@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Arr;
 
 class Recipe extends Model
 {
@@ -22,6 +23,79 @@ class Recipe extends Model
         'preparation_time',
         'cooking_time',
     ];
+
+    /**
+     * @param array<Ingredient> $ingredients_data
+     */
+    public function syncIngredients($ingredients_data): void
+    {
+        $pivotData = collect($ingredients_data)->mapWithKeys(function ($ingredient_data) {
+            $ingredient = Ingredient::query()->firstOrCreate(['name' => $ingredient_data['name']]);
+            return [$ingredient->id => Arr::only($ingredient_data, ['quantity', 'unit'])];
+        });
+
+        $this->ingredients()->sync($pivotData->toArray());
+    }
+
+    /**
+     * @param array<Tag> $tags_data
+     */
+    public function syncTags($tags_data): void
+    {
+        $tags = collect($tags_data)->mapWithKeys(function ($tag_data) {
+            $tag = Tag::query()->firstOrCreate(['name' => $tag_data['name']]);
+            return [$tag->id => Arr::only($tag_data, ['name'])];
+        });
+
+        $this->tags()->sync($tags->toArray());
+    }
+
+    /**
+     * @param array<MealTime> $meal_times_data
+     */
+    public function syncMealTimes($meal_times_data): void
+    {
+
+        $meal_times_ids = collect($meal_times_data)->map(function ($meal_time_data) {
+            $meal_time = MealTime::query()->where('name', $meal_time_data['name'])->first();
+            return $meal_time->id;
+        })->toArray();
+
+        $this->mealTimes()->sync($meal_times_ids);
+    }
+
+    /**
+     * @param array<Ingredient> $ingredients_data
+     */
+    public function attachIngredients($ingredients_data): void
+    {
+        $this->syncIngredients($ingredients_data);
+    }
+
+    /**
+     * @param array<Tag> $tags_data
+     */
+    public function attachTags($tags_data): void
+    {
+        $this->syncTags($tags_data);
+    }
+
+    /**
+     * @param array<MealTime> $meal_times_data
+     */
+    public function attachMealTimes($meal_times_data): void
+    {
+        $this->syncMealTimes($meal_times_data);
+    }
+
+    /**
+     * @param array<Step> $steps_data
+     */
+    public function syncSteps($steps_data): void
+    {
+        $this->steps()->delete();
+        $this->steps()->createMany($steps_data);
+    }
 
     /**
      * @return BelongsTo<User>
