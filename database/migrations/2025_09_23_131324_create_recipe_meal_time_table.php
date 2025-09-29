@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('recipe_meal_time', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Recipe::class);
-            $table->foreignIdFor(MealTime::class);
+            $table->foreignIdFor(Recipe::class)->constrained('recipe')->onDelete('CASCADE');
+            $table->foreignIdFor(MealTime::class)->constrained('meal_times');
             $table->timestamps();
         });
     }
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('meal_times');
+        Schema::dropIfExists('recipe_meal_time');
     }
 };
