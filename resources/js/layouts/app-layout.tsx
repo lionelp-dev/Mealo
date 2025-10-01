@@ -10,10 +10,19 @@ interface AppLayoutProps {
   headerRightContent?: ReactNode;
 }
 
-export default ({ children, breadcrumbs, headerRightContent, ...props }: AppLayoutProps) => {
+export default ({
+  children,
+  breadcrumbs,
+  headerRightContent,
+  ...props
+}: AppLayoutProps) => {
   const { flash } = usePage<{ flash: FlashMessage }>().props;
   return (
-    <AppLayoutTemplate breadcrumbs={breadcrumbs} headerRightContent={headerRightContent} {...props}>
+    <AppLayoutTemplate
+      breadcrumbs={breadcrumbs}
+      headerRightContent={headerRightContent}
+      {...props}
+    >
       {children}
       <Toast flash={flash} />
     </AppLayoutTemplate>

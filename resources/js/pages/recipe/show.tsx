@@ -4,21 +4,22 @@ import type { Recipe } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 
 type PageProps = {
-  collection: {
+  recipe: {
     data: Recipe;
   };
 };
 
 function Recipe() {
-  const { collection } = usePage<PageProps>().props;
-  const { data: recipe } = collection;
+  const { recipe } = usePage<PageProps>().props;
   return (
     <AppLayout
       headerRightContent={
         <div className="flex gap-2 self-end">
           <button
             className="btn btn-secondary"
-            onClick={() => router.visit(recipes.edit.url({ id: recipe.id }))}
+            onClick={() =>
+              router.visit(recipes.edit.url({ id: recipe.data.id }))
+            }
           >
             Modifier la recette
           </button>
@@ -31,13 +32,13 @@ function Recipe() {
         </div>
       }
     >
-      <Head title={`${recipe.name}`}></Head>
+      <Head title={`${recipe.data.name}`}></Head>
       <div className="overflow-y-auto">
         <div className="mx-auto flex max-w-[85%] flex-col">
-          <h1 className="mb-4 text-3xl font-bold">{recipe.name}</h1>
+          <h1 className="mb-4 text-3xl font-bold">{recipe.data.name}</h1>
 
           <div className="mb-6 rounded-lg bg-gray-50 p-4">
-            <p className="text-gray-700">{recipe.description}</p>
+            <p className="text-gray-700">{recipe.data.description}</p>
           </div>
 
           <div className="mb-6 grid grid-cols-2 gap-4">
@@ -46,7 +47,7 @@ function Recipe() {
                 Preparation time
               </h3>
               <p className="text-2xl font-bold text-blue-600">
-                {recipe.preparation_time} min
+                {recipe.data.preparation_time} min
               </p>
             </div>
 
@@ -55,19 +56,19 @@ function Recipe() {
                 Cooking time
               </h3>
               <p className="text-2xl font-bold text-green-600">
-                {recipe.cooking_time} min
+                {recipe.data.cooking_time} min
               </p>
             </div>
           </div>
 
           <div className="grid gap-4 min-xl:grid-cols-2">
-            {recipe.steps && recipe.steps.length > 0 && (
+            {recipe.data.steps && recipe.data.steps.length > 0 && (
               <div className="mb-6">
                 <h2 className="mb-4 text-2xl font-bold text-gray-800">
                   Étapes
                 </h2>
                 <div className="space-y-4">
-                  {recipe.steps
+                  {recipe.data.steps
                     .sort((a, b) => a.order - b.order)
                     .map((step) => (
                       <div key={step.id} className="rounded-lg bg-gray-50 p-4">
@@ -85,7 +86,7 @@ function Recipe() {
               </div>
             )}
 
-            {recipe.ingredients && recipe.ingredients.length > 0 && (
+            {recipe.data.ingredients && recipe.data.ingredients.length > 0 && (
               <div className="mb-6 overflow-x-auto">
                 <h2 className="mb-4 text-2xl font-bold text-gray-800">
                   Ingredients
@@ -99,7 +100,7 @@ function Recipe() {
                     </tr>
                   </thead>
                   <tbody>
-                    {recipe.ingredients.map((ingredient) => (
+                    {recipe.data.ingredients.map((ingredient) => (
                       <tr key={ingredient.id}>
                         <td className="font-medium">{ingredient.name}</td>
                         <td>{ingredient.pivot.quantity}</td>

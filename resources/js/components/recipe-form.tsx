@@ -32,7 +32,7 @@ export function RecipeForm({
   cancelLabel = 'Annuler',
   onCancel,
 }: RecipeFormProps) {
-  const { meal_times } = usePage<PageProps>().props;
+  const { meal_times, tags } = usePage<PageProps>().props;
 
   const form = useAppForm({
     defaultValues,
@@ -92,11 +92,12 @@ export function RecipeForm({
               label: meal_time.name,
             }));
             return (
-              <div>
+              <div className="flex flex-col">
                 <label className="mb-2 block text-sm font-medium text-gray-700">
                   Moments du repas
                 </label>
                 <MultiSelect
+                  className="w-full"
                   options={options}
                   value={field.state.value.map((v) => v.name)}
                   onValueChange={(values) =>

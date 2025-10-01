@@ -5,7 +5,7 @@ import { MealTime, Recipe } from '@/types';
 import { Head, router } from '@inertiajs/react';
 
 interface EditRecipeProps {
-  collection: {
+  recipe: {
     data: Recipe;
   };
   meal_times: {
@@ -13,31 +13,29 @@ interface EditRecipeProps {
   };
 }
 
-function EditRecipe({ collection }: EditRecipeProps) {
-  const { data: recipe } = collection;
-
+function EditRecipe({ recipe }: EditRecipeProps) {
   const defaultValues = {
-    name: recipe.name,
-    description: recipe.description,
-    preparation_time: recipe.preparation_time,
-    cooking_time: recipe.cooking_time,
+    name: recipe.data.name,
+    description: recipe.data.description,
+    preparation_time: recipe.data.preparation_time,
+    cooking_time: recipe.data.cooking_time,
     ingredients:
-      recipe.ingredients?.map((ing) => ({
+      recipe.data.ingredients?.map((ing) => ({
         name: ing.name,
         quantity: Number(ing.pivot.quantity),
         unit: ing.pivot.unit,
       })) || [],
     steps:
-      recipe.steps?.map((step) => ({
+      recipe.data.steps?.map((step) => ({
         description: step.description,
         order: step.order,
       })) || [],
     tags:
-      recipe.tags?.map((tag) => ({
+      recipe.data.tags?.map((tag) => ({
         name: tag.name,
       })) || [],
     meal_times:
-      recipe.meal_times?.map((meal_time) => ({
+      recipe.data.meal_times?.map((meal_time) => ({
         name: meal_time.name,
       })) || [],
   };
@@ -47,13 +45,13 @@ function EditRecipe({ collection }: EditRecipeProps) {
       headerRightContent={
         <button
           className="btn w-fit self-end btn-primary"
-          onClick={() => router.visit(recipes.show.url({ id: recipe.id }))}
+          onClick={() => router.visit(recipes.show.url({ id: recipe.data.id }))}
         >
           Retour à la recette
         </button>
       }
     >
-      <Head title={`Modifier ${recipe.name}`}></Head>
+      <Head title={`Modifier ${recipe.data.name}`}></Head>
       <div className="h-screen overflow-y-auto">
         <div className="mx-auto flex max-w-[85%] flex-col gap-3">
           <h1 className="mb-6 text-2xl font-bold">Modifier la recette</h1>
@@ -61,7 +59,7 @@ function EditRecipe({ collection }: EditRecipeProps) {
             defaultValues={defaultValues}
             mode="edit"
             onSubmit={({ value }) => {
-              router.put(recipes.update.url(recipe.id), value);
+              router.put(recipes.update.url(recipe.data.id), value);
             }}
           />
         </div>

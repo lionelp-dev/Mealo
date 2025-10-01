@@ -22,7 +22,10 @@ const tagSchema = z.object({
 });
 
 const mealTimeSchema = z.object({
-  name: z.string().trim().min(1, 'Le nom du moment de repas ne peut pas être vide'),
+  name: z
+    .string()
+    .trim()
+    .min(1, 'Le nom du moment de repas ne peut pas être vide'),
 });
 
 const recipeSchema = z.object({

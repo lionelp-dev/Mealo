@@ -1,7 +1,11 @@
 import { FlashMessage } from '@/types';
 import { useEffect, useState } from 'react';
 
-type Toast = { id: string; message: string; type: 'success' | 'error' | 'warning' | 'info' };
+type Toast = {
+  id: string;
+  message: string;
+  type: 'success' | 'error' | 'warning' | 'info';
+};
 
 type ToastItemProps = Omit<Toast, 'id'> & {
   onClose: () => void;
@@ -47,13 +51,21 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
     const newToasts: Toast[] = [];
 
     if (flash.success) {
-      newToasts.push({ id: 'success', message: flash.success, type: 'success' });
+      newToasts.push({
+        id: 'success',
+        message: flash.success,
+        type: 'success',
+      });
     }
     if (flash.error) {
       newToasts.push({ id: 'error', message: flash.error, type: 'error' });
     }
     if (flash.warning) {
-      newToasts.push({ id: 'warning', message: flash.warning, type: 'warning' });
+      newToasts.push({
+        id: 'warning',
+        message: flash.warning,
+        type: 'warning',
+      });
     }
     if (flash.message) {
       newToasts.push({ id: 'message', message: flash.message, type: 'info' });
@@ -75,9 +87,13 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
   return (
     <div className="flex flex-col">
       {toasts.map((toast) => (
-        <ToastItem key={toast.id} message={toast.message} type={toast.type} onClose={() => removeToast(toast.id)} />
+        <ToastItem
+          key={toast.id}
+          message={toast.message}
+          type={toast.type}
+          onClose={() => removeToast(toast.id)}
+        />
       ))}
     </div>
   );
 }
-

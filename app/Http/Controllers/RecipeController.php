@@ -6,8 +6,10 @@ use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\MealTimeResource;
 use App\Http\Resources\RecipeCollection;
+use App\Http\Resources\RecipeResource;
 use App\Models\MealTime;
 use App\Models\Recipe;
+use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -28,7 +30,7 @@ class RecipeController extends Controller
             ->paginate(15);
 
         return Inertia::render('recipe/index', [
-            'collection' => new RecipeCollection($recipes)
+            'recipes_collection' => new RecipeCollection($recipes)
         ]);
     }
 
@@ -37,7 +39,15 @@ class RecipeController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('recipe/create', ['meal_times' => MealTimeResource::collection(MealTime::all())]);
+        $tags = Tag::query()->paginate(15);
+
+        return Inertia::render(
+            'recipe/create',
+            [
+                'meal_times' => MealTimeResource::collection(MealTime::all()),
+                'tags' => $tags->toResourceCollection()
+            ]
+        );
     }
 
     /**
@@ -64,9 +74,7 @@ class RecipeController extends Controller
             $recipe->steps()->createMany($validated['steps']);
         });
 
-        $request->session()->flash('success', 'Recipe successfully created');
-
-        return to_route('recipes.index');
+        return to_route('recipes.index')->with('success', 'Recipe successfully created');
     }
 
     /**
@@ -77,7 +85,7 @@ class RecipeController extends Controller
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         return Inertia::render('recipe/show', [
-            'collection' => $recipe->toResource()
+            'recipe' => new RecipeResource($recipe),
         ]);
     }
 
@@ -89,7 +97,7 @@ class RecipeController extends Controller
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         return Inertia::render('recipe/edit', [
-            'collection' => $recipe->toResource(),
+            'recipe' => new RecipeResource($recipe),
             'meal_times' => MealTimeResource::collection(MealTime::all())
         ]);
     }
@@ -120,9 +128,7 @@ class RecipeController extends Controller
             $recipe->syncSteps($validated['steps']);
         });
 
-        $request->session()->flash('success', 'Recipe successfully updated');
-
-        return to_route('recipes.show', ["recipe" => $recipe]);
+        return to_route('recipes.show', ['recipe' => $recipe])->with('success', 'Recipe successfully updated');
     }
 
     /**
@@ -131,7 +137,6 @@ class RecipeController extends Controller
     public function destroy(Request $request, Recipe $recipe): RedirectResponse
     {
         $recipe->delete();
-        $request->session()->flash('success', 'Recipe successfully deleted');
-        return to_route('recipes.index');
+        return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
     }
 }

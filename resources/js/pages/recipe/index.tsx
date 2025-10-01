@@ -1,3 +1,4 @@
+import { Pagination } from '@/components/ui/pagination';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import { BreadcrumbItem, PaginatedCollection, Recipe } from '@/types';
@@ -6,11 +7,11 @@ import { AlertTriangle, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 
 type PageProps = {
-  collection: PaginatedCollection<Recipe>;
+  recipes_collection: PaginatedCollection<Recipe>;
 };
 
 export default function Recipes() {
-  const { collection } = usePage<PageProps>().props;
+  const { recipes_collection } = usePage<PageProps>().props;
   const [recipeToDelete, setRecipeToDelete] = useState<Recipe | null>(null);
 
   const breadcrumbs: BreadcrumbItem[] = [
@@ -45,7 +46,7 @@ export default function Recipes() {
             </tr>
           </thead>
           <tbody>
-            {collection.data.map((recipe) => (
+            {recipes_collection.data.map((recipe) => (
               <tr
                 key={recipe.id}
                 onClick={() =>
@@ -87,37 +88,7 @@ export default function Recipes() {
         </table>
       </div>
 
-      <div className="join self-center">
-        <button
-          className="btn join-item"
-          disabled={collection.meta.current_page === 1}
-          onClick={() =>
-            router.visit(
-              recipes.index.url({
-                query: { page: collection.meta.current_page - 1 },
-              }),
-            )
-          }
-        >
-          «
-        </button>
-        <button className="btn join-item">
-          Page {collection.meta.current_page} / {collection.meta.last_page}
-        </button>
-        <button
-          className="btn join-item"
-          disabled={!collection.meta.has_more_pages}
-          onClick={() =>
-            router.visit(
-              recipes.index.url({
-                query: { page: collection.meta.current_page + 1 },
-              }),
-            )
-          }
-        >
-          »
-        </button>
-      </div>
+      <Pagination meta={recipes_collection.meta} />
 
       {recipeToDelete && (
         <div
