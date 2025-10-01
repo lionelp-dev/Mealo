@@ -1,10 +1,10 @@
 import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { ingredientSchema } from '@/schemas/recipe.schema';
-import { RecipeFormInput } from '@/types';
+import { Recipe } from '@/types';
 import { Plus, Trash2 } from 'lucide-react';
 
-const defaultValues: Pick<RecipeFormInput, 'ingredients'> = {
+const defaultValues: Pick<Recipe, 'ingredients'> = {
   ingredients: [],
 };
 

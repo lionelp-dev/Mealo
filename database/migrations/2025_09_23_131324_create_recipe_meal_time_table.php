@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('recipe_meal_time', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(Recipe::class)->constrained('recipe')->onDelete('CASCADE');
+            $table->foreignIdFor(Recipe::class)->constrained('recipes')->onDelete('CASCADE');
             $table->foreignIdFor(MealTime::class)->constrained('meal_times');
             $table->timestamps();
         });

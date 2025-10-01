@@ -14,7 +14,7 @@ class Recipe extends Model
     /** @use HasFactory<\Database\Factories\RecipeFactory> */
     use HasFactory;
 
-    protected $table = 'recipe';
+    protected $table = 'recipes';
 
     protected $fillable = [
         'user_id',
@@ -42,9 +42,9 @@ class Recipe extends Model
      */
     public function syncTags($tags_data): void
     {
-        $tags = collect($tags_data)->mapWithKeys(function ($tag_data) {
+        $tags = collect($tags_data)->map(function ($tag_data) {
             $tag = Tag::query()->firstOrCreate(['name' => $tag_data['name']]);
-            return [$tag->id => Arr::only($tag_data, ['name'])];
+            return $tag->id;
         });
 
         $this->tags()->sync($tags->toArray());

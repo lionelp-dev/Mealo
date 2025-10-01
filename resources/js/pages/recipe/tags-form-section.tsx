@@ -1,12 +1,12 @@
 import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { tagSchema } from '@/schemas/recipe.schema';
-import { PaginatedCollection, RecipeFormInput, Tag } from '@/types';
+import { PaginatedCollection, Recipe, Tag } from '@/types';
 import { usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 
-const defaultValues: Pick<RecipeFormInput, 'tags'> = {
+const defaultValues: Pick<Recipe, 'tags'> = {
   tags: [],
 };
 
@@ -81,7 +81,7 @@ const TagsFormSection = withFieldGroup({
                     onOpenAutoFocus={(e) => e.preventDefault()}
                   >
                     <div className="grid max-h-[5lh] grid-cols-3 overflow-y-scroll">
-                      {tags.data.map((tag) => (
+                      {tags?.data?.map((tag) => (
                         <div
                           key={tag.id}
                           className="cursor-pointer rounded-xs px-2 hover:bg-gray-100"
@@ -89,7 +89,11 @@ const TagsFormSection = withFieldGroup({
                         >
                           {tag.name}
                         </div>
-                      ))}
+                      )) || (
+                        <div className="col-span-3 text-gray-500 text-sm">
+                          Aucun tag disponible
+                        </div>
+                      )}
                     </div>
                   </Popover.Content>
                 </Popover.Portal>

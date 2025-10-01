@@ -21,13 +21,12 @@ class RecipeResource extends JsonResource
             'description' => $this->resource->description,
             'preparation_time' => $this->resource->preparation_time,
             'cooking_time' => $this->resource->cooking_time,
-            'meal_times' => $this->whenLoaded('mealTimes'),
-            'ingredients' => $this->whenLoaded('ingredients'),
-            'steps' => $this->whenLoaded('steps'),
-            'tags' => $this->whenLoaded('tags'),
+            'meal_times' => MealTimeResource::collection($this->whenLoaded('mealTimes'))->toArray(request()),
+            'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients'))->toArray(request()),
+            'steps' => StepResource::collection($this->whenLoaded('steps'))->toArray(request()),
+            'tags' => TagResource::collection($this->whenLoaded('tags'))->toArray(request()),
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];
     }
 }
-

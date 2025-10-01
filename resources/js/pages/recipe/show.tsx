@@ -11,6 +11,7 @@ type PageProps = {
 
 function Recipe() {
   const { recipe } = usePage<PageProps>().props;
+  console.log(recipe);
   return (
     <AppLayout
       headerRightContent={
@@ -103,8 +104,8 @@ function Recipe() {
                     {recipe.data.ingredients.map((ingredient) => (
                       <tr key={ingredient.id}>
                         <td className="font-medium">{ingredient.name}</td>
-                        <td>{ingredient.pivot.quantity}</td>
-                        <td>{ingredient.pivot.unit}</td>
+                        <td>{ingredient.quantity}</td>
+                        <td>{ingredient.unit}</td>
                       </tr>
                     ))}
                   </tbody>

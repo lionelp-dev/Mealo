@@ -68,64 +68,39 @@ export type PaginatedCollection<T> = {
   };
 };
 
-export type TimeStamps = {
-  created_at: string;
-  updated_at: string;
-};
-
 export type MealTime = {
-  id: number;
+  id?: number;
   name: string;
 };
 
 export type Step = {
-  id: number;
-  recipe_id: number;
+  id?: number;
   order: number;
   description: string;
 };
 
 export type Tag = {
-  id: number;
+  id?: number;
   name: string;
 };
 
-export type IngredientDetails = {
-  id: number;
+export type Ingredient = {
+  id?: number;
   name: string;
-};
-
-export type RecipeIngredientPivot = {
-  recipe_id: number;
-  ingredient_id: number;
   quantity: number;
   unit: string;
 };
 
-export type Ingredient = IngredientDetails & { pivot: RecipeIngredientPivot };
-
-export type RecipeDetails = {
+export type Recipe = {
   id: number;
   name: string;
   description: string;
   preparation_time: number;
   cooking_time: number;
-};
-
-export type Recipe = RecipeDetails & {
   meal_times: MealTime[];
   ingredients: Ingredient[];
   steps: Step[];
   tags: Tag[];
-};
-export type RecipeFormInput = Omit<RecipeDetails, 'id'> & {
-  meal_times: Omit<MealTime, 'id'>[];
-  ingredients: Array<
-    Omit<Ingredient, 'id' | 'pivot'> &
-      Omit<RecipeIngredientPivot, 'recipe_id' | 'ingredient_id'>
-  >;
-  steps: Omit<Step, 'id' | 'recipe_id'>[];
-  tags: Omit<Tag, 'id'>[];
 };
 
 export type FlashMessage = {

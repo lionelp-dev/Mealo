@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateRecipeRequest;
 use App\Http\Resources\MealTimeResource;
 use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\RecipeResource;
+use App\Http\Resources\TagResource;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
@@ -40,7 +41,6 @@ class RecipeController extends Controller
     public function create(): Response
     {
         $tags = Tag::query()->paginate(15);
-
         return Inertia::render(
             'recipe/create',
             [
@@ -95,10 +95,11 @@ class RecipeController extends Controller
     public function edit(Recipe $recipe): Response
     {
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
-
+        $tags = Tag::query()->paginate(15);
         return Inertia::render('recipe/edit', [
             'recipe' => new RecipeResource($recipe),
-            'meal_times' => MealTimeResource::collection(MealTime::all())
+            'meal_times' => MealTimeResource::collection(MealTime::all()),
+            'tags' => TagResource::collection($tags)
         ]);
     }
 

@@ -1,19 +1,18 @@
+import FieldInfo from '@/components/ui/form-field-info';
 import { MultiSelect, Option } from '@/components/ui/multi-select';
 import { useAppForm } from '@/hooks/form-hook';
 import IngredientFormSection from '@/pages/recipe/ingredient-form-section';
 import StepsFormSection from '@/pages/recipe/steps-form-section';
 import TagsFormSection from '@/pages/recipe/tags-form-section';
 import { recipeSchema } from '@/schemas/recipe.schema';
-import { MealTime, RecipeFormInput } from '@/types';
+import { MealTime, Recipe } from '@/types';
 import { usePage } from '@inertiajs/react';
-import FieldInfo from './ui/form-field-info';
 
 type RecipeFormProps = {
-  defaultValues: RecipeFormInput;
+  defaultValues: Omit<Recipe, 'id'>;
   mode: 'create' | 'edit';
-  recipeId?: number;
   submitLabel?: string;
-  onSubmit: (props: { value: RecipeFormInput }) => void;
+  onSubmit: (props: { value: Omit<Recipe, 'id'> }) => void;
   cancelLabel?: string;
   onCancel?: () => void;
 };
@@ -32,7 +31,7 @@ export function RecipeForm({
   cancelLabel = 'Annuler',
   onCancel,
 }: RecipeFormProps) {
-  const { meal_times, tags } = usePage<PageProps>().props;
+  const { meal_times } = usePage<PageProps>().props;
 
   const form = useAppForm({
     defaultValues,
@@ -102,9 +101,9 @@ export function RecipeForm({
                   value={field.state.value.map((v) => v.name)}
                   onValueChange={(values) =>
                     field.handleChange(
-                      values.map((v) => ({
-                        name: v,
-                      })),
+                      values.flatMap((v) => {
+                        return meal_times.data.filter((m) => m.name === v);
+                      }),
                     )
                   }
                   placeholder="Sélectionnez les moments du repas..."

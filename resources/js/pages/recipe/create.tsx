@@ -1,11 +1,11 @@
-import { RecipeForm } from '@/components/recipe-form';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
-import { RecipeFormInput } from '@/types';
+import { Recipe } from '@/types';
 import { Head, router } from '@inertiajs/react';
+import { RecipeForm } from './recipe-form';
 
 function CreateRecipe() {
-  const defaultValues: RecipeFormInput = {
+  const defaultValues: Omit<Recipe, 'id'> = {
     name: '',
     description: '',
     preparation_time: 0,
