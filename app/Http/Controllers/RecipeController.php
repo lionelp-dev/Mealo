@@ -11,10 +11,12 @@ use App\Http\Resources\TagResource;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -23,9 +25,14 @@ class RecipeController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $recipes = Recipe::query()
+        Gate::authorize('viewAny', Recipe::class);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $recipes = $user->recipes()
             ->orderBy('created_at', 'desc')
             ->with(['mealTimes', 'ingredients', 'steps', 'tags'])
             ->paginate(15);
@@ -38,9 +45,15 @@ class RecipeController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        $tags = Tag::query()->paginate(15);
+        Gate::authorize('create', Recipe::class);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $tags = $this->getUserTags($user);
+
         return Inertia::render(
             'recipe/create',
             [
@@ -55,6 +68,8 @@ class RecipeController extends Controller
      */
     public function store(StoreRecipeRequest $request): RedirectResponse
     {
+        Gate::authorize('create', Recipe::class);
+
         $validated = $request->safe()->only([
             'name',
             'description',
@@ -66,8 +81,11 @@ class RecipeController extends Controller
             'tags'
         ]);
 
-        DB::transaction(function () use ($request, $validated) {
-            $recipe = $request->user()->recipes()->create(Arr::except($validated, ['ingredients', 'meal_times', 'steps', 'tags']));
+        /** @var User $user */
+        $user = $request->user();
+
+        DB::transaction(function () use ($user, $validated) {
+            $recipe = $user->recipes()->create(Arr::except($validated, ['ingredients', 'meal_times', 'steps', 'tags']));
             $recipe->attachIngredients($validated['ingredients']);
             $recipe->attachTags($validated['tags']);
             $recipe->attachMealTimes($validated['meal_times']);
@@ -82,6 +100,8 @@ class RecipeController extends Controller
      */
     public function show(Recipe $recipe): Response
     {
+        Gate::authorize('view', $recipe);
+
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         return Inertia::render('recipe/show', [
@@ -92,10 +112,17 @@ class RecipeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Recipe $recipe): Response
+    public function edit(Request $request, Recipe $recipe): Response
     {
+        Gate::authorize('update', $recipe);
+
+        /** @var User $user */
+        $user = $request->user();
+
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
-        $tags = Tag::query()->paginate(15);
+
+        $tags = $this->getUserTags($user);
+
         return Inertia::render('recipe/edit', [
             'recipe' => new RecipeResource($recipe),
             'meal_times' => MealTimeResource::collection(MealTime::all()),
@@ -108,6 +135,8 @@ class RecipeController extends Controller
      */
     public function update(UpdateRecipeRequest $request, Recipe $recipe): RedirectResponse
     {
+        Gate::authorize('update', $recipe);
+
         $validated = $request->safe()->only([
             'name',
             'description',
@@ -119,7 +148,6 @@ class RecipeController extends Controller
             'tags'
         ]);
 
-        $recipe = Recipe::query()->findOrFail($recipe->id);
 
         DB::transaction(function () use ($recipe, $validated) {
             $recipe->update(Arr::except($validated, ['ingredients', 'meal_times', 'steps', 'tags']));
@@ -137,7 +165,19 @@ class RecipeController extends Controller
      */
     public function destroy(Request $request, Recipe $recipe): RedirectResponse
     {
+        Gate::authorize('delete', $recipe);
+
         $recipe->delete();
         return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
+    }
+
+    /**
+     * Get tags that have been used in user's recipes
+     */
+    private function getUserTags(User $user)
+    {
+        return Tag::query()->whereHas('recipes', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })->paginate(15);
     }
 }

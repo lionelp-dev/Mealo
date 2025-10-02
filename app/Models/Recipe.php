@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Policies\RecipePolicy;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -9,6 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Arr;
 
+#[UsePolicy(RecipePolicy::class)]
 class Recipe extends Model
 {
     /** @use HasFactory<\Database\Factories\RecipeFactory> */
@@ -30,7 +33,10 @@ class Recipe extends Model
     public function syncIngredients($ingredients_data): void
     {
         $pivotData = collect($ingredients_data)->mapWithKeys(function ($ingredient_data) {
-            $ingredient = Ingredient::query()->firstOrCreate(['name' => $ingredient_data['name']]);
+            $ingredient = Ingredient::query()->firstOrCreate([
+                'name' => $ingredient_data['name'],
+                'user_id' => $this->user_id
+            ]);
             return [$ingredient->id => Arr::only($ingredient_data, ['quantity', 'unit'])];
         });
 
@@ -43,7 +49,10 @@ class Recipe extends Model
     public function syncTags($tags_data): void
     {
         $tags = collect($tags_data)->map(function ($tag_data) {
-            $tag = Tag::query()->firstOrCreate(['name' => $tag_data['name']]);
+            $tag = Tag::query()->firstOrCreate([
+                'name' => $tag_data['name'],
+                'user_id' => $this->user_id
+            ]);
             return $tag->id;
         });
 
