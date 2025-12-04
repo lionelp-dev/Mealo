@@ -10,10 +10,11 @@ import {
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { CookingPot, LayoutGrid, Pen } from 'lucide-react';
+import { Calendar, CookingPot, LayoutGrid, Pen } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
@@ -23,14 +24,19 @@ const mainNavItems: NavItem[] = [
     icon: LayoutGrid,
   },
   {
-    title: 'Creer une recette',
-    href: recipes.create.url(),
-    icon: Pen,
+    title: 'Plannification de repas',
+    href: plannedMeals.index.url(),
+    icon: Calendar,
   },
   {
     title: 'Mes recettes',
     href: recipes.index.url(),
     icon: CookingPot,
+  },
+  {
+    title: 'Creer une recette',
+    href: recipes.create.url(),
+    icon: Pen,
   },
 ];
 

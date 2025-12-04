@@ -8,18 +8,22 @@ import { type PropsWithChildren, type ReactNode } from 'react';
 export default function AppSidebarLayout({
   children,
   breadcrumbs = [],
+  headerLeftContent,
   headerRightContent,
 }: PropsWithChildren<{
   breadcrumbs?: BreadcrumbItem[];
+  headerLeftContent?: ReactNode;
   headerRightContent?: ReactNode;
 }>) {
   return (
     <AppShell variant="sidebar">
       <AppSidebar />
-      <AppContent variant="sidebar" className="">
-        <AppSidebarHeader breadcrumbs={breadcrumbs}>
-          {headerRightContent}
-        </AppSidebarHeader>
+      <AppContent variant="sidebar">
+        <AppSidebarHeader
+          breadcrumbs={breadcrumbs}
+          headerLeftContent={headerLeftContent}
+          headerRightContent={headerRightContent}
+        />
         {children}
       </AppContent>
     </AppShell>

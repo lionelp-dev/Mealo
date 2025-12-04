@@ -68,9 +68,23 @@ export type PaginatedCollection<T> = {
   };
 };
 
+export type FlashMessage = {
+  message?: string;
+  success?: string;
+  error?: string;
+  warning?: string;
+};
+
 export type MealTime = {
+  id: number;
+  name: string;
+};
+
+export type Ingredient = {
   id?: number;
   name: string;
+  quantity: number;
+  unit: string;
 };
 
 export type Step = {
@@ -82,13 +96,6 @@ export type Step = {
 export type Tag = {
   id?: number;
   name: string;
-};
-
-export type Ingredient = {
-  id?: number;
-  name: string;
-  quantity: number;
-  unit: string;
 };
 
 export type Recipe = {
@@ -103,9 +110,9 @@ export type Recipe = {
   tags: Tag[];
 };
 
-export type FlashMessage = {
-  message?: string;
-  success?: string;
-  error?: string;
-  warning?: string;
+export type PlannedMeal = {
+  id: number;
+  planned_date: string;
+  meal_time_id: number;
+  recipe: Pick<Recipe, 'id' | 'name'>;
 };

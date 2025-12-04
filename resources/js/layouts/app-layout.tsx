@@ -7,12 +7,14 @@ import { type ReactNode } from 'react';
 interface AppLayoutProps {
   children: ReactNode;
   breadcrumbs?: BreadcrumbItem[];
+  headerLeftContent?: ReactNode;
   headerRightContent?: ReactNode;
 }
 
 export default ({
   children,
   breadcrumbs,
+  headerLeftContent,
   headerRightContent,
   ...props
 }: AppLayoutProps) => {
@@ -20,6 +22,7 @@ export default ({
   return (
     <AppLayoutTemplate
       breadcrumbs={breadcrumbs}
+      headerLeftContent={headerLeftContent}
       headerRightContent={headerRightContent}
       {...props}
     >
