@@ -11,6 +11,7 @@ use App\Models\MealTime;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\Tag;
+use App\Services\ShoppingListService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -19,6 +20,10 @@ use Inertia\Inertia;
 
 class PlannedMealController extends Controller
 {
+    public function __construct(
+        private ShoppingListService $shoppingListService
+    ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -34,7 +39,7 @@ class PlannedMealController extends Controller
             'meal_times' => ['nullable', 'array'],
             'meal_times.*' => ['integer', 'exists:meal_times,id'],
             'preparation_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
-            'cooking_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60']
+            'cooking_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
         ]);
 
         $weekStart = ($validated['week'] ?? null)
@@ -46,7 +51,7 @@ class PlannedMealController extends Controller
         $plannedMeals = PlannedMeal::query()->where('user_id', $user->id)->with('recipe:id,name')
             ->whereBetween('planned_date', [
                 $weekStart->toDateString(),
-                $weekEnd->toDateString()
+                $weekEnd->toDateString(),
             ])
             ->get();
 
@@ -93,7 +98,7 @@ class PlannedMealController extends Controller
             'mealTimes' => $mealTimes,
             'plannedMeals' => PlannedMealResource::collection($plannedMeals)->toArray($request),
             'tags' => TagResource::collection(Tag::query()->where('user_id', $user->id)->get())->toArray($request),
-            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipesQuery->paginate(15)))
+            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipesQuery->paginate(15))),
         ]);
     }
 
@@ -114,17 +119,18 @@ class PlannedMealController extends Controller
             $recipe = Recipe::findOrFail($request->recipe_id);
             Gate::authorize('create', [PlannedMeal::class, $recipe]);
 
-
             $validated = $request->safe()->only([
                 'recipe_id',
                 'meal_time_id',
-                'planned_date'
+                'planned_date',
             ]);
 
-            PlannedMeal::create([
+            $plannedMeal = PlannedMeal::create([
                 'user_id' => $request->user()->id,
-                ...$validated
+                ...$validated,
             ]);
+
+            $this->shoppingListService->regenerateAffectedShoppingLists($request->user()->id, [$plannedMeal->planned_date]);
 
             return to_route('planned-meals.index')->with('success', 'Meal successfully planned');
         }, attempts: 5);
@@ -156,16 +162,25 @@ class PlannedMealController extends Controller
         return DB::transaction(function () use ($request, $plannedMeal) {
             Gate::authorize('update', $plannedMeal);
 
+            $originalDate = $plannedMeal->planned_date;
+
             $validated = $request->safe()->only([
                 'recipe_id',
                 'meal_time_id',
-                'planned_date'
+                'planned_date',
             ]);
 
             $recipe = Recipe::findOrFail($validated['recipe_id']);
             Gate::authorize('create', [PlannedMeal::class, $recipe]);
 
             $plannedMeal->update($validated);
+
+            // Regenerate shopping lists for both original and new weeks (if different)
+            $affectedDates = [$originalDate, $plannedMeal->planned_date];
+            $this->shoppingListService->regenerateAffectedShoppingLists(
+                $request->user()->id,
+                $affectedDates
+            );
 
             return to_route('planned-meals.index')->with('success', 'Planned meal successfully updated');
         }, attempts: 5);
@@ -179,7 +194,16 @@ class PlannedMealController extends Controller
         return DB::transaction(function () use ($plannedMeal) {
             Gate::authorize('delete', $plannedMeal);
 
+            $deletedDate = $plannedMeal->planned_date;
+            $userId = $plannedMeal->user_id;
+
             $plannedMeal->delete();
+
+            // Regenerate shopping list for the affected week
+            $this->shoppingListService->regenerateAffectedShoppingLists(
+                $userId,
+                [$deletedDate]
+            );
 
             return to_route('planned-meals.index')->with('success', 'Planned meal successfully deleted');
         }, attempts: 5);
@@ -195,10 +219,11 @@ class PlannedMealController extends Controller
                 'planned_meals' => ['required', 'array'],
                 'planned_meals.*.recipe_id' => ['required', 'integer', 'exists:recipes,id'],
                 'planned_meals.*.meal_time_id' => ['required', 'integer', 'exists:meal_times,id'],
-                'planned_meals.*.planned_date' => ['required', 'date']
+                'planned_meals.*.planned_date' => ['required', 'date'],
             ]);
 
             $plannedMealsData = [];
+            $affectedDates = [];
 
             foreach ($validated['planned_meals'] as $plannedMealData) {
                 $recipe = Recipe::findOrFail($plannedMealData['recipe_id']);
@@ -212,11 +237,19 @@ class PlannedMealController extends Controller
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
+
+                $affectedDates[] = $plannedMealData['planned_date'];
             }
 
             PlannedMeal::insert($plannedMealsData);
 
-            return to_route('planned-meals.index')->with('success', 'Meals successfully planned');
+            // Regenerate shopping lists for all affected weeks
+            $this->shoppingListService->regenerateAffectedShoppingLists(
+                $request->user()->id,
+                $affectedDates
+            );
+
+            return back()->with('success', 'Meals successfully planned');
         }, attempts: 5);
     }
 
@@ -228,7 +261,7 @@ class PlannedMealController extends Controller
         return DB::transaction(function () use ($request) {
             $validated = $request->validate([
                 'planned_meals' => ['required', 'array'],
-                'planned_meals.*' => ['integer', 'exists:planned_meals,id']
+                'planned_meals.*' => ['integer', 'exists:planned_meals,id'],
             ]);
 
             $plannedMealIds = $validated['planned_meals'];
@@ -241,9 +274,18 @@ class PlannedMealController extends Controller
                 Gate::authorize('delete', $plannedMeal);
             }
 
+            // Collect affected dates before deletion
+            $affectedDates = $plannedMeals->pluck('planned_date')->toArray();
+
             PlannedMeal::whereIn('id', $plannedMeals->pluck('id'))->delete();
 
-            return to_route('planned-meals.index')->with('success', 'Planned meals successfully deleted');
+            // Regenerate shopping lists for all affected weeks
+            $this->shoppingListService->regenerateAffectedShoppingLists(
+                $request->user()->id,
+                $affectedDates
+            );
+
+            return back()->with('success', 'Planned meals successfully deleted');
         }, attempts: 5);
     }
 

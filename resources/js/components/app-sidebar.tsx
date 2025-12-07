@@ -12,21 +12,22 @@ import {
 import { dashboard } from '@/routes';
 import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';
+import shoppingLists from '@/routes/shopping-lists';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Calendar, CookingPot, LayoutGrid, Pen } from 'lucide-react';
+import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
   {
-    title: 'Dashboard',
-    href: dashboard(),
-    icon: LayoutGrid,
-  },
-  {
     title: 'Plannification de repas',
     href: plannedMeals.index.url(),
     icon: Calendar,
+  },
+  {
+    title: 'Mes listes de courses',
+    href: shoppingLists.index.url(),
+    icon: ShoppingCart,
   },
   {
     title: 'Mes recettes',
@@ -37,6 +38,11 @@ const mainNavItems: NavItem[] = [
     title: 'Creer une recette',
     href: recipes.create.url(),
     icon: Pen,
+  },
+  {
+    title: 'Generer une recette',
+    href: recipes.create.url(),
+    icon: Wand,
   },
 ];
 

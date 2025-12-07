@@ -1,13 +1,13 @@
 import { router } from '@inertiajs/react';
 import { useEffect } from 'react';
 
+import { useMealPlanDialogControllerStore } from '../stores/meal-plan-dialog';
 import {
   CopiedDayPlannedMeals,
   CopiedMealSlot,
   SetDayPlannedMealsProps,
   useWeekPlannedMealsStore,
 } from '../stores/week-meal-planner';
-import { useMealPlanDialogControllerStore } from '../stores/meal-plan-dialog';
 
 export const useWeekPlannedMeals = ({
   weekStart,
@@ -26,6 +26,7 @@ export const useWeekPlannedMeals = ({
 
   const unplanMeal = (id: number) => {
     router.delete(`/planned-meals/${id}`, {
+      preserveUrl: true,
       preserveState: true,
       preserveScroll: true,
       onSuccess: () => {
@@ -37,6 +38,7 @@ export const useWeekPlannedMeals = ({
   const unplanMeals = (ids: number[]) => {
     router.delete(`/planned-meals`, {
       data: { planned_meals: ids },
+      preserveUrl: true,
       preserveState: true,
       preserveScroll: true,
       onSuccess: () => {
@@ -52,8 +54,8 @@ export const useWeekPlannedMeals = ({
       '/planned-meals/bulk',
       { planned_meals },
       {
-        preserveState: true,
         preserveUrl: true,
+        preserveState: true,
         preserveScroll: true,
       },
     );
@@ -61,18 +63,23 @@ export const useWeekPlannedMeals = ({
   };
 
   const planSelectedMeals = () => {
-    if (mealPlanDialogStore.selectedRecipesId.length === 0 || !mealPlanDialogStore.selectedMealTimeId) {
+    if (
+      mealPlanDialogStore.selectedRecipesId.length === 0 ||
+      !mealPlanDialogStore.selectedMealTimeId
+    ) {
       return;
     }
 
     const selectedISODate = mealPlanDialogStore.selectedDate?.toISODate();
     if (!selectedISODate) return;
 
-    const payload: CopiedMealSlot[] = mealPlanDialogStore.selectedRecipesId.map((recipeId) => ({
-      recipe_id: recipeId,
-      meal_time_id: mealPlanDialogStore.selectedMealTimeId!,
-      planned_date: selectedISODate,
-    }));
+    const payload: CopiedMealSlot[] = mealPlanDialogStore.selectedRecipesId.map(
+      (recipeId) => ({
+        recipe_id: recipeId,
+        meal_time_id: mealPlanDialogStore.selectedMealTimeId!,
+        planned_date: selectedISODate,
+      }),
+    );
 
     router.post(
       '/planned-meals/bulk',

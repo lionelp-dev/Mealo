@@ -116,3 +116,29 @@ export type PlannedMeal = {
   meal_time_id: number;
   recipe: Pick<Recipe, 'id' | 'name'>;
 };
+
+export type ShoppingList = {
+  data: {
+    id: number;
+    user_id: number;
+    week_start: string;
+    ingredients?: ShoppingListIngredient[];
+    created_at: string;
+    updated_at: string;
+  };
+};
+
+export type ShoppingListIngredient = {
+  id: number;
+  shopping_list_id: number;
+  ingredient_id: number;
+  ingredient: {
+    id: number;
+    name: string;
+  };
+  quantity: number;
+  unit: string;
+  is_checked: boolean;
+  created_at: string;
+  updated_at: string;
+};
