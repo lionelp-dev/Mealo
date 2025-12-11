@@ -8,7 +8,7 @@ use App\Http\Resources\IngredientCollection;
 use App\Http\Resources\MealTimeResource;
 use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\RecipeResource;
-use App\Http\Resources\TagResource;
+use App\Http\Resources\TagCollection;
 use App\Models\Ingredient;
 use App\Models\MealTime;
 use App\Models\Recipe;
@@ -58,23 +58,30 @@ class RecipeController extends Controller
 
         $validated = $request->validate([
             'ingredients_search' => ['nullable', 'string', 'max:255'],
+            'tags_search' => ['nullable', 'string', 'max:255'],
         ]);
 
-        $tags = $this->getUserTags($user);
 
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
-
         if (!empty($validated['ingredients_search'])) {
             $ingredientsQuery = $ingredientsQuery
             ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
             ->orderBy('name');
         }
+
+        $tagsQuery = Tag::query()->where('user_id', $user->id);
+        if (!empty($validated['tags_search'])) {
+            $tagsQuery = $tagsQuery
+            ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+            ->orderBy('name');
+        }
+
         return Inertia::render(
             'recipe/create',
             [
                 'meal_times' => MealTimeResource::collection(MealTime::all()),
-                'tags' => $tags->toResourceCollection(),
                 'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
+                'tags_search_results' => Inertia::scroll(new TagCollection($tagsQuery->paginate(5))),
             ]
         );
     }
@@ -137,23 +144,30 @@ class RecipeController extends Controller
 
         $validated = $request->validate([
             'ingredients_search' => ['nullable', 'string', 'max:255'],
+            'tags_search' => ['nullable', 'string', 'max:255'],
         ]);
 
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
-        $tags = $this->getUserTags($user);
-
-        $ingredientsSearchResults = [];
+        $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
         if (!empty($validated['ingredients_search'])) {
-            $ingredientsSearchResults = $this->ingredientSearchService
-                ->search($user, $validated['ingredients_search']);
+            $ingredientsQuery = $ingredientsQuery
+            ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+            ->orderBy('name');
+        }
+
+        $tagsQuery = Tag::query()->where('user_id', $user->id);
+        if (!empty($validated['tags_search'])) {
+            $tagsQuery = $tagsQuery
+            ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+            ->orderBy('name');
         }
 
         return Inertia::render('recipe/edit', [
             'recipe' => new RecipeResource($recipe),
             'meal_times' => MealTimeResource::collection(MealTime::all()),
-            'tags' => TagResource::collection($tags),
-            'ingredients_search_results' => new IngredientCollection($ingredientsSearchResults),
+            'ingredients_search_results' => new IngredientCollection($ingredientsQuery->paginate(5)),
+            'tags_search_results' => new TagCollection($tagsQuery->paginate(5)),
         ]);
     }
 
@@ -198,13 +212,4 @@ class RecipeController extends Controller
         return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
     }
 
-    /**
-     * Get tags that have been used in user's recipes
-     */
-    private function getUserTags(User $user)
-    {
-        return Tag::query()->whereHas('recipes', function ($query) use ($user) {
-            $query->where('user_id', $user->id);
-        })->paginate(15);
-    }
 }
