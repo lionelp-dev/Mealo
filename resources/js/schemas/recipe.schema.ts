@@ -22,6 +22,7 @@ const tagSchema = z.object({
 });
 
 const mealTimeSchema = z.object({
+  id: z.number(),
   name: z
     .string()
     .trim()

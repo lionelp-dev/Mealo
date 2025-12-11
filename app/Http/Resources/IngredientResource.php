@@ -17,8 +17,12 @@ class IngredientResource extends JsonResource
         return [
             "id" => $this->resource->id,
             'name' => $this->resource->name,
-            'quantity' => $this->resource->pivot->quantity,
-            'unit' => $this->resource->pivot->unit,
+            'quantity' => $this->when($this->relationLoaded('pivot'), function () {
+                return $this->pivot->quantity;
+            }),
+            'unit' => $this->when($this->relationLoaded('pivot'), function () {
+                return $this->pivot->unit;
+            }),
         ];
     }
 }

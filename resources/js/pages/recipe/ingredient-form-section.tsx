@@ -1,11 +1,19 @@
 import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { ingredientSchema } from '@/schemas/recipe.schema';
-import { Recipe } from '@/types';
+import { useIngredientSearchStore } from '@/stores/ingredient-search';
+import { Ingredient, Recipe } from '@/types';
+import { InfiniteScroll, usePage } from '@inertiajs/react';
+import * as Popover from '@radix-ui/react-popover';
 import { Plus, Trash2 } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 const defaultValues: Pick<Recipe, 'ingredients'> = {
   ingredients: [],
+};
+
+type PageProps = {
+  ingredients_search_results: { data: Ingredient[] };
 };
 
 const IngredientFormSection = withFieldGroup({
@@ -14,16 +22,75 @@ const IngredientFormSection = withFieldGroup({
     title: 'Ingrédients',
   },
   render: function Render({ group, title }) {
+    const { ingredients_search_results } = usePage<PageProps>().props;
+
+    console.log(ingredients_search_results);
+
+    const {
+      searchTerm,
+      setSearchTerm,
+      triggerSearch,
+      isSearching,
+      setIsSearching,
+    } = useIngredientSearchStore();
+
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isInitialRender = useRef(true);
+
     const form = useAppForm({
-      defaultValues: { name: '', quantity: 0, unit: '' },
+      defaultValues: {
+        name: '',
+        quantity: 0,
+        unit: '',
+      },
       validators: {
         onSubmit: ingredientSchema,
       },
       onSubmit: ({ value }) => {
         group.pushFieldValue('ingredients', value);
         form.reset();
+        setSearchTerm('');
       },
     });
+
+    useEffect(() => {
+      if (isInitialRender.current) {
+        isInitialRender.current = false;
+        return;
+      }
+
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      debounceTimeoutRef.current = setTimeout(() => {
+        triggerSearch({
+          onBefore: () => setIsSearching(true),
+          onFinish: () => {
+            setIsSearching(false);
+            setTimeout(() => {
+              const searchInput = document.querySelector(
+                'input[data-ingredient-input]',
+              ) as HTMLInputElement;
+              if (searchInput) {
+                searchInput.focus();
+              }
+            }, 100);
+          },
+        });
+      }, 300);
+
+      return () => {
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current);
+        }
+      };
+    }, [searchTerm]);
+
+    const addExistingIngredient = (ingredient: Ingredient) => {
+      form.setFieldValue('name', ingredient.name);
+      setSearchTerm('');
+    };
 
     return (
       <group.AppField
@@ -36,15 +103,21 @@ const IngredientFormSection = withFieldGroup({
             <table className="table w-full table-xs">
               <thead>
                 <tr>
-                  <th className="w-[15%]">Quantité</th>
-                  <th className="w-[15%]">Unité</th>
-                  <th className="w-[60%]">Nom de l'ingrédient</th>
-                  <th className="w-[10%]">Actions</th>
+                  <th className="w-[45%]">Nom de l'ingrédient</th>
+                  <th className="w-[12%]">Quantité</th>
+                  <th className="w-[12%]">Unité</th>
+                  <th className="w-[16%]">Actions</th>
                 </tr>
               </thead>
               <tbody className="*:border-none [&>tr:first-child>td]:pt-2 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
                 {field.state.value.map((_, index) => (
                   <tr key={index} className="*:align-top">
+                    <td>
+                      <group.AppField
+                        name={`ingredients[${index}].name`}
+                        children={(field) => <field.InputField />}
+                      />
+                    </td>
                     <td>
                       <group.AppField
                         name={`ingredients[${index}].quantity`}
@@ -71,12 +144,6 @@ const IngredientFormSection = withFieldGroup({
                         children={(field) => <field.InputField />}
                       />
                     </td>
-                    <td>
-                      <group.AppField
-                        name={`ingredients[${index}].name`}
-                        children={(field) => <field.InputField />}
-                      />
-                    </td>
                     <td className="align-top">
                       <button
                         type="button"
@@ -89,6 +156,67 @@ const IngredientFormSection = withFieldGroup({
                   </tr>
                 ))}
                 <tr className="*:align-top">
+                  <td>
+                    <Popover.Root>
+                      <Popover.Anchor className="flex">
+                        <form.AppField
+                          name="name"
+                          children={(field) => (
+                            <Popover.Trigger className="flex-1">
+                              <field.InputField
+                                data-ingredient-input
+                                value={searchTerm || field.state.value}
+                                onChange={(e) => {
+                                  const value = e.target.value;
+                                  field.handleChange(value);
+                                  setSearchTerm(value);
+                                }}
+                                autoComplete="off"
+                              />
+                            </Popover.Trigger>
+                          )}
+                        />
+                      </Popover.Anchor>
+                      <Popover.Portal>
+                        <Popover.Content
+                          className=""
+                          side="top"
+                          sideOffset={8}
+                          align="start"
+                          onOpenAutoFocus={(e) => e.preventDefault()}
+                        >
+                          {ingredients_search_results?.data &&
+                            ingredients_search_results.data.length > 0 && (
+                              <div className="z-50 flex rounded-sm border border-solid border-gray-200 bg-white p-4">
+                                <div className="h-[10lh] overflow-y-auto">
+                                  <InfiniteScroll
+                                    data="ingredients_search_results"
+                                    preserveUrl
+                                  >
+                                    {ingredients_search_results.data.map(
+                                      (ingredient) => (
+                                        <div
+                                          key={ingredient.id}
+                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-gray-100"
+                                          onClick={() =>
+                                            addExistingIngredient(ingredient)
+                                          }
+                                        >
+                                          <span className="font-medium">
+                                            {ingredient.name}
+                                          </span>
+                                        </div>
+                                      ),
+                                    )}
+                                  </InfiniteScroll>
+                                </div>
+                              </div>
+                            )}
+                        </Popover.Content>
+                      </Popover.Portal>
+                    </Popover.Root>
+                  </td>
+
                   <td>
                     <form.AppField
                       name="quantity"
@@ -116,21 +244,15 @@ const IngredientFormSection = withFieldGroup({
                     />
                   </td>
                   <td>
-                    <form.AppField
-                      name="name"
-                      children={(field) => <field.InputField />}
-                    />
-                  </td>
-                  <td>
                     <form.Subscribe>
                       {(state) => (
                         <button
                           type="button"
-                          disabled={!state.canSubmit || state.isSubmitting}
+                          disabled={!state.canSubmit || isSearching}
                           onClick={() => {
                             form.handleSubmit();
                           }}
-                          className="btn btn-accent"
+                          className="btn w-full btn-accent"
                         >
                           <Plus size={16} /> Ajouter
                         </button>

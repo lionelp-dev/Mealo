@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreRecipeRequest;
 use App\Http\Requests\UpdateRecipeRequest;
+use App\Http\Resources\IngredientCollection;
 use App\Http\Resources\MealTimeResource;
 use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\RecipeResource;
 use App\Http\Resources\TagResource;
+use App\Models\Ingredient;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
@@ -22,6 +24,8 @@ use Inertia\Response;
 
 class RecipeController extends Controller
 {
+    public function __construct(
+    ) {}
     /**
      * Display a listing of the resource.
      */
@@ -38,7 +42,7 @@ class RecipeController extends Controller
             ->paginate(15);
 
         return Inertia::render('recipe/index', [
-            'recipes_collection' => new RecipeCollection($recipes)
+            'recipes_collection' => new RecipeCollection($recipes),
         ]);
     }
 
@@ -52,13 +56,25 @@ class RecipeController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $validated = $request->validate([
+            'ingredients_search' => ['nullable', 'string', 'max:255'],
+        ]);
+
         $tags = $this->getUserTags($user);
 
+        $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
+
+        if (!empty($validated['ingredients_search'])) {
+            $ingredientsQuery = $ingredientsQuery
+            ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+            ->orderBy('name');
+        }
         return Inertia::render(
             'recipe/create',
             [
                 'meal_times' => MealTimeResource::collection(MealTime::all()),
-                'tags' => $tags->toResourceCollection()
+                'tags' => $tags->toResourceCollection(),
+                'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
             ]
         );
     }
@@ -78,7 +94,7 @@ class RecipeController extends Controller
             'meal_times',
             'ingredients',
             'steps',
-            'tags'
+            'tags',
         ]);
 
         /** @var User $user */
@@ -119,14 +135,25 @@ class RecipeController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        $validated = $request->validate([
+            'ingredients_search' => ['nullable', 'string', 'max:255'],
+        ]);
+
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         $tags = $this->getUserTags($user);
 
+        $ingredientsSearchResults = [];
+        if (!empty($validated['ingredients_search'])) {
+            $ingredientsSearchResults = $this->ingredientSearchService
+                ->search($user, $validated['ingredients_search']);
+        }
+
         return Inertia::render('recipe/edit', [
             'recipe' => new RecipeResource($recipe),
             'meal_times' => MealTimeResource::collection(MealTime::all()),
-            'tags' => TagResource::collection($tags)
+            'tags' => TagResource::collection($tags),
+            'ingredients_search_results' => new IngredientCollection($ingredientsSearchResults),
         ]);
     }
 
@@ -145,7 +172,7 @@ class RecipeController extends Controller
             'meal_times',
             'ingredients',
             'steps',
-            'tags'
+            'tags',
         ]);
 
 
