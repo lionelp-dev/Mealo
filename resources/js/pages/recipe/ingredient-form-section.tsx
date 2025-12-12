@@ -7,6 +7,7 @@ import { InfiniteScroll, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'ingredients'> = {
   ingredients: [],
@@ -19,7 +20,7 @@ type PageProps = {
 const IngredientFormSection = withFieldGroup({
   defaultValues,
   props: {
-    title: 'Ingrédients',
+    title: '', // Title will be passed from parent component
   },
   render: function Render({ group, title }) {
     const { ingredients_search_results } = usePage<PageProps>().props;
@@ -37,6 +38,7 @@ const IngredientFormSection = withFieldGroup({
     const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const isInitialRender = useRef(true);
 
+    const { t } = useTranslation();
     const form = useAppForm({
       defaultValues: {
         name: '',
@@ -103,10 +105,16 @@ const IngredientFormSection = withFieldGroup({
             <table className="table w-full table-xs">
               <thead>
                 <tr>
-                  <th className="w-[45%]">Nom de l'ingrédient</th>
-                  <th className="w-[12%]">Quantité</th>
-                  <th className="w-[12%]">Unité</th>
-                  <th className="w-[16%]">Actions</th>
+                  <th className="w-[60%]">
+                    {t('recipes.ingredients.nameLabel')}
+                  </th>
+                  <th className="w-[15%]">
+                    {t('recipes.ingredients.quantityLabel')}
+                  </th>
+                  <th className="w-[15%]">
+                    {t('recipes.ingredients.unitLabel')}
+                  </th>
+                  <th className="w-[10%]">{t('recipes.table.actions')}</th>
                 </tr>
               </thead>
               <tbody className="*:border-none [&>tr:first-child>td]:pt-2 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
@@ -252,9 +260,10 @@ const IngredientFormSection = withFieldGroup({
                           onClick={() => {
                             form.handleSubmit();
                           }}
-                          className="btn w-full btn-accent"
+                          className="btn w-full whitespace-nowrap btn-accent"
                         >
-                          <Plus size={16} /> Ajouter
+                          <Plus size={16} />{' '}
+                          {t('recipes.ingredients.addButton')}
                         </button>
                       )}
                     </form.Subscribe>

@@ -2,9 +2,10 @@ import { usePage } from '@inertiajs/react';
 import { Trash2 } from 'lucide-react';
 import { DateTime } from 'luxon';
 
-import { PlannedMeal } from '@/types';
+import { MealTime, PlannedMeal } from '@/types';
+import { useTranslation } from 'react-i18next';
 import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
-import { MealTime, PlannedMealsSlot } from '../stores/week-meal-planner';
+import { PlannedMealsSlot } from '../stores/week-meal-planner';
 import { Button } from './ui/button';
 
 type PageProps = {
@@ -20,6 +21,8 @@ type MealPlanMealListProps = {
 export default function MealPlanMealList({
   plannedMealsSlots,
 }: MealPlanMealListProps) {
+  const { t } = useTranslation();
+
   const { weekStart, mealTimes, plannedMeals } = usePage<PageProps>().props;
 
   const currWeekStart = DateTime.fromISO(weekStart);
@@ -37,7 +40,7 @@ export default function MealPlanMealList({
         className="flex flex-col justify-between gap-5 py-2"
       >
         <span className="w-fit rounded-full bg-[#eceee9] px-3 py-1 text-xs text-gray-800">
-          {mealTime.name}
+          {t(`mealPlanning.dialog.filters.${mealTime.name}`)}
         </span>
         {plannedMeals.map((plannedMeal) => {
           const { id, recipe } = plannedMeal;

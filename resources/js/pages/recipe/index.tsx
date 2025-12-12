@@ -5,6 +5,8 @@ import { BreadcrumbItem, PaginatedCollection, Recipe } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { AlertTriangle, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 type PageProps = {
   recipes_collection: PaginatedCollection<Recipe>;
@@ -13,10 +15,11 @@ type PageProps = {
 export default function Recipes() {
   const { recipes_collection } = usePage<PageProps>().props;
   const [recipeToDelete, setRecipeToDelete] = useState<Recipe | null>(null);
+  const { t } = useTranslation();
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: 'Recipes',
+      title: t('recipes.title'),
       href: recipes.index.url(),
     },
   ];
@@ -25,24 +28,27 @@ export default function Recipes() {
     <AppLayout
       breadcrumbs={breadcrumbs}
       headerRightContent={
-        <button
-          className="btn btn-primary"
-          onClick={() => router.get(recipes.create.url())}
-        >
-          Creer une recette
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            className="btn btn-primary"
+            onClick={() => router.get(recipes.create.url())}
+          >
+            {t('recipes.index.createButton')}
+          </button>
+        </div>
       }
     >
-      <Head title="My recipes"></Head>
+      <Head title={t('recipes.pageTitle')}></Head>
       <div className="flex h-screen flex-1 flex-col overflow-y-scroll">
         <table className="table-pin-rows table mx-auto max-w-[85%]">
           <thead className="bg-white">
             <tr className="mb-1">
-              <th>name</th>
-              <th>description</th>
-              <th>preparation time</th>
-              <th>cooking time</th>
-              <th>actions</th>
+              <th>{t('recipes.table.name')}</th>
+              <th>{t('recipes.table.description')}</th>
+              <th>{t('recipes.table.preparationTime')}</th>
+              <th>{t('recipes.table.cookingTime')}</th>
+              <th>{t('recipes.table.actions')}</th>
             </tr>
           </thead>
           <tbody>
@@ -104,7 +110,7 @@ export default function Recipes() {
               <AlertTriangle className="text-red-600" />
               <span className="flex flex-col justify-center gap-1">
                 <span className="text-center font-medium">
-                  Êtes-vous sûr de vouloir supprimer la recette ?{' '}
+                  {t('recipes.delete.confirmTitle')}{' '}
                 </span>
                 <span>"{recipeToDelete.name}"</span>
               </span>
@@ -114,7 +120,7 @@ export default function Recipes() {
                 className="btn btn-sm"
                 onClick={() => setRecipeToDelete(null)}
               >
-                Annuler
+                {t('recipes.delete.cancelButton')}
               </button>
               <button
                 className="btn text-white btn-sm btn-error"
@@ -127,7 +133,7 @@ export default function Recipes() {
                   }
                 }}
               >
-                Supprimer
+                {t('recipes.delete.confirmButton')}
               </button>
             </div>
           </div>

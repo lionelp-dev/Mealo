@@ -10,6 +10,7 @@ import { regenerateRecoveryCodes } from '@/routes/two-factor';
 import { Form } from '@inertiajs/react';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AlertError from './alert-error';
 
 interface TwoFactorRecoveryCodesProps {
@@ -23,6 +24,7 @@ export default function TwoFactorRecoveryCodes({
   fetchRecoveryCodes,
   errors,
 }: TwoFactorRecoveryCodesProps) {
+  const { t } = useTranslation();
   const [codesAreVisible, setCodesAreVisible] = useState<boolean>(false);
   const codesSectionRef = useRef<HTMLDivElement | null>(null);
   const canRegenerateCodes = recoveryCodesList.length > 0 && codesAreVisible;
@@ -57,11 +59,10 @@ export default function TwoFactorRecoveryCodes({
       <CardHeader>
         <CardTitle className="flex gap-3">
           <LockKeyhole className="size-4" aria-hidden="true" />
-          2FA Recovery Codes
+          {t('settings.twoFactor.recoveryCodesTitle')}
         </CardTitle>
         <CardDescription>
-          Recovery codes let you regain access if you lose your 2FA device.
-          Store them in a secure password manager.
+          {t('settings.twoFactor.recoveryCodesDescription')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -73,7 +74,7 @@ export default function TwoFactorRecoveryCodes({
             aria-controls="recovery-codes-section"
           >
             <RecoveryCodeIconComponent className="size-4" aria-hidden="true" />
-            {codesAreVisible ? 'Hide' : 'View'} Recovery Codes
+            {codesAreVisible ? t('settings.twoFactor.hideCodes') : t('settings.twoFactor.viewCodes')} {t('settings.twoFactor.recoveryCodesLabel')}
           </Button>
 
           {canRegenerateCodes && (
@@ -89,7 +90,7 @@ export default function TwoFactorRecoveryCodes({
                   disabled={processing}
                   aria-describedby="regenerate-warning"
                 >
-                  <RefreshCw /> Regenerate Codes
+                  <RefreshCw /> {t('settings.twoFactor.regenerateCodes')}
                 </Button>
               )}
             </Form>

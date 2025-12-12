@@ -3,7 +3,9 @@ import { usePage } from '@inertiajs/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { CalendarDays, ChevronDownIcon, X } from 'lucide-react';
 import { DateTime } from 'luxon';
+import { useTranslation } from 'react-i18next';
 
+import i18n from '@/lib/i18n';
 import { MealTime } from '@/types';
 import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
 import MealPlanDialogFilters from './meal-plan-dialog-filters';
@@ -18,6 +20,7 @@ type PageProps = {
 };
 
 export default function MealPlanDialog() {
+  const { t } = useTranslation();
   const { mealTimes, plannedMeals, weekStart } = usePage<PageProps>().props;
 
   const {
@@ -38,7 +41,7 @@ export default function MealPlanDialog() {
     items: mealTimes
       .sort((a, b) => a.id - b.id)
       .map((mealTime) => ({
-        label: mealTime.name,
+        label: t(`mealPlanning.dialog.filters.${mealTime.name}`),
         value: String(mealTime.id),
       })),
   });
@@ -51,7 +54,9 @@ export default function MealPlanDialog() {
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <Dialog.Title>
-                <span className="text-3xl font-bold">Add meal</span>
+                <span className="text-3xl font-bold">
+                  {t('mealPlanning.dialog.title')}
+                </span>
               </Dialog.Title>
               <Dialog.Close asChild>
                 <Button variant="ghost" className="!static hover:text-red-600">
@@ -62,7 +67,11 @@ export default function MealPlanDialog() {
             <div className="flex items-center gap-4">
               <CalendarDays size={24} />
               <span className="pt-1 text-2xl">
-                {selectedDate?.toFormat('EEEE dd MMMM')!}
+                {
+                  selectedDate
+                    ?.setLocale(i18n.language)
+                    .toFormat('EEEE d MMMM')!
+                }
               </span>
             </div>
           </div>
@@ -74,7 +83,7 @@ export default function MealPlanDialog() {
           <div className="mt-5 flex items-center justify-end">
             <div className="flex items-baseline justify-end gap-4">
               <span className="pl-3 text-base">
-                When would you like to eat this ?
+                {t('mealPlanning.dialog.whenToEat')}
               </span>
 
               <Select.Root
@@ -88,7 +97,9 @@ export default function MealPlanDialog() {
               >
                 <Select.Control className="h-full">
                   <Select.Trigger className="flex h-9 w-fit items-center gap-3 rounded-md border border-blue-500 pr-3 pl-5 text-sm text-blue-600 hover:border-gray-400 focus:border-blue-400 focus:shadow-[0_0_0_2px_rgba(59,130,246,0.1)] focus:outline-none">
-                    <Select.ValueText placeholder="Meal time" />
+                    <Select.ValueText
+                      placeholder={t('mealPlanning.mealTimeSelection')}
+                    />
                     <Select.Indicator>
                       <ChevronDownIcon />
                     </Select.Indicator>
@@ -120,9 +131,9 @@ export default function MealPlanDialog() {
                   }
                   onClick={planSelectedMeals}
                 >
-                  {selectedRecipesId.length > 0
-                    ? `Plan dish (${selectedRecipesId.length})`
-                    : 'Plan dish'}
+                  {selectedRecipesId.length > 1
+                    ? `${t('mealPlanning.planDishes')} (${selectedRecipesId.length})`
+                    : t('mealPlanning.planDish')}
                 </Button>
               </div>
             </div>

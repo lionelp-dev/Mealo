@@ -1,7 +1,9 @@
 import AppLayout from '@/layouts/app-layout';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import recipes from '@/routes/recipes';
 import type { Recipe } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 type PageProps = {
   recipe: {
@@ -10,25 +12,27 @@ type PageProps = {
 };
 
 function Recipe() {
+  const { t } = useTranslation();
   const { recipe } = usePage<PageProps>().props;
   console.log(recipe);
   return (
     <AppLayout
       headerRightContent={
         <div className="flex gap-2 self-end">
+          <LanguageSwitcher />
           <button
             className="btn btn-secondary"
             onClick={() =>
               router.visit(recipes.edit.url({ id: recipe.data.id }))
             }
           >
-            Modifier la recette
+            {t('common.buttons.edit')}
           </button>
           <button
             className="btn btn-primary"
             onClick={() => router.visit(recipes.index.url())}
           >
-            Voir mes recettes
+            {t('recipes.index.viewButton')}
           </button>
         </div>
       }
@@ -45,7 +49,7 @@ function Recipe() {
           <div className="mb-6 grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-blue-50 p-4">
               <h3 className="mb-2 font-semibold text-blue-800">
-                Preparation time
+                {t('recipes.table.preparationTime')}
               </h3>
               <p className="text-2xl font-bold text-blue-600">
                 {recipe.data.preparation_time} min
@@ -54,7 +58,7 @@ function Recipe() {
 
             <div className="rounded-lg bg-green-50 p-4">
               <h3 className="mb-2 font-semibold text-green-800">
-                Cooking time
+                {t('recipes.table.cookingTime')}
               </h3>
               <p className="text-2xl font-bold text-green-600">
                 {recipe.data.cooking_time} min
@@ -66,7 +70,7 @@ function Recipe() {
             {recipe.data.steps && recipe.data.steps.length > 0 && (
               <div className="mb-6">
                 <h2 className="mb-4 text-2xl font-bold text-gray-800">
-                  Étapes
+                  {t('recipes.form.stepsTitle')}
                 </h2>
                 <div className="space-y-4">
                   {recipe.data.steps
@@ -90,14 +94,14 @@ function Recipe() {
             {recipe.data.ingredients && recipe.data.ingredients.length > 0 && (
               <div className="mb-6 overflow-x-auto">
                 <h2 className="mb-4 text-2xl font-bold text-gray-800">
-                  Ingredients
+                  {t('recipes.form.ingredientsTitle')}
                 </h2>
                 <table className="table">
                   <thead>
                     <tr>
-                      <th>Ingredient</th>
-                      <th>Quantity</th>
-                      <th>Unit</th>
+                      <th>{t('recipes.ingredients.nameLabel')}</th>
+                      <th>{t('recipes.ingredients.quantityLabel')}</th>
+                      <th>{t('recipes.ingredients.unitLabel')}</th>
                     </tr>
                   </thead>
                   <tbody>

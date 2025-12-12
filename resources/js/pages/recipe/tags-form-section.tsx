@@ -7,6 +7,7 @@ import { InfiniteScroll, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'tags'> = {
   tags: [],
@@ -19,11 +20,10 @@ type PageProps = {
 
 const TagsFormSection = withFieldGroup({
   defaultValues,
-  props: {
-    title: 'Tags',
-  },
-  render: function Render({ group, title }) {
-    const { tags, tags_search_results } = usePage<PageProps>().props;
+  render: function Render({ group }) {
+    const { t } = useTranslation();
+
+    const { tags_search_results } = usePage<PageProps>().props;
 
     const {
       searchTerm,
@@ -93,7 +93,7 @@ const TagsFormSection = withFieldGroup({
         mode="array"
         children={(field) => (
           <div className="flex flex-col gap-2">
-            <span className="text-md">{title}</span>
+            <span className="text-md">{t('recipes.form.tagsTitle')}</span>
 
             <div className="flex flex-col gap-3">
               <div className="flex flex-1 gap-2">
@@ -111,7 +111,7 @@ const TagsFormSection = withFieldGroup({
                               field.handleChange(value);
                               setSearchTerm(value);
                             }}
-                            placeholder="Ajouter un tag"
+                            placeholder={t('recipes.tags.namePlaceholder')}
                             autoComplete="off"
                           />
                         </Popover.Trigger>

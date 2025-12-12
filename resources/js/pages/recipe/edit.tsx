@@ -2,6 +2,8 @@ import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import { MealTime, Recipe } from '@/types';
 import { Head, router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { RecipeForm } from './recipe-form';
 
 interface EditRecipeProps {
@@ -14,21 +16,26 @@ interface EditRecipeProps {
 }
 
 function EditRecipe({ recipe }: EditRecipeProps) {
+  const { t } = useTranslation();
+  
   return (
     <AppLayout
       headerRightContent={
-        <button
-          className="btn w-fit self-end btn-primary"
-          onClick={() => router.visit(recipes.show.url({ id: recipe.data.id }))}
-        >
-          Retour à la recette
-        </button>
+        <div className="flex items-center gap-2">
+          <LanguageSwitcher />
+          <button
+            className="btn w-fit self-end btn-primary"
+            onClick={() => router.visit(recipes.show.url({ id: recipe.data.id }))}
+          >
+            {t('common.buttons.back')}
+          </button>
+        </div>
       }
     >
-      <Head title={`Modifier ${recipe.data.name}`}></Head>
+      <Head title={t('recipes.edit.pageTitle')}></Head>
       <div className="h-screen overflow-y-auto">
         <div className="mx-auto flex max-w-[85%] flex-col gap-3">
-          <h1 className="mb-6 text-2xl font-bold">Modifier la recette</h1>
+          <h1 className="mb-6 text-2xl font-bold">{t('recipes.edit.title')}</h1>
           <RecipeForm
             defaultValues={recipe.data}
             mode="edit"

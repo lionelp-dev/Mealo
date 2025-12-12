@@ -7,6 +7,7 @@ import TagsFormSection from '@/pages/recipe/tags-form-section';
 import { recipeSchema } from '@/schemas/recipe.schema';
 import { MealTime, Recipe } from '@/types';
 import { usePage } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 type RecipeFormProps = {
   defaultValues: Omit<Recipe, 'id'>;
@@ -26,12 +27,20 @@ type PageProps = {
 export function RecipeForm({
   defaultValues,
   mode,
-  submitLabel = mode === 'edit' ? 'Mettre à jour' : 'Créer la recette',
+  submitLabel,
   onSubmit,
-  cancelLabel = 'Annuler',
+  cancelLabel,
   onCancel,
 }: RecipeFormProps) {
+  const { t } = useTranslation();
   const { meal_times } = usePage<PageProps>().props;
+
+  const defaultSubmitLabel =
+    submitLabel ||
+    (mode === 'edit'
+      ? t('common.buttons.update')
+      : t('recipes.form.saveButton'));
+  const defaultCancelLabel = cancelLabel || t('common.buttons.cancel');
 
   const form = useAppForm({
     defaultValues,
@@ -58,15 +67,17 @@ export function RecipeForm({
       }}
       className="flex flex-col gap-5"
     >
-      <span className="text-md">Détails de la recette</span>
+      <span className="text-md">
+        {t('recipes.form.detailsTitle', 'Recipe details')}
+      </span>
 
       <form.AppField
         name="name"
         children={(field) => (
           <field.InputField
             type="text"
-            label="Titre"
-            placeholder="Entrez le titre de votre recette"
+            label={t('recipes.form.nameLabel')}
+            placeholder={t('recipes.form.namePlaceholder')}
           />
         )}
       />
@@ -75,8 +86,8 @@ export function RecipeForm({
         name="description"
         children={(field) => (
           <field.TextAreaField
-            label="Description"
-            placeholder="Décrivez votre recette"
+            label={t('recipes.form.descriptionLabel')}
+            placeholder={t('recipes.form.descriptionPlaceholder')}
             rows={6}
           />
         )}
@@ -93,7 +104,7 @@ export function RecipeForm({
             return (
               <div className="flex flex-col">
                 <label className="mb-2 block text-sm font-medium text-gray-700">
-                  Moments du repas
+                  {t('recipes.form.mealTimesTitle')}
                 </label>
                 <MultiSelect
                   className="w-full"
@@ -106,7 +117,10 @@ export function RecipeForm({
                       }),
                     )
                   }
-                  placeholder="Sélectionnez les moments du repas..."
+                  placeholder={t(
+                    'recipes.form.mealTimesPlaceholder',
+                    'Select meal times...',
+                  )}
                 />
                 <FieldInfo />
               </div>
@@ -119,7 +133,7 @@ export function RecipeForm({
           children={(field) => (
             <field.InputField
               type="number"
-              label="Temps de préparation (minutes)"
+              label={t('recipes.form.preparationTimeLabel')}
               placeholder="0"
               min="0"
               className="input"
@@ -132,7 +146,7 @@ export function RecipeForm({
           children={(field) => (
             <field.InputField
               type="number"
-              label="Temps de cuisson (minutes)"
+              label={t('recipes.form.cookingTimeLabel')}
               placeholder="0"
               min="0"
             />
@@ -143,23 +157,23 @@ export function RecipeForm({
       <IngredientFormSection
         form={form}
         fields={{ ingredients: 'ingredients' }}
-        title="Ingrédients"
+        title={t('recipes.form.ingredientsTitle')}
       />
 
       <StepsFormSection
         form={form}
         fields={{ steps: 'steps' }}
-        title="Etapes de la recette"
+        title={t('recipes.form.stepsTitle')}
       />
 
-      <TagsFormSection form={form} fields={{ tags: 'tags' }} title="Tags" />
+      <TagsFormSection form={form} fields={{ tags: 'tags' }} />
 
       <div className="flex justify-end gap-4">
         <form.AppForm>
-          <form.SubmitButton label={submitLabel} />
+          <form.SubmitButton label={defaultSubmitLabel} />
         </form.AppForm>
         <button type="reset" className="btn" onClick={handleCancel}>
-          {cancelLabel}
+          {defaultCancelLabel}
         </button>
       </div>
     </form>

@@ -3,6 +3,7 @@ import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { stepSchema } from '@/schemas/recipe.schema';
 import { Recipe } from '@/types';
 import { Plus, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'steps'> = {
   steps: [],
@@ -11,9 +12,10 @@ const defaultValues: Pick<Recipe, 'steps'> = {
 const StepsFormSection = withFieldGroup({
   defaultValues,
   props: {
-    title: 'Étapes de préparation',
+    title: '', // Title will be passed from parent component
   },
   render: function Render({ group, title }) {
+    const { t } = useTranslation();
     const form = useAppForm({
       defaultValues: { description: '', order: 0 },
       validators: {
@@ -78,7 +80,7 @@ const StepsFormSection = withFieldGroup({
                 name="description"
                 children={(field) => (
                   <field.TextAreaField
-                    placeholder="Décrivez l'étape de préparation..."
+                    placeholder={t('recipes.steps.instructionPlaceholder')}
                     rows={3}
                   />
                 )}
@@ -96,7 +98,7 @@ const StepsFormSection = withFieldGroup({
                     }}
                     className="btn flex w-fit btn-accent"
                   >
-                    <Plus size={16} /> Ajouter une étape
+                    <Plus size={16} /> {t('recipes.steps.addButton')}
                   </button>
                 )}
               </form.Subscribe>
