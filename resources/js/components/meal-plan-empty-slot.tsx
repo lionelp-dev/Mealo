@@ -2,6 +2,7 @@ import { useMealPlanDialogControllerStore } from '@/stores/meal-plan-dialog';
 import { Plus } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { RefObject, useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Banane,
   Brocoli,
@@ -24,6 +25,7 @@ export default function MealPlanEmptySlot({
   date,
   ...rest
 }: MealPlanEmptySlotProps) {
+  const { t } = useTranslation();
   const stickyElementRef = useRef<HTMLDivElement>(null);
   const [isStickyActive, setIsStickyActive] = useState(false);
   const [isStickyBelowTwoThird, setIsStickyBelowTwoThird] = useState(false);
@@ -118,7 +120,7 @@ export default function MealPlanEmptySlot({
         onClick={() => openMealPlanDialog(date)}
       >
         <Plus size={14} />
-        <span>Plan meal</span>
+        <span>{t('mealPlanning.actions.planMeal')}</span>
       </Button>
     </div>
   );

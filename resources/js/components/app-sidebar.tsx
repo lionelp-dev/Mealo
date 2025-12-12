@@ -16,37 +16,41 @@ import shoppingLists from '@/routes/shopping-lists';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 
-const mainNavItems: NavItem[] = [
-  {
-    title: 'Plannification de repas',
-    href: plannedMeals.index.url(),
-    icon: Calendar,
-  },
-  {
-    title: 'Mes listes de courses',
-    href: shoppingLists.index.url(),
-    icon: ShoppingCart,
-  },
-  {
-    title: 'Mes recettes',
-    href: recipes.index.url(),
-    icon: CookingPot,
-  },
-  {
-    title: 'Creer une recette',
-    href: recipes.create.url(),
-    icon: Pen,
-  },
-  {
-    title: 'Generer une recette',
-    href: recipes.create.url(),
-    icon: Wand,
-  },
-];
 
 export function AppSidebar() {
+  const { t } = useTranslation();
+  
+  const mainNavItems: NavItem[] = [
+    {
+      title: t('mealPlanning.title'),
+      href: plannedMeals.index.url(),
+      icon: Calendar,
+    },
+    {
+      title: t('shoppingLists.title'),
+      href: shoppingLists.index.url(),
+      icon: ShoppingCart,
+    },
+    {
+      title: t('recipes.title'),
+      href: recipes.index.url(),
+      icon: CookingPot,
+    },
+    {
+      title: t('recipes.create.button'),
+      href: recipes.create.url(),
+      icon: Pen,
+    },
+    {
+      title: t('recipes.generate.button'),
+      href: recipes.create.url(),
+      icon: Wand,
+    },
+  ];
+  
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>

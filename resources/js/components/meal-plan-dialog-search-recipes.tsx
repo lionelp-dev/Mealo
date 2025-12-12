@@ -1,8 +1,10 @@
 import { useRecipeSearchStore } from '@/stores/recipe-search';
 import { Search } from 'lucide-react';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function MealPlanDialogSearchRecipes() {
+  const { t } = useTranslation();
   const {
     searchTerm,
     setSearchTerm,
@@ -57,7 +59,7 @@ export default function MealPlanDialogSearchRecipes() {
         data-search-input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder="Search recipes..."
+        placeholder={t('mealPlanning.searchRecipes')}
         disabled={isSearching}
         className={`w-full rounded-lg border-2 border-gray-200 py-2.5 pr-4 pl-12 text-base hover:border-gray-300 focus:border-blue-400 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.1)] focus:outline-none ${
           isSearching ? 'cursor-wait opacity-50' : ''

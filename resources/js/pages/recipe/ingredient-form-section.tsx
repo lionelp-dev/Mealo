@@ -3,6 +3,7 @@ import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { ingredientSchema } from '@/schemas/recipe.schema';
 import { Recipe } from '@/types';
 import { Plus, Trash2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'ingredients'> = {
   ingredients: [],
@@ -11,9 +12,10 @@ const defaultValues: Pick<Recipe, 'ingredients'> = {
 const IngredientFormSection = withFieldGroup({
   defaultValues,
   props: {
-    title: 'Ingrédients',
+    title: '', // Title will be passed from parent component
   },
   render: function Render({ group, title }) {
+    const { t } = useTranslation();
     const form = useAppForm({
       defaultValues: { name: '', quantity: 0, unit: '' },
       validators: {
@@ -36,10 +38,10 @@ const IngredientFormSection = withFieldGroup({
             <table className="table w-full table-xs">
               <thead>
                 <tr>
-                  <th className="w-[15%]">Quantité</th>
-                  <th className="w-[15%]">Unité</th>
-                  <th className="w-[60%]">Nom de l'ingrédient</th>
-                  <th className="w-[10%]">Actions</th>
+                  <th className="w-[15%]">{t('recipes.ingredients.quantityLabel')}</th>
+                  <th className="w-[15%]">{t('recipes.ingredients.unitLabel')}</th>
+                  <th className="w-[60%]">{t('recipes.ingredients.nameLabel')}</th>
+                  <th className="w-[10%]">{t('recipes.table.actions')}</th>
                 </tr>
               </thead>
               <tbody className="*:border-none [&>tr:first-child>td]:pt-2 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
@@ -132,7 +134,7 @@ const IngredientFormSection = withFieldGroup({
                           }}
                           className="btn btn-accent"
                         >
-                          <Plus size={16} /> Ajouter
+                          <Plus size={16} /> {t('recipes.ingredients.addButton')}
                         </button>
                       )}
                     </form.Subscribe>

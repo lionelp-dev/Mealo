@@ -5,6 +5,7 @@ import { PaginatedCollection, Recipe, Tag } from '@/types';
 import { usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Plus } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'tags'> = {
   tags: [],
@@ -17,9 +18,10 @@ type PageProps = {
 const TagsFormSection = withFieldGroup({
   defaultValues,
   props: {
-    title: 'Tags',
+    title: undefined, // Will be translated dynamically
   },
   render: function Render({ group, title }) {
+    const { t } = useTranslation();
     const { tags } = usePage<PageProps>().props;
 
     const form = useAppForm({
@@ -39,7 +41,7 @@ const TagsFormSection = withFieldGroup({
         mode="array"
         children={(field) => (
           <div className="flex flex-col gap-2">
-            <span className="text-md">{title}</span>
+            <span className="text-md">{t('recipes.form.tagsTitle')}</span>
 
             <div className="flex flex-col gap-3">
               <Popover.Root>
@@ -67,7 +69,7 @@ const TagsFormSection = withFieldGroup({
                     name="name"
                     children={(field) => (
                       <Popover.Trigger className="flex-1">
-                        <field.InputField placeholder="Ajouter un tag" />
+                        <field.InputField placeholder={t('recipes.tags.namePlaceholder')} />
                       </Popover.Trigger>
                     )}
                   />
@@ -91,7 +93,7 @@ const TagsFormSection = withFieldGroup({
                         </div>
                       )) || (
                         <div className="col-span-3 text-gray-500 text-sm">
-                          Aucun tag disponible
+                          {t('recipes.tags.noTagsAvailable', 'No tags available')}
                         </div>
                       )}
                     </div>
@@ -112,7 +114,7 @@ const TagsFormSection = withFieldGroup({
                     }}
                   >
                     <Plus size={16} />
-                    Ajouter un tag
+                    {t('recipes.tags.addButton')}
                   </button>
                 )}
               </form.Subscribe>

@@ -6,6 +6,8 @@ import AppLayout from '@/layouts/app-layout';
 import shoppingLists from '@/routes/shopping-lists';
 import { ShoppingList } from '@/types';
 import { DateTime } from 'luxon';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/language-switcher';
 
 type PageProps = {
   shoppingList: ShoppingList;
@@ -13,6 +15,7 @@ type PageProps = {
 };
 
 export default function ShoppingListsIndex() {
+  const { t } = useTranslation();
   const { flush } = usePrefetch();
   flush();
 
@@ -26,8 +29,9 @@ export default function ShoppingListsIndex() {
           url={shoppingLists.index.url()}
         />
       }
+      headerRightContent={<LanguageSwitcher />}
     >
-      <Head title="Shopping List" />
+      <Head title={t('shoppingLists.pageTitle')} />
       <ShoppingListIngredientList shoppingList={shoppingList} />
     </AppLayout>
   );

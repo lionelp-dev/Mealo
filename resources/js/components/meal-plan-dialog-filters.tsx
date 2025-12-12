@@ -3,6 +3,7 @@ import { Tag } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
 import { usePage } from '@inertiajs/react';
 import { ChevronRightIcon, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 enum MealTime {
   BREAKFAST = '1',
@@ -16,13 +17,6 @@ type FilterOption = {
   value: string;
 };
 
-const MEAL_TIME_OPTIONS: FilterOption[] = [
-  { label: 'Breakfast', value: MealTime.BREAKFAST },
-  { label: 'Lunch', value: MealTime.LUNCH },
-  { label: 'Dinner', value: MealTime.DINNER },
-  { label: 'Snack', value: MealTime.SNACK },
-];
-
 const TIME_OPTIONS: FilterOption[] = [
   { label: '0 - 15 min', value: '[0..15]' },
   { label: '15 - 30 min', value: '[15..30]' },
@@ -30,33 +24,41 @@ const TIME_OPTIONS: FilterOption[] = [
   { label: '+ 1h', value: '>60' },
 ];
 
-const FILTER_SECTIONS = [
-  {
-    title: 'Meal Time',
-    type: 'meal_time' as FilterType,
-    options: MEAL_TIME_OPTIONS,
-  },
-  {
-    title: 'Preparation Time',
-    type: 'preparation_time' as FilterType,
-    options: TIME_OPTIONS,
-  },
-  {
-    title: 'Cooking Time',
-    type: 'cooking_time' as FilterType,
-    options: TIME_OPTIONS,
-  },
-] as const;
-
 type PageProps = {
   tags: Tag[];
 };
 
 export default function MealPlanDialogFilters() {
+  const { t } = useTranslation();
   const { tags } = usePage<PageProps>().props;
 
   const { activeFilters, addFilter, removeFilter, clearFilters, isSearching } =
     useRecipeSearchStore();
+
+  const MEAL_TIME_OPTIONS: FilterOption[] = [
+    { label: t('mealPlanning.dialog.filters.breakfast'), value: MealTime.BREAKFAST },
+    { label: t('mealPlanning.dialog.filters.lunch'), value: MealTime.LUNCH },
+    { label: t('mealPlanning.dialog.filters.dinner'), value: MealTime.DINNER },
+    { label: t('mealPlanning.dialog.filters.snack'), value: MealTime.SNACK },
+  ];
+
+  const FILTER_SECTIONS = [
+    {
+      title: t('mealPlanning.dialog.filters.mealTime'),
+      type: 'meal_time' as FilterType,
+      options: MEAL_TIME_OPTIONS,
+    },
+    {
+      title: t('mealPlanning.dialog.filters.preparationTime'),
+      type: 'preparation_time' as FilterType,
+      options: TIME_OPTIONS,
+    },
+    {
+      title: t('mealPlanning.dialog.filters.cookingTime'),
+      type: 'cooking_time' as FilterType,
+      options: TIME_OPTIONS,
+    },
+  ] as const;
 
   const isFilterActive = (type: FilterType, value: string) => {
     return activeFilters.some((f) => f.type === type && f.value === value);
@@ -105,8 +107,8 @@ export default function MealPlanDialogFilters() {
       className="flex items-center gap-2 rounded-full border border-gray-300 py-1.5 pr-3 pl-4 text-sm whitespace-nowrap transition-colors hover:border-red-400 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
     >
       <span>
-        {filter.type === 'preparation_time' && 'Prep: '}
-        {filter.type === 'cooking_time' && 'Cook: '}
+        {filter.type === 'preparation_time' && t('mealPlanning.dialog.filters.prep')}
+        {filter.type === 'cooking_time' && t('mealPlanning.dialog.filters.cook')}
         {filter.label}
       </span>
       <X size={14} className="text-gray-500 hover:text-red-500" />
@@ -116,7 +118,7 @@ export default function MealPlanDialogFilters() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <span className="font-medium">Filter recipes</span>
+        <span className="font-medium">{t('mealPlanning.dialog.filterRecipes')}</span>
 
         <Popover.Root>
           <Popover.Trigger
@@ -124,8 +126,8 @@ export default function MealPlanDialogFilters() {
             disabled={isSearching}
           >
             {activeFilters.length === 0
-              ? 'Add filters'
-              : `${activeFilters.length} filter${activeFilters.length > 1 ? 's' : ''}`}
+              ? t('mealPlanning.dialog.addFilters')
+              : `${activeFilters.length} ${activeFilters.length > 1 ? t('mealPlanning.dialog.filters.filters') : t('mealPlanning.dialog.filters.filter')}`}
             <ChevronRightIcon size={16} />
           </Popover.Trigger>
 
@@ -150,7 +152,7 @@ export default function MealPlanDialogFilters() {
 
                 {Array.isArray(tags) && tags.length > 0 && (
                   <div className="space-y-2">
-                    <span className="font-medium">Tags</span>
+                    <span className="font-medium">{t('mealPlanning.dialog.filters.tags')}</span>
                     <div className="max-h-32 space-y-1 overflow-y-auto">
                       {tags.map((tag) =>
                         renderFilterOption(
@@ -177,7 +179,7 @@ export default function MealPlanDialogFilters() {
             disabled={isSearching}
             className="text-sm text-gray-500 underline hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Clear all filters
+            {t('mealPlanning.dialog.filters.clearAllFilters')}
           </button>
         </div>
       )}

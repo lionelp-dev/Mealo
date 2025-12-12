@@ -4,6 +4,7 @@ import { EllipsisVertical } from 'lucide-react';
 import { DateTime } from 'luxon';
 
 import { useDayHeaderState } from '@/hooks/use-meal-plan-day-header';
+import i18n from '@/lib/i18n';
 import {
   CopiedDayPlannedMeals,
   CopiedMealSlot,
@@ -59,7 +60,7 @@ function DayInfo({ date, isCurrentDay }: DayInfoProps) {
           isCurrentDay ? 'text-[#3a5a40]' : 'text-gray-700'
         }`}
       >
-        {date.weekdayLong}
+        {date.setLocale(i18n.language).weekdayLong}
       </div>
       <div
         className={`flex h-7 w-7 items-center justify-center rounded-full text-base font-medium ${
