@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -88,9 +87,9 @@ function TwoFactorSetupStep({
           </div>
 
           <div className="flex w-full space-x-5">
-            <Button className="w-full" onClick={onNextStep}>
+            <button className="btn btn-primary w-full" onClick={onNextStep}>
               {buttonText}
-            </Button>
+            </button>
           </div>
 
           <div className="relative flex w-full items-center justify-center">
@@ -184,22 +183,21 @@ function TwoFactorVerificationStep({
             </div>
 
             <div className="flex w-full space-x-5">
-              <Button
+              <button
                 type="button"
-                variant="outline"
-                className="flex-1"
+                className="btn btn-outline flex-1"
                 onClick={onBack}
                 disabled={processing}
               >
                 {t('common.buttons.back')}
-              </Button>
-              <Button
+              </button>
+              <button
                 type="submit"
-                className="flex-1"
+                className="btn btn-primary flex-1"
                 disabled={processing || code.length < OTP_MAX_LENGTH}
               >
                 {t('common.buttons.confirm')}
-              </Button>
+              </button>
             </div>
           </div>
         </>

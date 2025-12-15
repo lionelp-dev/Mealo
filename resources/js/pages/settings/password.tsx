@@ -8,7 +8,6 @@ import { Form, Head } from '@inertiajs/react';
 import { useRef } from 'react';
 
 import HeadingSmall from '@/components/heading-small';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { edit } from '@/routes/password';
@@ -113,12 +112,13 @@ export default function Password() {
                 </div>
 
                 <div className="flex items-center gap-4">
-                  <Button
+                  <button
+                    className="btn btn-primary"
                     disabled={processing}
                     data-test="update-password-button"
                   >
                     {t('settings.password.saveButton')}
-                  </Button>
+                  </button>
 
                   <Transition
                     show={recentlySuccessful}

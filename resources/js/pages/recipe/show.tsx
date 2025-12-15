@@ -1,5 +1,5 @@
-import AppLayout from '@/layouts/app-layout';
 import { LanguageSwitcher } from '@/components/language-switcher';
+import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import type { Recipe } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
@@ -19,7 +19,6 @@ function Recipe() {
     <AppLayout
       headerRightContent={
         <div className="flex gap-2 self-end">
-          <LanguageSwitcher />
           <button
             className="btn btn-secondary"
             onClick={() =>
@@ -34,6 +33,7 @@ function Recipe() {
           >
             {t('recipes.index.viewButton')}
           </button>
+          <LanguageSwitcher />
         </div>
       }
     >

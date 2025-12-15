@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,10 +29,10 @@ export default function AppearanceToggleDropdown({
     <div className={className} {...props}>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-md">
+          <button className="btn btn-ghost btn-square h-9 w-9 rounded-md">
             {getCurrentIcon()}
             <span className="sr-only">Toggle theme</span>
-          </Button>
+          </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => updateAppearance('light')}>

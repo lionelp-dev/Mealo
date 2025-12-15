@@ -1,7 +1,6 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -37,9 +36,9 @@ export default function DeleteUser() {
 
         <Dialog>
           <DialogTrigger asChild>
-            <Button variant="destructive" data-test="delete-user-button">
+            <button className="btn btn-error" data-test="delete-user-button">
               {t('deleteAccount.deleteButton')}
-            </Button>
+            </button>
           </DialogTrigger>
           <DialogContent>
             <DialogTitle>
@@ -79,22 +78,22 @@ export default function DeleteUser() {
 
                   <DialogFooter className="gap-2">
                     <DialogClose asChild>
-                      <Button
-                        variant="secondary"
+                      <button
+                        className="btn btn-secondary"
                         onClick={() => resetAndClearErrors()}
                       >
                         {t('deleteAccount.cancelButton')}
-                      </Button>
+                      </button>
                     </DialogClose>
 
-                    <Button variant="destructive" disabled={processing} asChild>
-                      <button
-                        type="submit"
-                        data-test="confirm-delete-user-button"
-                      >
-                        {t('deleteAccount.deleteButton')}
-                      </button>
-                    </Button>
+                    <button
+                      className="btn btn-error"
+                      type="submit"
+                      disabled={processing}
+                      data-test="confirm-delete-user-button"
+                    >
+                      {t('deleteAccount.deleteButton')}
+                    </button>
                   </DialogFooter>
                 </>
               )}

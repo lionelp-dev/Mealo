@@ -260,7 +260,7 @@ const IngredientFormSection = withFieldGroup({
                           onClick={() => {
                             form.handleSubmit();
                           }}
-                          className="btn w-full whitespace-nowrap btn-accent"
+                          className="btn w-full whitespace-nowrap btn-secondary"
                         >
                           <Plus size={16} />{' '}
                           {t('recipes.ingredients.addButton')}

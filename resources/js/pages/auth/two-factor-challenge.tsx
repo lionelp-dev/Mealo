@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
   InputOTP,
@@ -94,9 +93,9 @@ export default function TwoFactorChallenge() {
                 </div>
               )}
 
-              <Button type="submit" className="w-full" disabled={processing}>
+              <button type="submit" className="btn btn-primary w-full" disabled={processing}>
                 {t('auth.twoFactor.confirmButton')}
-              </Button>
+              </button>
 
               <div className="text-center text-sm text-muted-foreground">
                 <span>{t('common.buttons.cancel')} </span>

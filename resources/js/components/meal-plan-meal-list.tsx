@@ -6,7 +6,6 @@ import { MealTime, PlannedMeal } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
 import { PlannedMealsSlot } from '../stores/week-meal-planner';
-import { Button } from './ui/button';
 
 type PageProps = {
   weekStart: string;
@@ -54,8 +53,8 @@ export default function MealPlanMealList({
                   <span className="text-base leading-tight text-gray-900">
                     {recipe.name}
                   </span>
-                  <Button
-                    variant="ghost"
+                  <button
+                    className="btn btn-ghost"
                     onClick={(e) => {
                       e.stopPropagation();
                       unplanMeal(plannedMeal.id);
@@ -65,7 +64,7 @@ export default function MealPlanMealList({
                       size={18}
                       className="text-gray-400 hover:text-red-500"
                     />
-                  </Button>
+                  </button>
                 </div>
               </div>
             </div>

@@ -1,9 +1,9 @@
+import { LanguageSwitcher } from '@/components/language-switcher';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import { Recipe } from '@/types';
 import { Head, router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '@/components/language-switcher';
 import { RecipeForm } from './recipe-form';
 
 function CreateRecipe() {
@@ -21,14 +21,14 @@ function CreateRecipe() {
   return (
     <AppLayout
       headerRightContent={
-        <div className="flex items-center gap-2">
-          <LanguageSwitcher />
+        <div className="flex items-center gap-8">
           <button
-            className="btn w-fit btn-primary"
+            className="btn btn-primary"
             onClick={() => router.get(recipes.index.url())}
           >
             {t('recipes.index.viewButton')}
           </button>
+          <LanguageSwitcher />
         </div>
       }
     >

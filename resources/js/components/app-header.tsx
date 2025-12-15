@@ -2,7 +2,6 @@ import { Breadcrumbs } from '@/components/breadcrumbs';
 import { Icon } from '@/components/icon';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -89,13 +88,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="mr-2 h-[34px] w-[34px]"
+                <button
+                  className="btn btn-ghost btn-square mr-2 h-[34px] w-[34px]"
                 >
                   <Menu className="h-5 w-5" />
-                </Button>
+                </button>
               </SheetTrigger>
               <SheetContent
                 side="left"
@@ -193,13 +190,11 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <div className="ml-auto flex items-center space-x-2">
             <div className="relative flex items-center space-x-1">
               <LanguageSwitcher />
-              <Button
-                variant="ghost"
-                size="icon"
-                className="group h-9 w-9 cursor-pointer"
+              <button
+                className="btn btn-ghost btn-square group h-9 w-9 cursor-pointer"
               >
                 <Search className="!size-5 opacity-80 group-hover:opacity-100" />
-              </Button>
+              </button>
               <div className="hidden lg:flex">
                 {rightNavItems.map((item) => (
                   <TooltipProvider key={item.title} delayDuration={0}>
@@ -234,14 +229,14 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="size-10 rounded-full p-1">
+                <button className="btn btn-ghost size-10 rounded-full p-1">
                   <Avatar className="size-8 overflow-hidden rounded-full">
                     <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
                     <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">
                       {getInitials(auth.user.name)}
                     </AvatarFallback>
                   </Avatar>
-                </Button>
+                </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56" align="end">
                 <UserMenuContent user={auth.user} />

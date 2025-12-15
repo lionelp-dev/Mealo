@@ -5,7 +5,6 @@ import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
 import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
 import AuthLayout from '@/layouts/auth-layout';
 import { useTranslation } from 'react-i18next';
 
@@ -31,10 +30,10 @@ export default function VerifyEmail({ status }: { status?: string }) {
       >
         {({ processing }) => (
           <>
-            <Button disabled={processing} variant="secondary">
+            <button disabled={processing} className="btn btn-secondary">
               {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
               {t('auth.verifyEmail.resendButton')}
-            </Button>
+            </button>
 
             <TextLink href={logout()} className="mx-auto block text-sm">
               {t('auth.verifyEmail.logoutButton')}

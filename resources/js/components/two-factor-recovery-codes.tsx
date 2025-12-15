@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
@@ -67,15 +66,15 @@ export default function TwoFactorRecoveryCodes({
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
-          <Button
+          <button
+            className="btn btn-primary w-fit"
             onClick={toggleCodesVisibility}
-            className="w-fit"
             aria-expanded={codesAreVisible}
             aria-controls="recovery-codes-section"
           >
             <RecoveryCodeIconComponent className="size-4" aria-hidden="true" />
             {codesAreVisible ? t('settings.twoFactor.hideCodes') : t('settings.twoFactor.viewCodes')} {t('settings.twoFactor.recoveryCodesLabel')}
-          </Button>
+          </button>
 
           {canRegenerateCodes && (
             <Form
@@ -84,14 +83,14 @@ export default function TwoFactorRecoveryCodes({
               onSuccess={fetchRecoveryCodes}
             >
               {({ processing }) => (
-                <Button
-                  variant="secondary"
+                <button
+                  className="btn btn-secondary"
                   type="submit"
                   disabled={processing}
                   aria-describedby="regenerate-warning"
                 >
                   <RefreshCw /> {t('settings.twoFactor.regenerateCodes')}
-                </Button>
+                </button>
               )}
             </Form>
           )}

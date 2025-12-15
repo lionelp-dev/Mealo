@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,21 +21,21 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="gap-2">
+        <button className="btn btn-outline gap-2">
           <Languages className="h-4 w-4" />
           <span className="hidden sm:inline">{getCurrentLanguageLabel()}</span>
           <span className="sm:hidden">{i18n.language.toUpperCase()}</span>
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => changeLanguage('fr')}
           disabled={i18n.language === 'fr'}
           className="gap-2"
         >
           🇫🇷 Français
         </DropdownMenuItem>
-        <DropdownMenuItem 
+        <DropdownMenuItem
           onClick={() => changeLanguage('en')}
           disabled={i18n.language === 'en'}
           className="gap-2"

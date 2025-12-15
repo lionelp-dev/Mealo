@@ -1,5 +1,4 @@
 import Heading from '@/components/heading';
-import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -57,22 +56,18 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
         <aside className="w-full max-w-xl lg:w-48">
           <nav className="flex flex-col space-y-1 space-x-0">
             {sidebarNavItems.map((item, index) => (
-              <Button
+              <Link
                 key={`${typeof item.href === 'string' ? item.href : item.href.url}-${index}`}
-                size="sm"
-                variant="ghost"
-                asChild
-                className={cn('w-full justify-start', {
+                href={item.href}
+                className={cn('btn btn-sm btn-ghost w-full justify-start', {
                   'bg-muted':
                     currentPath ===
                     (typeof item.href === 'string' ? item.href : item.href.url),
                 })}
               >
-                <Link href={item.href}>
-                  {item.icon && <item.icon className="h-4 w-4" />}
-                  {item.title}
-                </Link>
-              </Button>
+                {item.icon && <item.icon className="h-4 w-4" />}
+                {item.title}
+              </Link>
             ))}
           </nav>
         </aside>

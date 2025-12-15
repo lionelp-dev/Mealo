@@ -1,7 +1,6 @@
 import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
 import InputError from '@/components/input-error';
 import TextLink from '@/components/text-link';
-import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -80,9 +79,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 <Label htmlFor="remember">{t('auth.login.rememberMe')}</Label>
               </div>
 
-              <Button
+              <button
                 type="submit"
-                className="mt-4 w-full"
+                className="btn btn-primary mt-4 w-full"
                 tabIndex={4}
                 disabled={processing}
                 data-test="login-button"
@@ -91,7 +90,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 )}
                 {t('auth.login.loginButton')}
-              </Button>
+              </button>
             </div>
 
             <div className="text-center text-sm text-muted-foreground">

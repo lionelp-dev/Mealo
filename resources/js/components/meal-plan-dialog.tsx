@@ -11,7 +11,6 @@ import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
 import MealPlanDialogFilters from './meal-plan-dialog-filters';
 import MealPlanDialogRecipes from './meal-plan-dialog-recipes';
 import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
-import { Button } from './ui/button';
 
 type PageProps = {
   mealTimes: MealTime[];
@@ -59,9 +58,9 @@ export default function MealPlanDialog() {
                 </span>
               </Dialog.Title>
               <Dialog.Close asChild>
-                <Button variant="ghost" className="!static hover:text-red-600">
+                <button className="btn btn-ghost !static hover:text-red-600">
                   <X size={24} />
-                </Button>
+                </button>
               </Dialog.Close>
             </div>
             <div className="flex items-center gap-4">
@@ -125,7 +124,8 @@ export default function MealPlanDialog() {
                 <Select.HiddenSelect />
               </Select.Root>
               <div className="flex gap-5">
-                <Button
+                <button
+                  className="btn btn-primary"
                   disabled={
                     selectedRecipesId.length === 0 || !selectedMealTimeId
                   }
@@ -134,7 +134,7 @@ export default function MealPlanDialog() {
                   {selectedRecipesId.length > 1
                     ? `${t('mealPlanning.planDishes')} (${selectedRecipesId.length})`
                     : t('mealPlanning.planDish')}
-                </Button>
+                </button>
               </div>
             </div>
           </div>

@@ -2,7 +2,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
-import { Button } from '@/components/ui/button';
 import { useWeekSelector } from '@/hooks/use-week-selector';
 
 type WeekSelectorProps = {
@@ -22,17 +21,17 @@ export default function WeekSelector({ currentWeek, url }: WeekSelectorProps) {
 
   return (
     <div className="flex gap-5 divide-x divide-gray-300">
-      <Button variant="outline" onClick={goToCurrentWeek}>
+      <button className="btn btn-outline" onClick={goToCurrentWeek}>
         {t('mealPlanning.weekSelector.today')}
-      </Button>
+      </button>
       <div className="flex items-center gap-5">
         <div className="flex items-center gap-1">
-          <Button size="sm" variant="ghost" onClick={goToPreviousWeek}>
+          <button className="btn btn-sm btn-ghost" onClick={goToPreviousWeek}>
             <ChevronLeft />
-          </Button>
-          <Button size="sm" variant="ghost" onClick={goToNextWeek}>
+          </button>
+          <button className="btn btn-sm btn-ghost" onClick={goToNextWeek}>
             <ChevronRight />
-          </Button>
+          </button>
         </div>
         <span>{t('mealPlanning.weekSelector.week')} {currentWeek.weekNumber.toString().padStart(2, '0')}</span>
         <span className="text-lg">

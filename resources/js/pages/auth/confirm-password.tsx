@@ -1,5 +1,4 @@
 import InputError from '@/components/input-error';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
@@ -36,8 +35,8 @@ export default function ConfirmPassword() {
             </div>
 
             <div className="flex items-center">
-              <Button
-                className="w-full"
+              <button
+                className="btn btn-primary w-full"
                 disabled={processing}
                 data-test="confirm-password-button"
               >
@@ -45,7 +44,7 @@ export default function ConfirmPassword() {
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 )}
                 Confirm password
-              </Button>
+              </button>
             </div>
           </div>
         )}

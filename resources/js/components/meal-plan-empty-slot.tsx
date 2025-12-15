@@ -13,7 +13,6 @@ import {
   Pomme,
   Tomate,
 } from './icons';
-import { Button } from './ui/button';
 
 type MealPlanEmptySlotProps = React.ComponentProps<'div'> & {
   containerRef: RefObject<HTMLDivElement | null>;
@@ -115,13 +114,13 @@ export default function MealPlanEmptySlot({
       {...rest}
     >
       {!isStickyBelowTwoThird && MealPlanSlotsIcons[date.weekday].icon}
-      <Button
-        className="gap-2 rounded-full !border-0 pr-5"
+      <button
+        className="btn btn-primary gap-2 rounded-full !border-0 pr-5"
         onClick={() => openMealPlanDialog(date)}
       >
         <Plus size={14} />
         <span>{t('mealPlanning.actions.planMeal')}</span>
-      </Button>
+      </button>
     </div>
   );
 }

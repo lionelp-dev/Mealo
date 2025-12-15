@@ -1,12 +1,12 @@
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { Pagination } from '@/components/ui/pagination';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
-import { BreadcrumbItem, PaginatedCollection, Recipe } from '@/types';
+import { PaginatedCollection, Recipe } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { AlertTriangle, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from '@/components/language-switcher';
 
 type PageProps = {
   recipes_collection: PaginatedCollection<Recipe>;
@@ -17,25 +17,17 @@ export default function Recipes() {
   const [recipeToDelete, setRecipeToDelete] = useState<Recipe | null>(null);
   const { t } = useTranslation();
 
-  const breadcrumbs: BreadcrumbItem[] = [
-    {
-      title: t('recipes.title'),
-      href: recipes.index.url(),
-    },
-  ];
-
   return (
     <AppLayout
-      breadcrumbs={breadcrumbs}
       headerRightContent={
-        <div className="flex items-center gap-2">
-          <LanguageSwitcher />
+        <div className="flex items-center gap-8">
           <button
             className="btn btn-primary"
             onClick={() => router.get(recipes.create.url())}
           >
             {t('recipes.index.createButton')}
           </button>
+          <LanguageSwitcher />
         </div>
       }
     >

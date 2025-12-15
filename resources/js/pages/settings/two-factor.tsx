@@ -2,7 +2,6 @@ import HeadingSmall from '@/components/heading-small';
 import TwoFactorRecoveryCodes from '@/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/components/two-factor-setup-modal';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { useTwoFactorAuth } from '@/hooks/use-two-factor-auth';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
@@ -69,13 +68,13 @@ export default function TwoFactor({
               <div className="relative inline">
                 <Form {...disable.form()}>
                   {({ processing }) => (
-                    <Button
-                      variant="destructive"
+                    <button
+                      className="btn btn-error"
                       type="submit"
                       disabled={processing}
                     >
                       <ShieldBan /> {t('settings.twoFactor.disableButton')}
-                    </Button>
+                    </button>
                   )}
                 </Form>
               </div>
@@ -89,20 +88,20 @@ export default function TwoFactor({
 
               <div>
                 {hasSetupData ? (
-                  <Button onClick={() => setShowSetupModal(true)}>
+                  <button className="btn btn-primary" onClick={() => setShowSetupModal(true)}>
                     <ShieldCheck />
                     {t('settings.twoFactor.continueSetup')}
-                  </Button>
+                  </button>
                 ) : (
                   <Form
                     {...enable.form()}
                     onSuccess={() => setShowSetupModal(true)}
                   >
                     {({ processing }) => (
-                      <Button type="submit" disabled={processing}>
+                      <button className="btn btn-primary" type="submit" disabled={processing}>
                         <ShieldCheck />
                         {t('settings.twoFactor.enableButton')}
-                      </Button>
+                      </button>
                     )}
                   </Form>
                 )}
