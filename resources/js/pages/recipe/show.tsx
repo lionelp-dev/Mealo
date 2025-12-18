@@ -14,7 +14,7 @@ type PageProps = {
 function Recipe() {
   const { t } = useTranslation();
   const { recipe } = usePage<PageProps>().props;
-  console.log(recipe);
+
   return (
     <AppLayout
       headerRightContent={

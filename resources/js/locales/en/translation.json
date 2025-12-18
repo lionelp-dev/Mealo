@@ -86,7 +86,13 @@
       "button": "Create recipe"
     },
     "generate": {
-      "button": "Generate recipe"
+      "button": "Generate recipe",
+      "modalTitle": "Generate Recipe with AI",
+      "generating": "Generating...",
+      "prompt": {
+        "label": "Recipe Description",
+        "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
+      }
     },
     "edit": {
       "title": "Edit recipe",

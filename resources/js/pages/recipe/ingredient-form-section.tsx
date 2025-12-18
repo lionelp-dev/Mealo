@@ -25,8 +25,6 @@ const IngredientFormSection = withFieldGroup({
   render: function Render({ group, title }) {
     const { ingredients_search_results } = usePage<PageProps>().props;
 
-    console.log(ingredients_search_results);
-
     const {
       searchTerm,
       setSearchTerm,

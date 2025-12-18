@@ -86,7 +86,13 @@
       "button": "Créer une recette"
     },
     "generate": {
-      "button": "Générer une recette"
+      "button": "Générer une recette",
+      "modalTitle": "Générer une recette avec IA",
+      "generating": "Génération en cours...",
+      "prompt": {
+        "label": "Description de la recette",
+        "placeholder": "Décrivez la recette que vous voulez créer, ex: 'Un plat méditerranéen sain au poulet avec des légumes'"
+      }
     },
     "edit": {
       "title": "Modifier la recette",

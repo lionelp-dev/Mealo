@@ -14,6 +14,7 @@ use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Models\User;
+use App\Services\AIRecipeGenerationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
@@ -25,6 +26,7 @@ use Inertia\Response;
 class RecipeController extends Controller
 {
     public function __construct(
+        private AIRecipeGenerationService $aiRecipeGenerationService
     ) {}
     /**
      * Display a listing of the resource.
@@ -59,8 +61,8 @@ class RecipeController extends Controller
         $validated = $request->validate([
             'ingredients_search' => ['nullable', 'string', 'max:255'],
             'tags_search' => ['nullable', 'string', 'max:255'],
+            'generate' => ['nullable', 'boolean'],
         ]);
-
 
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
         if (!empty($validated['ingredients_search'])) {
@@ -82,8 +84,44 @@ class RecipeController extends Controller
                 'meal_times' => MealTimeResource::collection(MealTime::all()),
                 'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
                 'tags_search_results' => Inertia::scroll(new TagCollection($tagsQuery->paginate(5))),
+                'should_open_ai_modal' => $validated['generate'] ?? false,
             ]
         );
+    }
+
+    /**
+     * Generate a recipe using AI and return to create form
+     */
+    public function generateRecipeWithAI(Request $request): Response|RedirectResponse
+    {
+        Gate::authorize('create', Recipe::class);
+
+        $request->validate([
+            'prompt' => ['required', 'string', 'min:5', 'max:500'],
+        ]);
+
+        try {
+            $recipe = $this->aiRecipeGenerationService->generateRecipe($request->input('prompt'));
+
+            /** @var User $user */
+            $user = $request->user();
+            $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
+            $tagsQuery = Tag::query()->where('user_id', $user->id);
+
+            return Inertia::render(
+                'recipe/create',
+                [
+                    'meal_times' => MealTimeResource::collection(MealTime::all()),
+                    'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
+                    'tags_search_results' => Inertia::scroll(new TagCollection($tagsQuery->paginate(5))),
+                    'should_open_ai_modal' => false,
+                    'generated_recipe' => $recipe,
+                ]
+            );
+
+        } catch (\Exception $e) {
+            return to_route('recipes.create')->with('error', 'Failed to generate recipe');
+        }
     }
 
     /**

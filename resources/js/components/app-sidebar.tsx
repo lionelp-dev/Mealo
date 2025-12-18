@@ -19,10 +19,9 @@ import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
 
-
 export function AppSidebar() {
   const { t } = useTranslation();
-  
+
   const mainNavItems: NavItem[] = [
     {
       title: t('mealPlanning.title'),
@@ -46,11 +45,11 @@ export function AppSidebar() {
     },
     {
       title: t('recipes.generate.button'),
-      href: recipes.create.url(),
+      href: recipes.create({ query: { generate: true } }),
       icon: Wand,
     },
   ];
-  
+
   return (
     <Sidebar collapsible="icon" variant="inset">
       <SidebarHeader>

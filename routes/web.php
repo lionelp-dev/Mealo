@@ -15,6 +15,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
     Route::resource('recipes', RecipeController::class);
+    Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
     Route::resource('planned-meals', PlannedMealController::class);
     Route::post('planned-meals/bulk', [PlannedMealController::class, 'bulkStore'])->name('planned-meals.bulk-store');
     Route::delete('planned-meals', [PlannedMealController::class, 'bulkDestroy'])->name('planned-meals.bulk-destroy');
