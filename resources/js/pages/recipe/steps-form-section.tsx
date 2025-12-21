@@ -46,10 +46,10 @@ const StepsFormSection = withFieldGroup({
         mode="array"
         name="steps"
         children={(field) => (
-          <div className="flex flex-col gap-2">
-            <span className="text-md">{title}</span>
+          <div className="flex flex-col gap-4">
+            <span className="font-medium text-base-content">{title}</span>
 
-            <div className="flex flex-col gap-3">
+            <div className="flex flex-col gap-4">
               {field.state.value.length > 0 && (
                 <div className="flex flex-col gap-2">
                   {field.state.value.map((step, index) => (
@@ -57,11 +57,11 @@ const StepsFormSection = withFieldGroup({
                       key={index}
                       name={`steps[${index}].description`}
                       children={(field) => (
-                        <div className="flex items-start gap-2 rounded-md bg-gray-50 p-3">
-                          <span className="flex-shrink-0 rounded-full bg-blue-100 px-2 py-1 text-sm font-medium text-blue-800">
+                        <div className="flex items-start gap-2 rounded-md bg-base-100 p-3">
+                          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-content">
                             {step.order}
                           </span>
-                          <field.TextAreaField rows={2} />
+                          <field.TextAreaField rows={undefined} />
                           <button
                             type="button"
                             onClick={() => handleDeleteStep(index)}
@@ -80,8 +80,8 @@ const StepsFormSection = withFieldGroup({
                 name="description"
                 children={(field) => (
                   <field.TextAreaField
+                    rows={6}
                     placeholder={t('recipes.steps.instructionPlaceholder')}
-                    rows={3}
                   />
                 )}
               />
@@ -96,7 +96,7 @@ const StepsFormSection = withFieldGroup({
                     onClick={() => {
                       form.handleSubmit();
                     }}
-                    className="btn flex w-fit btn-accent"
+                    className="btn flex w-fit btn-secondary"
                   >
                     <Plus size={16} /> {t('recipes.steps.addButton')}
                   </button>

@@ -98,7 +98,7 @@ class PlannedMealController extends Controller
             'mealTimes' => $mealTimes,
             'plannedMeals' => PlannedMealResource::collection($plannedMeals)->toArray($request),
             'tags' => TagResource::collection(Tag::query()->where('user_id', $user->id)->get())->toArray($request),
-            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipesQuery->paginate(15))),
+            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipesQuery->paginate(10))),
         ]);
     }
 

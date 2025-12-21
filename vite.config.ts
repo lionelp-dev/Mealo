@@ -15,6 +15,11 @@ const dirname =
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  server: {
+    watch: {
+      ignored: ['**/worktrees/**']
+    }
+  },
   plugins: [
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.tsx'],

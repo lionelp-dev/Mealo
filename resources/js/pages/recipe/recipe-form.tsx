@@ -5,8 +5,7 @@ import IngredientFormSection from '@/pages/recipe/ingredient-form-section';
 import StepsFormSection from '@/pages/recipe/steps-form-section';
 import TagsFormSection from '@/pages/recipe/tags-form-section';
 import { recipeSchema } from '@/schemas/recipe.schema';
-import { MealTime, Recipe } from '@/types';
-import { usePage } from '@inertiajs/react';
+import { Ingredient, MealTime, Recipe, Tag } from '@/types';
 import { useTranslation } from 'react-i18next';
 
 type RecipeFormProps = {
@@ -16,11 +15,14 @@ type RecipeFormProps = {
   onSubmit: (props: { value: Omit<Recipe, 'id'> }) => void;
   cancelLabel?: string;
   onCancel?: () => void;
-};
-
-type PageProps = {
   meal_times: {
     data: MealTime[];
+  };
+  tags_search_results?: {
+    data: Tag[];
+  };
+  ingredients_search_results?: {
+    data: Ingredient[];
   };
 };
 
@@ -31,9 +33,11 @@ export function RecipeForm({
   onSubmit,
   cancelLabel,
   onCancel,
+  meal_times,
+  tags_search_results = { data: [] },
+  ingredients_search_results = { data: [] },
 }: RecipeFormProps) {
   const { t } = useTranslation();
-  const { meal_times } = usePage<PageProps>().props;
 
   const defaultSubmitLabel =
     submitLabel ||
@@ -65,12 +69,8 @@ export function RecipeForm({
         e.preventDefault();
         form.handleSubmit();
       }}
-      className="flex flex-col gap-5"
+      className="flex flex-col gap-6"
     >
-      <span className="text-md">
-        {t('recipes.form.detailsTitle', 'Recipe details')}
-      </span>
-
       <form.AppField
         name="name"
         children={(field) => (
@@ -102,8 +102,8 @@ export function RecipeForm({
               label: meal_time.name,
             }));
             return (
-              <div className="flex flex-col">
-                <label className="mb-2 block text-sm font-medium text-gray-700">
+              <div className="flex flex-col gap-3">
+                <label className="block text-sm font-medium text-base-content">
                   {t('recipes.form.mealTimesTitle')}
                 </label>
                 <MultiSelect
@@ -136,7 +136,6 @@ export function RecipeForm({
               label={t('recipes.form.preparationTimeLabel')}
               placeholder="0"
               min="0"
-              className="input"
             />
           )}
         />
@@ -153,20 +152,25 @@ export function RecipeForm({
           )}
         />
       </div>
-
-      <IngredientFormSection
+      <TagsFormSection
         form={form}
-        fields={{ ingredients: 'ingredients' }}
-        title={t('recipes.form.ingredientsTitle')}
+        fields={{ tags: 'tags' }}
+        tags_search_results={tags_search_results}
       />
 
-      <StepsFormSection
-        form={form}
-        fields={{ steps: 'steps' }}
-        title={t('recipes.form.stepsTitle')}
-      />
-
-      <TagsFormSection form={form} fields={{ tags: 'tags' }} />
+      <div className="grid grid-cols-[48%_52%] gap-9">
+        <StepsFormSection
+          form={form}
+          fields={{ steps: 'steps' }}
+          title={t('recipes.form.stepsTitle')}
+        />
+        <IngredientFormSection
+          form={form}
+          fields={{ ingredients: 'ingredients' }}
+          title={t('recipes.form.ingredientsTitle')}
+          ingredients_search_results={ingredients_search_results}
+        />
+      </div>
 
       <div className="flex justify-end gap-4">
         <form.AppForm>

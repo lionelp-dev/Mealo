@@ -19,7 +19,7 @@ export default function SubmitButton({
         <button
           type="submit"
           disabled={!canSubmit}
-          className={`btn btn-accent ${className || ''}`}
+          className={`btn btn-primary ${className || ''}`}
         >
           {isSubmitting ? loadingLabel : label}
         </button>

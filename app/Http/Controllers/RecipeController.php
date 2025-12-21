@@ -120,7 +120,7 @@ class RecipeController extends Controller
             );
 
         } catch (\Exception $e) {
-            return to_route('recipes.create')->with('error', 'Failed to generate recipe');
+            return to_route('recipes.create')->with('error', $e->getMessage());
         }
     }
 

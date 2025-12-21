@@ -20,16 +20,14 @@ class AIRecipeGenerationService
 
         $apiKey = getenv('OPEN_ROUTER_API_KEY');
 
-        if (!$apiKey) {
-            throw new Exception('OpenRouter API key not configured');
+        if ($apiKey) {
+            $this->client = OpenAI::factory()
+                ->withApiKey($apiKey)
+                ->withBaseUri('https://openrouter.ai/api/v1')
+                ->withHttpHeader('HTTP-Referer', 'http://localhost')
+                ->withHttpHeader('X-Title', 'Meal Planner')
+                ->make();
         }
-
-        $this->client = OpenAI::factory()
-            ->withApiKey($apiKey)
-            ->withBaseUri('https://openrouter.ai/api/v1')
-            ->withHttpHeader('HTTP-Referer', 'http://localhost')
-            ->withHttpHeader('X-Title', 'Meal Planner')
-            ->make();
     }
 
     /**
@@ -37,6 +35,12 @@ class AIRecipeGenerationService
      */
     public function generateRecipe(string $prompt): array
     {
+        // Vérifier si la clé API existe
+        $apiKey = getenv('OPEN_ROUTER_API_KEY');
+        if (!$apiKey || empty($apiKey)) {
+            throw new Exception('La génération de recettes par IA n\'est pas disponible pour le moment.');
+        }
+
         // Get available meal times from database
         $mealTimes = MealTime::all();
         $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();

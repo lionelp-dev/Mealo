@@ -3,7 +3,7 @@ import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { ingredientSchema } from '@/schemas/recipe.schema';
 import { useIngredientSearchStore } from '@/stores/ingredient-search';
 import { Ingredient, Recipe } from '@/types';
-import { InfiniteScroll, usePage } from '@inertiajs/react';
+import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { Plus, Trash2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
@@ -13,18 +13,13 @@ const defaultValues: Pick<Recipe, 'ingredients'> = {
   ingredients: [],
 };
 
-type PageProps = {
-  ingredients_search_results: { data: Ingredient[] };
-};
-
 const IngredientFormSection = withFieldGroup({
   defaultValues,
   props: {
     title: '', // Title will be passed from parent component
+    ingredients_search_results: { data: [] as Ingredient[] },
   },
-  render: function Render({ group, title }) {
-    const { ingredients_search_results } = usePage<PageProps>().props;
-
+  render: function Render({ group, title, ingredients_search_results }) {
     const {
       searchTerm,
       setSearchTerm,
@@ -97,27 +92,29 @@ const IngredientFormSection = withFieldGroup({
         name="ingredients"
         mode="array"
         children={(field) => (
-          <div className="flex flex-col gap-1">
-            <span>{title}</span>
+          <div className="flex flex-col gap-4">
+            <span className="font-medium text-base-content">{title}</span>
 
-            <table className="table w-full table-xs">
+            <table className="table -mt-1 -mb-1 w-full table-xs">
               <thead>
-                <tr>
-                  <th className="w-[60%]">
+                <tr className="[&>th]:pb-1 [&>th]:font-normal [&>th]:text-base-content">
+                  <th className="w-[55%]">
                     {t('recipes.ingredients.nameLabel')}
                   </th>
                   <th className="w-[15%]">
                     {t('recipes.ingredients.quantityLabel')}
                   </th>
-                  <th className="w-[15%]">
+                  <th className="w-[20%]">
                     {t('recipes.ingredients.unitLabel')}
                   </th>
-                  <th className="w-[10%]">{t('recipes.table.actions')}</th>
+                  {field.state.value.length !== 0 && (
+                    <th className="w-[10%]">{t('recipes.table.actions')}</th>
+                  )}
                 </tr>
               </thead>
-              <tbody className="*:border-none [&>tr:first-child>td]:pt-2 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
+              <tbody className="*:border-none [&>tr:first-child>td]:pt-3 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
                 {field.state.value.map((_, index) => (
-                  <tr key={index} className="*:align-top">
+                  <tr key={index} className="*:pb-4 *:align-top">
                     <td>
                       <group.AppField
                         name={`ingredients[${index}].name`}
@@ -193,7 +190,7 @@ const IngredientFormSection = withFieldGroup({
                         >
                           {ingredients_search_results?.data &&
                             ingredients_search_results.data.length > 0 && (
-                              <div className="z-50 flex rounded-sm border border-solid border-gray-200 bg-white p-4">
+                              <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-4">
                                 <div className="h-[10lh] overflow-y-auto">
                                   <InfiniteScroll
                                     data="ingredients_search_results"
@@ -203,7 +200,7 @@ const IngredientFormSection = withFieldGroup({
                                       (ingredient) => (
                                         <div
                                           key={ingredient.id}
-                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-gray-100"
+                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-base-200"
                                           onClick={() =>
                                             addExistingIngredient(ingredient)
                                           }
@@ -249,28 +246,26 @@ const IngredientFormSection = withFieldGroup({
                       children={(field) => <field.InputField />}
                     />
                   </td>
-                  <td>
-                    <form.Subscribe>
-                      {(state) => (
-                        <button
-                          type="button"
-                          disabled={!state.canSubmit || isSearching}
-                          onClick={() => {
-                            form.handleSubmit();
-                          }}
-                          className="btn w-full whitespace-nowrap btn-secondary"
-                        >
-                          <Plus size={16} />{' '}
-                          {t('recipes.ingredients.addButton')}
-                        </button>
-                      )}
-                    </form.Subscribe>
-                  </td>
+                  {field.state.value.length !== 0 && <td></td>}
                 </tr>
               </tbody>
             </table>
 
             <FieldInfo />
+            <form.Subscribe>
+              {(state) => (
+                <button
+                  type="button"
+                  disabled={!state.canSubmit || isSearching}
+                  onClick={() => {
+                    form.handleSubmit();
+                  }}
+                  className="btn w-fit whitespace-nowrap btn-secondary"
+                >
+                  <Plus size={16} /> {t('recipes.ingredients.addButton')}
+                </button>
+              )}
+            </form.Subscribe>
           </div>
         )}
       />

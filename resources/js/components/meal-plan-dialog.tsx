@@ -1,40 +1,37 @@
 import { createListCollection, Portal, Select } from '@ark-ui/react';
-import { usePage } from '@inertiajs/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { CalendarDays, ChevronDownIcon, X } from 'lucide-react';
-import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
-import i18n from '@/lib/i18n';
-import { MealTime } from '@/types';
+import { useRecipeSearchStore } from '@/stores/recipe-search';
+import { ReactNode } from 'react';
+import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
+import i18n from '../lib/i18n';
 import MealPlanDialogFilters from './meal-plan-dialog-filters';
-import MealPlanDialogRecipes from './meal-plan-dialog-recipes';
 import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
 
-type PageProps = {
-  mealTimes: MealTime[];
-  plannedMeals: any[];
-  weekStart: string;
+type MealPlanDialogProps = {
+  open: boolean;
+  children?: ReactNode;
 };
 
-export default function MealPlanDialog() {
+export default function MealPlanDialog({
+  open,
+  children,
+}: MealPlanDialogProps) {
   const { t } = useTranslation();
-  const { mealTimes, plannedMeals, weekStart } = usePage<PageProps>().props;
+
+  const { mealTimes, recipes } = useMealPlanData();
 
   const {
-    isOpen,
     setIsOpen,
     selectedDate,
     selectedRecipesId,
     selectedMealTimeId,
     setSelectedMealTimeId,
     planSelectedMeals,
-  } = useWeekPlannedMeals({
-    weekStart: DateTime.fromISO(weekStart),
-    mealTimes,
-    plannedMeals,
-  });
+  } = useWeekPlannedMeals();
 
   const collection = createListCollection({
     items: mealTimes
@@ -45,27 +42,29 @@ export default function MealPlanDialog() {
       })),
   });
 
+  const { searchTerm, activeFilters } = useRecipeSearchStore();
+
   return (
-    <Dialog.Root open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog.Root open={open} onOpenChange={setIsOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 flex h-[90vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-xl bg-white pt-12 pr-14 pb-11 pl-14">
-          <div className="flex flex-col gap-3">
+        <Dialog.Content className="fixed top-1/2 left-1/2 flex h-[90vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-xl bg-base-100 pt-12 pr-14 pb-11 pl-14">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <Dialog.Title>
-                <span className="text-3xl font-bold">
+                <span className="text-3xl font-bold text-base-content">
                   {t('mealPlanning.dialog.title')}
                 </span>
               </Dialog.Title>
               <Dialog.Close asChild>
-                <button className="btn btn-ghost !static hover:text-red-600">
+                <button className="btn !static text-base-content btn-ghost hover:text-red-600">
                   <X size={24} />
                 </button>
               </Dialog.Close>
             </div>
             <div className="flex items-center gap-4">
-              <CalendarDays size={24} />
-              <span className="pt-1 text-2xl">
+              <CalendarDays size={24} className="text-base-content" />
+              <span className="pt-1 text-2xl text-base-content">
                 {
                   selectedDate
                     ?.setLocale(i18n.language)
@@ -74,11 +73,24 @@ export default function MealPlanDialog() {
               </span>
             </div>
           </div>
-          <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-hidden">
+          <div className="flex flex-1 flex-col gap-4 overflow-hidden">
             <MealPlanDialogFilters />
             <MealPlanDialogSearchRecipes />
-            <MealPlanDialogRecipes />
+            {(!recipes || !recipes.data || recipes.data.length === 0) && (
+              <div className="flex items-center justify-center py-8">
+                <div className="text-center text-base-content">
+                  <p className="mb-2">No recipes found</p>
+                  {(searchTerm || activeFilters.length > 0) && (
+                    <p className="text-sm">
+                      Try adjusting your search or filters
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+            {children}
           </div>
+
           <div className="mt-5 flex items-center justify-end">
             <div className="flex items-baseline justify-end gap-4">
               <span className="pl-3 text-base">
@@ -95,7 +107,7 @@ export default function MealPlanDialog() {
                 className="h-full"
               >
                 <Select.Control className="h-full">
-                  <Select.Trigger className="flex h-9 w-fit items-center gap-3 rounded-md border border-blue-500 pr-3 pl-5 text-sm text-blue-600 hover:border-gray-400 focus:border-blue-400 focus:shadow-[0_0_0_2px_rgba(59,130,246,0.1)] focus:outline-none">
+                  <Select.Trigger className="btn btn-outline">
                     <Select.ValueText
                       placeholder={t('mealPlanning.mealTimeSelection')}
                     />
@@ -106,13 +118,13 @@ export default function MealPlanDialog() {
                 </Select.Control>
                 <Portal>
                   <Select.Positioner>
-                    <Select.Content className="z-[10000] flex rounded-md bg-white px-2 py-3 shadow-[0px_-1px_1px_2px_rgba(0,0,0,0.05)]">
-                      <Select.ItemGroup className="flex flex-col gap-2">
+                    <Select.Content className="z-[100] flex rounded-md border border-base-300 bg-base-100 px-2 py-3 shadow-[0px_-1px_1px_2px_rgba(0,0,0,0.05)]">
+                      <Select.ItemGroup className="flex flex-col gap-1">
                         {collection.items.map((item) => (
                           <Select.Item
                             key={item.value}
                             item={item}
-                            className="flex cursor-pointer rounded-md px-3 hover:bg-gray-100"
+                            className="flex cursor-pointer rounded-xs px-3 py-1 hover:bg-base-200"
                           >
                             <Select.ItemText>{item.label}</Select.ItemText>
                           </Select.Item>

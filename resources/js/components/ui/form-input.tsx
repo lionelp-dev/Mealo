@@ -14,11 +14,11 @@ export default function InputField({
   const field = useFieldContext<string>();
 
   return (
-    <div>
+    <div className="flex flex-col gap-3">
       {label && (
         <label
           htmlFor={field.name}
-          className="mb-2 block text-sm font-medium text-gray-700"
+          className="text-sm font-medium text-base-content"
         >
           {label}
         </label>

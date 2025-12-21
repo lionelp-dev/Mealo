@@ -179,7 +179,7 @@
     "planDish": "Planifier le plat",
     "planDishes": "Planifier les plats",
     "dialog": {
-      "title": "Ajouter un repas",
+      "title": "Planifier des repas",
       "filterRecipes": "Filtrer les recettes",
       "addFilters": "Ajouter des filtres",
       "whenToEat": "Quand souhaitez-vous manger cela ?",
@@ -190,6 +190,7 @@
         "tags": "Tags",
         "breakfast": "Petit-déjeuner",
         "lunch": "Déjeuner",
+        "dinner": "Dîner",
         "diner": "Dîner",
         "snack": "Collation",
         "clearAllFilters": "Effacer tous les filtres",

@@ -40,17 +40,4 @@ i18n
     },
   });
 
-// Configure Luxon locale to match i18next language
-const updateLuxonLocale = (language: string) => {
-  // Map i18next language codes to Luxon locale codes
-  const luxonLocale = language === 'fr' ? 'fr' : 'en';
-  Settings.defaultLocale = luxonLocale;
-};
-
-// Set initial Luxon locale
-updateLuxonLocale(i18n.language);
-
-// Listen for language changes and update Luxon locale
-i18n.on('languageChanged', updateLuxonLocale);
-
 export default i18n;

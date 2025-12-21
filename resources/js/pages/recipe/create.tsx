@@ -2,18 +2,30 @@ import AIRecipeGenerationModal from '@/components/ai-recipe-generation-modal';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
-import { Recipe } from '@/types';
-import { Head, router } from '@inertiajs/react';
+import { Ingredient, MealTime, Recipe, Tag } from '@/types';
+import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { RecipeForm } from './recipe-form';
+
+type PageProps = {
+  meal_times: {
+    data: MealTime[];
+  };
+  tags_search_results?: {
+    data: Tag[];
+  };
+  ingredients_search_results?: {
+    data: Ingredient[];
+  };
+};
 
 interface CreateRecipeProps {
   should_open_ai_modal: boolean;
   generated_recipe?: Omit<Recipe, 'id'> | null;
 }
 
-const initialFormValues = {
+const defaultValues: Omit<Recipe, 'id'> = {
   name: '',
   description: '',
   preparation_time: 0,
@@ -29,9 +41,12 @@ function CreateRecipe({
   generated_recipe,
 }: CreateRecipeProps) {
   const { t } = useTranslation();
+  const { meal_times, tags_search_results, ingredients_search_results } =
+    usePage<PageProps>().props;
+
   const [showAIModal, setShowAIModal] = useState(false);
   const [formValues, setFormValues] =
-    useState<Omit<Recipe, 'id'>>(initialFormValues);
+    useState<Omit<Recipe, 'id'>>(defaultValues);
 
   useEffect(() => {
     if (should_open_ai_modal) {
@@ -72,6 +87,9 @@ function CreateRecipe({
             onSubmit={({ value }) => {
               router.post(recipes.store.url(), value);
             }}
+            meal_times={meal_times}
+            tags_search_results={tags_search_results}
+            ingredients_search_results={ingredients_search_results}
           />
 
           <AIRecipeGenerationModal

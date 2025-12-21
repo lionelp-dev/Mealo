@@ -11,22 +11,22 @@ export interface MealPlanDialogControllerActions {
   resetState: () => void;
 }
 
-export interface MealPlanDialogControllerState {
+export interface MealPlanDialogState {
   isOpen: boolean;
   selectedDate: DateTime | undefined;
   selectedMealTimeId: number | undefined;
   selectedRecipesId: number[];
 }
 
-const initialState: MealPlanDialogControllerState = {
+const initialState: MealPlanDialogState = {
   isOpen: false,
   selectedDate: undefined,
   selectedMealTimeId: undefined,
   selectedRecipesId: [],
 };
 
-export const useMealPlanDialogControllerStore = create<
-  MealPlanDialogControllerState & MealPlanDialogControllerActions
+export const useMealPlanDialogStore = create<
+  MealPlanDialogState & MealPlanDialogControllerActions
 >((set) => ({
   ...initialState,
 
