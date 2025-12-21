@@ -1,8 +1,8 @@
-import { useMealPlanDialogControllerStore } from '@/stores/meal-plan-dialog';
 import { Plus } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import {
   Banane,
   Brocoli,
@@ -31,12 +31,13 @@ export default function MealPlanEmptySlot({
 
   useEffect(() => {
     const container = containerRef.current;
+    const stickyElem = stickyElementRef.current;
 
-    if (!container) return;
+    if (!container || !stickyElem) return;
+
+    const hasOverflow = container.scrollHeight > container.clientHeight;
 
     const checkStickyState = () => {
-      const hasOverflow = container.scrollHeight > container.clientHeight;
-
       if (!hasOverflow) {
         setIsStickyActive(false);
         return;
@@ -53,29 +54,6 @@ export default function MealPlanEmptySlot({
       }
     };
 
-    container.addEventListener('scroll', checkStickyState, { passive: true });
-
-    const mutationObserver = new MutationObserver(checkStickyState);
-    mutationObserver.observe(container, { childList: true, subtree: true });
-
-    const resizeObserver = new ResizeObserver(checkStickyState);
-    resizeObserver.observe(container);
-
-    checkStickyState();
-
-    return () => {
-      container.removeEventListener('scroll', checkStickyState);
-      mutationObserver.disconnect();
-      resizeObserver.disconnect();
-    };
-  }, [containerRef]);
-
-  useEffect(() => {
-    const container = containerRef.current;
-    const stickyElem = stickyElementRef.current;
-
-    if (!container || !stickyElem) return;
-
     const checkIfStickyBelowTwoThird = () => {
       const isBellow =
         stickyElem.getBoundingClientRect().top >
@@ -89,10 +67,16 @@ export default function MealPlanEmptySlot({
       }
     };
 
-    const mutationObserver = new MutationObserver(checkIfStickyBelowTwoThird);
+    const mutationObserver = new MutationObserver(() => {
+      checkIfStickyBelowTwoThird();
+      checkStickyState();
+    });
     mutationObserver.observe(container, { childList: true, subtree: true });
 
-    const resizeObserver = new ResizeObserver(checkIfStickyBelowTwoThird);
+    const resizeObserver = new ResizeObserver(() => {
+      checkIfStickyBelowTwoThird();
+      checkStickyState();
+    });
     resizeObserver.observe(container);
 
     checkIfStickyBelowTwoThird();
@@ -103,23 +87,31 @@ export default function MealPlanEmptySlot({
     };
   }, [containerRef, stickyElementRef]);
 
-  const { openMealPlanDialog } = useMealPlanDialogControllerStore();
+  const { openMealPlanDialog } = useMealPlanDialogStore();
+
+  const showMealPlanSlotIcon = !(
+    isStickyBelowTwoThird ||
+    (containerRef.current &&
+      containerRef.current.scrollHeight > containerRef.current.clientHeight)
+  );
 
   return (
     <div
       ref={stickyElementRef}
       className={`sticky right-0 bottom-0 left-0 flex flex-1 flex-col items-center justify-center gap-5 rounded-md py-5 text-gray-400 transition-all duration-200 ease-in-out ${
-        isStickyActive ? 'bg-[#D9DADBDB]' : 'bg-gray-100'
+        isStickyActive ? 'bg-base-200' : 'bg-base-200'
       }`}
       {...rest}
     >
-      {!isStickyBelowTwoThird && MealPlanSlotsIcons[date.weekday].icon}
+      {showMealPlanSlotIcon && MealPlanSlotsIcons[date.weekday].icon}
       <button
-        className="btn btn-primary gap-2 rounded-full !border-0 pr-5"
+        className="btn gap-2 rounded-full !border-0 pr-5 btn-secondary"
         onClick={() => openMealPlanDialog(date)}
       >
         <Plus size={14} />
-        <span>{t('mealPlanning.actions.planMeal')}</span>
+        <span className="font-normal text-secondary-content">
+          {t('mealPlanning.actions.planMeal')}
+        </span>
       </button>
     </div>
   );
@@ -127,7 +119,7 @@ export default function MealPlanEmptySlot({
 
 const MealPlanSlotsIcons = [
   {
-    icon: <Brocoli />,
+    icon: <Brocoli className="fill-red-500" />,
   },
   {
     icon: <Fraise />,

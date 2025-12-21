@@ -14,7 +14,6 @@ type PageProps = {
 function Recipe() {
   const { t } = useTranslation();
   const { recipe } = usePage<PageProps>().props;
-  console.log(recipe);
   return (
     <AppLayout
       headerRightContent={
@@ -38,50 +37,52 @@ function Recipe() {
       }
     >
       <Head title={`${recipe.data.name}`}></Head>
-      <div className="overflow-y-auto">
-        <div className="mx-auto flex max-w-[85%] flex-col">
-          <h1 className="mb-4 text-3xl font-bold">{recipe.data.name}</h1>
+      <div className="overflow-y-auto py-8">
+        <div className="mx-auto flex max-w-[85%] flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <h1 className="text-3xl font-bold text-base-content">
+              {recipe.data.name}
+            </h1>
 
-          <div className="mb-6 rounded-lg bg-gray-50 p-4">
-            <p className="text-gray-700">{recipe.data.description}</p>
+            <p className="text-base-content">{recipe.data.description}</p>
           </div>
 
-          <div className="mb-6 grid grid-cols-2 gap-4">
-            <div className="rounded-lg bg-blue-50 p-4">
-              <h3 className="mb-2 font-semibold text-blue-800">
+          <div className="grid grid-cols-2 gap-6">
+            <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
+              <h3 className="font-semibold text-base-content">
                 {t('recipes.table.preparationTime')}
               </h3>
-              <p className="text-2xl font-bold text-blue-600">
+              <p className="text-2xl font-bold text-base-content">
                 {recipe.data.preparation_time} min
               </p>
             </div>
 
-            <div className="rounded-lg bg-green-50 p-4">
-              <h3 className="mb-2 font-semibold text-green-800">
+            <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
+              <h3 className="font-semibold text-base-content">
                 {t('recipes.table.cookingTime')}
               </h3>
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-base-content">
                 {recipe.data.cooking_time} min
               </p>
             </div>
           </div>
 
-          <div className="grid gap-4 min-xl:grid-cols-2">
+          <div className="grid gap-6 min-xl:grid-cols-2">
             {recipe.data.steps && recipe.data.steps.length > 0 && (
-              <div className="mb-6">
-                <h2 className="mb-4 text-2xl font-bold text-gray-800">
+              <div className="flex flex-col gap-3">
+                <h2 className="text-2xl font-bold text-base-content">
                   {t('recipes.form.stepsTitle')}
                 </h2>
                 <div className="space-y-4">
                   {recipe.data.steps
                     .sort((a, b) => a.order - b.order)
                     .map((step) => (
-                      <div key={step.id} className="rounded-lg bg-gray-50 p-4">
+                      <div key={step.id} className="rounded-lg bg-base-100 p-4">
                         <div className="flex items-start gap-3">
-                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-bold text-white">
+                          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-content">
                             {step.order}
                           </span>
-                          <p className="flex-1 text-gray-700">
+                          <p className="flex-1 text-base-content">
                             {step.description}
                           </p>
                         </div>
@@ -92,11 +93,11 @@ function Recipe() {
             )}
 
             {recipe.data.ingredients && recipe.data.ingredients.length > 0 && (
-              <div className="mb-6 overflow-x-auto">
-                <h2 className="mb-4 text-2xl font-bold text-gray-800">
+              <div className="flex flex-col gap-3">
+                <h2 className="text-2xl font-bold text-base-content">
                   {t('recipes.form.ingredientsTitle')}
                 </h2>
-                <table className="table">
+                <table className="table table-zebra">
                   <thead>
                     <tr>
                       <th>{t('recipes.ingredients.nameLabel')}</th>

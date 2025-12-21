@@ -10,7 +10,7 @@ export function Pagination({
   return (
     <div className="join self-center">
       <button
-        className="btn join-item"
+        className="btn join-item btn-ghost"
         disabled={meta.current_page === 1}
         onClick={() =>
           router.visit(
@@ -22,11 +22,11 @@ export function Pagination({
       >
         «
       </button>
-      <button className="btn join-item">
+      <span className="join-item flex items-center px-3">
         Page {meta.current_page} / {meta.last_page}
-      </button>
+      </span>
       <button
-        className="btn join-item"
+        className="btn join-item btn-ghost"
         disabled={!meta.has_more_pages}
         onClick={() =>
           router.visit(

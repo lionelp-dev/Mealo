@@ -138,7 +138,7 @@ export const useRecipeSearchStore = create<
       data: searchParams,
       method: 'get',
       preserveUrl: false,
-      preserveState: false,
+      preserveState: true,
       only: ['recipes'],
       reset: ['recipes'],
       replace: true,

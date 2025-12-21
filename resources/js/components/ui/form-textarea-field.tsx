@@ -12,17 +12,17 @@ interface TextAreaFieldProps {
 export default function TextAreaField({
   label,
   placeholder,
-  rows = 3,
+  rows = 6,
   className,
 }: TextAreaFieldProps) {
   const field = useFieldContext<string>();
 
   return (
-    <div className={cn('flex flex-1 flex-col gap-2', className)}>
+    <div className={cn('flex flex-1 flex-col gap-3', className)}>
       {label && (
         <label
           htmlFor={field.name}
-          className="text-sm font-medium text-gray-700"
+          className="text-sm font-medium text-base-content"
         >
           {label}
         </label>

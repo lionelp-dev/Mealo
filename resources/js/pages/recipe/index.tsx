@@ -32,10 +32,10 @@ export default function Recipes() {
       }
     >
       <Head title={t('recipes.pageTitle')}></Head>
-      <div className="flex h-screen flex-1 flex-col overflow-y-scroll">
+      <div className="my-3 flex h-screen flex-1 flex-col overflow-y-scroll">
         <table className="table-pin-rows table mx-auto max-w-[85%]">
-          <thead className="bg-white">
-            <tr className="mb-1">
+          <thead>
+            <tr className="!bg-background [&>th]:border-b-[2px] [&>th]:border-base-300 [&>th]:py-5 [&>th]:text-base-content">
               <th>{t('recipes.table.name')}</th>
               <th>{t('recipes.table.description')}</th>
               <th>{t('recipes.table.preparationTime')}</th>
@@ -50,7 +50,7 @@ export default function Recipes() {
                 onClick={() =>
                   router.visit(recipes.show.url({ id: recipe.id }))
                 }
-                className="cursor-pointer hover:bg-gray-100"
+                className="cursor-pointer hover:bg-base-100"
               >
                 <td>{recipe.name}</td>
                 <td>{recipe.description}</td>

@@ -1,9 +1,13 @@
-import { Filter, FilterType, useRecipeSearchStore } from '@/stores/recipe-search';
-import { Tag } from '@/types';
+import { Checkbox } from '@/components/ui/checkbox';
 import * as Popover from '@radix-ui/react-popover';
-import { usePage } from '@inertiajs/react';
 import { ChevronRightIcon, X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useMealPlanData } from '../hooks/use-meal-plan-data';
+import {
+  Filter,
+  FilterType,
+  useRecipeSearchStore,
+} from '../stores/recipe-search';
 
 enum MealTime {
   BREAKFAST = '1',
@@ -24,19 +28,19 @@ const TIME_OPTIONS: FilterOption[] = [
   { label: '+ 1h', value: '>60' },
 ];
 
-type PageProps = {
-  tags: Tag[];
-};
-
 export default function MealPlanDialogFilters() {
   const { t } = useTranslation();
-  const { tags } = usePage<PageProps>().props;
 
   const { activeFilters, addFilter, removeFilter, clearFilters, isSearching } =
     useRecipeSearchStore();
 
+  const { tags } = useMealPlanData();
+
   const MEAL_TIME_OPTIONS: FilterOption[] = [
-    { label: t('mealPlanning.dialog.filters.breakfast'), value: MealTime.BREAKFAST },
+    {
+      label: t('mealPlanning.dialog.filters.breakfast'),
+      value: MealTime.BREAKFAST,
+    },
     { label: t('mealPlanning.dialog.filters.lunch'), value: MealTime.LUNCH },
     { label: t('mealPlanning.dialog.filters.dinner'), value: MealTime.DINNER },
     { label: t('mealPlanning.dialog.filters.snack'), value: MealTime.SNACK },
@@ -79,20 +83,20 @@ export default function MealPlanDialogFilters() {
       label: option.label,
     };
     const isActive = isFilterActive(filterType, option.value);
-
+    const key = `${filterType}-${option.value}`;
     return (
       <label
-        key={option.value}
         className={`flex cursor-pointer items-center gap-3 rounded px-2 py-1 pl-2 transition-colors select-none ${
-          isActive ? 'bg-blue-100 text-blue-800' : 'hover:bg-gray-50'
+          isActive ? 'bg-base-200 text-base-content' : 'hover:bg-base-200'
         }`}
+        htmlFor={key}
       >
-        <input
-          type="checkbox"
+        <Checkbox
+          id={key}
           checked={isActive}
-          onChange={() => toggleFilter(filter)}
+          onCheckedChange={() => toggleFilter(filter)}
           disabled={isSearching}
-          className="rounded"
+          className="flex-shrink-0"
         />
         <span>{option.label}</span>
       </label>
@@ -104,25 +108,29 @@ export default function MealPlanDialogFilters() {
       key={`${filter.type}-${filter.value}`}
       onClick={() => removeFilter(filter)}
       disabled={isSearching}
-      className="flex items-center gap-2 rounded-full border border-gray-300 py-1.5 pr-3 pl-4 text-sm whitespace-nowrap transition-colors hover:border-red-400 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-50"
+      className="flex cursor-pointer items-center gap-2 rounded-full border py-1.5 pr-3 pl-4 text-sm whitespace-nowrap text-base-content transition-colors hover:border-error hover:bg-base-100 disabled:cursor-not-allowed disabled:opacity-50 [&:hover]:text-error"
     >
       <span>
-        {filter.type === 'preparation_time' && t('mealPlanning.dialog.filters.prep')}
-        {filter.type === 'cooking_time' && t('mealPlanning.dialog.filters.cook')}
+        {filter.type === 'preparation_time' &&
+          t('mealPlanning.dialog.filters.prep')}
+        {filter.type === 'cooking_time' &&
+          t('mealPlanning.dialog.filters.cook')}
         {filter.label}
       </span>
-      <X size={14} className="text-gray-500 hover:text-red-500" />
+      <X size={14} />
     </button>
   );
 
   return (
-    <div className="space-y-4">
+    <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span className="font-medium">{t('mealPlanning.dialog.filterRecipes')}</span>
+        <span className="font-medium text-base-content">
+          {t('mealPlanning.dialog.filterRecipes')}
+        </span>
 
         <Popover.Root>
           <Popover.Trigger
-            className="flex cursor-pointer items-center gap-2 rounded-md border border-gray-300 bg-white px-4 py-2 text-sm transition-colors hover:border-gray-400 focus:border-blue-400 focus:outline-none disabled:opacity-50"
+            className="btn flex cursor-pointer items-center gap-2 px-4 py-2 text-sm transition-colors btn-outline disabled:opacity-50"
             disabled={isSearching}
           >
             {activeFilters.length === 0
@@ -132,8 +140,8 @@ export default function MealPlanDialogFilters() {
           </Popover.Trigger>
 
           <Popover.Portal>
-            <Popover.Content 
-              className="z-50 min-w-[300px] rounded-lg border bg-white p-4 shadow-lg"
+            <Popover.Content
+              className="z-50 min-w-[300px] rounded-lg border bg-base-100 p-4 shadow-lg"
               side="bottom"
               align="end"
               sideOffset={4}
@@ -152,14 +160,21 @@ export default function MealPlanDialogFilters() {
 
                 {Array.isArray(tags) && tags.length > 0 && (
                   <div className="space-y-2">
-                    <span className="font-medium">{t('mealPlanning.dialog.filters.tags')}</span>
-                    <div className="max-h-32 space-y-1 overflow-y-auto">
-                      {tags.map((tag) =>
-                        renderFilterOption(
-                          { label: tag.name, value: tag.id?.toString() ?? '' },
-                          'tag',
-                        ),
-                      )}
+                    <span className="font-medium text-base-content">
+                      {t('mealPlanning.dialog.filters.tags')}
+                    </span>
+                    <div className="max-h-32 overflow-y-auto">
+                      <div className="space-y-1">
+                        {tags.map((tag) =>
+                          renderFilterOption(
+                            {
+                              label: tag.name,
+                              value: tag.id?.toString() ?? '',
+                            },
+                            'tag',
+                          ),
+                        )}
+                      </div>
                     </div>
                   </div>
                 )}
@@ -170,14 +185,14 @@ export default function MealPlanDialogFilters() {
       </div>
 
       {activeFilters.length > 0 && (
-        <div className="space-y-2">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex justify-between">
+          <div className="flex flex-wrap gap-x-2 gap-y-3">
             {activeFilters.map(renderActiveFilter)}
           </div>
           <button
             onClick={clearFilters}
             disabled={isSearching}
-            className="text-sm text-gray-500 underline hover:text-red-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="btn text-sm text-base-content btn-link underline hover:text-error disabled:cursor-not-allowed disabled:opacity-50"
           >
             {t('mealPlanning.dialog.filters.clearAllFilters')}
           </button>

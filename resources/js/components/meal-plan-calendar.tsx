@@ -1,33 +1,20 @@
-import { usePage } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import { useEffect, useRef } from 'react';
 
-import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
+import { useWeekPlannedMeals } from '@/hooks/use-week-planned-meals';
+import { InfiniteScroll } from '@inertiajs/react';
+import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import MealPlanDayHeader from './meal-plan-day-header';
 import MealPlanDialog from './meal-plan-dialog';
+import MealPlanDialogRecipes from './meal-plan-dialog-recipes';
 import MealPlanSlots from './meal-plan-slots';
 
-import { MealTime, PlannedMeal } from '@/types';
-
-type PageProps = {
-  mealTimes: Array<MealTime>;
-  plannedMeals: Array<PlannedMeal>;
-  weekStart: string;
-};
-
 export default function MealPlanCalendar() {
+  const { weekPlannedMeals } = useMealPlanData();
+
+  const { isOpen } = useWeekPlannedMeals();
+
   const today = DateTime.now();
-
-  const { weekStart, mealTimes, plannedMeals } = usePage<PageProps>().props;
-
-  const currWeekStart = DateTime.fromISO(weekStart);
-
-  const { weekPlannedMeals } = useWeekPlannedMeals({
-    weekStart: currWeekStart,
-    mealTimes,
-    plannedMeals,
-  });
-
   const currentDayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -57,7 +44,13 @@ export default function MealPlanCalendar() {
           </div>
         );
       })}
-      <MealPlanDialog />
+      <MealPlanDialog open={isOpen}>
+        <div className="overflow-y-scroll">
+          <InfiniteScroll data="recipes">
+            <MealPlanDialogRecipes />
+          </InfiniteScroll>
+        </div>
+      </MealPlanDialog>
     </div>
   );
 }

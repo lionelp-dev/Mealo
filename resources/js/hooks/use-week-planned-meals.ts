@@ -1,28 +1,16 @@
 import { router } from '@inertiajs/react';
-import { useEffect } from 'react';
-
-import { useMealPlanDialogControllerStore } from '../stores/meal-plan-dialog';
+import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import {
   CopiedDayPlannedMeals,
   CopiedMealSlot,
-  SetDayPlannedMealsProps,
   useWeekPlannedMealsStore,
 } from '../stores/week-meal-planner';
 
-export const useWeekPlannedMeals = ({
-  weekStart,
-  mealTimes,
-  plannedMeals,
-}: SetDayPlannedMealsProps) => {
+export const useWeekPlannedMeals = () => {
   const weekPlannedMealStore = useWeekPlannedMealsStore();
-  const mealPlanDialogStore = useMealPlanDialogControllerStore();
+  const mealPlanDialogStore = useMealPlanDialogStore();
 
-  const { weekPlannedMeals, setWeekPlannedMeals, setCopiedDayPlannedMeals } =
-    weekPlannedMealStore;
-
-  useEffect(() => {
-    setWeekPlannedMeals({ weekStart, mealTimes, plannedMeals });
-  }, [plannedMeals]);
+  const { setCopiedDayPlannedMeals } = weekPlannedMealStore;
 
   const unplanMeal = (id: number) => {
     router.delete(`/planned-meals/${id}`, {
@@ -96,7 +84,6 @@ export const useWeekPlannedMeals = ({
   return {
     ...weekPlannedMealStore,
     ...mealPlanDialogStore,
-    weekPlannedMeals,
     planCopiedDayPlannedMeal,
     planSelectedMeals,
     unplanMeal,

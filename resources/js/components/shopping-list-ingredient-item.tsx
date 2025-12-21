@@ -33,10 +33,10 @@ export default function ShoppingListIngredientItem({
   return (
     <label
       className={cn(
-        'flex cursor-pointer items-center gap-5 px-7 py-2 transition-all duration-200 select-none hover:bg-gray-50',
+        'flex cursor-pointer items-center gap-5 px-7 py-2 transition-all duration-200 select-none',
         ingredient.is_checked
-          ? 'bg-gray-50 hover:bg-gray-100'
-          : 'bg-white hover:bg-gray-50',
+          ? 'bg-base-200 hover:bg-base-200'
+          : 'bg-base-100 hover:bg-base-200',
         isLoading && 'opacity-50',
       )}
     >
@@ -50,18 +50,15 @@ export default function ShoppingListIngredientItem({
       <div className="flex min-w-0 flex-col gap-1">
         <div
           className={cn(
-            'font-medium transition-all duration-200',
-            ingredient.is_checked
-              ? 'text-gray-500 line-through'
-              : 'text-gray-900',
+            'font-medium text-base-content transition-all duration-200',
+            ingredient.is_checked && 'line-through',
           )}
         >
           {ingredient.ingredient.name}
         </div>
         <div
           className={cn(
-            'text-sm transition-all duration-200',
-            ingredient.is_checked ? 'text-gray-400' : 'text-gray-600',
+            'text-sm text-base-content transition-all duration-200',
           )}
         >
           {ingredient.quantity} {ingredient.unit}
