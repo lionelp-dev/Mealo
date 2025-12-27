@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Recipe;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
@@ -12,7 +11,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $user = User::query()->firstOrCreate(
+        User::query()->firstOrCreate(
             ['email' => 'test@example.com'],
             [
                 'name' => 'Test User',
@@ -21,13 +20,16 @@ class UserSeeder extends Seeder
             ]
         );
 
-        Recipe::factory()
-           ->count(40)
-           ->withMealTime(2)
-           ->withIngredients(10)
-           ->withSteps(10)
-           ->withTags(5)
-           ->create(['user_id' => $user->id]);
+        /*
+                Recipe::factory()
+                   ->count(40)
+                   ->withMealTime(2)
+                   ->withIngredients(10)
+                   ->withSteps(10)
+                   ->withTags(5)
+                   ->create(['user_id' => $user->id]);
+          */
 
+        new AIRecipeSeeder()->run();
     }
 }

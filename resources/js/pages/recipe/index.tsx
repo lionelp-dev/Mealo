@@ -4,9 +4,11 @@ import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import { PaginatedCollection, Recipe } from '@/types';
 import { Head, InfiniteScroll, router, usePage } from '@inertiajs/react';
-import { AlertTriangle, Edit, Trash2 } from 'lucide-react';
+import { AlertTriangle, EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import * as Popover from '@radix-ui/react-popover';
 
 type PageProps = {
   recipes_collection: PaginatedCollection<Recipe>;
@@ -15,6 +17,7 @@ type PageProps = {
 export default function Recipes() {
   const { recipes_collection } = usePage<PageProps>().props;
   const [recipeToDelete, setRecipeToDelete] = useState<Recipe | null>(null);
+  const [openPopover, setOpenPopover] = useState<number | null>(null);
   const { t } = useTranslation();
 
   return (
@@ -33,9 +36,9 @@ export default function Recipes() {
     >
       <Head title={t('recipes.pageTitle')}></Head>
 
-      <AppMainContent>
+      <AppMainContent className="w-[92%]">
         <InfiniteScroll data="recipes_collection">
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(22rem,1fr)))] gap-x-7 gap-y-10">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(min(22rem,100%),1fr)))] gap-x-6 gap-y-10">
             {recipes_collection.data.map((recipe) => (
               <div
                 key={recipe.id}
@@ -45,28 +48,51 @@ export default function Recipes() {
                 className="card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl"
               >
                 <div className="relative">
-                  <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-5">
-                    <button
-                      className="btn-default btn btn-circle btn-sm"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        router.get(recipes.edit.url({ id: recipe.id }));
-                      }}
+                  <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-4">
+                    <Popover.Root
+                      open={openPopover === recipe.id}
+                      onOpenChange={(open) =>
+                        setOpenPopover(open ? recipe.id : null)
+                      }
                     >
-                      <Edit size={16} />
-                    </button>
-                    <button
-                      className="btn-default btn btn-circle btn-sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
-                        setRecipeToDelete(recipe);
-                      }}
-                    >
-                      <Trash2 size={16} className="text-error" />
-                    </button>
+                      <Popover.Trigger asChild>
+                        <button
+                          className="btn btn-circle border-base-300/75 bg-base-300/75 btn-sm"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <EllipsisVertical
+                            size={14}
+                            className="rotate-90 text-base-content/75"
+                          />
+                        </button>
+                      </Popover.Trigger>
+                      <Popover.Portal>
+                        <Popover.Content
+                          className="z-[10000] rounded-lg border border-base-300 bg-base-100 p-2 shadow-xl"
+                          side="top"
+                          align="end"
+                          sideOffset={8}
+                          alignOffset={-4}
+                        >
+                          <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-end">
+                            <button
+                              className="btn items-end justify-start gap-2 rounded-md text-error btn-ghost btn-sm hover:bg-error/10"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+                                setOpenPopover(null);
+                                setRecipeToDelete(recipe);
+                              }}
+                            >
+                              <li>{t('common.buttons.delete')}</li>
+                            </button>
+                          </ul>
+                          <Popover.Arrow className="fill-base-100 stroke-base-300" />
+                        </Popover.Content>
+                      </Popover.Portal>
+                    </Popover.Root>
                   </div>
+
                   {recipe.image_url ? (
                     <figure className="h-42">
                       <img
@@ -76,30 +102,37 @@ export default function Recipes() {
                       />
                     </figure>
                   ) : (
-                    <figure className="flex h-42 items-center justify-center bg-base-200">
-                      <div className="text-base-content/40">
-                        <svg
-                          className="h-16 w-16"
-                          fill="currentColor"
-                          viewBox="0 0 20 20"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
-                            clipRule="evenodd"
-                          />
-                        </svg>
-                      </div>
-                    </figure>
+                    <figure className="flex h-42 items-center justify-center bg-base-200"></figure>
                   )}
+                  <div className="absolute right-0 bottom-0 left-0 flex max-h-[1.5lh] flex-wrap justify-start gap-2 overflow-hidden px-2 py-2">
+                    {recipe.meal_times.map((meal_time) => (
+                      <span
+                        key={meal_time.id}
+                        className="badge bg-base-100/90 badge-sm whitespace-nowrap"
+                      >
+                        {meal_time.name}
+                      </span>
+                    ))}
+                    {recipe.tags.map((tag) => (
+                      <span
+                        key={tag.id}
+                        className="badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content"
+                      >
+                        {tag.name}
+                      </span>
+                    ))}
+                  </div>
                 </div>
                 <div className="card-body">
-                  <h2 className="card-title text-base-content">
-                    {recipe.name}
-                  </h2>
-                  <p className="line-clamp-2 text-base-content/70">
-                    {recipe.description}
-                  </p>
+                  <div className="flex flex-col gap-1">
+                    <h2 className="card-title text-base-content">
+                      {recipe.name}
+                    </h2>
+
+                    <p className="line-clamp-2 text-base-content/70">
+                      {recipe.description}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
