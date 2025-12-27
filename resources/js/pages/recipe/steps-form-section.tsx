@@ -12,7 +12,7 @@ const defaultValues: Pick<Recipe, 'steps'> = {
 const StepsFormSection = withFieldGroup({
   defaultValues,
   props: {
-    title: '', // Title will be passed from parent component
+    title: '',
   },
   render: function Render({ group, title }) {
     const { t } = useTranslation();
@@ -47,20 +47,17 @@ const StepsFormSection = withFieldGroup({
         name="steps"
         children={(field) => (
           <div className="flex flex-col gap-4">
-            <span className="font-medium text-base-content">{title}</span>
+            <span className="text-base-content">{title}</span>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5">
               {field.state.value.length > 0 && (
                 <div className="flex flex-col gap-2">
-                  {field.state.value.map((step, index) => (
+                  {field.state.value.map((_, index) => (
                     <group.AppField
                       key={index}
                       name={`steps[${index}].description`}
                       children={(field) => (
                         <div className="flex items-start gap-2 rounded-md bg-base-100 p-3">
-                          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-content">
-                            {step.order}
-                          </span>
                           <field.TextAreaField rows={undefined} />
                           <button
                             type="button"
@@ -80,7 +77,7 @@ const StepsFormSection = withFieldGroup({
                 name="description"
                 children={(field) => (
                   <field.TextAreaField
-                    rows={6}
+                    rows={10}
                     placeholder={t('recipes.steps.instructionPlaceholder')}
                   />
                 )}
@@ -96,7 +93,7 @@ const StepsFormSection = withFieldGroup({
                     onClick={() => {
                       form.handleSubmit();
                     }}
-                    className="btn flex w-fit btn-secondary"
+                    className="btn w-fit"
                   >
                     <Plus size={16} /> {t('recipes.steps.addButton')}
                   </button>

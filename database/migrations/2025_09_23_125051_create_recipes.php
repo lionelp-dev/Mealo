@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('description');
             $table->integer('preparation_time');
             $table->integer('cooking_time');
+            $table->string('image_path')->nullable();
             $table->timestamps();
         });
     }

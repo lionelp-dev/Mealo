@@ -21,6 +21,7 @@ class PlannedMealResource extends JsonResource
             'recipe' => [
                 'id' => $this->resource->recipe->id,
                 'name' => $this->resource->recipe->name,
+                'image_url' => $this->resource->recipe->getImageUrl(),
             ],
         ];
     }

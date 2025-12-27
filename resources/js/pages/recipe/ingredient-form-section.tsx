@@ -93,37 +93,136 @@ const IngredientFormSection = withFieldGroup({
         mode="array"
         children={(field) => (
           <div className="flex flex-col gap-4">
-            <span className="font-medium text-base-content">{title}</span>
-
-            <table className="table -mt-1 -mb-1 w-full table-xs">
-              <thead>
-                <tr className="[&>th]:pb-1 [&>th]:font-normal [&>th]:text-base-content">
-                  <th className="w-[55%]">
-                    {t('recipes.ingredients.nameLabel')}
-                  </th>
-                  <th className="w-[15%]">
-                    {t('recipes.ingredients.quantityLabel')}
-                  </th>
-                  <th className="w-[20%]">
-                    {t('recipes.ingredients.unitLabel')}
-                  </th>
-                  {field.state.value.length !== 0 && (
-                    <th className="w-[10%]">{t('recipes.table.actions')}</th>
-                  )}
-                </tr>
-              </thead>
-              <tbody className="*:border-none [&>tr:first-child>td]:pt-3 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
-                {field.state.value.map((_, index) => (
-                  <tr key={index} className="*:pb-4 *:align-top">
+            <span className="text-base-content">{title}</span>
+            <div className="flex flex-col gap-5">
+              <table className="table -mt-1 -mb-1 w-full table-xs">
+                <thead>
+                  <tr className="[&>th]:pb-2 [&>th]:text-sm [&>th]:font-normal [&>th]:text-base-content">
+                    <th className="w-[55%]">
+                      {t('recipes.ingredients.nameLabel')}
+                    </th>
+                    <th className="w-[15%]">
+                      {t('recipes.ingredients.quantityLabel')}
+                    </th>
+                    <th className="w-[20%]">
+                      {t('recipes.ingredients.unitLabel')}
+                    </th>
+                    {field.state.value.length !== 0 && (
+                      <th className="w-[10%]">{t('recipes.table.actions')}</th>
+                    )}
+                  </tr>
+                </thead>
+                <tbody className="*:border-none [&>tr:first-child>td]:pt-3 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
+                  {field.state.value.map((_, index) => (
+                    <tr key={index} className="*:pb-4 *:align-top">
+                      <td>
+                        <group.AppField
+                          name={`ingredients[${index}].name`}
+                          children={(field) => <field.InputField />}
+                        />
+                      </td>
+                      <td>
+                        <group.AppField
+                          name={`ingredients[${index}].quantity`}
+                          children={(field) => (
+                            <field.InputField
+                              type="number"
+                              min="0"
+                              step="0.01"
+                              onChange={(e) =>
+                                field.handleChange(
+                                  e.target.value === ''
+                                    ? 0
+                                    : Math.round(Number(e.target.value) * 100) /
+                                        100,
+                                )
+                              }
+                            />
+                          )}
+                        />
+                      </td>
+                      <td>
+                        <group.AppField
+                          name={`ingredients[${index}].unit`}
+                          children={(field) => <field.InputField />}
+                        />
+                      </td>
+                      <td className="align-top">
+                        <button
+                          type="button"
+                          onClick={() => field.removeValue(index)}
+                          className="btn text-red-700 btn-ghost hover:border-red-50 hover:bg-red-100"
+                        >
+                          <Trash2 size={18} />
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                  <tr className="*:align-top">
                     <td>
-                      <group.AppField
-                        name={`ingredients[${index}].name`}
-                        children={(field) => <field.InputField />}
-                      />
+                      <Popover.Root>
+                        <Popover.Anchor className="flex">
+                          <form.AppField
+                            name="name"
+                            children={(field) => (
+                              <Popover.Trigger className="flex-1">
+                                <field.InputField
+                                  data-ingredient-input
+                                  value={searchTerm || field.state.value}
+                                  onChange={(e) => {
+                                    const value = e.target.value;
+                                    field.handleChange(value);
+                                    setSearchTerm(value);
+                                  }}
+                                  autoComplete="off"
+                                />
+                              </Popover.Trigger>
+                            )}
+                          />
+                        </Popover.Anchor>
+                        <Popover.Portal>
+                          <Popover.Content
+                            className=""
+                            side="top"
+                            sideOffset={8}
+                            align="start"
+                            onOpenAutoFocus={(e) => e.preventDefault()}
+                          >
+                            {ingredients_search_results?.data &&
+                              ingredients_search_results.data.length > 0 && (
+                                <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-4">
+                                  <div className="h-[10lh] overflow-y-auto">
+                                    <InfiniteScroll
+                                      data="ingredients_search_results"
+                                      preserveUrl
+                                    >
+                                      {ingredients_search_results.data.map(
+                                        (ingredient) => (
+                                          <div
+                                            key={ingredient.id}
+                                            className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-base-200"
+                                            onClick={() =>
+                                              addExistingIngredient(ingredient)
+                                            }
+                                          >
+                                            <span className="font-medium">
+                                              {ingredient.name}
+                                            </span>
+                                          </div>
+                                        ),
+                                      )}
+                                    </InfiniteScroll>
+                                  </div>
+                                </div>
+                              )}
+                          </Popover.Content>
+                        </Popover.Portal>
+                      </Popover.Root>
                     </td>
+
                     <td>
-                      <group.AppField
-                        name={`ingredients[${index}].quantity`}
+                      <form.AppField
+                        name="quantity"
                         children={(field) => (
                           <field.InputField
                             type="number"
@@ -142,130 +241,32 @@ const IngredientFormSection = withFieldGroup({
                       />
                     </td>
                     <td>
-                      <group.AppField
-                        name={`ingredients[${index}].unit`}
+                      <form.AppField
+                        name="unit"
                         children={(field) => <field.InputField />}
                       />
                     </td>
-                    <td className="align-top">
-                      <button
-                        type="button"
-                        onClick={() => field.removeValue(index)}
-                        className="btn text-red-700 btn-ghost hover:border-red-50 hover:bg-red-100"
-                      >
-                        <Trash2 size={18} />
-                      </button>
-                    </td>
+                    {field.state.value.length !== 0 && <td></td>}
                   </tr>
-                ))}
-                <tr className="*:align-top">
-                  <td>
-                    <Popover.Root>
-                      <Popover.Anchor className="flex">
-                        <form.AppField
-                          name="name"
-                          children={(field) => (
-                            <Popover.Trigger className="flex-1">
-                              <field.InputField
-                                data-ingredient-input
-                                value={searchTerm || field.state.value}
-                                onChange={(e) => {
-                                  const value = e.target.value;
-                                  field.handleChange(value);
-                                  setSearchTerm(value);
-                                }}
-                                autoComplete="off"
-                              />
-                            </Popover.Trigger>
-                          )}
-                        />
-                      </Popover.Anchor>
-                      <Popover.Portal>
-                        <Popover.Content
-                          className=""
-                          side="top"
-                          sideOffset={8}
-                          align="start"
-                          onOpenAutoFocus={(e) => e.preventDefault()}
-                        >
-                          {ingredients_search_results?.data &&
-                            ingredients_search_results.data.length > 0 && (
-                              <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-4">
-                                <div className="h-[10lh] overflow-y-auto">
-                                  <InfiniteScroll
-                                    data="ingredients_search_results"
-                                    preserveUrl
-                                  >
-                                    {ingredients_search_results.data.map(
-                                      (ingredient) => (
-                                        <div
-                                          key={ingredient.id}
-                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-base-200"
-                                          onClick={() =>
-                                            addExistingIngredient(ingredient)
-                                          }
-                                        >
-                                          <span className="font-medium">
-                                            {ingredient.name}
-                                          </span>
-                                        </div>
-                                      ),
-                                    )}
-                                  </InfiniteScroll>
-                                </div>
-                              </div>
-                            )}
-                        </Popover.Content>
-                      </Popover.Portal>
-                    </Popover.Root>
-                  </td>
+                </tbody>
+              </table>
 
-                  <td>
-                    <form.AppField
-                      name="quantity"
-                      children={(field) => (
-                        <field.InputField
-                          type="number"
-                          min="0"
-                          step="0.01"
-                          onChange={(e) =>
-                            field.handleChange(
-                              e.target.value === ''
-                                ? 0
-                                : Math.round(Number(e.target.value) * 100) /
-                                    100,
-                            )
-                          }
-                        />
-                      )}
-                    />
-                  </td>
-                  <td>
-                    <form.AppField
-                      name="unit"
-                      children={(field) => <field.InputField />}
-                    />
-                  </td>
-                  {field.state.value.length !== 0 && <td></td>}
-                </tr>
-              </tbody>
-            </table>
-
-            <FieldInfo />
-            <form.Subscribe>
-              {(state) => (
-                <button
-                  type="button"
-                  disabled={!state.canSubmit || isSearching}
-                  onClick={() => {
-                    form.handleSubmit();
-                  }}
-                  className="btn w-fit whitespace-nowrap btn-secondary"
-                >
-                  <Plus size={16} /> {t('recipes.ingredients.addButton')}
-                </button>
-              )}
-            </form.Subscribe>
+              <FieldInfo />
+              <form.Subscribe>
+                {(state) => (
+                  <button
+                    type="button"
+                    disabled={!state.canSubmit || isSearching}
+                    onClick={() => {
+                      form.handleSubmit();
+                    }}
+                    className="btn w-fit"
+                  >
+                    <Plus size={16} /> {t('recipes.ingredients.addButton')}
+                  </button>
+                )}
+              </form.Subscribe>
+            </div>
           </div>
         )}
       />

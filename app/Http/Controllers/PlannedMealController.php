@@ -48,7 +48,7 @@ class PlannedMealController extends Controller
 
         $weekEnd = $weekStart->copy()->endOf('week');
 
-        $plannedMeals = PlannedMeal::query()->where('user_id', $user->id)->with('recipe:id,name')
+        $plannedMeals = PlannedMeal::query()->where('user_id', $user->id)->with('recipe:id,name,image_path')
             ->whereBetween('planned_date', [
                 $weekStart->toDateString(),
                 $weekEnd->toDateString(),
@@ -249,7 +249,7 @@ class PlannedMealController extends Controller
                 $affectedDates
             );
 
-            return back()->with('success', 'Meals successfully planned');
+            return to_route('planned-meals.index')->with('success', 'Meals successfully planned');
         }, attempts: 5);
     }
 
@@ -285,7 +285,7 @@ class PlannedMealController extends Controller
                 $affectedDates
             );
 
-            return back()->with('success', 'Planned meals successfully deleted');
+            return to_route('planned-meals.index')->with('success', 'Planned meals successfully deleted');
         }, attempts: 5);
     }
 

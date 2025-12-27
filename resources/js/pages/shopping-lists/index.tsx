@@ -56,13 +56,13 @@ export default function ShoppingListsIndex() {
           </div>
         </div>
       ) : (
-        <div className="flex flex-1 flex-col gap-4 overflow-hidden px-10 py-5">
+        <div className="mx-auto flex w-[90%] flex-1 flex-col gap-9 overflow-y-auto py-9">
           <ShoppingListProgress
             checkedCount={checkedCount}
             totalCount={totalCount}
           />
 
-          <div className="flex flex-1 gap-7 overflow-hidden max-xl:flex-col">
+          <div className="flex flex-1 gap-8 overflow-hidden max-xl:flex-col">
             {uncheckedIngredients.length > 0 && (
               <ShoppingListIngredientList
                 title="To buy"

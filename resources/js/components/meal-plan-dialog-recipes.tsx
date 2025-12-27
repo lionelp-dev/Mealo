@@ -1,3 +1,4 @@
+import { Clock, CookingPot } from 'lucide-react';
 import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 
@@ -7,49 +8,76 @@ function MealPlanDialogRecipes() {
   const { selectedRecipesId, toggleRecipeSelection } = useMealPlanDialogStore();
 
   return (
-    <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(300px,1fr))] gap-4">
-      {recipes.data.map((recipe, id) => {
+    <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(24rem,1fr))] gap-6 p-1">
+      {recipes.data.map((recipe) => {
         const isSelected = selectedRecipesId.includes(recipe.id);
 
         return (
           <div
-            key={id}
+            key={recipe.id}
             onClick={() => toggleRecipeSelection(recipe.id)}
-            className={`cursor-pointer rounded-lg border border-solid p-5 px-6 transition-all duration-200 hover:border-base-300 ${
-              isSelected ? 'border-base-300 bg-base-200' : 'border-base-200'
+            className={`card cursor-pointer overflow-hidden rounded-md border border-base-300 bg-base-100 shadow-lg transition-all card-sm select-none hover:shadow-xl ${
+              isSelected ? 'ring-2 ring-secondary' : ''
             }`}
           >
-            <span className="text-base font-semibold text-base-content">
-              {recipe.name}
-            </span>
+            {recipe.image_url ? (
+              <figure className="h-48">
+                <img
+                  src={recipe.image_url}
+                  alt={recipe.name}
+                  className="h-full w-full object-cover"
+                />
+              </figure>
+            ) : (
+              <figure className="flex h-48 items-center justify-center bg-base-200">
+                <div className="text-base-content/40">
+                  <svg
+                    className="h-16 w-16"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              </figure>
+            )}
+            <div className="card-body bg-base-100">
+              <h2 className="card-title text-base-content">{recipe.name}</h2>
 
-            <span className="flex gap-4 text-xs text-base-content">
-              <span>Prep: {recipe.preparation_time} min</span>
-              <span>Cooking: {recipe.cooking_time} min</span>
-            </span>
-
-            <span className="min-h-[3lh] overflow-hidden text-sm leading-normal text-ellipsis text-base-content">
-              {recipe.description}
-            </span>
-
-            <div className="flex flex-wrap items-center gap-y-3 [&>span:not(:first-child)]:ml-3">
-              {recipe.meal_times.map((meal_time) => (
-                <span
-                  key={meal_time.id}
-                  className="h-fit rounded-full bg-base-300 px-3 py-0.5 text-xs leading-tight text-base-content"
-                >
-                  {meal_time.name}
+              <p className="line-clamp-2 text-base-content/70">
+                {recipe.description}
+              </p>
+              <div className="flex flex-wrap gap-1">
+                <span className="badge badge-sm">
+                  <Clock className="size-[1em]" />
+                  <span className="text-base-content">
+                    {recipe.preparation_time}min
+                  </span>
                 </span>
-              ))}
-
-              {recipe.tags.map((tag) => (
-                <span
-                  key={tag.id}
-                  className="w-min overflow-hidden text-xs text-ellipsis whitespace-nowrap text-base-content"
-                >
-                  {tag.name}
+                <span className="badge badge-sm">
+                  <CookingPot className="size-[1em]" />
+                  <span className="text-base-content">
+                    {recipe.cooking_time}min
+                  </span>
                 </span>
-              ))}
+                {recipe.meal_times.map((meal_time) => (
+                  <span
+                    key={meal_time.id}
+                    className="badge bg-base-300 badge-sm"
+                  >
+                    {meal_time.name}
+                  </span>
+                ))}
+                {recipe.tags.map((tag) => (
+                  <span key={tag.id} className="badge badge-sm">
+                    {tag.name}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         );

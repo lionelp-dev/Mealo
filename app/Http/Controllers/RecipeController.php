@@ -17,9 +17,12 @@ use App\Models\User;
 use App\Services\AIRecipeGenerationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -44,7 +47,7 @@ class RecipeController extends Controller
             ->paginate(15);
 
         return Inertia::render('recipe/index', [
-            'recipes_collection' => new RecipeCollection($recipes),
+            'recipes_collection' => Inertia::scroll(new RecipeCollection($recipes)),
         ]);
     }
 
@@ -145,13 +148,19 @@ class RecipeController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        DB::transaction(function () use ($user, $validated) {
+        $recipe = null;
+        DB::transaction(function () use ($user, $validated, &$recipe) {
             $recipe = $user->recipes()->create(Arr::except($validated, ['ingredients', 'meal_times', 'steps', 'tags']));
             $recipe->attachIngredients($validated['ingredients']);
             $recipe->attachTags($validated['tags']);
             $recipe->attachMealTimes($validated['meal_times']);
             $recipe->steps()->createMany($validated['steps']);
         });
+
+        // Upload image after transaction to avoid update visibility issues
+        if ($recipe && $request->hasFile('image')) {
+            $recipe->uploadImage($request->file('image'));
+        }
 
         return to_route('recipes.index')->with('success', 'Recipe successfully created');
     }
@@ -204,8 +213,8 @@ class RecipeController extends Controller
         return Inertia::render('recipe/edit', [
             'recipe' => new RecipeResource($recipe),
             'meal_times' => MealTimeResource::collection(MealTime::all()),
-            'ingredients_search_results' => new IngredientCollection($ingredientsQuery->paginate(5)),
-            'tags_search_results' => new TagCollection($tagsQuery->paginate(5)),
+            'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
+            'tags_search_results' => Inertia::scroll(new TagCollection($tagsQuery->paginate(5))),
         ]);
     }
 
@@ -236,6 +245,14 @@ class RecipeController extends Controller
             $recipe->syncSteps($validated['steps']);
         });
 
+        // Handle image after transaction to avoid update visibility issues
+        if ($request->hasFile('image')) {
+            $recipe->uploadImage($request->file('image'));
+        } elseif ($request->has('image') && $request->input('image') === null) {
+            // Image was explicitly set to null (removed)
+            $recipe->deleteImage();
+        }
+
         return to_route('recipes.show', ['recipe' => $recipe])->with('success', 'Recipe successfully updated');
     }
 
@@ -248,6 +265,54 @@ class RecipeController extends Controller
 
         $recipe->delete();
         return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
+    }
+
+    /**
+     * Upload image for a recipe
+     */
+    public function uploadImage(Request $request, Recipe $recipe): JsonResponse
+    {
+        Gate::authorize('update', $recipe);
+
+        $request->validate([
+            'image' => ['required', 'image', 'mimes:jpeg,jpg,png', 'max:5120'],
+        ]);
+
+        $recipe->uploadImage($request->file('image'));
+
+        return response()->json([
+            'message' => 'Image uploaded successfully',
+            'image_url' => $recipe->getImageUrl(),
+        ]);
+    }
+
+    /**
+     * Serve recipe image
+     */
+    public function image(Request $request, Recipe $recipe): HttpResponse
+    {
+        // Vérifier que l'utilisateur connecté est bien le propriétaire de la recette
+        if ($request->user()->id !== $recipe->user_id) {
+            abort(403, 'Unauthorized access to this recipe image');
+        }
+
+        if (!$recipe->image_path) {
+            abort(404, 'Image not found');
+        }
+
+        if (!Storage::disk('recipe_images')->exists($recipe->image_path)) {
+            abort(404, 'Image not found');
+        }
+
+        $file = Storage::disk('recipe_images')->get($recipe->image_path);
+
+        $fullPath = Storage::disk('recipe_images')->path($recipe->image_path);
+        $mimeType = mime_content_type($fullPath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=86400', // Cache for 1 day
+        ]);
     }
 
 }

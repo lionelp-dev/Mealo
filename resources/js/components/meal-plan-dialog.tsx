@@ -48,7 +48,7 @@ export default function MealPlanDialog({
     <Dialog.Root open={open} onOpenChange={setIsOpen}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 bg-black/50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 flex h-[90vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-xl bg-base-100 pt-12 pr-14 pb-11 pl-14">
+        <Dialog.Content className="fixed top-1/2 left-1/2 flex h-[90vh] w-[70vw] -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-xl bg-base-100 px-9 pt-11 pb-9">
           <div className="flex flex-col gap-2">
             <div className="flex items-center justify-between">
               <Dialog.Title>
@@ -91,7 +91,7 @@ export default function MealPlanDialog({
             {children}
           </div>
 
-          <div className="mt-5 flex items-center justify-end">
+          <div className="mt-4 flex items-center justify-end">
             <div className="flex items-baseline justify-end gap-4">
               <span className="pl-3 text-base">
                 {t('mealPlanning.dialog.whenToEat')}

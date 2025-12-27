@@ -33,7 +33,8 @@ test('create recipe screen can be rendered', function () {
 });
 
 test('user can create a recipe successfully', function () {
-    $recipeData = makeRecipeResource()->toArray(request());
+    $recipe = createRecipeResource($this->user->id, true);
+    $recipeData = $recipe->toArray(request());
 
     // Validate recipe data structure is correct
     assertValidData($recipeData, $this->storeRecipeRequestRules);
@@ -70,7 +71,7 @@ test('show recipe screen can be rendered', function () {
 });
 
 test('edit recipe screen can be rendered', function () {
-    $recipe = createRecipeResource($this->user->id, false);
+    $recipe = createRecipeResource($this->user->id, true);
 
     // Validate recipe data structure
     assertValidData($recipe->toArray(request()), $this->storeRecipeRequestRules);
@@ -80,7 +81,7 @@ test('edit recipe screen can be rendered', function () {
 });
 
 test('user can update a recipe successfully', function () {
-    $recipe = createRecipeResource($this->user->id, false);
+    $recipe = createRecipeResource($this->user->id, true);
 
     $updatedData = $recipe->toArray(request());
     $updatedData['name'] = "Updated Recipe Name";
@@ -157,24 +158,24 @@ test('user cannot update recipe with invalid data', function () {
 });
 
 test('user cannot update other users recipe', function () {
-    $otherUserRecipe = createRecipeResource($this->otherUser->id, false);
+    $otherUserRecipe = createRecipeResource($this->otherUser->id, true);
 
     $updatedData = $otherUserRecipe->toArray(request());
-    $updatedData['name'] = "Hacked Recipe Name";
+    $updatedData['name'] = "Any Recipe Name";
 
-    $response = $this->actingAs($this->user)->put(route('recipes.update', $otherUserRecipe), $updatedData);
+    $response = $this->actingAs($this->user)->put(route('recipes.update', $otherUserRecipe->resource), $updatedData);
 
     // Should be forbidden due to ownership policy
     $response->assertStatus(403);
 
     // Original recipe should remain unchanged
     $this->assertDatabaseHas('recipes', [
-        'id' => $otherUserRecipe->id,
-        'name' => $otherUserRecipe->name,
+        'id' => $otherUserRecipe->resource->id,
+        'name' => $otherUserRecipe->resource->name,
     ]);
 
     $this->assertDatabaseMissing('recipes', [
-        'id' => $otherUserRecipe->id,
+        'id' => $otherUserRecipe->resource->id,
         'name' => "Hacked Recipe Name",
     ]);
 });

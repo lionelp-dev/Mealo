@@ -1,9 +1,9 @@
+import { AppMainContent } from '@/components/app-main-content';
 import { LanguageSwitcher } from '@/components/language-switcher';
-import { Pagination } from '@/components/ui/pagination';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
 import { PaginatedCollection, Recipe } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
+import { Head, InfiniteScroll, router, usePage } from '@inertiajs/react';
 import { AlertTriangle, Edit, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -32,62 +32,80 @@ export default function Recipes() {
       }
     >
       <Head title={t('recipes.pageTitle')}></Head>
-      <div className="my-3 flex h-screen flex-1 flex-col overflow-y-scroll">
-        <table className="table-pin-rows table mx-auto max-w-[85%]">
-          <thead>
-            <tr className="!bg-background [&>th]:border-b-[2px] [&>th]:border-base-300 [&>th]:py-5 [&>th]:text-base-content">
-              <th>{t('recipes.table.name')}</th>
-              <th>{t('recipes.table.description')}</th>
-              <th>{t('recipes.table.preparationTime')}</th>
-              <th>{t('recipes.table.cookingTime')}</th>
-              <th>{t('recipes.table.actions')}</th>
-            </tr>
-          </thead>
-          <tbody>
+
+      <AppMainContent>
+        <InfiniteScroll data="recipes_collection">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(22rem,1fr)))] gap-x-7 gap-y-10">
             {recipes_collection.data.map((recipe) => (
-              <tr
+              <div
                 key={recipe.id}
                 onClick={() =>
                   router.visit(recipes.show.url({ id: recipe.id }))
                 }
-                className="cursor-pointer hover:bg-base-100"
+                className="card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl"
               >
-                <td>{recipe.name}</td>
-                <td>{recipe.description}</td>
-                <td>{recipe.preparation_time}</td>
-                <td>{recipe.cooking_time}</td>
-                <td>
-                  <div className="flex content-center">
+                <div className="relative">
+                  <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-5">
                     <button
-                      className="btn btn-ghost"
+                      className="btn-default btn btn-circle btn-sm"
                       onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         router.get(recipes.edit.url({ id: recipe.id }));
                       }}
                     >
-                      <Edit size={18} />
+                      <Edit size={16} />
                     </button>
                     <button
-                      className="btn btn-ghost"
+                      className="btn-default btn btn-circle btn-sm"
                       onClick={(e) => {
                         e.stopPropagation();
                         e.preventDefault();
                         setRecipeToDelete(recipe);
                       }}
                     >
-                      <Trash2 size={18} className="text-red-700" />
+                      <Trash2 size={16} className="text-error" />
                     </button>
                   </div>
-                </td>
-              </tr>
+                  {recipe.image_url ? (
+                    <figure className="h-42">
+                      <img
+                        src={recipe.image_url}
+                        alt={recipe.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </figure>
+                  ) : (
+                    <figure className="flex h-42 items-center justify-center bg-base-200">
+                      <div className="text-base-content/40">
+                        <svg
+                          className="h-16 w-16"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                      </div>
+                    </figure>
+                  )}
+                </div>
+                <div className="card-body">
+                  <h2 className="card-title text-base-content">
+                    {recipe.name}
+                  </h2>
+                  <p className="line-clamp-2 text-base-content/70">
+                    {recipe.description}
+                  </p>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
-      </div>
-
-      <Pagination meta={recipes_collection.meta} />
-
+          </div>
+        </InfiniteScroll>
+      </AppMainContent>
       {recipeToDelete && (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/20"
@@ -95,16 +113,18 @@ export default function Recipes() {
         >
           <div
             role="alert"
-            className="flex max-w-md flex-col items-center gap-6 rounded-md bg-white px-6 py-4 shadow-lg"
+            className="flex max-w-md flex-col items-center gap-6 rounded-md border border-base-300 bg-base-100 px-6 py-4 shadow-lg"
             onClick={(e) => e.stopPropagation()}
           >
             <span className="flex flex-col gap-4">
-              <AlertTriangle className="text-red-600" />
+              <AlertTriangle className="text-error" />
               <span className="flex flex-col justify-center gap-1">
-                <span className="text-center font-medium">
+                <span className="text-center font-medium text-base-content">
                   {t('recipes.delete.confirmTitle')}{' '}
                 </span>
-                <span>"{recipeToDelete.name}"</span>
+                <span className="text-base-content">
+                  "{recipeToDelete.name}"
+                </span>
               </span>
             </span>
             <div className="flex w-full justify-between gap-2 self-end">
@@ -115,7 +135,7 @@ export default function Recipes() {
                 {t('recipes.delete.cancelButton')}
               </button>
               <button
-                className="btn text-white btn-sm btn-error"
+                className="btn btn-sm btn-error"
                 onClick={() => {
                   if (recipeToDelete) {
                     router.delete(

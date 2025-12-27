@@ -11,7 +11,7 @@ function ShoppingListProgress({
     totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="w-full flex-col px-4 pb-4">
+    <div className="w-full flex-col px-2">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-md font-medium text-base-content">
           Shopping list progress

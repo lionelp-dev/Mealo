@@ -16,6 +16,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
     Route::resource('recipes', RecipeController::class);
     Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
+    Route::post('recipes/{recipe}/upload-image', [RecipeController::class, 'uploadImage'])->name('recipes.upload-image');
+    Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::resource('planned-meals', PlannedMealController::class);
     Route::post('planned-meals/bulk', [PlannedMealController::class, 'bulkStore'])->name('planned-meals.bulk-store');
     Route::delete('planned-meals', [PlannedMealController::class, 'bulkDestroy'])->name('planned-meals.bulk-destroy');

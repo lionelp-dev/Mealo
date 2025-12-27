@@ -99,7 +99,7 @@ export default function MealPlanEmptySlot({
     <div
       ref={stickyElementRef}
       className={`sticky right-0 bottom-0 left-0 flex flex-1 flex-col items-center justify-center gap-5 rounded-md py-5 text-gray-400 transition-all duration-200 ease-in-out ${
-        isStickyActive ? 'bg-base-200' : 'bg-base-200'
+        isStickyActive ? 'bg-base-200/70' : 'bg-base-200'
       }`}
       {...rest}
     >

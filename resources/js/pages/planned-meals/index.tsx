@@ -38,7 +38,7 @@ export default function PlannedMeals() {
       }
       headerRightContent={<LanguageSwitcher />}
     >
-      <div className="overflow-y-scroll px-6">
+      <div className="overflow-y-scroll px-7 py-7">
         <Head title={t('mealPlanning.pageTitle')}></Head>
         <MealPlanProvider
           data={{ weekStart, mealTimes, plannedMeals, recipes, tags }}

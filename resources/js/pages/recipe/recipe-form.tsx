@@ -1,12 +1,13 @@
+import { ImageUpload } from '@/components/image-upload';
 import FieldInfo from '@/components/ui/form-field-info';
-import { MultiSelect, Option } from '@/components/ui/multi-select';
+import { MultiSelect } from '@/components/ui/multi-select';
 import { useAppForm } from '@/hooks/form-hook';
 import IngredientFormSection from '@/pages/recipe/ingredient-form-section';
-import StepsFormSection from '@/pages/recipe/steps-form-section';
-import TagsFormSection from '@/pages/recipe/tags-form-section';
 import { recipeSchema } from '@/schemas/recipe.schema';
 import { Ingredient, MealTime, Recipe, Tag } from '@/types';
 import { useTranslation } from 'react-i18next';
+import StepsFormSection from './steps-form-section';
+import TagsFormSection from './tags-form-section';
 
 type RecipeFormProps = {
   defaultValues: Omit<Recipe, 'id'>;
@@ -45,7 +46,6 @@ export function RecipeForm({
       ? t('common.buttons.update')
       : t('recipes.form.saveButton'));
   const defaultCancelLabel = cancelLabel || t('common.buttons.cancel');
-
   const form = useAppForm({
     defaultValues,
     validators: {
@@ -69,45 +69,44 @@ export function RecipeForm({
         e.preventDefault();
         form.handleSubmit();
       }}
-      className="flex flex-col gap-6"
+      className="flex flex-col gap-7"
     >
-      <form.AppField
-        name="name"
-        children={(field) => (
-          <field.InputField
-            type="text"
-            label={t('recipes.form.nameLabel')}
-            placeholder={t('recipes.form.namePlaceholder')}
-          />
-        )}
-      />
+      <div className="grid gap-x-12 gap-y-8 min-2xl:grid-cols-[9fr_10fr]">
+        <form.AppField
+          name="name"
+          children={(field) => (
+            <field.InputField
+              type="text"
+              label={t('recipes.form.nameLabel')}
+              placeholder={t('recipes.form.namePlaceholder')}
+            />
+          )}
+        />
 
-      <form.AppField
-        name="description"
-        children={(field) => (
-          <field.TextAreaField
-            label={t('recipes.form.descriptionLabel')}
-            placeholder={t('recipes.form.descriptionPlaceholder')}
-            rows={6}
-          />
-        )}
-      />
+        <form.AppField
+          name="description"
+          children={(field) => (
+            <field.TextAreaField
+              label={t('recipes.form.descriptionLabel')}
+              placeholder={t('recipes.form.descriptionPlaceholder')}
+              rows={10}
+            />
+          )}
+        />
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <form.AppField
           name="meal_times"
           children={(field) => {
-            const options: Option[] = meal_times.data.map((meal_time) => ({
+            const options = meal_times.data.map((meal_time) => ({
               value: meal_time.name,
               label: meal_time.name,
             }));
             return (
-              <div className="flex flex-col gap-3">
-                <label className="block text-sm font-medium text-base-content">
+              <div className="flex flex-col gap-4">
+                <label className="text-md text-base-content">
                   {t('recipes.form.mealTimesTitle')}
                 </label>
                 <MultiSelect
-                  className="w-full"
                   options={options}
                   value={field.state.value.map((v) => v.name)}
                   onValueChange={(values) =>
@@ -128,42 +127,60 @@ export function RecipeForm({
           }}
         />
 
+        <div className="grid grid-flow-col gap-5">
+          <form.AppField
+            name="preparation_time"
+            children={(field) => (
+              <field.InputField
+                type="number"
+                label={t('recipes.form.preparationTimeLabel')}
+                placeholder="0"
+                min="0"
+              />
+            )}
+          />
+
+          <form.AppField
+            name="cooking_time"
+            children={(field) => (
+              <field.InputField
+                type="number"
+                label={t('recipes.form.cookingTimeLabel')}
+                placeholder="0"
+                min="0"
+              />
+            )}
+          />
+        </div>
+
         <form.AppField
-          name="preparation_time"
+          name="image"
           children={(field) => (
-            <field.InputField
-              type="number"
-              label={t('recipes.form.preparationTimeLabel')}
-              placeholder="0"
-              min="0"
+            <ImageUpload
+              value={field.state.value}
+              onChange={field.handleChange}
+              currentImageUrl={defaultValues.image_url}
+              className="min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4"
             />
           )}
         />
 
-        <form.AppField
-          name="cooking_time"
-          children={(field) => (
-            <field.InputField
-              type="number"
-              label={t('recipes.form.cookingTimeLabel')}
-              placeholder="0"
-              min="0"
-            />
-          )}
-        />
-      </div>
-      <TagsFormSection
-        form={form}
-        fields={{ tags: 'tags' }}
-        tags_search_results={tags_search_results}
-      />
+        <div className="min-2xl:col-start-2 min-2xl:row-start-4 min-2xl:row-end-6">
+          <TagsFormSection
+            form={form}
+            fields={{ tags: 'tags' }}
+            tags_search_results={tags_search_results}
+          />
+        </div>
 
-      <div className="grid grid-cols-[48%_52%] gap-9">
-        <StepsFormSection
-          form={form}
-          fields={{ steps: 'steps' }}
-          title={t('recipes.form.stepsTitle')}
-        />
+        <div className="min-2xl:row-start-5 min-2xl:row-end-8">
+          <StepsFormSection
+            form={form}
+            fields={{ steps: 'steps' }}
+            title={t('recipes.form.stepsTitle')}
+          />
+        </div>
+
         <IngredientFormSection
           form={form}
           fields={{ ingredients: 'ingredients' }}

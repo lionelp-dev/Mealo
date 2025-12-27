@@ -33,6 +33,7 @@ class RecipeResource extends JsonResource
             'tags' => $this->when($this->relationLoaded('tags'), function () {
                 return TagResource::collection($this->tags)->toArray(request());
             }, []),
+            'image_url' => $this->resource->getImageUrl() ?? null,
             'created_at' => $this->resource->created_at,
             'updated_at' => $this->resource->updated_at,
         ];

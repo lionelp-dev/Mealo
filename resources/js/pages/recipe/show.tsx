@@ -17,21 +17,23 @@ function Recipe() {
   return (
     <AppLayout
       headerRightContent={
-        <div className="flex gap-2 self-end">
-          <button
-            className="btn btn-secondary"
-            onClick={() =>
-              router.visit(recipes.edit.url({ id: recipe.data.id }))
-            }
-          >
-            {t('common.buttons.edit')}
-          </button>
-          <button
-            className="btn btn-primary"
-            onClick={() => router.visit(recipes.index.url())}
-          >
-            {t('recipes.index.viewButton')}
-          </button>
+        <div className="flex items-center gap-8">
+          <div className="flex gap-4 self-end">
+            <button
+              className="btn btn-primary"
+              onClick={() =>
+                router.visit(recipes.edit.url({ id: recipe.data.id }))
+              }
+            >
+              {t('common.buttons.edit')}
+            </button>
+            <button
+              className="btn"
+              onClick={() => router.visit(recipes.index.url())}
+            >
+              {t('recipes.index.viewButton')}
+            </button>
+          </div>
           <LanguageSwitcher />
         </div>
       }
@@ -46,6 +48,16 @@ function Recipe() {
 
             <p className="text-base-content">{recipe.data.description}</p>
           </div>
+
+          {recipe.data.image_url && (
+            <div className="relative">
+              <img
+                src={recipe.data.image_url}
+                alt={recipe.data.name}
+                className="max-h-96 w-full rounded-lg object-cover shadow-lg"
+              />
+            </div>
+          )}
 
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">

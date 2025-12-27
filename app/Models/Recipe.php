@@ -9,7 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 #[UsePolicy(RecipePolicy::class)]
 class Recipe extends Model
@@ -25,6 +28,7 @@ class Recipe extends Model
         'description',
         'preparation_time',
         'cooking_time',
+        'image_path',
     ];
 
     /**
@@ -35,7 +39,7 @@ class Recipe extends Model
         $pivotData = collect($ingredients_data)->mapWithKeys(function ($ingredient_data) {
             $ingredient = Ingredient::query()->firstOrCreate([
                 'name' => $ingredient_data['name'],
-                'user_id' => $this->user_id
+                'user_id' => $this->user_id,
             ]);
             return [$ingredient->id => Arr::only($ingredient_data, ['quantity', 'unit'])];
         });
@@ -51,7 +55,7 @@ class Recipe extends Model
         $tags = collect($tags_data)->map(function ($tag_data) {
             $tag = Tag::query()->firstOrCreate([
                 'name' => $tag_data['name'],
-                'user_id' => $this->user_id
+                'user_id' => $this->user_id,
             ]);
             return $tag->id;
         });
@@ -152,5 +156,56 @@ class Recipe extends Model
         return $this->belongsToMany(Tag::class, 'recipe_tag')
             ->using(RecipeTag::class)
             ->withTimestamps();
+    }
+
+    /**
+     * Upload and store a recipe image
+     */
+    public function uploadImage(UploadedFile $file): string
+    {
+        $this->deleteImage();
+
+        $filename = 'recipe_' . $this->id . '_' . $file->hashName();
+        $directory = 'user_' . $this->user_id;
+
+        $path = $file->storeAs($directory, $filename, 'recipe_images');
+
+        $this->update(['image_path' => $path]);
+
+        return $path;
+    }
+
+    /**
+     * Delete the recipe image
+     */
+    public function deleteImage(): void
+    {
+        if ($this->image_path) {
+            Storage::disk('recipe_images')->delete($this->image_path);
+            $this->update(['image_path' => null]);
+        }
+    }
+
+    /**
+     * Get secure URL for recipe image
+     */
+    public function getImageUrl(): ?string
+    {
+        if (!$this->image_path) {
+            return null;
+        }
+
+        $timestamp = $this->updated_at ? $this->updated_at->timestamp : time();
+        return route('recipes.image', ['recipe' => $this->id]) . '?v=' . $timestamp;
+    }
+
+    /**
+     * Boot method for model events
+     */
+    protected static function booted(): void
+    {
+        static::deleting(function (Recipe $recipe) {
+            $recipe->deleteImage();
+        });
     }
 }

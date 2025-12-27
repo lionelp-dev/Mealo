@@ -6,13 +6,7 @@ import { DayPlannedMeals } from '../stores/week-meal-planner';
 export function useMealPlanData() {
   const context = useMealPlanContext();
   const { weekStart, mealTimes, plannedMeals, recipes } = context;
-  
-  // Debug logs pour Storybook
-  console.log('🔍 useMealPlanData - context:', context);
-  console.log('🔍 recipes:', recipes);
-  console.log('🔍 recipes.data:', recipes?.data);
-  console.log('🔍 recipes.data.length:', recipes?.data?.length);
-  
+
   const currWeekStart = DateTime.fromISO(weekStart);
 
   const weekPlannedMeals = useMemo<DayPlannedMeals[]>(() => {

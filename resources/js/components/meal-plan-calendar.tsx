@@ -29,7 +29,7 @@ export default function MealPlanCalendar() {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 gap-x-5 gap-y-0 pb-4 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(22.5rem,1fr))] gap-x-6 gap-y-6">
       {weekPlannedMeals.map((dayPlannedMeals) => {
         const { date } = dayPlannedMeals;
         const isToday = date.hasSame(today, 'day');
@@ -37,7 +37,7 @@ export default function MealPlanCalendar() {
           <div
             key={date.toISODate()}
             ref={isToday ? currentDayRef : null}
-            className="flex flex-col gap-4 pt-4"
+            className="flex flex-col gap-5"
           >
             <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
             <MealPlanSlots dayPlannedMeals={dayPlannedMeals} />

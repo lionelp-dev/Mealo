@@ -57,7 +57,7 @@ class ShoppingListController extends Controller
         );
 
         if ($success) {
-            return back()->with('success');
+            return back()->with('success', 'Ingredient updated successfully');
         }
 
         return response()->json(['error' => 'Failed to update ingredient'], 500);

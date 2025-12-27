@@ -1,11 +1,12 @@
 import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
+import { cn } from '@/lib/utils';
 import { tagSchema } from '@/schemas/recipe.schema';
 import { useTagSearchStore } from '@/stores/tag-search';
 import { Recipe, Tag } from '@/types';
 import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Plus } from 'lucide-react';
+import { Plus, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -87,50 +88,62 @@ const TagsFormSection = withFieldGroup({
       <group.AppField
         name="tags"
         mode="array"
-        children={(field) => (
+        children={(tags_field) => (
           <div className="flex flex-col gap-4">
-            <span className="font-medium text-base-content">
+            <span className="text-md text-base-content">
               {t('recipes.form.tagsTitle')}
             </span>
 
-            {field.state.value.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {field.state.value.map((tag, index) => (
-                  <span
-                    key={index}
-                    className="inline-flex items-center gap-1 rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
-                  >
-                    {tag.name}
-                    <button
-                      type="button"
-                      onClick={() => field.removeValue(index)}
-                      className="ml-1 text-blue-600 hover:text-blue-800"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                ))}
-              </div>
-            )}
-
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-6">
               <Popover.Root>
                 <Popover.Anchor className="flex flex-1">
                   <form.AppField
                     name="name"
                     children={(field) => (
                       <Popover.Trigger className="flex-1">
-                        <field.InputField
-                          data-tag-input
-                          value={searchTerm || field.state.value}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            field.handleChange(value);
-                            setSearchTerm(value);
-                          }}
-                          placeholder={t('recipes.tags.namePlaceholder')}
-                          autoComplete="off"
-                        />
+                        <label
+                          className={cn(
+                            `${tags_field.state.value.length > 0 && 'input pt-2 pr-4 pb-4 pl-3'}`,
+                            'flex h-fit w-full flex-col items-start gap-4 text-left [&>div:first-of-type]:w-full',
+                          )}
+                        >
+                          <div
+                            className={`${tags_field.state.value.length > 0 && 'py-2'}`}
+                          >
+                            <field.InputField
+                              className="-mb-1 w-full py-2 outline outline-base-300"
+                              data-tag-input
+                              value={searchTerm || field.state.value}
+                              onChange={(e) => {
+                                const value = e.target.value;
+                                field.handleChange(value);
+                                setSearchTerm(value);
+                              }}
+                              placeholder={t('recipes.tags.namePlaceholder')}
+                              autoComplete="off"
+                            />
+                          </div>
+                          {tags_field.state.value.length > 0 && (
+                            <div className="max-h-[6lh] overflow-y-scroll">
+                              <div className="flex flex-wrap gap-3">
+                                {tags_field.state.value.map((tag, index) => (
+                                  <span
+                                    key={index}
+                                    className="badge flex cursor-pointer content-center badge-secondary"
+                                    onClick={() =>
+                                      tags_field.removeValue(index)
+                                    }
+                                  >
+                                    <span className="text-secondary-content">
+                                      {tag.name}
+                                    </span>
+                                    <X size={14} />
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                        </label>
                       </Popover.Trigger>
                     )}
                   />
@@ -176,7 +189,7 @@ const TagsFormSection = withFieldGroup({
                 {(state) => (
                   <button
                     disabled={!state.canSubmit || isSearching}
-                    className="btn w-fit btn-secondary"
+                    className="btn w-fit"
                     onClick={(e) => {
                       e.preventDefault();
                       form.handleSubmit();

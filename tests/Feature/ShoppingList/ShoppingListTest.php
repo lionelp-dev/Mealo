@@ -251,8 +251,8 @@ test('user can toggle ingredient checked status', function () {
         ['is_checked' => true]
     );
 
-    $response->assertStatus(200);
-    $response->assertJson(['success' => true]);
+    $response->assertStatus(302);
+    $response->assertSessionHas('success');
 
     $ingredient->refresh();
     expect($ingredient->is_checked)->toBeTrue();
@@ -263,7 +263,7 @@ test('user can toggle ingredient checked status', function () {
         ['is_checked' => false]
     );
 
-    $response->assertStatus(200);
+    $response->assertStatus(302);
     $ingredient->refresh();
     expect($ingredient->is_checked)->toBeFalse();
 });

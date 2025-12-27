@@ -108,13 +108,15 @@ export type Recipe = {
   ingredients: Ingredient[];
   steps: Step[];
   tags: Tag[];
+  image_url?: string | null;
+  image?: File | null;
 };
 
 export type PlannedMeal = {
   id: number;
   planned_date: string;
   meal_time_id: number;
-  recipe: Pick<Recipe, 'id' | 'name'>;
+  recipe: Pick<Recipe, 'id' | 'name' | 'image_url'>;
 };
 
 export type ShoppingList = {
