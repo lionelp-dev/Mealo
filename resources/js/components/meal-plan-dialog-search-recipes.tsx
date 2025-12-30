@@ -53,15 +53,14 @@ export default function MealPlanDialogSearchRecipes() {
   }, [searchTerm, triggerSearch]);
 
   return (
-    <label className="input input-md flex w-full shrink-0">
-      <Search className="text-base-content" size={18} />
+    <label className="input col-start-1 col-end-3 input-md flex w-full gap-3 input-secondary">
+      <Search className="mb-[2px] text-secondary" size={16} />
       <input
         data-search-input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder={t('mealPlanning.searchRecipes')}
         disabled={isSearching}
-        className={` ${isSearching ? 'cursor-wait opacity-50' : ''}`}
       />
     </label>
   );

@@ -1,11 +1,10 @@
 import * as Popover from '@radix-ui/react-popover';
 import { EllipsisVertical } from 'lucide-react';
 
+import { useMealPlanDayActions } from '@/hooks/use-meal-plan-day-actions';
+import { DayPlannedMeals } from '@/types';
 import { Button } from '@headlessui/react';
-import { useMealPlanDayActions } from '../hooks/use-meal-plan-day-actions';
-import { useDayHeaderState } from '../hooks/use-meal-plan-day-state';
-import { DayPlannedMeals } from '../stores/week-meal-planner';
-import DayActionsMenu from './meal-plan-day-actions-menu';
+import { useTranslation } from 'react-i18next';
 
 type MealPlanDayHeaderProps = {
   dayPlannedMeals: DayPlannedMeals;
@@ -14,37 +13,24 @@ type MealPlanDayHeaderProps = {
 export default function MealPlanDayHeader({
   dayPlannedMeals,
 }: MealPlanDayHeaderProps) {
+  const { t } = useTranslation();
+
   const {
     date,
     isCurrentDay,
     hasPlannedMeals,
+    copiedDayPlannedMeals,
     isOpen,
     setIsOpen,
-    closeMenu,
     toggleMenu,
-  } = useDayHeaderState(dayPlannedMeals);
-
-  const { copiedDayPlannedMeals, handleCopy, handlePaste, handleDeleteAll } =
-    useMealPlanDayActions(dayPlannedMeals);
-
-  const onCopy = () => {
-    handleCopy();
-    closeMenu();
-  };
-
-  const onPaste = () => {
-    handlePaste();
-    closeMenu();
-  };
-
-  const onDeleteAll = () => {
-    handleDeleteAll();
-    closeMenu();
-  };
+    handleCopy,
+    handlePaste,
+    handleDeleteAll,
+  } = useMealPlanDayActions(dayPlannedMeals);
 
   return (
     <div
-      className={`flex items-center justify-between gap-2 rounded-lg border bg-background px-5 py-3 shadow-sm ${
+      className={`flex h-14 items-center justify-between gap-2 rounded-lg border bg-background px-5 shadow-sm ${
         isCurrentDay ? 'border-base-content' : 'border-base-300'
       }`}
     >
@@ -56,32 +42,61 @@ export default function MealPlanDayHeader({
           {date.day}
         </div>
       </div>
-      <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-        <Popover.Trigger asChild>
-          <Button onClick={toggleMenu} className="btn btn-ghost btn-sm">
-            <EllipsisVertical size={15} className="text-base-content" />
-          </Button>
-        </Popover.Trigger>
-        <Popover.Portal>
-          <Popover.Content
-            className="z-[10000]"
-            side="bottom"
-            align="end"
-            sideOffset={4}
-            onInteractOutside={() => {
-              setIsOpen(false);
-            }}
-          >
-            <DayActionsMenu
-              hasPlannedMeals={hasPlannedMeals}
-              copiedDayPlannedMeals={copiedDayPlannedMeals}
-              onCopy={onCopy}
-              onPaste={onPaste}
-              onDeleteAll={onDeleteAll}
-            />
-          </Popover.Content>
-        </Popover.Portal>
-      </Popover.Root>
+      {(hasPlannedMeals || copiedDayPlannedMeals) && (
+        <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
+          <Popover.Trigger asChild>
+            <Button
+              onClick={toggleMenu}
+              className="btn btn-circle btn-ghost btn-sm hover:bg-base-200"
+            >
+              <EllipsisVertical
+                size={15}
+                className="rotate-90 text-base-content/75"
+              />
+            </Button>
+          </Popover.Trigger>
+          <Popover.Portal>
+            <Popover.Content
+              className="z-[10000]"
+              side="bottom"
+              align="end"
+              sideOffset={4}
+              onMouseLeave={() => {
+                setIsOpen(false);
+              }}
+            >
+              <div className="rounded-md border border-base-300 bg-base-100 p-2 text-right shadow-[1px_1px_1px_4px_rgba(0,0,0,0.01)]">
+                <div className="flex flex-col gap-1">
+                  {hasPlannedMeals && (
+                    <button
+                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
+                      onClick={handleCopy}
+                    >
+                      {t('mealPlanning.actions.copy')}
+                    </button>
+                  )}
+                  {copiedDayPlannedMeals && (
+                    <button
+                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
+                      onClick={handlePaste}
+                    >
+                      {t('mealPlanning.actions.paste')}
+                    </button>
+                  )}
+                  {hasPlannedMeals && (
+                    <button
+                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
+                      onClick={handleDeleteAll}
+                    >
+                      {t('mealPlanning.actions.deleteAll')}
+                    </button>
+                  )}
+                </div>
+              </div>
+            </Popover.Content>
+          </Popover.Portal>
+        </Popover.Root>
+      )}
     </div>
   );
 }

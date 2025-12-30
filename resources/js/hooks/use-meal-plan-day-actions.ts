@@ -1,96 +1,90 @@
-import { router } from '@inertiajs/react';
-import { useMealPlanData } from './use-meal-plan-data';
-import { useWeekPlannedMealsStore } from '../stores/week-meal-planner';
-import { 
-  DayPlannedMeals,
-  CopiedMealSlot,
-  CopiedDayPlannedMeals 
-} from '../stores/week-meal-planner';
+import { useMealPlanClipboardStore } from '@/stores/meal-plan-clipboard';
+import { DayPlannedMeals } from '@/types';
+import { DateTime } from 'luxon';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useMealPlanActions } from './use-meal-plan-actions';
 
-const prepareMealSlotsForCopy = (
-  dayPlannedMeals: DayPlannedMeals,
-): CopiedMealSlot[] => {
-  return dayPlannedMeals.plannedMealsSlots
-    .flatMap((slot) => slot.plannedMeals)
-    .map((plannedMeal) => ({
-      recipe_id: plannedMeal.recipe.id,
-      meal_time_id: plannedMeal.meal_time_id,
-      planned_date: plannedMeal.planned_date,
-    }));
-};
+export const useMealPlanDayActions = (dayPlannedMeals: DayPlannedMeals) => {
+  const { i18n } = useTranslation();
 
-const preparePastePayload = (
-  copiedMeals: CopiedDayPlannedMeals,
-  targetDate: string,
-): CopiedDayPlannedMeals => ({
-  planned_meals: copiedMeals.planned_meals.map((plannedMeal) => ({
-    ...plannedMeal,
-    planned_date: targetDate,
-  })),
-});
+  const [date, setDate] = useState(
+    dayPlannedMeals.date.setLocale(i18n.language),
+  );
 
-export function useMealPlanDayActions(dayPlannedMeals: DayPlannedMeals) {
-  const { setCopiedDayPlannedMeals, copiedDayPlannedMeals } = useWeekPlannedMealsStore();
+  useEffect(() => {
+    setDate(dayPlannedMeals.date.setLocale(i18n.language));
+  }, [i18n.language]);
+
+  const today = DateTime.now();
+
+  const isCurrentDay = useMemo(
+    () => dayPlannedMeals.date.hasSame(today, 'day'),
+    [dayPlannedMeals.date, today],
+  );
+
+  const hasPlannedMeals = useMemo(
+    () =>
+      (dayPlannedMeals.plannedMealsSlots &&
+        dayPlannedMeals.plannedMealsSlots.length > 0) ||
+      false,
+    [dayPlannedMeals.plannedMealsSlots],
+  );
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const closeMenu = useCallback(() => setIsOpen(false), []);
+  const toggleMenu = useCallback(() => setIsOpen((prev) => !prev), []);
+
+  const { copiedDayPlannedMeals, setCopiedDayPlannedMeals } =
+    useMealPlanClipboardStore();
+
+  const { planMeals, unplanMeals } = useMealPlanActions();
 
   const handleCopy = () => {
-    if (dayPlannedMeals) {
-      const mealsSlots = prepareMealSlotsForCopy(dayPlannedMeals);
-      setCopiedDayPlannedMeals({ planned_meals: mealsSlots });
-    }
+    setCopiedDayPlannedMeals(dayPlannedMeals);
+    closeMenu();
   };
 
   const handlePaste = () => {
-    const isoDate = dayPlannedMeals.date.toISODate();
-    if (!isoDate || !copiedDayPlannedMeals) return;
+    const date = dayPlannedMeals.date.toISODate();
 
-    const payload = preparePastePayload(copiedDayPlannedMeals, isoDate);
-    
-    router.post(
-      '/planned-meals/bulk',
-      { planned_meals: payload.planned_meals },
-      {
-        preserveUrl: true,
-        preserveState: true,
-        preserveScroll: true,
-      },
-    );
+    if (!copiedDayPlannedMeals || !date) return;
+
+    planMeals({
+      meals: copiedDayPlannedMeals.plannedMealsSlots.flatMap((mealSlot) =>
+        mealSlot.plannedMeals.map((meal) => ({
+          meal_time_id: mealSlot.mealTime.id,
+          recipe_id: meal.recipe.id,
+          planned_date: date,
+        })),
+      ),
+    });
+
     setCopiedDayPlannedMeals(null);
+    closeMenu();
   };
 
   const handleDeleteAll = () => {
-    const plannedMealsId = dayPlannedMeals?.plannedMealsSlots.flatMap((slot) =>
-      slot.plannedMeals.map((plannedMeal) => plannedMeal.id),
+    unplanMeals(
+      dayPlannedMeals.plannedMealsSlots.flatMap((mealSlot) =>
+        mealSlot.plannedMeals.map((plannedMeal) => plannedMeal.id),
+      ),
     );
-    
-    if (plannedMealsId && plannedMealsId.length > 0) {
-      router.delete(`/planned-meals`, {
-        data: { planned_meals: plannedMealsId },
-        preserveUrl: true,
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: () => {
-          router.reload({ only: ['plannedMeals'] });
-        },
-      });
-    }
-  };
-
-  const handleUnplanMeal = (id: number) => {
-    router.delete(`/planned-meals/${id}`, {
-      preserveUrl: true,
-      preserveState: true,
-      preserveScroll: true,
-      onSuccess: () => {
-        router.reload({ only: ['plannedMeals'] });
-      },
-    });
+    closeMenu();
   };
 
   return {
+    isOpen,
+    setIsOpen,
+    closeMenu,
+    toggleMenu,
+    date,
+    isCurrentDay,
+    hasPlannedMeals,
     copiedDayPlannedMeals,
     handleCopy,
     handlePaste,
     handleDeleteAll,
-    handleUnplanMeal,
   };
-}
+};

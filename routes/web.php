@@ -18,9 +18,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
     Route::post('recipes/{recipe}/upload-image', [RecipeController::class, 'uploadImage'])->name('recipes.upload-image');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
-    Route::resource('planned-meals', PlannedMealController::class);
-    Route::post('planned-meals/bulk', [PlannedMealController::class, 'bulkStore'])->name('planned-meals.bulk-store');
-    Route::delete('planned-meals', [PlannedMealController::class, 'bulkDestroy'])->name('planned-meals.bulk-destroy');
+    Route::resource('planned-meals', PlannedMealController::class)->except(['destroy']);
+    Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
     Route::get('shopping-lists', [ShoppingListController::class, 'index'])->name('shopping-lists.index');
     Route::put('shopping-lists/ingredients/{ingredient}', [ShoppingListController::class, 'toggleIngredient'])->name('shopping-lists.toggle-ingredient');
 });

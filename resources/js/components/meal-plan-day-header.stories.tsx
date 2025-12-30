@@ -1,8 +1,8 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { DateTime } from 'luxon';
 import { MealPlanProvider } from '../contexts/meal-plan-context';
-import { DayPlannedMeals } from '../stores/week-meal-planner';
 import {
+  DayPlannedMeals,
   MealTime,
   PaginatedCollection,
   PlannedMeal,

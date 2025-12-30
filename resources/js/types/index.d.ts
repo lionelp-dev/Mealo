@@ -119,6 +119,16 @@ export type PlannedMeal = {
   recipe: Pick<Recipe, 'id' | 'name' | 'image_url'>;
 };
 
+export type PlannedMealsSlot = {
+  mealTime: MealTime;
+  plannedMeals: PlannedMeal[];
+};
+
+export type DayPlannedMeals = {
+  date: DateTime;
+  plannedMealsSlots: PlannedMealsSlot[];
+};
+
 export type ShoppingList = {
   data: {
     id: number;

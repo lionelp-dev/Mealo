@@ -154,6 +154,7 @@
     },
     "delete": {
       "confirmTitle": "Êtes-vous sûr de vouloir supprimer la recette ?",
+      "confirmDescription": "Une fois cette recette supprimée, elle sera définitivement supprimée. Êtes-vous sûr de vouloir supprimer \"{{recipeName}}\" ?",
       "confirmButton": "Supprimer",
       "cancelButton": "Annuler"
     }
@@ -168,7 +169,7 @@
       "deleteAll": "Supprimer tout",
       "planMeal": "Planifier un repas"
     },
-    "searchRecipes": "Rechercher des recettes...",
+    "searchRecipes": "Rechercher...",
     "searchingRecipes": "Recherche de recettes...",
     "noRecipesFound": "Aucune recette trouvée",
     "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou vos filtres",
@@ -183,6 +184,11 @@
       "filterRecipes": "Filtrer les recettes",
       "addFilters": "Ajouter des filtres",
       "whenToEat": "Quand souhaitez-vous manger cela ?",
+      "multiSelect": {
+        "abandon": "Abandonner",
+        "clearSelection": "Effacer sélection",
+        "plan": "Plannifier"
+      },
       "filters": {
         "mealTime": "Moment du repas",
         "preparationTime": "Temps de préparation",
@@ -193,7 +199,7 @@
         "dinner": "Dîner",
         "diner": "Dîner",
         "snack": "Collation",
-        "clearAllFilters": "Effacer tous les filtres",
+        "clearAllFilters": "Supprimer tout",
         "prep": "Prép: ",
         "cook": "Cuiss: ",
         "filter": "filtre",
@@ -298,6 +304,7 @@
       "cancel": "Annuler",
       "delete": "Supprimer",
       "edit": "Modifier",
+      "view": "Voir",
       "create": "Créer",
       "add": "Ajouter",
       "remove": "Supprimer",

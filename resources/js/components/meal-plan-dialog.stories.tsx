@@ -324,7 +324,6 @@ const meta: Meta<typeof MealPlanDialog> = {
     },
   },
   args: {
-    open: true,
     children: (
       <div className="overflow-y-scroll">
         <MealPlanDialogRecipes />

@@ -51,7 +51,7 @@ test('user can plan a meal successfully', function () {
         'planned_date' => $plannedDate,
     ];
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMeal);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), ['planned_meals' => [$plannedMeal]]);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Meal successfully planned');
@@ -68,25 +68,29 @@ test('user cannot plan meal with invalid data', function () {
     // Empty data should fail validation
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), []);
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['recipe_id', 'planned_date', 'meal_time_id']);
+    $response->assertSessionHasErrors(['planned_meals']);
 
     // Invalid data types should fail validation
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => 'invalid',
-        'planned_date' => 'invalid-date',
-        'meal_time_id' => 'invalid',
+        'planned_meals' => [[
+            'recipe_id' => 'invalid',
+            'planned_date' => 'invalid-date',
+            'meal_time_id' => 'invalid',
+        ]]
     ]);
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['recipe_id', 'planned_date', 'meal_time_id']);
+    $response->assertSessionHasErrors(['planned_meals.0.recipe_id', 'planned_meals.0.planned_date', 'planned_meals.0.meal_time_id']);
 
     // Non-existent IDs should fail validation
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => 999999,
-        'planned_date' => now()->format('Y-m-d'),
-        'meal_time_id' => 999999,
+        'planned_meals' => [[
+            'recipe_id' => 999999,
+            'planned_date' => now()->format('Y-m-d'),
+            'meal_time_id' => 999999,
+        ]]
     ]);
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['recipe_id', 'meal_time_id']);
+    $response->assertSessionHasErrors(['planned_meals.0.recipe_id', 'planned_meals.0.meal_time_id']);
 
     // No planned meal should be created after failed validations
     $this->assertDatabaseMissing('planned_meals', [
@@ -105,7 +109,7 @@ test('user cannot create planned meal with other users recipe', function () {
         'planned_date' => now()->addDay()->format('Y-m-d'),
     ];
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMeal);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), ['planned_meals' => [$plannedMeal]]);
 
     // Should be forbidden due to recipe ownership policy
     $response->assertStatus(403);
@@ -201,7 +205,9 @@ test('user can delete a planned meal successfully', function () {
         'planned_date' => $plannedDate,
     ]);
 
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy', $plannedMeal));
+    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+        'planned_meals' => [$plannedMeal->id]
+    ]);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Planned meal successfully deleted');
@@ -213,7 +219,7 @@ test('user can delete a planned meal successfully', function () {
     ]);
 });
 
-test('user can bulk store planned meals successfully', function () {
+test('user can store multiple planned meals successfully', function () {
     $recipe1 = createRecipeResource($this->user->id);
     $recipe2 = createRecipeResource($this->user->id);
     $mealTime1 = \App\Models\MealTime::first();
@@ -234,7 +240,7 @@ test('user can bulk store planned meals successfully', function () {
         ]
     ];
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.bulk-store'), $plannedMealsData);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Meals successfully planned');
@@ -254,14 +260,14 @@ test('user can bulk store planned meals successfully', function () {
     ]);
 });
 
-test('user cannot bulk store planned meals with invalid data', function () {
+test('user cannot store multiple planned meals with invalid data', function () {
     // Empty array should fail validation
-    $response = $this->actingAs($this->user)->post(route('planned-meals.bulk-store'), []);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), []);
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['planned_meals']);
 
     // Invalid data in bulk operation should fail
-    $response = $this->actingAs($this->user)->post(route('planned-meals.bulk-store'), [
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), [
         'planned_meals' => [
             [
                 'recipe_id' => 'invalid',
@@ -293,7 +299,7 @@ test('user cannot bulk store planned meals with invalid data', function () {
     ]);
 });
 
-test('user cannot bulk store planned meals with other users recipes', function () {
+test('user cannot store multiple planned meals with other users recipes', function () {
     $otherUser = \App\Models\User::factory()->create();
     $otherRecipe = createRecipeResource($otherUser->id);
     $ownRecipe = createRecipeResource($this->user->id);
@@ -314,7 +320,7 @@ test('user cannot bulk store planned meals with other users recipes', function (
         ]
     ];
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.bulk-store'), $plannedMealsData);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
 
     // Should be forbidden due to recipe ownership policy
     $response->assertStatus(403);
@@ -323,7 +329,7 @@ test('user cannot bulk store planned meals with other users recipes', function (
     ]);
 });
 
-test('user can bulk delete planned meals successfully', function () {
+test('user can delete multiple planned meals successfully', function () {
     $recipe1 = createRecipeResource($this->user->id);
     $recipe2 = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
@@ -342,7 +348,7 @@ test('user can bulk delete planned meals successfully', function () {
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
     ]);
 
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.bulk-destroy'), [
+    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
         'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id]
     ]);
 
@@ -385,7 +391,9 @@ test('user cannot access other users planned meals', function () {
     $response->assertStatus(403);
 
     // Should not be able to delete other user's planned meal
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy', $otherUserPlannedMeal));
+    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+        'planned_meals' => [$otherUserPlannedMeal->id]
+    ]);
     $response->assertStatus(403);
 
     // Other user's planned meal should remain untouched
@@ -395,7 +403,7 @@ test('user cannot access other users planned meals', function () {
     ]);
 });
 
-test('user cannot bulk delete other users planned meals', function () {
+test('user cannot delete other users planned meals in bulk operation', function () {
     $otherUser = \App\Models\User::factory()->create();
     $otherRecipe1 = createRecipeResource($otherUser->id);
     $otherRecipe2 = createRecipeResource($otherUser->id);
@@ -425,8 +433,8 @@ test('user cannot bulk delete other users planned meals', function () {
         'planned_date' => now()->addDays(3)->format('Y-m-d'),
     ]);
 
-    // Attempt to bulk delete other users' planned meals mixed with own
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.bulk-destroy'), [
+    // Attempt to delete other users' planned meals mixed with own
+    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
         'planned_meals' => [
             $ownPlannedMeal->id,
             $otherUserPlannedMeal1->id, // Not owned by user
@@ -434,16 +442,12 @@ test('user cannot bulk delete other users planned meals', function () {
         ]
     ]);
 
-    $response->assertStatus(302);
-    $response->assertRedirect(route('planned-meals.index'));
-    $response->assertSessionHas('success', 'Planned meals successfully deleted');
+    $response->assertStatus(403);
 
-    // Only own planned meal should be deleted
-    $this->assertDatabaseMissing('planned_meals', [
+    // All planned meals should remain untouched (no partial deletion)
+    $this->assertDatabaseHas('planned_meals', [
         'id' => $ownPlannedMeal->id,
     ]);
-
-    // Other users' planned meals should remain untouched
     $this->assertDatabaseHas('planned_meals', [
         'id' => $otherUserPlannedMeal1->id,
         'user_id' => $otherUser->id,

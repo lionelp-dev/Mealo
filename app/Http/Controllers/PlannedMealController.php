@@ -110,31 +110,6 @@ class PlannedMealController extends Controller
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StorePlannedMeal $request)
-    {
-        return DB::transaction(function () use ($request) {
-            $recipe = Recipe::findOrFail($request->recipe_id);
-            Gate::authorize('create', [PlannedMeal::class, $recipe]);
-
-            $validated = $request->safe()->only([
-                'recipe_id',
-                'meal_time_id',
-                'planned_date',
-            ]);
-
-            $plannedMeal = PlannedMeal::create([
-                'user_id' => $request->user()->id,
-                ...$validated,
-            ]);
-
-            $this->shoppingListService->regenerateAffectedShoppingLists($request->user()->id, [$plannedMeal->planned_date]);
-
-            return to_route('planned-meals.index')->with('success', 'Meal successfully planned');
-        }, attempts: 5);
-    }
 
     /**
      * Display the specified resource.
@@ -186,33 +161,11 @@ class PlannedMealController extends Controller
         }, attempts: 5);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PlannedMeal $plannedMeal)
-    {
-        return DB::transaction(function () use ($plannedMeal) {
-            Gate::authorize('delete', $plannedMeal);
-
-            $deletedDate = $plannedMeal->planned_date;
-            $userId = $plannedMeal->user_id;
-
-            $plannedMeal->delete();
-
-            // Regenerate shopping list for the affected week
-            $this->shoppingListService->regenerateAffectedShoppingLists(
-                $userId,
-                [$deletedDate]
-            );
-
-            return to_route('planned-meals.index')->with('success', 'Planned meal successfully deleted');
-        }, attempts: 5);
-    }
 
     /**
-     * Store multiple planned meals at once.
+     * Store a newly created resource in storage.
      */
-    public function bulkStore(Request $request)
+    public function store(Request $request)
     {
         return DB::transaction(function () use ($request) {
             $validated = $request->validate([
@@ -222,10 +175,12 @@ class PlannedMealController extends Controller
                 'planned_meals.*.planned_date' => ['required', 'date'],
             ]);
 
+            $plannedMealsInput = $validated['planned_meals'];
+
             $plannedMealsData = [];
             $affectedDates = [];
 
-            foreach ($validated['planned_meals'] as $plannedMealData) {
+            foreach ($plannedMealsInput as $plannedMealData) {
                 $recipe = Recipe::findOrFail($plannedMealData['recipe_id']);
                 Gate::authorize('create', [PlannedMeal::class, $recipe]);
 
@@ -249,14 +204,15 @@ class PlannedMealController extends Controller
                 $affectedDates
             );
 
-            return to_route('planned-meals.index')->with('success', 'Meals successfully planned');
+            $successMessage = count($plannedMealsInput) > 1 ? 'Meals successfully planned' : 'Meal successfully planned';
+            return to_route('planned-meals.index')->with('success', $successMessage);
         }, attempts: 5);
     }
 
     /**
-     * Remove multiple planned meals from storage.
+     * Remove the specified resource from storage.
      */
-    public function bulkDestroy(Request $request)
+    public function destroy(Request $request)
     {
         return DB::transaction(function () use ($request) {
             $validated = $request->validate([
@@ -269,6 +225,11 @@ class PlannedMealController extends Controller
             $plannedMeals = PlannedMeal::whereIn('id', $plannedMealIds)
                 ->where('user_id', $request->user()->id)
                 ->get();
+
+            // If not all requested meals were found, some don't belong to user
+            if ($plannedMeals->count() !== count($plannedMealIds)) {
+                abort(403, 'Some planned meals do not belong to you');
+            }
 
             foreach ($plannedMeals as $plannedMeal) {
                 Gate::authorize('delete', $plannedMeal);
@@ -285,7 +246,8 @@ class PlannedMealController extends Controller
                 $affectedDates
             );
 
-            return to_route('planned-meals.index')->with('success', 'Planned meals successfully deleted');
+            $successMessage = $plannedMeals->count() > 1 ? 'Planned meals successfully deleted' : 'Planned meal successfully deleted';
+            return to_route('planned-meals.index')->with('success', $successMessage);
         }, attempts: 5);
     }
 

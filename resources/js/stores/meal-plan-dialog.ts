@@ -9,6 +9,7 @@ export interface MealPlanDialogControllerActions {
   toggleRecipeSelection: (recipeId: number) => void;
   clearSelectedRecipes: () => void;
   resetState: () => void;
+  setIsMultiSelectMode: (value: boolean) => void;
 }
 
 export interface MealPlanDialogState {
@@ -16,6 +17,7 @@ export interface MealPlanDialogState {
   selectedDate: DateTime | undefined;
   selectedMealTimeId: number | undefined;
   selectedRecipesId: number[];
+  isMultiSelectMode: boolean;
 }
 
 const initialState: MealPlanDialogState = {
@@ -23,6 +25,7 @@ const initialState: MealPlanDialogState = {
   selectedDate: undefined,
   selectedMealTimeId: undefined,
   selectedRecipesId: [],
+  isMultiSelectMode: false,
 };
 
 export const useMealPlanDialogStore = create<
@@ -55,4 +58,6 @@ export const useMealPlanDialogStore = create<
   clearSelectedRecipes: () => set({ selectedRecipesId: [] }),
 
   resetState: () => set(initialState),
+
+  setIsMultiSelectMode: (value) => set({ isMultiSelectMode: value }),
 }));

@@ -42,7 +42,7 @@ test('shopping list is automatically generated when planned meal is created', fu
         'planned_date' => $plannedDate,
     ];
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMeal);
+    $response = $this->actingAs($this->user)->post(route('planned-meals.store'), ['planned_meals' => [$plannedMeal]]);
     $response->assertStatus(302);
 
     // Shopping list should be auto-generated for the week
@@ -214,7 +214,9 @@ test('shopping list regenerates when planned meal is deleted', function () {
     expect($shoppingList->ingredients)->toHaveCount($recipe->resource->ingredients->count());
 
     // Delete planned meal
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy', $plannedMeal));
+    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+        'planned_meals' => [$plannedMeal->id]
+    ]);
     $response->assertStatus(302); // Should redirect with success message
 
     // Shopping list should be regenerated (empty if no other planned meals)
@@ -232,9 +234,11 @@ test('user can toggle ingredient checked status', function () {
 
     // Create planned meal to generate shopping list
     $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => $recipe->resource->id,
-        'meal_time_id' => $mealTime->id,
-        'planned_date' => $plannedDate,
+        'planned_meals' => [[
+            'recipe_id' => $recipe->resource->id,
+            'meal_time_id' => $mealTime->id,
+            'planned_date' => $plannedDate,
+        ]]
     ]);
 
     $weekStart = Carbon::parse($plannedDate)->startOfWeek();
@@ -386,15 +390,19 @@ test('shopping list only shows current week by default', function () {
     $nextWeekDate = now()->startOfWeek()->addWeek()->addDays(1)->format('Y-m-d');
 
     $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => $recipe->resource->id,
-        'meal_time_id' => $mealTime->id,
-        'planned_date' => $thisWeekDate,
+        'planned_meals' => [[
+            'recipe_id' => $recipe->resource->id,
+            'meal_time_id' => $mealTime->id,
+            'planned_date' => $thisWeekDate,
+        ]]
     ]);
 
     $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => $recipe->resource->id,
-        'meal_time_id' => $mealTime->id,
-        'planned_date' => $nextWeekDate,
+        'planned_meals' => [[
+            'recipe_id' => $recipe->resource->id,
+            'meal_time_id' => $mealTime->id,
+            'planned_date' => $nextWeekDate,
+        ]]
     ]);
 
     // Should have shopping lists for both weeks
@@ -428,9 +436,11 @@ test('shopping list can be filtered by week', function () {
     $nextWeekDate = now()->startOfWeek()->addWeek()->addDays(1)->format('Y-m-d');
 
     $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => $recipe->resource->id,
-        'meal_time_id' => $mealTime->id,
-        'planned_date' => $nextWeekDate,
+        'planned_meals' => [[
+            'recipe_id' => $recipe->resource->id,
+            'meal_time_id' => $mealTime->id,
+            'planned_date' => $nextWeekDate,
+        ]]
     ]);
 
     $nextWeekStart = Carbon::parse($nextWeekDate)->startOfWeek();
@@ -466,9 +476,11 @@ test('user cannot toggle ingredient with invalid data', function () {
 
     // Create planned meal to generate shopping list
     $this->actingAs($this->user)->post(route('planned-meals.store'), [
-        'recipe_id' => $recipe->resource->id,
-        'meal_time_id' => $mealTime->id,
-        'planned_date' => $plannedDate,
+        'planned_meals' => [[
+            'recipe_id' => $recipe->resource->id,
+            'meal_time_id' => $mealTime->id,
+            'planned_date' => $plannedDate,
+        ]]
     ]);
 
     $weekStart = Carbon::parse($plannedDate)->startOfWeek();
@@ -497,13 +509,13 @@ test('user cannot toggle ingredient with invalid data', function () {
     $response->assertSessionHasErrors(['is_checked']);
 });
 
-test('bulk planned meal operations properly regenerate shopping lists', function () {
+test('multiple planned meal operations properly regenerate shopping lists', function () {
     $recipe1 = createRecipeResource($this->user->id);
     $recipe2 = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
     $plannedDate = now()->startOfWeek()->addDays(1)->format('Y-m-d');
 
-    // Test bulk store
+    // Test multiple store
     $plannedMealsData = [
         'planned_meals' => [
             [
@@ -519,7 +531,7 @@ test('bulk planned meal operations properly regenerate shopping lists', function
         ]
     ];
 
-    $this->actingAs($this->user)->post(route('planned-meals.bulk-store'), $plannedMealsData);
+    $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
 
     $weekStart = Carbon::parse($plannedDate)->startOfWeek();
     $shoppingList = ShoppingList::where('user_id', $this->user->id)
@@ -535,8 +547,8 @@ test('bulk planned meal operations properly regenerate shopping lists', function
     $plannedMeal2 = \App\Models\PlannedMeal::where('user_id', $this->user->id)
         ->where('recipe_id', $recipe2->resource->id)->first();
 
-    // Test bulk delete
-    $this->actingAs($this->user)->delete(route('planned-meals.bulk-destroy'), [
+    // Test multiple delete
+    $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
         'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id]
     ]);
 

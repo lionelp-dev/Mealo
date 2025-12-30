@@ -12,7 +12,7 @@ export function MealPlanDialogActiveFilter({ filter, handleDelete }: Props) {
     <button
       key={`${filter.type}-${filter.value}`}
       onClick={() => handleDelete(filter)}
-      className="flex cursor-pointer items-center gap-2 rounded-full border py-1.5 pr-3 pl-4 text-sm whitespace-nowrap text-base-content transition-colors hover:border-error hover:bg-base-100 disabled:cursor-not-allowed disabled:opacity-50 [&:hover]:text-error"
+      className="badge flex cursor-pointer items-center gap-2 border-base-300 badge-xl text-sm whitespace-nowrap text-base-content transition-colors hover:border-error hover:bg-base-100 disabled:cursor-not-allowed disabled:opacity-50 [&:hover]:text-error"
     >
       <span>
         {filter.type === 'preparation_time' &&

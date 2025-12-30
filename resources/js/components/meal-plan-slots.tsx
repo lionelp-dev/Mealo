@@ -1,14 +1,17 @@
 import { useRef } from 'react';
 
-import { DayPlannedMeals } from '../stores/week-meal-planner';
+import { DayPlannedMeals } from '@/types';
+import { useTranslation } from 'react-i18next';
 import MealPlanEmptySlot from './meal-plan-empty-slot';
-import MealPlanMealList from './meal-plan-meal-list';
+import MealPlanMealCard from './meal-plan-meal-card';
 
 type MealPlanProps = {
   dayPlannedMeals: DayPlannedMeals;
 };
 
 export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
+  const { t } = useTranslation();
+
   const { date, plannedMealsSlots } = dayPlannedMeals;
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -21,7 +24,20 @@ export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
       >
         <div className="flex h-full flex-col gap-2.5">
           <div className="flex flex-1 flex-col gap-3 rounded-lg border-base-300 bg-base-100">
-            <MealPlanMealList plannedMealsSlots={plannedMealsSlots} />
+            {plannedMealsSlots.length > 0 &&
+              plannedMealsSlots.map(({ mealTime, plannedMeals }) => (
+                <div
+                  key={mealTime.id}
+                  className="flex flex-col justify-between gap-5 py-2"
+                >
+                  <span className="w-fit rounded-full bg-secondary px-3 py-1 text-xs text-secondary-content">
+                    {t(`mealPlanning.dialog.filters.${mealTime.name}`)}
+                  </span>
+                  {plannedMeals.map((plannedMeal) => (
+                    <MealPlanMealCard plannedMeal={plannedMeal} />
+                  ))}
+                </div>
+              ))}
             <MealPlanEmptySlot containerRef={scrollContainerRef} date={date} />
           </div>
         </div>

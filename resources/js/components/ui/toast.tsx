@@ -35,11 +35,9 @@ function ToastItem({ message, type, onClose }: ToastItemProps) {
   };
 
   return (
-    <div className="toast-end toast">
-      <div className={`alert ${typeStyles[type]}`}>
-        <span>{icons[type]}</span>
-        <span>{message}</span>
-      </div>
+    <div className={`alert ${typeStyles[type]} mb-2`}>
+      <span>{icons[type]}</span>
+      <span>{message}</span>
     </div>
   );
 }
@@ -49,30 +47,39 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
 
   useEffect(() => {
     const newToasts: Toast[] = [];
+    const timestamp = Date.now();
 
     if (flash.success) {
       newToasts.push({
-        id: 'success',
+        id: `success-${timestamp}`,
         message: flash.success,
         type: 'success',
       });
     }
     if (flash.error) {
-      newToasts.push({ id: 'error', message: flash.error, type: 'error' });
+      newToasts.push({
+        id: `error-${timestamp}`,
+        message: flash.error,
+        type: 'error',
+      });
     }
     if (flash.warning) {
       newToasts.push({
-        id: 'warning',
+        id: `warning-${timestamp}`,
         message: flash.warning,
         type: 'warning',
       });
     }
     if (flash.message) {
-      newToasts.push({ id: 'message', message: flash.message, type: 'info' });
+      newToasts.push({
+        id: `message-${timestamp}`,
+        message: flash.message,
+        type: 'info',
+      });
     }
 
     if (newToasts.length > 0) {
-      setToasts(newToasts);
+      setToasts((prev) => [...prev, ...newToasts]);
     }
   }, [flash]);
 
@@ -85,7 +92,7 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="toast-end toast z-[1000]">
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}

@@ -180,6 +180,11 @@
       "filterRecipes": "Filter recipes",
       "addFilters": "Add filters",
       "whenToEat": "When would you like to eat this?",
+      "multiSelect": {
+        "abandon": "Cancel",
+        "clearSelection": "Clear selection",
+        "plan": "Plan"
+      },
       "filters": {
         "mealTime": "Meal Time",
         "preparationTime": "Preparation Time",
@@ -294,6 +299,7 @@
       "cancel": "Cancel",
       "delete": "Delete",
       "edit": "Edit",
+      "view": "View",
       "create": "Create",
       "add": "Add",
       "remove": "Remove",
