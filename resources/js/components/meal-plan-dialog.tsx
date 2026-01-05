@@ -6,13 +6,18 @@ import { useRecipeSearchStore } from '@/stores/recipe-search';
 import { ReactNode, useState } from 'react';
 import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
-import MealPlanDialogFilters from './meal-plan-dialog-filters';
 import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
 
 import i18n from '../lib/i18n';
 
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
+import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
+import { useUrlFilterSync } from '@/hooks/use-url-filter-sync';
+import { cn } from '@/lib/utils';
+import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import * as Popover from '@radix-ui/react-popover';
+import { RecipesActiveFilters } from './recipes-active-filters';
+import { RecipesPopoverFilters } from './recipes-popover-filters';
 
 type MealPlanDialogProps = {
   children?: ReactNode;
@@ -21,20 +26,23 @@ type MealPlanDialogProps = {
 export default function MealPlanDialog({ children }: MealPlanDialogProps) {
   const { t } = useTranslation();
 
-  const { recipes, mealTimes } = useMealPlanData();
+  const { recipes, mealTimes, tags } = useMealPlanData();
 
   const { isOpen, setIsOpen, selectedDate } = useMealPlanDialogStore();
 
-  const { searchTerm, activeFilters } = useRecipeSearchStore();
+  const { searchTerm } = useRecipeSearchStore();
 
   const { planMeals } = useMealPlanActions();
+
+  const { activeFilters, clearAllFilters } = useRecipeFiltersStore();
+  useUrlFilterSync();
 
   const {
     isMultiSelectMode,
     setIsMultiSelectMode,
     selectedRecipesId,
     clearSelectedRecipes,
-  } = useMealPlanDialogStore();
+  } = useMultiSelectRecipe();
 
   const [openPlanPopover, setOpenPlanPopover] = useState<boolean>(false);
 
@@ -72,12 +80,32 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                 className={`btn col-start-4 row-start-1 gap-2 justify-self-end whitespace-nowrap btn-outline btn-secondary ${
                   isMultiSelectMode ? 'btn-active' : ''
                 }`}
-                onClick={() => setIsMultiSelectMode(!isMultiSelectMode)}
+                onClick={() => {
+                  setIsMultiSelectMode(!isMultiSelectMode);
+                  if (!isMultiSelectMode) {
+                    clearSelectedRecipes();
+                  }
+                }}
               >
+                {t('mealPlanning.dialog.multiSelect')}
                 <Copy size={14} className="mb-[1px]" />
-                Mode selection
               </button>
-              <MealPlanDialogFilters />
+              <RecipesActiveFilters className="col-start-2 col-end-6 row-start-2" />
+              {activeFilters.length > 0 && (
+                <button
+                  onClick={clearAllFilters}
+                  className="btn col-start-1 row-start-2 mb-[2px] w-fit items-center gap-3 text-sm text-base-content btn-link underline btn-sm hover:text-error disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {t('mealPlanning.dialog.filters.clearAllFilters')}
+                </button>
+              )}
+              <RecipesPopoverFilters
+                className={cn(
+                  'btn-outline btn-secondary',
+                  activeFilters.length > 0 && 'btn-active',
+                )}
+                tags={tags}
+              />
             </div>
 
             {(!recipes || !recipes.data || recipes.data.length === 0) && (
@@ -96,17 +124,17 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
             {children}
           </div>
 
-          {isMultiSelectMode && (
+          {isMultiSelectMode && selectedRecipesId.length > 0 && (
             <div className="absolute bottom-7 left-1/2 flex -translate-x-1/2 transform">
               <div className="join shadow-2xl">
                 <button
                   className="btn join-item rounded-l-full border-base-300"
                   onClick={() => {
-                    setIsMultiSelectMode(false);
                     clearSelectedRecipes();
+                    setIsMultiSelectMode(false);
                   }}
                 >
-                  {t('mealPlanning.dialog.multiSelect.abandon')}
+                  {t('mealPlanning.dialog.multiSelectActions.abandon')}
                 </button>
                 <button
                   className="btn join-item border-base-300 disabled:!bg-base-200"
@@ -115,7 +143,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                     clearSelectedRecipes();
                   }}
                 >
-                  {t('mealPlanning.dialog.multiSelect.clearSelection')}
+                  {t('mealPlanning.dialog.multiSelectActions.clearSelection')}
                 </button>
 
                 <Popover.Root
@@ -128,7 +156,9 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                       disabled={selectedRecipesId.length === 0}
                     >
                       <CalendarPlus size={16} className="mb-[2px]" />
-                      <span>{t('mealPlanning.dialog.multiSelect.plan')}</span>
+                      <span>
+                        {t('mealPlanning.dialog.multiSelectActions.plan')}
+                      </span>
                     </button>
                   </Popover.Trigger>
                   <Popover.Portal>

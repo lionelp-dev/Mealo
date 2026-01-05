@@ -1,7 +1,7 @@
 import { Recipe } from '@/types';
 
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
-import { useMealPlanDialogFilters } from '@/hooks/use-meal-plan-dialog-filters';
+import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import * as Popover from '@radix-ui/react-popover';
 import { Calendar, CalendarPlus } from 'lucide-react';
 import { useState } from 'react';
@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import i18n from '../lib/i18n';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
+import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -21,16 +22,13 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
 
   const [openPlanPopover, setOpenPlanPopover] = useState<boolean>(false);
 
-  const {
-    selectedDate,
-    isMultiSelectMode,
-    selectedRecipesId,
-    toggleRecipeSelection,
-  } = useMealPlanDialogStore();
+  const { selectedDate } = useMealPlanDialogStore();
 
   const { planMeals } = useMealPlanActions();
 
-  const { isFilterActive } = useMealPlanDialogFilters();
+  const { isFilterActive } = useRecipeFiltersStore();
+
+  const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } = useMultiSelectRecipe();
 
   return (
     <div
@@ -49,9 +47,11 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
             className="radio absolute top-4 right-4 border-base-300 bg-base-100/85 radio-sm checked:border-secondary checked:text-secondary"
             type="radio"
             checked={selectedRecipesId.includes(recipe.id)}
+            onChange={() => {
+              toggleRecipeSelection(recipe.id);
+            }}
             onClick={(e) => {
               e.stopPropagation();
-              toggleRecipeSelection(recipe.id);
             }}
           />
         )}

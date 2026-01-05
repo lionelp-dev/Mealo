@@ -153,10 +153,16 @@
       "noTagsAvailable": "Aucun tag disponible"
     },
     "delete": {
-      "confirmTitle": "Êtes-vous sûr de vouloir supprimer la recette ?",
-      "confirmDescription": "Une fois cette recette supprimée, elle sera définitivement supprimée. Êtes-vous sûr de vouloir supprimer \"{{recipeName}}\" ?",
-      "confirmButton": "Supprimer",
+      "confirmTitle": "Supprimer la recette ?",
+      "confirmTitleMultiple": "Supprimer ces recettes ?",
+      "confirmDescription": "Cette action est irréversible. La recette \"{{recipeName}}\" sera définitivement effacée.",
+      "confirmDescriptionMultiple": "Cette action est irréversible. Ces {{count}} recettes seront définitivement effacées.",
+      "confirmButton": "Confirmer",
       "cancelButton": "Annuler"
+    },
+    "selected": {
+      "singular": "recette sélectionnée",
+      "plural": "recettes sélectionnées"
     }
   },
   "mealPlanning": {
@@ -184,7 +190,8 @@
       "filterRecipes": "Filtrer les recettes",
       "addFilters": "Ajouter des filtres",
       "whenToEat": "Quand souhaitez-vous manger cela ?",
-      "multiSelect": {
+      "multiSelect": "Mode sélection",
+      "multiSelectActions": {
         "abandon": "Abandonner",
         "clearSelection": "Effacer sélection",
         "plan": "Plannifier"
@@ -315,8 +322,15 @@
       "close": "Fermer",
       "submit": "Soumettre",
       "reset": "Réinitialiser",
-      "update": "Mettre à jour"
+      "update": "Mettre à jour",
+      "abandon": "Abandonner",
+      "clearSelection": "Effacer la selection",
+      "selected": {
+        "singular": "sélectionné",
+        "plural": "sélectionnés"
+      }
     },
+    "clear": "Effacer",
     "status": {
       "loading": "Chargement...",
       "success": "Succès",

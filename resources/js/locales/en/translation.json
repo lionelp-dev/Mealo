@@ -310,7 +310,13 @@
       "close": "Close",
       "submit": "Submit",
       "reset": "Reset",
-      "update": "Update"
+      "update": "Update",
+      "abandon": "Cancel",
+      "clearSelection": "Clear selection",
+      "selected": {
+        "singular": "selected",
+        "plural": "selected"
+      }
     },
     "status": {
       "loading": "Loading...",

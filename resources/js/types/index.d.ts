@@ -154,3 +154,15 @@ export type ShoppingListIngredient = {
   created_at: string;
   updated_at: string;
 };
+
+export type Option = { value: string; label: string };
+
+export type Filter = {
+  type: 'meal_time' | 'preparation_time' | 'cooking_time' | 'tag';
+} & Option;
+
+export type FilterSection = {
+  title: string;
+  type: Filter['type'];
+  options: Option[];
+};

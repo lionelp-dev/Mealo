@@ -57,7 +57,6 @@ class PlannedMealController extends Controller
 
         $mealTimes = MealTime::all();
 
-        // Create a completely fresh query for each request to avoid any state issues
         $recipesQuery = Recipe::query()
             ->where('user_id', $user->id)
             ->with(['mealTimes', 'ingredients', 'steps', 'tags']);

@@ -1,12 +1,9 @@
-import { FilterType } from '@/stores/recipe-search';
+import { Filter } from '@/types';
+import { useTranslation } from 'react-i18next';
 import { Checkbox } from './ui/checkbox';
 
 type Props = {
-  filter: {
-    type: FilterType;
-    label: string;
-    value: string;
-  };
+  filter: Filter;
   isActive: boolean;
   handleCheckedChange: () => void;
 };
@@ -16,10 +13,11 @@ export function MealPlanDialogFilterOption({
   isActive,
   handleCheckedChange,
 }: Props) {
+  const { t } = useTranslation();
   const key = `${filter.type}-${filter.value}`;
   return (
     <label
-      className={`flex cursor-pointer items-center gap-3 rounded px-2 py-1 pl-2 transition-colors select-none ${
+      className={`flex cursor-pointer items-center gap-4 rounded px-1 py-[5px] text-sm text-base-content transition-colors select-none ${
         isActive ? 'bg-base-200 text-base-content' : 'hover:bg-base-200'
       }`}
       htmlFor={key}
@@ -30,7 +28,9 @@ export function MealPlanDialogFilterOption({
         onCheckedChange={handleCheckedChange}
         className="flex-shrink-0"
       />
-      <span>{filter.label}</span>
+      <span>
+        {t(`mealPlanning.dialog.filters.${filter.label}`, filter.label)}
+      </span>
     </label>
   );
 }

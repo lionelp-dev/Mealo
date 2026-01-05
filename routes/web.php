@@ -14,7 +14,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
-    Route::resource('recipes', RecipeController::class);
+    Route::resource('recipes', RecipeController::class)->except(['destroy']);
+    Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
     Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
     Route::post('recipes/{recipe}/upload-image', [RecipeController::class, 'uploadImage'])->name('recipes.upload-image');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');

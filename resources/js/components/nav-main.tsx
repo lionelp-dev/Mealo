@@ -12,19 +12,19 @@ import { useTranslation } from 'react-i18next';
 export function NavMain({ items = [] }: { items: NavItem[] }) {
   const page = usePage();
   const { t } = useTranslation();
-  
+
   // Function to get translated title based on the original English title
   const getTranslatedTitle = (title: string) => {
     const titleMap: { [key: string]: string } = {
-      'Dashboard': t('navigation.dashboard'),
-      'Recipes': t('navigation.recipes'),
+      Dashboard: t('navigation.dashboard'),
+      Recipes: t('navigation.recipes'),
       'Meal Planning': t('navigation.mealPlanning'),
       'Shopping Lists': t('navigation.shoppingLists'),
-      'Settings': t('navigation.settings'),
+      Settings: t('navigation.settings'),
     };
     return titleMap[title] || title;
   };
-  
+
   return (
     <SidebarGroup className="px-2 py-0">
       <SidebarGroupLabel>{t('navigation.platform')}</SidebarGroupLabel>

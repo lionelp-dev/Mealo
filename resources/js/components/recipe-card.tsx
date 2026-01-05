@@ -1,4 +1,6 @@
+import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import recipes from '@/routes/recipes';
+import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import { Recipe } from '@/types';
 import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
@@ -12,8 +14,13 @@ type RecipeCardProps = {
 };
 
 export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
-  const [openPopover, setOpenPopover] = useState<boolean>(false);
   const { t } = useTranslation();
+
+  const [openPopover, setOpenPopover] = useState<boolean>(false);
+
+  const { isFilterActive } = useRecipeFiltersStore();
+  const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } =
+    useMultiSelectRecipe();
 
   const handleView = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -35,15 +42,31 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
 
   return (
     <div
-      onClick={handleView}
-      className="card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl hover:[&_.recipe-card-actions-btn]:visible"
+      onClick={
+        isMultiSelectMode ? () => toggleRecipeSelection(recipe.id) : handleView
+      }
+      className={`card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl ${!isMultiSelectMode && 'hover:[&_.recipe-card-actions-btn]:visible'}`}
     >
       <div className="relative">
+        {isMultiSelectMode && (
+          <input
+            className="radio absolute top-4 right-4 border-base-300 bg-base-100/85 radio-sm checked:border-secondary checked:text-secondary"
+            type="radio"
+            checked={selectedRecipesId.includes(recipe.id)}
+            onChange={() => {
+              toggleRecipeSelection(recipe.id);
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          />
+        )}
         <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-4">
           <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
             <Popover.Trigger asChild>
               <button
                 className="recipe-card-actions-btn btn invisible btn-circle border-base-300 bg-base-300/80 btn-sm hover:bg-base-200"
+                disabled={isMultiSelectMode}
                 onClick={(e) => e.stopPropagation()}
               >
                 <EllipsisVertical
@@ -96,15 +119,15 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
           {recipe.meal_times.map((meal_time) => (
             <span
               key={meal_time.id}
-              className="badge bg-base-100/90 badge-sm whitespace-nowrap"
+              className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
             >
-              {meal_time.name}
+              {t(`mealPlanning.dialog.filters.${meal_time.name}`)}
             </span>
           ))}
           {recipe.tags.map((tag) => (
             <span
               key={tag.id}
-              className="badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content"
+              className={`badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content ${tag.id && isFilterActive({ type: 'tag', value: tag.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
             >
               {tag.name}
             </span>

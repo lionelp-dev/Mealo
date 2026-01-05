@@ -21,10 +21,10 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="btn btn-outline gap-2">
-          <Languages className="h-4 w-4" />
+        <button className="btn gap-3 pl-5 btn-outline">
           <span className="hidden sm:inline">{getCurrentLanguageLabel()}</span>
           <span className="sm:hidden">{i18n.language.toUpperCase()}</span>
+          <Languages className="h-4 w-4" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

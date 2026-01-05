@@ -6,45 +6,60 @@ import {
   DialogFooter,
   DialogTitle,
 } from '@/components/ui/dialog';
-import recipes from '@/routes/recipes';
-import { Recipe } from '@/types';
-import { router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
+import { useDeleteRecipesDialog } from '@/hooks/use-delete-recipes-dialog';
 
-type DeleteRecipeProps = {
-  recipe: Recipe | null;
-  onClose: () => void;
-};
-
-export default function DeleteRecipe({ recipe, onClose }: DeleteRecipeProps) {
+export default function DeleteRecipesDialog() {
   const { t } = useTranslation();
+  
+  const {
+    recipesToDelete,
+    isDeleteDialogOpen,
+    isDeleting,
+    closeDeleteDialog,
+    handleDelete,
+    isMultiple,
+  } = useDeleteRecipesDialog();
 
-  if (!recipe) {
-    return null;
-  }
+  const getTitle = () => {
+    if (isMultiple) {
+      return t('recipes.delete.confirmTitleMultiple');
+    }
+    return t('recipes.delete.confirmTitle');
+  };
 
-  const handleDelete = () => {
-    router.delete(recipes.destroy.url({ id: recipe.id }));
-    onClose();
+  const getDescription = () => {
+    if (isMultiple) {
+      return t('recipes.delete.confirmDescriptionMultiple', {
+        count: recipesToDelete.length,
+        defaultValue: `Once these ${recipesToDelete.length} recipes are deleted, they will be permanently removed. Are you sure you want to delete them?`,
+      });
+    }
+    return t('recipes.delete.confirmDescription', {
+      recipeName: recipesToDelete[0]?.name,
+      defaultValue: `Once this recipe is deleted, it will be permanently removed. Are you sure you want to delete "${recipesToDelete[0]?.name}"?`,
+    });
   };
 
   return (
-    <Dialog open={!!recipe} onOpenChange={(open) => !open && onClose()}>
+    <Dialog
+      open={isDeleteDialogOpen}
+      onOpenChange={(open) => !open && closeDeleteDialog()}
+    >
       <DialogContent>
-        <DialogTitle>{t('recipes.delete.confirmTitle')}</DialogTitle>
-        <DialogDescription>
-          {t('recipes.delete.confirmDescription', {
-            recipeName: recipe.name,
-            defaultValue: `Once this recipe is deleted, it will be permanently removed. Are you sure you want to delete "${recipe.name}"?`,
-          })}
-        </DialogDescription>
+        <DialogTitle>{getTitle()}</DialogTitle>
+        <DialogDescription>{getDescription()}</DialogDescription>
 
         <DialogFooter className="w-full !justify-between">
-          <button className="btn btn-error" onClick={handleDelete}>
-            {t('recipes.delete.confirmButton')}{' '}
+          <button 
+            className="btn btn-error" 
+            onClick={handleDelete}
+            disabled={isDeleting}
+          >
+            {isDeleting ? t('common.status.loading') : t('recipes.delete.confirmButton')}
           </button>
           <DialogClose asChild>
-            <button className="btn" onClick={onClose}>
+            <button className="btn" onClick={closeDeleteDialog} disabled={isDeleting}>
               {t('recipes.delete.cancelButton')}
             </button>
           </DialogClose>

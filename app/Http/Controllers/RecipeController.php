@@ -9,6 +9,7 @@ use App\Http\Resources\MealTimeResource;
 use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\RecipeResource;
 use App\Http\Resources\TagCollection;
+use App\Http\Resources\TagResource;
 use App\Models\Ingredient;
 use App\Models\MealTime;
 use App\Models\Recipe;
@@ -41,13 +42,57 @@ class RecipeController extends Controller
         /** @var User $user */
         $user = $request->user();
 
-        $recipes = $user->recipes()
-            ->orderBy('created_at', 'desc')
-            ->with(['mealTimes', 'ingredients', 'steps', 'tags'])
-            ->paginate(15);
+        $validated = $request->validate([
+            'search' => ['nullable', 'string', 'max:255'],
+            'tags' => ['nullable', 'array'],
+            'tags.*' => ['integer', 'exists:tags,id'],
+            'meal_times' => ['nullable', 'array'],
+            'meal_times.*' => ['integer', 'exists:meal_times,id'],
+            'preparation_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
+            'cooking_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
+        ]);
+
+        $recipesQuery = Recipe::query()
+                    ->where('user_id', $user->id)
+                    ->orderBy('created_at', 'desc')
+                    ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
+
+        // Search filter
+        if (!empty($validated['search'])) {
+            $recipesQuery = $recipesQuery->where('name', 'LIKE', '%' . $validated['search'] . '%');
+        }
+
+        // Preparation time filter
+        if (!empty($validated['preparation_time'])) {
+            $recipesQuery = $this->applyTimeFilter($recipesQuery, 'preparation_time', $validated['preparation_time']);
+        }
+
+        // Cooking time filter
+        if (!empty($validated['cooking_time'])) {
+            $recipesQuery = $this->applyTimeFilter($recipesQuery, 'cooking_time', $validated['cooking_time']);
+        }
+
+        // Tags filter (AND logic - recipe must have ALL selected tags)
+        if (!empty($validated['tags']) && count($validated['tags']) > 0) {
+            foreach ($validated['tags'] as $tagId) {
+                $recipesQuery = $recipesQuery->whereHas('tags', function ($query) use ($tagId) {
+                    $query->where('tags.id', $tagId);
+                });
+            }
+        }
+
+        // Meal times filter
+        if (!empty($validated['meal_times']) && count($validated['meal_times']) > 0) {
+            $recipesQuery = $recipesQuery->whereHas('mealTimes', function ($query) use ($validated) {
+                $query->whereIn('meal_times.id', $validated['meal_times']);
+            });
+        }
+
+        $tags = Tag::query()->where('user_id', $user->id)->get();
 
         return Inertia::render('recipe/index', [
-            'recipes_collection' => Inertia::scroll(new RecipeCollection($recipes)),
+            'recipes' => Inertia::scroll(new RecipeCollection($recipesQuery->paginate(15))),
+            'tags' =>  TagResource::collection($tags)->toArray($request),
         ]);
     }
 
@@ -259,12 +304,33 @@ class RecipeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, Recipe $recipe): RedirectResponse
+    public function destroy(Request $request): RedirectResponse
     {
-        Gate::authorize('delete', $recipe);
+        return DB::transaction(function () use ($request) {
 
-        $recipe->delete();
-        return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
+            /** @var User $user */
+            $user = $request->user();
+
+            $validated = $request->validate([
+                'recipe_ids' => ['required', 'array'],
+                'recipe_ids.*' => ['required', 'integer', 'exists:recipes,id'],
+            ]);
+
+            $recipe_ids = $validated['recipe_ids'];
+
+            foreach ($recipe_ids as $recipe_id) {
+                $recipe = Recipe::query()->where('user_id', $user->id)->where('id', $recipe_id)->first();
+
+                if (!$recipe) {
+                    continue;
+                }
+
+                Gate::authorize('delete', $recipe);
+                $recipe->delete();
+            }
+
+            return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
+        });
     }
 
     /**
@@ -313,6 +379,25 @@ class RecipeController extends Controller
             'Content-Type' => $mimeType,
             'Cache-Control' => 'public, max-age=86400', // Cache for 1 day
         ]);
+    }
+
+    /**
+     * Apply time-based filters to recipe query.
+     */
+    private function applyTimeFilter($query, $field, $timeRange)
+    {
+        switch ($timeRange) {
+            case '[0..15]':
+                return $query->where($field, '<=', 15);
+            case '[15..30]':
+                return $query->whereBetween($field, [16, 30]);
+            case '[30..60]':
+                return $query->whereBetween($field, [31, 60]);
+            case '>60':
+                return $query->where($field, '>', 60);
+            default:
+                return $query;
+        }
     }
 
 }

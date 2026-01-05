@@ -1,7 +1,7 @@
 import { LanguageSwitcher } from '@/components/language-switcher';
 import MealPlanCalendar from '@/components/meal-plan-calendar';
 import WeekSelector from '@/components/week-selector';
-import { MealPlanProvider } from '@/contexts/meal-plan-context';
+import { MealPlanDataProvider } from '@/contexts/meal-plan-data-context';
 import AppLayout from '@/layouts/app-layout';
 import plannedMealsRoute from '@/routes/planned-meals';
 import {
@@ -29,23 +29,23 @@ export default function PlannedMeals() {
     usePage<PageProps>().props;
 
   return (
-    <AppLayout
-      headerLeftContent={
-        <WeekSelector
-          currentWeek={DateTime.fromISO(weekStart)}
-          url={plannedMealsRoute.index.url()}
-        />
-      }
-      headerRightContent={<LanguageSwitcher />}
+    <MealPlanDataProvider
+      data={{ weekStart, mealTimes, plannedMeals, recipes, tags }}
     >
-      <div className="overflow-y-scroll px-7 py-7">
-        <Head title={t('mealPlanning.pageTitle')}></Head>
-        <MealPlanProvider
-          data={{ weekStart, mealTimes, plannedMeals, recipes, tags }}
-        >
+      <AppLayout
+        headerLeftContent={
+          <WeekSelector
+            currentWeek={DateTime.fromISO(weekStart)}
+            url={plannedMealsRoute.index.url()}
+          />
+        }
+        headerRightContent={<LanguageSwitcher />}
+      >
+        <div className="overflow-y-scroll px-7 py-7">
+          <Head title={t('mealPlanning.pageTitle')}></Head>
           <MealPlanCalendar />
-        </MealPlanProvider>
-      </div>
-    </AppLayout>
+        </div>
+      </AppLayout>
+    </MealPlanDataProvider>
   );
 }

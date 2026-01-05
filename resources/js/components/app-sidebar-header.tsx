@@ -14,11 +14,11 @@ export function AppSidebarHeader({
   headerRightContent?: ReactNode;
 }) {
   return (
-    <header className="sticky flex h-16 min-h-0 w-full shrink-0 items-center gap-2 border-b border-sidebar-border/50 px-6 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12 md:px-4">
-      <SidebarTrigger className="-ml-1" />
+    <header className="sticky mx-auto flex h-16 min-h-0 w-[92%] shrink-0 items-center gap-10 border-b border-sidebar-border/50 pb-[2px] transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <SidebarTrigger className="" />
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <div className="ml-1 flex flex-1">{headerLeftContent}</div>
-      <div className="mr-3 flex flex-1 justify-end">{headerRightContent}</div>
+      <div className="flex flex-1">{headerLeftContent}</div>
+      <div className="flex flex-1 justify-end">{headerRightContent}</div>
     </header>
   );
 }

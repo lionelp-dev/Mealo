@@ -18,7 +18,7 @@ class AIRecipeSeeder extends Seeder
         }
 
         $delayBetweenJobs = config('recipe-queue.rate_limit.delay_between_jobs', 6);
-        $totalRecipes = 40;
+        $totalRecipes = 80;
 
         echo "🚀 Dispatching {$totalRecipes} recipe generation jobs to queue\n";
 

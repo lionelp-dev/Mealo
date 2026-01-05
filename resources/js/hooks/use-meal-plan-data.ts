@@ -1,7 +1,7 @@
+import { useMealPlanContext } from '@/contexts/meal-plan-data-context';
+import { DayPlannedMeals } from '@/types';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
-import { useMealPlanContext } from '../contexts/meal-plan-context';
-import { DayPlannedMeals } from '../stores/week-meal-planner';
 
 export function useMealPlanData() {
   const context = useMealPlanContext();
