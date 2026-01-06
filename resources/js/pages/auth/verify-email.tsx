@@ -13,14 +13,14 @@ export default function VerifyEmail({ status }: { status?: string }) {
   
   return (
     <AuthLayout
-      title={t('auth.verifyEmail.title')}
-      description={t('auth.verifyEmail.description')}
+      title={t('auth.verifyEmail.title', 'Verify your email')}
+      description={t('auth.verifyEmail.description', 'A verification link has been sent to your email address')}
     >
-      <Head title={t('auth.verifyEmail.pageTitle')} />
+      <Head title={t('auth.verifyEmail.pageTitle', 'Email verification')} />
 
       {status === 'verification-link-sent' && (
         <div className="mb-4 text-center text-sm font-medium text-green-600">
-          {t('auth.verifyEmail.description')}
+          {t('auth.verifyEmail.description', 'A verification link has been sent to your email address')}
         </div>
       )}
 
@@ -32,11 +32,11 @@ export default function VerifyEmail({ status }: { status?: string }) {
           <>
             <button disabled={processing} className="btn btn-secondary">
               {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
-              {t('auth.verifyEmail.resendButton')}
+              {t('auth.verifyEmail.resendButton', 'Resend verification email')}
             </button>
 
             <TextLink href={logout()} className="mx-auto block text-sm">
-              {t('auth.verifyEmail.logoutButton')}
+              {t('auth.verifyEmail.logoutButton', 'Log out')}
             </TextLink>
           </>
         )}

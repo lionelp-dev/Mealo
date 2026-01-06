@@ -16,10 +16,10 @@ export default function ForgotPassword({ status }: { status?: string }) {
   
   return (
     <AuthLayout
-      title={t('auth.forgotPassword.title')}
-      description={t('auth.forgotPassword.description')}
+      title={t('auth.forgotPassword.title', 'Forgot password')}
+      description={t('auth.forgotPassword.description', 'Enter your email to receive a reset link')}
     >
-      <Head title={t('auth.forgotPassword.pageTitle')} />
+      <Head title={t('auth.forgotPassword.pageTitle', 'Forgot password')} />
 
       {status && (
         <div className="mb-4 text-center text-sm font-medium text-green-600">
@@ -32,14 +32,14 @@ export default function ForgotPassword({ status }: { status?: string }) {
           {({ processing, errors }) => (
             <>
               <div className="grid gap-2">
-                <Label htmlFor="email">{t('auth.forgotPassword.emailLabel')}</Label>
+                <Label htmlFor="email">{t('auth.forgotPassword.emailLabel', 'Email address')}</Label>
                 <Input
                   id="email"
                   type="email"
                   name="email"
                   autoComplete="off"
                   autoFocus
-                  placeholder={t('auth.forgotPassword.emailPlaceholder')}
+                  placeholder={t('auth.forgotPassword.emailPlaceholder', 'email@example.com')}
                 />
 
                 <InputError message={errors.email} />
@@ -54,7 +54,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                   {processing && (
                     <LoaderCircle className="h-4 w-4 animate-spin" />
                   )}
-                  {t('auth.forgotPassword.sendLinkButton')}
+                  {t('auth.forgotPassword.sendLinkButton', 'Send reset link')}
                 </button>
               </div>
             </>
@@ -62,8 +62,8 @@ export default function ForgotPassword({ status }: { status?: string }) {
         </Form>
 
         <div className="space-x-1 text-center text-sm text-muted-foreground">
-          <span>{t('auth.forgotPassword.backToLogin')}</span>
-          <TextLink href={login()}>{t('auth.login.pageTitle')}</TextLink>
+          <span>{t('auth.forgotPassword.backToLogin', 'Back to login')}</span>
+          <TextLink href={login()}>{t('auth.login.pageTitle', 'Log in')}</TextLink>
         </div>
       </div>
     </AuthLayout>

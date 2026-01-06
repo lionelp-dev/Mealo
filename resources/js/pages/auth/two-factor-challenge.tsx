@@ -25,16 +25,16 @@ export default function TwoFactorChallenge() {
   }>(() => {
     if (showRecoveryInput) {
       return {
-        title: t('auth.twoFactor.title'),
-        description: t('auth.twoFactor.description'),
-        toggleText: t('auth.twoFactor.useRecoveryCode'),
+        title: t('auth.twoFactor.title', 'Two-Factor Authentication'),
+        description: t('auth.twoFactor.description', 'Please confirm access to your account by entering the authentication code provided by your authenticator application'),
+        toggleText: t('auth.twoFactor.useRecoveryCode', 'Use a recovery code'),
       };
     }
 
     return {
-      title: t('auth.twoFactor.title'),
-      description: t('auth.twoFactor.description'),
-      toggleText: t('auth.twoFactor.useRecoveryCode'),
+      title: t('auth.twoFactor.title', 'Two-Factor Authentication'),
+      description: t('auth.twoFactor.description', 'Please confirm access to your account by entering the authentication code provided by your authenticator application'),
+      toggleText: t('auth.twoFactor.useRecoveryCode', 'Use a recovery code'),
     };
   }, [showRecoveryInput, t]);
 
@@ -49,7 +49,7 @@ export default function TwoFactorChallenge() {
       title={authConfigContent.title}
       description={authConfigContent.description}
     >
-      <Head title={t('auth.twoFactor.pageTitle')} />
+      <Head title={t('auth.twoFactor.pageTitle', 'Two-Factor Authentication')} />
 
       <div className="space-y-6">
         <Form
@@ -65,7 +65,7 @@ export default function TwoFactorChallenge() {
                   <Input
                     name="recovery_code"
                     type="text"
-                    placeholder={t('auth.twoFactor.codePlaceholder')}
+                    placeholder={t('auth.twoFactor.codePlaceholder', 'Authentication code')}
                     autoFocus={showRecoveryInput}
                     required
                   />
@@ -94,11 +94,11 @@ export default function TwoFactorChallenge() {
               )}
 
               <button type="submit" className="btn btn-primary w-full" disabled={processing}>
-                {t('auth.twoFactor.confirmButton')}
+                {t('auth.twoFactor.confirmButton', 'Confirm')}
               </button>
 
               <div className="text-center text-sm text-muted-foreground">
-                <span>{t('common.buttons.cancel')} </span>
+                <span>{t('common.buttons.cancel', 'Cancel')} </span>
                 <button
                   type="button"
                   className="cursor-pointer text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"

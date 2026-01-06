@@ -43,9 +43,9 @@ export function RecipeForm({
   const defaultSubmitLabel =
     submitLabel ||
     (mode === 'edit'
-      ? t('common.buttons.update')
-      : t('recipes.form.saveButton'));
-  const defaultCancelLabel = cancelLabel || t('common.buttons.cancel');
+      ? t('common.buttons.update', 'Update')
+      : t('recipes.form.saveButton', 'Save recipe'));
+  const defaultCancelLabel = cancelLabel || t('common.buttons.cancel', 'Cancel');
   const form = useAppForm({
     defaultValues,
     validators: {
@@ -77,8 +77,8 @@ export function RecipeForm({
           children={(field) => (
             <field.InputField
               type="text"
-              label={t('recipes.form.nameLabel')}
-              placeholder={t('recipes.form.namePlaceholder')}
+              label={t('recipes.form.nameLabel', 'Recipe name')}
+              placeholder={t('recipes.form.namePlaceholder', 'Enter recipe name')}
             />
           )}
         />
@@ -87,8 +87,8 @@ export function RecipeForm({
           name="description"
           children={(field) => (
             <field.TextAreaField
-              label={t('recipes.form.descriptionLabel')}
-              placeholder={t('recipes.form.descriptionPlaceholder')}
+              label={t('recipes.form.descriptionLabel', 'Description')}
+              placeholder={t('recipes.form.descriptionPlaceholder', 'Describe your recipe')}
               rows={10}
             />
           )}
@@ -104,7 +104,7 @@ export function RecipeForm({
             return (
               <div className="flex flex-col gap-4">
                 <label className="text-md text-base-content">
-                  {t('recipes.form.mealTimesTitle')}
+                  {t('recipes.form.mealTimesTitle', 'Meal times')}
                 </label>
                 <MultiSelect
                   options={options}
@@ -133,7 +133,7 @@ export function RecipeForm({
             children={(field) => (
               <field.InputField
                 type="number"
-                label={t('recipes.form.preparationTimeLabel')}
+                label={t('recipes.form.preparationTimeLabel', 'Preparation time (minutes)')}
                 placeholder="0"
                 min="0"
               />
@@ -145,7 +145,7 @@ export function RecipeForm({
             children={(field) => (
               <field.InputField
                 type="number"
-                label={t('recipes.form.cookingTimeLabel')}
+                label={t('recipes.form.cookingTimeLabel', 'Cooking time (minutes)')}
                 placeholder="0"
                 min="0"
               />
@@ -177,14 +177,14 @@ export function RecipeForm({
           <StepsFormSection
             form={form}
             fields={{ steps: 'steps' }}
-            title={t('recipes.form.stepsTitle')}
+            title={t('recipes.form.stepsTitle', 'Steps')}
           />
         </div>
 
         <IngredientFormSection
           form={form}
           fields={{ ingredients: 'ingredients' }}
-          title={t('recipes.form.ingredientsTitle')}
+          title={t('recipes.form.ingredientsTitle', 'Ingredients')}
           ingredients_search_results={ingredients_search_results}
         />
       </div>

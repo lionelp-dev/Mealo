@@ -18,7 +18,7 @@ export default function MealPlanDialogSearchRecipes() {
         data-search-input
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        placeholder={t('mealPlanning.searchRecipes')}
+        placeholder={t('mealPlanning.searchRecipes', 'Search recipes...')}
         disabled={isSearching}
       />
       <span

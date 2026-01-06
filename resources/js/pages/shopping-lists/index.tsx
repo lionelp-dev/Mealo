@@ -43,15 +43,15 @@ export default function ShoppingListsIndex() {
       }
       headerRightContent={<LanguageSwitcher />}
     >
-      <Head title={t('shoppingLists.pageTitle')} />
+      <Head title={t('shoppingLists.pageTitle', 'Shopping Lists')} />
       {ingredients.length === 0 ? (
         <div className="flex items-center justify-center p-20 text-gray-500">
           <div className="text-center">
             <p className="text-lg text-base-content">
-              No ingredients in this shopping list
+              {t('shoppingLists.noIngredients', 'No ingredients in this shopping list')}
             </p>
             <p className="text-sm text-base-content">
-              Plan some meals to add ingredients
+              {t('shoppingLists.planMealsHint', 'Plan some meals to add ingredients')}
             </p>
           </div>
         </div>
@@ -65,15 +65,15 @@ export default function ShoppingListsIndex() {
           <div className="flex flex-1 gap-8 overflow-hidden max-xl:flex-col">
             {uncheckedIngredients.length > 0 && (
               <ShoppingListIngredientList
-                title="To buy"
-                description={`${uncheckedIngredients.length} items`}
+                title={t('shoppingLists.toBuy', 'To buy')}
+                description={t('shoppingLists.itemsCount', {count: uncheckedIngredients.length, defaultValue: `${uncheckedIngredients.length} items`})}
                 ingredients={uncheckedIngredients}
               />
             )}
 
             <ShoppingListIngredientList
-              title="Completed"
-              description={`${checkedIngredients.length} items checked off`}
+              title={t('shoppingLists.completed', 'Completed')}
+              description={t('shoppingLists.itemsCheckedOff', {count: checkedIngredients.length, defaultValue: `${checkedIngredients.length} items checked off`})}
               ingredients={checkedIngredients}
             />
           </div>

@@ -74,7 +74,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
   // Function to get translated nav item titles
   const getTranslatedNavTitle = (title: string) => {
     const titleMap: { [key: string]: string } = {
-      'Dashboard': t('navigation.dashboard'),
+      'Dashboard': t('navigation.dashboard', 'Dashboard'),
       'Repository': 'Repository', // Keep as is
       'Documentation': 'Documentation', // Keep as is
     };

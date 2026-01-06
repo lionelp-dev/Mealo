@@ -16,18 +16,18 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
   // Function to get translated title based on the original English title
   const getTranslatedTitle = (title: string) => {
     const titleMap: { [key: string]: string } = {
-      Dashboard: t('navigation.dashboard'),
-      Recipes: t('navigation.recipes'),
-      'Meal Planning': t('navigation.mealPlanning'),
-      'Shopping Lists': t('navigation.shoppingLists'),
-      Settings: t('navigation.settings'),
+      Dashboard: t('navigation.dashboard', 'Dashboard'),
+      Recipes: t('navigation.recipes', 'Recipes'),
+      'Meal Planning': t('navigation.mealPlanning', 'Meal Planning'),
+      'Shopping Lists': t('navigation.shoppingLists', 'Shopping Lists'),
+      Settings: t('navigation.settings', 'Settings'),
     };
     return titleMap[title] || title;
   };
 
   return (
     <SidebarGroup className="px-2 py-0">
-      <SidebarGroupLabel>{t('navigation.platform')}</SidebarGroupLabel>
+      <SidebarGroupLabel>{t('navigation.platform', 'Platform')}</SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>

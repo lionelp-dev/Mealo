@@ -118,7 +118,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                         setOpenPlanPopover(false);
                       }}
                     >
-                      {t(`mealPlanning.dialog.filters.${mealTime.name}`)}
+                      {t(`mealPlanning.dialog.filters.${mealTime.name}`, mealTime.name)}
                     </button>
                   ))}
                 </div>
@@ -147,7 +147,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                 key={meal_time.id}
                 className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
               >
-                {t(`mealPlanning.dialog.filters.${meal_time.name}`)}
+                {t(`mealPlanning.dialog.filters.${meal_time.name}`, meal_time.name)}
               </span>
             ))}
             {recipe.tags.map((tag) => (

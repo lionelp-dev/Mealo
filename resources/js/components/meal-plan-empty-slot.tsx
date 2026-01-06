@@ -110,7 +110,7 @@ export default function MealPlanEmptySlot({
       >
         <Plus size={14} />
         <span className="font-normal text-secondary-content">
-          {t('mealPlanning.actions.planMeal')}
+          {t('mealPlanning.actions.planMeal', 'Plan meal')}
         </span>
       </button>
     </div>

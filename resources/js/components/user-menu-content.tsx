@@ -44,7 +44,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             onClick={cleanup}
           >
             <Settings className="mr-2" />
-            {t('navigation.settings')}
+            {t('navigation.settings', 'Settings')}
           </Link>
         </DropdownMenuItem>
       </DropdownMenuGroup>
@@ -58,7 +58,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
           data-test="logout-button"
         >
           <LogOut className="mr-2" />
-          {t('auth.verifyEmail.logoutButton')}
+          {t('auth.verifyEmail.logoutButton', 'Log out')}
         </Link>
       </DropdownMenuItem>
     </>

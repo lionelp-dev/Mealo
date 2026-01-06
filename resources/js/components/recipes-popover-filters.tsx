@@ -80,8 +80,8 @@ export function RecipesPopoverFilters({
 
   const filterButtonLabel =
     activeFilters.length === 0
-      ? t('mealPlanning.dialog.addFilters')
-      : `${activeFilters.length} ${activeFilters.length > 1 ? t('mealPlanning.dialog.filters.filters') : t('mealPlanning.dialog.filters.filter')} ${activeFilters.length > 1 ? t('common.buttons.selected.plural') : t('common.buttons.selected.singular')}`;
+      ? t('mealPlanning.dialog.addFilters', 'Add filters')
+      : `${activeFilters.length} ${activeFilters.length > 1 ? t('mealPlanning.dialog.filters.filters', 'filters') : t('mealPlanning.dialog.filters.filter', 'filter')} ${activeFilters.length > 1 ? t('common.buttons.selected.plural', 'selected') : t('common.buttons.selected.singular', 'selected')}`;
 
   const createTagsSection = (tags: Tag[]): FilterSection => ({
     title: 'tags',

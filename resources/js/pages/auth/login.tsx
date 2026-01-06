@@ -21,10 +21,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
   return (
     <AuthLayout
-      title={t('auth.login.title')}
-      description={t('auth.login.description')}
+      title={t('auth.login.title', 'Log in to your account')}
+      description={t('auth.login.description', 'Enter your email and password below to log in')}
     >
-      <Head title={t('auth.login.pageTitle')} />
+      <Head title={t('auth.login.pageTitle', 'Log in')} />
 
       <Form
         {...AuthenticatedSessionController.store.form()}
@@ -35,7 +35,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
           <>
             <div className="grid gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">{t('auth.login.emailLabel')}</Label>
+                <Label htmlFor="email">{t('auth.login.emailLabel', 'Email address')}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -44,21 +44,21 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                   autoFocus
                   tabIndex={1}
                   autoComplete="email"
-                  placeholder={t('auth.login.emailPlaceholder')}
+                  placeholder={t('auth.login.emailPlaceholder', 'email@example.com')}
                 />
                 <InputError message={errors.email} />
               </div>
 
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">{t('auth.login.passwordLabel')}</Label>
+                  <Label htmlFor="password">{t('auth.login.passwordLabel', 'Password')}</Label>
                   {canResetPassword && (
                     <TextLink
                       href={request()}
                       className="ml-auto text-sm"
                       tabIndex={5}
                     >
-                      {t('auth.login.forgotPassword')}
+                      {t('auth.login.forgotPassword', 'Forgot password?')}
                     </TextLink>
                   )}
                 </div>
@@ -69,14 +69,14 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                   required
                   tabIndex={2}
                   autoComplete="current-password"
-                  placeholder={t('auth.login.passwordPlaceholder')}
+                  placeholder={t('auth.login.passwordPlaceholder', 'Password')}
                 />
                 <InputError message={errors.password} />
               </div>
 
               <div className="flex items-center space-x-3">
                 <Checkbox id="remember" name="remember" tabIndex={3} />
-                <Label htmlFor="remember">{t('auth.login.rememberMe')}</Label>
+                <Label htmlFor="remember">{t('auth.login.rememberMe', 'Remember me')}</Label>
               </div>
 
               <button
@@ -89,14 +89,14 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                 {processing && (
                   <LoaderCircle className="h-4 w-4 animate-spin" />
                 )}
-                {t('auth.login.loginButton')}
+                {t('auth.login.loginButton', 'Log in')}
               </button>
             </div>
 
             <div className="text-center text-sm text-muted-foreground">
-              {t('auth.login.noAccount')}{' '}
+              {t('auth.login.noAccount', "Don't have an account?")}{' '}
               <TextLink href={register()} tabIndex={5}>
-                {t('auth.login.signUp')}
+                {t('auth.login.signUp', 'Sign up')}
               </TextLink>
             </div>
           </>

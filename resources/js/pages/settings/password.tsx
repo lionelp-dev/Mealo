@@ -22,20 +22,20 @@ export default function Password() {
 
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: t('settings.password.pageTitle'),
+      title: t('settings.password.pageTitle', 'Password settings'),
       href: edit().url,
     },
   ];
 
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={t('settings.password.pageTitle')} />
+      <Head title={t('settings.password.pageTitle', 'Password settings')} />
 
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall
-            title={t('settings.password.sectionTitle')}
-            description={t('settings.password.sectionDescription')}
+            title={t('settings.password.sectionTitle', 'Update password')}
+            description={t('settings.password.sectionDescription', 'Ensure your account is using a long, random password to stay secure')}
           />
 
           <Form
@@ -63,7 +63,7 @@ export default function Password() {
             {({ errors, processing, recentlySuccessful }) => (
               <>
                 <div className="grid gap-2">
-                  <Label htmlFor="current_password">{t('settings.password.currentPasswordLabel')}</Label>
+                  <Label htmlFor="current_password">{t('settings.password.currentPasswordLabel', 'Current password')}</Label>
 
                   <Input
                     id="current_password"
@@ -72,14 +72,14 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="current-password"
-                    placeholder={t('settings.password.currentPasswordPlaceholder')}
+                    placeholder={t('settings.password.currentPasswordPlaceholder', 'Current password')}
                   />
 
                   <InputError message={errors.current_password} />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="password">{t('settings.password.newPasswordLabel')}</Label>
+                  <Label htmlFor="password">{t('settings.password.newPasswordLabel', 'New password')}</Label>
 
                   <Input
                     id="password"
@@ -88,7 +88,7 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="new-password"
-                    placeholder={t('settings.password.newPasswordPlaceholder')}
+                    placeholder={t('settings.password.newPasswordPlaceholder', 'New password')}
                   />
 
                   <InputError message={errors.password} />
@@ -96,7 +96,7 @@ export default function Password() {
 
                 <div className="grid gap-2">
                   <Label htmlFor="password_confirmation">
-                    {t('settings.password.confirmPasswordLabel')}
+                    {t('settings.password.confirmPasswordLabel', 'Confirm password')}
                   </Label>
 
                   <Input
@@ -105,7 +105,7 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="new-password"
-                    placeholder={t('settings.password.confirmPasswordPlaceholder')}
+                    placeholder={t('settings.password.confirmPasswordPlaceholder', 'Confirm password')}
                   />
 
                   <InputError message={errors.password_confirmation} />
@@ -117,7 +117,7 @@ export default function Password() {
                     disabled={processing}
                     data-test="update-password-button"
                   >
-                    {t('settings.password.saveButton')}
+                    {t('settings.password.saveButton', 'Save')}
                   </button>
 
                   <Transition
@@ -127,7 +127,7 @@ export default function Password() {
                     leave="transition ease-in-out"
                     leaveTo="opacity-0"
                   >
-                    <p className="text-sm text-neutral-600">{t('common.status.saved')}</p>
+                    <p className="text-sm text-neutral-600">{t('common.status.saved', 'Saved')}</p>
                   </Transition>
                 </div>
               </>

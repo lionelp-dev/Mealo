@@ -58,10 +58,10 @@ export default function TwoFactorRecoveryCodes({
       <CardHeader>
         <CardTitle className="flex gap-3">
           <LockKeyhole className="size-4" aria-hidden="true" />
-          {t('settings.twoFactor.recoveryCodesTitle')}
+          {t('settings.twoFactor.recoveryCodesTitle', '2FA Recovery Codes')}
         </CardTitle>
         <CardDescription>
-          {t('settings.twoFactor.recoveryCodesDescription')}
+          {t('settings.twoFactor.recoveryCodesDescription', 'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -73,7 +73,7 @@ export default function TwoFactorRecoveryCodes({
             aria-controls="recovery-codes-section"
           >
             <RecoveryCodeIconComponent className="size-4" aria-hidden="true" />
-            {codesAreVisible ? t('settings.twoFactor.hideCodes') : t('settings.twoFactor.viewCodes')} {t('settings.twoFactor.recoveryCodesLabel')}
+            {codesAreVisible ? t('settings.twoFactor.hideCodes', 'Hide') : t('settings.twoFactor.viewCodes', 'View')} {t('settings.twoFactor.recoveryCodesLabel', 'Recovery codes')}
           </button>
 
           {canRegenerateCodes && (
@@ -89,7 +89,7 @@ export default function TwoFactorRecoveryCodes({
                   disabled={processing}
                   aria-describedby="regenerate-warning"
                 >
-                  <RefreshCw /> {t('settings.twoFactor.regenerateCodes')}
+                  <RefreshCw /> {t('settings.twoFactor.regenerateCodes', 'Regenerate Codes')}
                 </button>
               )}
             </Form>

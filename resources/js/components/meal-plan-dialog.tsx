@@ -87,7 +87,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                   }
                 }}
               >
-                {t('mealPlanning.dialog.multiSelect')}
+                {t('mealPlanning.planDishes', 'Plan dishes')}
                 <Copy size={14} className="mb-[1px]" />
               </button>
               <RecipesActiveFilters className="col-start-2 col-end-6 row-start-2" />
@@ -96,7 +96,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                   onClick={clearAllFilters}
                   className="btn col-start-1 row-start-2 mb-[2px] w-fit items-center gap-3 text-sm text-base-content btn-link underline btn-sm hover:text-error disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {t('mealPlanning.dialog.filters.clearAllFilters')}
+                  {t('mealPlanning.dialog.filters.clearAllFilters', 'Clear all filters')}
                 </button>
               )}
               <RecipesPopoverFilters
@@ -134,7 +134,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                     setIsMultiSelectMode(false);
                   }}
                 >
-                  {t('mealPlanning.dialog.multiSelectActions.abandon')}
+                  {t('mealPlanning.dialog.multiSelect.abandon', 'Cancel')}
                 </button>
                 <button
                   className="btn join-item border-base-300 disabled:!bg-base-200"
@@ -143,7 +143,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                     clearSelectedRecipes();
                   }}
                 >
-                  {t('mealPlanning.dialog.multiSelectActions.clearSelection')}
+                  {t('mealPlanning.dialog.multiSelect.clearSelection', 'Clear selection')}
                 </button>
 
                 <Popover.Root
@@ -157,7 +157,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                     >
                       <CalendarPlus size={16} className="mb-[2px]" />
                       <span>
-                        {t('mealPlanning.dialog.multiSelectActions.plan')}
+                        {t('mealPlanning.dialog.multiSelect.plan', 'Plan')}
                       </span>
                     </button>
                   </Popover.Trigger>
@@ -208,6 +208,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                             >
                               {t(
                                 `mealPlanning.dialog.filters.${mealTime.name}`,
+                                mealTime.name,
                               )}
                             </button>
                           ))}

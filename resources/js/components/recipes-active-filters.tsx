@@ -21,9 +21,9 @@ export function RecipesActiveFilters({
           >
             <span>
               {filter.type === 'preparation_time' &&
-                t('mealPlanning.dialog.filters.prep')}
+                t('mealPlanning.dialog.filters.prep', 'Prep: ')}
               {filter.type === 'cooking_time' &&
-                t('mealPlanning.dialog.filters.cook')}
+                t('mealPlanning.dialog.filters.cook', 'Cook: ')}
               {filter.label}
             </span>
             <X size={14} />

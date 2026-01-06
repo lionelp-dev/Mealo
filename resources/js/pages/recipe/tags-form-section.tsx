@@ -91,7 +91,7 @@ const TagsFormSection = withFieldGroup({
         children={(tags_field) => (
           <div className="flex flex-col gap-4">
             <span className="text-md text-base-content">
-              {t('recipes.form.tagsTitle')}
+              {t('recipes.form.tagsTitle', 'Tags')}
             </span>
 
             <div className="flex flex-col gap-6">
@@ -119,7 +119,7 @@ const TagsFormSection = withFieldGroup({
                                 field.handleChange(value);
                                 setSearchTerm(value);
                               }}
-                              placeholder={t('recipes.tags.namePlaceholder')}
+                              placeholder={t('recipes.tags.namePlaceholder', 'Tag name')}
                               autoComplete="off"
                             />
                           </div>
@@ -196,7 +196,7 @@ const TagsFormSection = withFieldGroup({
                     }}
                   >
                     <Plus size={16} />
-                    Ajouter un tag
+                    {t('recipes.tags.addButton', 'Add tag')}
                   </button>
                 )}
               </form.Subscribe>

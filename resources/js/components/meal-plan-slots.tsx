@@ -31,7 +31,7 @@ export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
                   className="flex flex-col justify-between gap-5 py-2"
                 >
                   <span className="w-fit rounded-full bg-secondary px-3 py-1 text-xs text-secondary-content">
-                    {t(`mealPlanning.dialog.filters.${mealTime.name}`)}
+                    {t(`mealPlanning.dialog.filters.${mealTime.name}`, mealTime.name)}
                   </span>
                   {plannedMeals.map((plannedMeal) => (
                     <MealPlanMealCard plannedMeal={plannedMeal} />

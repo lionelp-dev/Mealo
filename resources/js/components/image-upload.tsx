@@ -159,15 +159,15 @@ export function ImageUpload({
                 <span className="font-medium text-primary">
                   {t(
                     'recipes.form.imageUpload.clickToUpload',
-                    'Cliquez pour télécharger',
+                    'Click to upload',
                   )}
                 </span>{' '}
-                {t('recipes.form.imageUpload.orDragDrop', 'ou glissez-déposez')}
+                {t('recipes.form.imageUpload.orDragDrop', 'or drag and drop')}
               </p>
               <p className="mt-1 text-sm text-base-content/60">
                 {t(
                   'recipes.form.imageUpload.formats',
-                  "PNG, JPG, WebP jusqu'à 5MB",
+                  "PNG, JPG, WebP up to 5MB",
                 )}
               </p>
             </div>

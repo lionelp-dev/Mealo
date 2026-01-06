@@ -73,13 +73,13 @@ export default function MealPlanMealCard({
                       className="btn btn-ghost btn-sm"
                       onClick={handleView}
                     >
-                      <li>{t('common.buttons.view')}</li>
+                      <li>{t('common.buttons.view', 'View')}</li>
                     </button>
                     <button
                       className="btn text-error btn-ghost btn-sm hover:border-error/5 hover:bg-error/10"
                       onClick={() => unplanMeals([plannedMeal.id])}
                     >
-                      <li>{t('common.buttons.delete')}</li>
+                      <li>{t('common.buttons.delete', 'Delete')}</li>
                     </button>
                   </ul>
                 </div>

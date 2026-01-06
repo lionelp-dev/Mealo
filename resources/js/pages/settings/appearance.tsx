@@ -16,20 +16,20 @@ export default function Appearance() {
   
   const breadcrumbs: BreadcrumbItem[] = [
     {
-      title: t('settings.appearance.pageTitle'),
+      title: t('settings.appearance.pageTitle', 'Appearance settings'),
       href: editAppearance().url,
     },
   ];
   
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
-      <Head title={t('settings.appearance.pageTitle')} />
+      <Head title={t('settings.appearance.pageTitle', 'Appearance settings')} />
 
       <SettingsLayout>
         <div className="space-y-6">
           <HeadingSmall
-            title={t('settings.appearance.sectionTitle')}
-            description={t('settings.appearance.sectionDescription')}
+            title={t('settings.appearance.sectionTitle', 'Appearance settings')}
+            description={t('settings.appearance.sectionDescription', 'Update your account\'s appearance settings')}
           />
           <AppearanceTabs />
         </div>

@@ -23,9 +23,9 @@ export default function DeleteRecipesDialog() {
 
   const getTitle = () => {
     if (isMultiple) {
-      return t('recipes.delete.confirmTitleMultiple');
+      return t('recipes.delete.confirmTitleMultiple', 'Are you sure you want to delete these recipes?');
     }
-    return t('recipes.delete.confirmTitle');
+    return t('recipes.delete.confirmTitle', 'Are you sure you want to delete this recipe?');
   };
 
   const getDescription = () => {
@@ -56,11 +56,11 @@ export default function DeleteRecipesDialog() {
             onClick={handleDelete}
             disabled={isDeleting}
           >
-            {isDeleting ? t('common.status.loading') : t('recipes.delete.confirmButton')}
+            {isDeleting ? t('common.status.loading', 'Loading...') : t('recipes.delete.confirmButton', 'Delete')}
           </button>
           <DialogClose asChild>
             <button className="btn" onClick={closeDeleteDialog} disabled={isDeleting}>
-              {t('recipes.delete.cancelButton')}
+              {t('recipes.delete.cancelButton', 'Cancel')}
             </button>
           </DialogClose>
         </DialogFooter>

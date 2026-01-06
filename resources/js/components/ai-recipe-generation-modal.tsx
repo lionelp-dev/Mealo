@@ -50,7 +50,7 @@ export default function AIRecipeGenerationModal({
         <div className="flex items-center justify-between">
           <h2 className="flex items-center gap-3 text-xl font-semibold">
             <Wand2 className="h-5 w-5" />
-{t('recipes.generate.modalTitle')}
+{t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
           </h2>
           <button
             onClick={onClose}
@@ -70,14 +70,14 @@ export default function AIRecipeGenerationModal({
           className="flex flex-col gap-2"
         >
           <label className="label">
-<span className="label-text">{t('recipes.generate.prompt.label')}</span>
+<span className="label-text">{t('recipes.generate.prompt.label', 'Recipe Description')}</span>
           </label>
           <form.Field
             name="prompt"
             children={(field) => (
               <textarea
                 className="textarea-bordered textarea w-full"
-placeholder={t('recipes.generate.prompt.placeholder')}
+placeholder={t('recipes.generate.prompt.placeholder', 'Describe the recipe you want to create, e.g., \'A healthy Mediterranean chicken dish with vegetables\'')}
                 value={field.state.value}
                 onChange={(e) => field.handleChange(e.target.value)}
                 disabled={isLoading}
@@ -92,7 +92,7 @@ placeholder={t('recipes.generate.prompt.placeholder')}
               className="btn btn-ghost"
               disabled={isLoading}
             >
-{t('common.buttons.cancel')}
+{t('common.buttons.cancel', 'Cancel')}
             </button>
             <button
               type="submit"
@@ -102,12 +102,12 @@ placeholder={t('recipes.generate.prompt.placeholder')}
               {isLoading ? (
                 <>
                   <span className="loading loading-sm loading-spinner"></span>
-{t('recipes.generate.generating')}
+{t('recipes.generate.generating', 'Generating...')}
                 </>
               ) : (
                 <>
                   <Wand2 className="h-4 w-4" />
-{t('recipes.generate.button')}
+{t('recipes.generate.button', 'Generate recipe')}
                 </>
               )}
             </button>

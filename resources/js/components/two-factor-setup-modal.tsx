@@ -95,7 +95,7 @@ function TwoFactorSetupStep({
           <div className="relative flex w-full items-center justify-center">
             <div className="absolute inset-0 top-1/2 h-px w-full bg-border" />
             <span className="relative bg-card px-2 py-1">
-              {t('settings.twoFactor.setupModal.manualSetupTitle')}
+              {t('settings.twoFactor.setupModal.manualSetupTitle', 'Manual Setup')}
             </span>
           </div>
 
@@ -189,14 +189,14 @@ function TwoFactorVerificationStep({
                 onClick={onBack}
                 disabled={processing}
               >
-                {t('common.buttons.back')}
+                {t('common.buttons.back', 'Back')}
               </button>
               <button
                 type="submit"
                 className="btn btn-primary flex-1"
                 disabled={processing || code.length < OTP_MAX_LENGTH}
               >
-                {t('common.buttons.confirm')}
+                {t('common.buttons.confirm', 'Confirm')}
               </button>
             </div>
           </div>
@@ -240,24 +240,24 @@ export default function TwoFactorSetupModal({
   }>(() => {
     if (twoFactorEnabled) {
       return {
-        title: t('settings.twoFactor.setupModal.title'),
-        description: t('settings.twoFactor.setupModal.scanQrDescription'),
-        buttonText: t('settings.twoFactor.setupModal.closeButton'),
+        title: t('settings.twoFactor.setupModal.title', 'Set up Two-Factor Authentication'),
+        description: t('settings.twoFactor.setupModal.scanQrDescription', 'Use your authenticator app to scan the QR code below.'),
+        buttonText: t('settings.twoFactor.setupModal.closeButton', 'Close'),
       };
     }
 
     if (showVerificationStep) {
       return {
-        title: t('settings.twoFactor.setupModal.verifyTitle'),
-        description: t('settings.twoFactor.setupModal.verifyDescription'),
-        buttonText: t('settings.twoFactor.setupModal.continueButton'),
+        title: t('settings.twoFactor.setupModal.verifyTitle', 'Verify Authentication Code'),
+        description: t('settings.twoFactor.setupModal.verifyDescription', 'Enter the 6-digit code from your authenticator app.'),
+        buttonText: t('settings.twoFactor.setupModal.continueButton', 'Continue'),
       };
     }
 
     return {
-      title: t('settings.twoFactor.setupModal.title'),
-      description: t('settings.twoFactor.setupModal.scanQrDescription'),
-      buttonText: t('settings.twoFactor.setupModal.continueButton'),
+      title: t('settings.twoFactor.setupModal.title', 'Set up Two-Factor Authentication'),
+      description: t('settings.twoFactor.setupModal.scanQrDescription', 'Use your authenticator app to scan the QR code below.'),
+      buttonText: t('settings.twoFactor.setupModal.continueButton', 'Continue'),
     };
   }, [twoFactorEnabled, showVerificationStep, t]);
 

@@ -99,16 +99,16 @@ const IngredientFormSection = withFieldGroup({
                 <thead>
                   <tr className="[&>th]:pb-2 [&>th]:text-sm [&>th]:font-normal [&>th]:text-base-content">
                     <th className="w-[55%]">
-                      {t('recipes.ingredients.nameLabel')}
+                      {t('recipes.ingredients.nameLabel', 'Name')}
                     </th>
                     <th className="w-[15%]">
-                      {t('recipes.ingredients.quantityLabel')}
+                      {t('recipes.ingredients.quantityLabel', 'Quantity')}
                     </th>
                     <th className="w-[20%]">
-                      {t('recipes.ingredients.unitLabel')}
+                      {t('recipes.ingredients.unitLabel', 'Unit')}
                     </th>
                     {field.state.value.length !== 0 && (
-                      <th className="w-[10%]">{t('recipes.table.actions')}</th>
+                      <th className="w-[10%]">{t('recipes.table.actions', 'Actions')}</th>
                     )}
                   </tr>
                 </thead>
@@ -262,7 +262,7 @@ const IngredientFormSection = withFieldGroup({
                     }}
                     className="btn w-fit"
                   >
-                    <Plus size={16} /> {t('recipes.ingredients.addButton')}
+                    <Plus size={16} /> {t('recipes.ingredients.addButton', 'Add ingredient')}
                   </button>
                 )}
               </form.Subscribe>

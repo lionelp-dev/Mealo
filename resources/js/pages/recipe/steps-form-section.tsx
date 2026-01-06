@@ -78,7 +78,7 @@ const StepsFormSection = withFieldGroup({
                 children={(field) => (
                   <field.TextAreaField
                     rows={10}
-                    placeholder={t('recipes.steps.instructionPlaceholder')}
+                    placeholder={t('recipes.steps.instructionPlaceholder', 'Describe this step')}
                   />
                 )}
               />
@@ -95,7 +95,7 @@ const StepsFormSection = withFieldGroup({
                     }}
                     className="btn w-fit"
                   >
-                    <Plus size={16} /> {t('recipes.steps.addButton')}
+                    <Plus size={16} /> {t('recipes.steps.addButton', 'Add step')}
                   </button>
                 )}
               </form.Subscribe>

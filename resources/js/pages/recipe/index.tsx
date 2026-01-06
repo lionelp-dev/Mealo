@@ -57,14 +57,14 @@ export default function Recipes() {
                 }
               }}
             >
-              {t('mealPlanning.dialog.multiSelect')}
+              Multi-select {/* TODO: Add proper translation key */}
               <Copy size={14} className="mb-[1px]" />
             </button>
             <button
               className="btn gap-2 pl-5 btn-secondary"
               onClick={() => router.get(recipesRoute.create.url())}
             >
-              {t('recipes.index.createButton')}
+              {t('recipes.index.createButton', 'Create recipe')}
               <CookingPot size={15} />
             </button>
           </div>
@@ -72,7 +72,7 @@ export default function Recipes() {
         </div>
       }
     >
-      <Head title={t('recipes.pageTitle')}></Head>
+      <Head title={t('recipes.pageTitle', 'My recipes')}></Head>
 
       <div className="overflow-y-scroll">
         <div
@@ -88,7 +88,7 @@ export default function Recipes() {
                   onClick={clearAllFilters}
                   className="btn mb-[2px] w-fit items-center gap-2 text-sm whitespace-nowrap text-secondary btn-link underline btn-sm hover:text-error disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {t('mealPlanning.dialog.filters.clearAllFilters')}
+                  {t('mealPlanning.dialog.filters.clearAllFilters', 'Clear all filters')}
                 </button>
               )}
               <RecipesActiveFilters />
@@ -127,7 +127,7 @@ export default function Recipes() {
                 }}
                 disabled={selectedRecipesId.length === 0}
               >
-                {t('common.buttons.abandon')}
+                {t('common.buttons.abandon', 'Cancel')}
               </button>
 
               <button
@@ -138,7 +138,7 @@ export default function Recipes() {
               >
                 <span className="flex items-baseline gap-1.5 text-base-content">
                   <span className="mb-[1px] text-sm font-medium">
-                    {t('common.buttons.clearSelection')}
+                    {t('common.buttons.clearSelection', 'Clear selection')}
                   </span>
                   <span className="text-sm font-medium">
                     ({selectedRecipesId.length})
@@ -156,7 +156,7 @@ export default function Recipes() {
                 }}
                 disabled={selectedRecipesId.length === 0}
               >
-                {t('common.buttons.remove')}
+                {t('common.buttons.remove', 'Remove')}
               </button>
             </div>
           </div>

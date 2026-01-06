@@ -85,16 +85,16 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
               >
                 <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-end">
                   <button className="btn btn-ghost btn-sm" onClick={handleView}>
-                    <li>{t('common.buttons.view')}</li>
+                    <li>{t('common.buttons.view', 'View')}</li>
                   </button>
                   <button className="btn btn-ghost btn-sm" onClick={handleEdit}>
-                    <li>{t('common.buttons.edit')}</li>
+                    <li>{t('common.buttons.edit', 'Edit')}</li>
                   </button>
                   <button
                     className="btn items-end justify-start gap-2 rounded-md text-error btn-ghost btn-sm hover:border-error/10 hover:bg-error/10"
                     onClick={handleDelete}
                   >
-                    <li>{t('common.buttons.delete')}</li>
+                    <li>{t('common.buttons.delete', 'Delete')}</li>
                   </button>
                 </ul>
                 <Popover.Arrow className="fill-base-100 stroke-base-300" />
@@ -121,7 +121,7 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
               key={meal_time.id}
               className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
             >
-              {t(`mealPlanning.dialog.filters.${meal_time.name}`)}
+              {t(`mealPlanning.dialog.filters.${meal_time.name}`, meal_time.name)}
             </span>
           ))}
           {recipe.tags.map((tag) => (

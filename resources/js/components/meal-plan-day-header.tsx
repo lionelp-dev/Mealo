@@ -72,7 +72,7 @@ export default function MealPlanDayHeader({
                       className="btn w-full justify-end text-base-content btn-ghost btn-sm"
                       onClick={handleCopy}
                     >
-                      {t('mealPlanning.actions.copy')}
+                      {t('mealPlanning.actions.copy', 'Copy')}
                     </button>
                   )}
                   {copiedDayPlannedMeals && (
@@ -80,7 +80,7 @@ export default function MealPlanDayHeader({
                       className="btn w-full justify-end text-base-content btn-ghost btn-sm"
                       onClick={handlePaste}
                     >
-                      {t('mealPlanning.actions.paste')}
+                      {t('mealPlanning.actions.paste', 'Paste')}
                     </button>
                   )}
                   {hasPlannedMeals && (
@@ -88,7 +88,7 @@ export default function MealPlanDayHeader({
                       className="btn w-full justify-end text-base-content btn-ghost btn-sm"
                       onClick={handleDeleteAll}
                     >
-                      {t('mealPlanning.actions.deleteAll')}
+                      {t('mealPlanning.actions.deleteAll', 'Delete all')}
                     </button>
                   )}
                 </div>

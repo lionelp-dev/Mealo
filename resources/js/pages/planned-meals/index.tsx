@@ -42,7 +42,7 @@ export default function PlannedMeals() {
         headerRightContent={<LanguageSwitcher />}
       >
         <div className="overflow-y-scroll px-7 py-7">
-          <Head title={t('mealPlanning.pageTitle')}></Head>
+          <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
           <MealPlanCalendar />
         </div>
       </AppLayout>

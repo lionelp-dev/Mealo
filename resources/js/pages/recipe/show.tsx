@@ -25,13 +25,13 @@ function Recipe() {
                 router.visit(recipes.edit.url({ id: recipe.data.id }))
               }
             >
-              {t('common.buttons.edit')}
+              {t('common.buttons.edit', 'Edit')}
             </button>
             <button
               className="btn"
               onClick={() => router.visit(recipes.index.url())}
             >
-              {t('recipes.index.viewButton')}
+              {t('recipes.index.viewButton', 'View my recipes')}
             </button>
           </div>
           <LanguageSwitcher />
@@ -62,7 +62,7 @@ function Recipe() {
           <div className="grid grid-cols-2 gap-6">
             <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
               <h3 className="font-semibold text-base-content">
-                {t('recipes.table.preparationTime')}
+                {t('recipes.table.preparationTime', 'Preparation time')}
               </h3>
               <p className="text-2xl font-bold text-base-content">
                 {recipe.data.preparation_time} min
@@ -71,7 +71,7 @@ function Recipe() {
 
             <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
               <h3 className="font-semibold text-base-content">
-                {t('recipes.table.cookingTime')}
+                {t('recipes.table.cookingTime', 'Cooking time')}
               </h3>
               <p className="text-2xl font-bold text-base-content">
                 {recipe.data.cooking_time} min
@@ -83,7 +83,7 @@ function Recipe() {
             {recipe.data.steps && recipe.data.steps.length > 0 && (
               <div className="flex flex-col gap-3">
                 <h2 className="text-2xl font-bold text-base-content">
-                  {t('recipes.form.stepsTitle')}
+                  {t('recipes.form.stepsTitle', 'Steps')}
                 </h2>
                 <div className="space-y-4">
                   {recipe.data.steps
@@ -107,14 +107,14 @@ function Recipe() {
             {recipe.data.ingredients && recipe.data.ingredients.length > 0 && (
               <div className="flex flex-col gap-3">
                 <h2 className="text-2xl font-bold text-base-content">
-                  {t('recipes.form.ingredientsTitle')}
+                  {t('recipes.form.ingredientsTitle', 'Ingredients')}
                 </h2>
                 <table className="table table-zebra">
                   <thead>
                     <tr>
-                      <th>{t('recipes.ingredients.nameLabel')}</th>
-                      <th>{t('recipes.ingredients.quantityLabel')}</th>
-                      <th>{t('recipes.ingredients.unitLabel')}</th>
+                      <th>{t('recipes.ingredients.nameLabel', 'Name')}</th>
+                      <th>{t('recipes.ingredients.quantityLabel', 'Quantity')}</th>
+                      <th>{t('recipes.ingredients.unitLabel', 'Unit')}</th>
                     </tr>
                   </thead>
                   <tbody>

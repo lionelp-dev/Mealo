@@ -24,27 +24,27 @@ export function AppSidebar() {
 
   const mainNavItems: NavItem[] = [
     {
-      title: t('mealPlanning.title'),
+      title: t('mealPlanning.title', 'Meal Planning'),
       href: plannedMeals.index.url(),
       icon: Calendar,
     },
     {
-      title: t('shoppingLists.title'),
+      title: t('shoppingLists.title', 'Shopping Lists'),
       href: shoppingLists.index.url(),
       icon: ShoppingCart,
     },
     {
-      title: t('recipes.title'),
+      title: t('recipes.title', 'Recipes'),
       href: recipes.index.url(),
       icon: CookingPot,
     },
     {
-      title: t('recipes.create.button'),
+      title: t('recipes.create.button', 'Create recipe'),
       href: recipes.create.url(),
       icon: Pen,
     },
     {
-      title: t('recipes.generate.button'),
+      title: t('recipes.generate.button', 'Generate recipe'),
       href: recipes.create({ query: { generate: true } }),
       icon: Wand,
     },
