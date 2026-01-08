@@ -182,6 +182,7 @@ class RecipeController extends Controller
         $validated = $request->safe()->only([
             'name',
             'description',
+            'serving_size',
             'preparation_time',
             'cooking_time',
             'meal_times',
@@ -273,6 +274,7 @@ class RecipeController extends Controller
         $validated = $request->safe()->only([
             'name',
             'description',
+            'serving_size',
             'preparation_time',
             'cooking_time',
             'meal_times',

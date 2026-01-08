@@ -28,7 +28,7 @@ export default function MealPlanMealCard({
   return (
     <div
       key={id}
-      className="card rounded-sm border border-base-300 bg-base-100 shadow-sm card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
+      className="card rounded-md border border-base-300/50 bg-base-100 shadow-xs card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
       onMouseLeave={() => setIsOpen(false)}
     >
       {recipe.image_url && (
@@ -40,10 +40,10 @@ export default function MealPlanMealCard({
           />
         </figure>
       )}
-      <div className="card-body">
-        <div className="flex items-center justify-between gap-2">
+      <div className="card-body py-1.5">
+        <div className="flex items-center justify-between">
           <div className="card-title contents">
-            <span className="overflow-hidden px-4 py-2 text-ellipsis whitespace-nowrap text-base-content">
+            <span className="text-md overflow-hidden px-2.5 font-normal text-ellipsis whitespace-nowrap text-base-content">
               {recipe.name}
             </span>
           </div>

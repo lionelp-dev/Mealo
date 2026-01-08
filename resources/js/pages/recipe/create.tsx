@@ -36,6 +36,7 @@ interface CreateRecipeProps {
 const defaultValues: Omit<Recipe, 'id'> = {
   name: '',
   description: '',
+  serving_size: 1,
   preparation_time: 0,
   cooking_time: 0,
   ingredients: [],
@@ -124,8 +125,7 @@ function CreateRecipe({
             <form.AppField
               name="name"
               children={(field) => (
-                <field.InputField
-                  type="text"
+                <field.TextField
                   label={t('recipes.form.nameLabel', 'Recipe name')}
                   placeholder={t('recipes.form.namePlaceholder', 'Enter recipe name')}
                 />
@@ -176,12 +176,23 @@ function CreateRecipe({
               }}
             />
 
-            <div className="grid grid-flow-col gap-5">
+            <div className="grid grid-cols-3 gap-5">
+              <form.AppField
+                name="serving_size"
+                children={(field) => (
+                  <field.NumberField
+                    label={t('recipes.form.servingSizeLabel', 'Nombre de portions')}
+                    placeholder="1"
+                    min="1"
+                    max="50"
+                  />
+                )}
+              />
+
               <form.AppField
                 name="preparation_time"
                 children={(field) => (
-                  <field.InputField
-                    type="number"
+                  <field.NumberField
                     label={t('recipes.form.preparationTimeLabel', 'Preparation time (minutes)')}
                     placeholder="0"
                     min="0"
@@ -192,8 +203,7 @@ function CreateRecipe({
               <form.AppField
                 name="cooking_time"
                 children={(field) => (
-                  <field.InputField
-                    type="number"
+                  <field.NumberField
                     label={t('recipes.form.cookingTimeLabel', 'Cooking time (minutes)')}
                     placeholder="0"
                     min="0"

@@ -118,15 +118,14 @@ const IngredientFormSection = withFieldGroup({
                       <td>
                         <group.AppField
                           name={`ingredients[${index}].name`}
-                          children={(field) => <field.InputField />}
+                          children={(field) => <field.TextField />}
                         />
                       </td>
                       <td>
                         <group.AppField
                           name={`ingredients[${index}].quantity`}
                           children={(field) => (
-                            <field.InputField
-                              type="number"
+                            <field.NumberField
                               min="0"
                               step="0.01"
                               onChange={(e) =>
@@ -144,7 +143,7 @@ const IngredientFormSection = withFieldGroup({
                       <td>
                         <group.AppField
                           name={`ingredients[${index}].unit`}
-                          children={(field) => <field.InputField />}
+                          children={(field) => <field.TextField />}
                         />
                       </td>
                       <td className="align-top">
@@ -166,7 +165,7 @@ const IngredientFormSection = withFieldGroup({
                             name="name"
                             children={(field) => (
                               <Popover.Trigger className="flex-1">
-                                <field.InputField
+                                <field.TextField
                                   data-ingredient-input
                                   value={searchTerm || field.state.value}
                                   onChange={(e) => {
@@ -224,8 +223,7 @@ const IngredientFormSection = withFieldGroup({
                       <form.AppField
                         name="quantity"
                         children={(field) => (
-                          <field.InputField
-                            type="number"
+                          <field.NumberField
                             min="0"
                             step="0.01"
                             onChange={(e) =>
@@ -243,7 +241,7 @@ const IngredientFormSection = withFieldGroup({
                     <td>
                       <form.AppField
                         name="unit"
-                        children={(field) => <field.InputField />}
+                        children={(field) => <field.TextField />}
                       />
                     </td>
                     {field.state.value.length !== 0 && <td></td>}

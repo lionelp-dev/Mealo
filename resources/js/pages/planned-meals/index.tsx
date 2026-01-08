@@ -1,5 +1,6 @@
 import { LanguageSwitcher } from '@/components/language-switcher';
 import MealPlanCalendar from '@/components/meal-plan-calendar';
+import { MealPlanGenerationPopover } from '@/components/meal-plan-generation-popover';
 import WeekSelector from '@/components/week-selector';
 import { MealPlanDataProvider } from '@/contexts/meal-plan-data-context';
 import AppLayout from '@/layouts/app-layout';
@@ -39,7 +40,12 @@ export default function PlannedMeals() {
             url={plannedMealsRoute.index.url()}
           />
         }
-        headerRightContent={<LanguageSwitcher />}
+        headerRightContent={
+          <div className="flex items-center gap-4">
+            <MealPlanGenerationPopover />
+            <LanguageSwitcher />
+          </div>
+        }
       >
         <div className="overflow-y-scroll px-7 py-7">
           <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>

@@ -118,8 +118,8 @@
       "namePlaceholder": "Enter recipe name",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Describe your recipe",
-      "preparationTimeLabel": "Preparation time (minutes)",
-      "cookingTimeLabel": "Cooking time (minutes)",
+      "preparationTimeLabel": "Preparation time",
+      "cookingTimeLabel": "Cooking time",
       "ingredientsTitle": "Ingredients",
       "stepsTitle": "Steps",
       "tagsTitle": "Tags",
@@ -200,7 +200,15 @@
         "filter": "filter",
         "filters": "filters"
       }
-    }
+    },
+    "generatePlan": "Generate Plan",
+    "generatePlanTitle": "Generate your meal plan",
+    "generatePlanDescription": "Automatically create a balanced meal plan with your existing recipes.",
+    "planningPeriod": "Planning period",
+    "startDate": "Start date",
+    "numberOfDays": "Number of days",
+    "days": "days",
+    "generateNow": "Generate my meal plan"
   },
   "shoppingLists": {
     "title": "Shopping Lists",

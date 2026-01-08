@@ -94,5 +94,5 @@ test('handles openai api failure gracefully', function () {
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
-    $response->assertSessionHas('error', 'Failed to generate recipe');
+    $response->assertSessionHas('error', 'Failed to generate recipe: OpenAI API error');
 });

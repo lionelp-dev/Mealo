@@ -110,8 +110,12 @@ const TagsFormSection = withFieldGroup({
                           <div
                             className={`${tags_field.state.value.length > 0 && 'py-2'}`}
                           >
-                            <field.InputField
-                              className="-mb-1 w-full py-2 outline outline-base-300"
+                            <field.TextField
+                              className={cn(
+                                '-mb-1 w-full py-2',
+                                tags_field.state.value.length > 0 &&
+                                  'outline outline-base-300',
+                              )}
                               data-tag-input
                               value={searchTerm || field.state.value}
                               onChange={(e) => {
@@ -119,7 +123,10 @@ const TagsFormSection = withFieldGroup({
                                 field.handleChange(value);
                                 setSearchTerm(value);
                               }}
-                              placeholder={t('recipes.tags.namePlaceholder', 'Tag name')}
+                              placeholder={t(
+                                'recipes.tags.namePlaceholder',
+                                'Tag name',
+                              )}
                               autoComplete="off"
                             />
                           </div>

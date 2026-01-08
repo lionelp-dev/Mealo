@@ -52,12 +52,13 @@ test('user cannot create recipe with invalid data', function () {
         'description' => '',
         'preparation_time' => -1,
         'cooking_time' => -1,
+        'serving_size' => -1,
     ];
 
     $response = $this->actingAs($this->user)->post(route('recipes.store'), $invalidData);
 
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time']);
+    $response->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time', 'serving_size']);
 });
 
 test('show recipe screen can be rendered', function () {
@@ -108,14 +109,16 @@ test('user can update a recipe successfully', function () {
 test('user can delete a recipe successfully', function () {
     $recipe = createRecipeResource($this->user->id, false);
 
-    $response = $this->actingAs($this->user)->delete(route('recipes.destroy', $recipe));
+    $response = $this->actingAs($this->user)->delete(route('recipes.destroy'), [
+        'recipe_ids' => [$recipe->resource->id]
+    ]);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.index'));
     $response->assertSessionHas('success', 'Recipe successfully deleted');
 
     // Recipe should be removed from database
-    $this->assertDatabaseMissing('recipes', ['id' => $recipe->id]);
+    $this->assertDatabaseMissing('recipes', ['id' => $recipe->resource->id]);
 });
 
 test('user cannot access other users recipes', function () {
@@ -129,9 +132,14 @@ test('user cannot access other users recipes', function () {
     $response = $this->actingAs($this->user)->get(route('recipes.edit', $recipe));
     $response->assertStatus(403);
 
-    // Should not be able to delete other user's recipe
-    $response = $this->actingAs($this->user)->delete(route('recipes.destroy', $recipe));
-    $response->assertStatus(403);
+    // Should not be able to delete other user's recipe - silently ignored
+    $response = $this->actingAs($this->user)->delete(route('recipes.destroy'), [
+        'recipe_ids' => [$recipe->resource->id]
+    ]);
+    $response->assertStatus(302); // Returns success but doesn't actually delete
+    
+    // Verify the recipe was NOT deleted (still exists)
+    $this->assertDatabaseHas('recipes', ['id' => $recipe->resource->id]);
 });
 
 test('user cannot update recipe with invalid data', function () {
@@ -142,12 +150,13 @@ test('user cannot update recipe with invalid data', function () {
         'description' => '',
         'preparation_time' => -1,
         'cooking_time' => -1,
+        'serving_size' => -1,
     ];
 
     $response = $this->actingAs($this->user)->put(route('recipes.update', $recipe), $invalidData);
 
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time']);
+    $response->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time', 'serving_size']);
 
     // Original recipe data should remain unchanged
     $this->assertDatabaseHas('recipes', [

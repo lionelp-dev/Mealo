@@ -1,4 +1,4 @@
-import { Plus } from 'lucide-react';
+import { ChefHat } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { RefObject, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,19 +99,19 @@ export default function MealPlanEmptySlot({
     <div
       ref={stickyElementRef}
       className={`sticky right-0 bottom-0 left-0 flex flex-1 flex-col items-center justify-center gap-5 rounded-md py-5 text-gray-400 transition-all duration-200 ease-in-out ${
-        isStickyActive ? 'bg-base-200/70' : 'bg-base-200'
+        isStickyActive ? 'bg-base-200/70' : 'bg-base-200/50'
       }`}
       {...rest}
     >
-      {showMealPlanSlotIcon && MealPlanSlotsIcons[date.weekday].icon}
+      {/* showMealPlanSlotIcon && MealPlanSlotsIcons[date.weekday].icon*/}
       <button
-        className="btn gap-2 rounded-full !border-0 pr-5 btn-secondary"
+        className="btn gap-2 rounded-full !border-0 pl-5 btn-sm btn-secondary"
         onClick={() => openMealPlanDialog(date)}
       >
-        <Plus size={14} />
         <span className="font-normal text-secondary-content">
           {t('mealPlanning.actions.planMeal', 'Plan meal')}
         </span>
+        <ChefHat size={14} />
       </button>
     </div>
   );

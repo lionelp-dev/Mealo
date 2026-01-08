@@ -47,6 +47,7 @@ class GenerateRecipeJob implements ShouldQueue
                 'user_id' => $user->id,
                 'name' => $validated['name'],
                 'description' => $validated['description'],
+                'serving_size' => $validated['serving_size'],
                 'preparation_time' => $validated['preparation_time'],
                 'cooking_time' => $validated['cooking_time'],
             ]);

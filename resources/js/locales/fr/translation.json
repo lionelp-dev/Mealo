@@ -118,8 +118,8 @@
       "namePlaceholder": "Entrez le nom de la recette",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Décrivez votre recette",
-      "preparationTimeLabel": "Temps de préparation (minutes)",
-      "cookingTimeLabel": "Temps de cuisson (minutes)",
+      "preparationTimeLabel": "Temps de préparation",
+      "cookingTimeLabel": "Temps de cuisson",
       "ingredientsTitle": "Ingrédients",
       "stepsTitle": "Étapes",
       "tagsTitle": "Tags",
@@ -212,7 +212,15 @@
         "filter": "filtre",
         "filters": "filtres"
       }
-    }
+    },
+    "generatePlan": "Générer un planning",
+    "generatePlanTitle": "Générer votre planning de repas",
+    "generatePlanDescription": "Créez automatiquement un planning de repas équilibré avec vos recettes existantes.",
+    "planningPeriod": "Période de planning",
+    "startDate": "Date de début",
+    "numberOfDays": "Nombre de jours",
+    "days": "jours",
+    "generateNow": "Générer mon planning"
   },
   "shoppingLists": {
     "title": "Listes de courses",

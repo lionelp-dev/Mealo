@@ -27,6 +27,7 @@ class RecipeFactory extends Factory
             'description' => fake()->paragraph(),
             'preparation_time' => fake()->numberBetween(0, 60),
             'cooking_time' => fake()->numberBetween(0, 60),
+            'serving_size' => fake()->numberBetween(1, 12),
         ];
     }
 

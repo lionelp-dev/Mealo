@@ -82,7 +82,9 @@ function EditRecipe() {
     >
       <Head title={t('recipes.edit.pageTitle', 'Edit recipe')}></Head>
       <AppMainContent>
-        <h1 className="mb-6 text-2xl font-bold">{t('recipes.edit.title', 'Edit recipe')}</h1>
+        <h1 className="mb-6 text-2xl font-bold">
+          {t('recipes.edit.title', 'Edit recipe')}
+        </h1>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -94,10 +96,12 @@ function EditRecipe() {
             <form.AppField
               name="name"
               children={(field) => (
-                <field.InputField
-                  type="text"
+                <field.TextField
                   label={t('recipes.form.nameLabel', 'Recipe name')}
-                  placeholder={t('recipes.form.namePlaceholder', 'Enter recipe name')}
+                  placeholder={t(
+                    'recipes.form.namePlaceholder',
+                    'Enter recipe name',
+                  )}
                 />
               )}
             />
@@ -107,7 +111,10 @@ function EditRecipe() {
               children={(field) => (
                 <field.TextAreaField
                   label={t('recipes.form.descriptionLabel', 'Description')}
-                  placeholder={t('recipes.form.descriptionPlaceholder', 'Describe your recipe')}
+                  placeholder={t(
+                    'recipes.form.descriptionPlaceholder',
+                    'Describe your recipe',
+                  )}
                   rows={10}
                 />
               )}
@@ -148,11 +155,28 @@ function EditRecipe() {
 
             <div className="grid grid-flow-col gap-5">
               <form.AppField
+                name="serving_size"
+                children={(field) => (
+                  <field.NumberField
+                    label={t(
+                      'recipes.form.servingSizeLabel',
+                      'Nombre de portions',
+                    )}
+                    placeholder="4"
+                    min="1"
+                    max="50"
+                  />
+                )}
+              />
+
+              <form.AppField
                 name="preparation_time"
                 children={(field) => (
-                  <field.InputField
-                    type="number"
-                    label={t('recipes.form.preparationTimeLabel', 'Preparation time (minutes)')}
+                  <field.NumberField
+                    label={t(
+                      'recipes.form.preparationTimeLabel',
+                      'Preparation time (minutes)',
+                    )}
                     placeholder="0"
                     min="0"
                   />
@@ -162,9 +186,11 @@ function EditRecipe() {
               <form.AppField
                 name="cooking_time"
                 children={(field) => (
-                  <field.InputField
-                    type="number"
-                    label={t('recipes.form.cookingTimeLabel', 'Cooking time (minutes)')}
+                  <field.NumberField
+                    label={t(
+                      'recipes.form.cookingTimeLabel',
+                      'Cooking time (minutes)',
+                    )}
                     placeholder="0"
                     min="0"
                   />

@@ -59,7 +59,16 @@ function Recipe() {
             </div>
           )}
 
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-3 gap-6">
+            <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
+              <h3 className="font-semibold text-base-content">
+                {t('recipes.show.servingSize', 'Portions')}
+              </h3>
+              <p className="text-2xl font-bold text-base-content">
+                {recipe.data.serving_size}
+              </p>
+            </div>
+
             <div className="flex flex-col rounded-lg bg-base-100 px-7 py-4">
               <h3 className="font-semibold text-base-content">
                 {t('recipes.table.preparationTime', 'Preparation time')}

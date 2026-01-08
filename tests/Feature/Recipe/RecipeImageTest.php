@@ -114,6 +114,7 @@ test('recipe creation with image uploads and stores image', function () {
     $recipeData = [
         'name' => 'Test Recipe with Image',
         'description' => 'A test recipe with an image',
+        'serving_size' => 4,
         'preparation_time' => 30,
         'cooking_time' => 45,
         'meal_times' => [['name' => 'diner']],
@@ -141,6 +142,7 @@ test('recipe update with image uploads and stores image', function () {
     $recipeData = [
         'name' => $this->recipe->name,
         'description' => $this->recipe->description,
+        'serving_size' => 4,
         'preparation_time' => $this->recipe->preparation_time,
         'cooking_time' => $this->recipe->cooking_time,
         'meal_times' => [['name' => 'diner']],
@@ -168,6 +170,7 @@ test('recipe update with image replaces old image', function () {
     $recipeData = [
         'name' => $this->recipe->name,
         'description' => $this->recipe->description,
+        'serving_size' => 4,
         'preparation_time' => $this->recipe->preparation_time,
         'cooking_time' => $this->recipe->cooking_time,
         'meal_times' => [['name' => 'diner']],
@@ -203,7 +206,9 @@ test('deleting recipe removes associated image', function () {
     Storage::disk('recipe_images')->assertExists($imagePath);
 
     $response = $this->actingAs($this->user)
-        ->delete(route('recipes.destroy', $this->recipe));
+        ->delete(route('recipes.destroy'), [
+            'recipe_ids' => [$this->recipe->id]
+        ]);
 
     $response->assertStatus(302);
     Storage::disk('recipe_images')->assertMissing($imagePath);

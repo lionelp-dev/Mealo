@@ -102,6 +102,7 @@ export type Recipe = {
   id: number;
   name: string;
   description: string;
+  serving_size: number;
   preparation_time: number;
   cooking_time: number;
   meal_times: MealTime[];

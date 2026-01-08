@@ -19,6 +19,7 @@ class RecipeResource extends JsonResource
             'user_id' => $this->resource->user_id,
             'name' => $this->resource->name,
             'description' => $this->resource->description,
+            'serving_size' => $this->resource->serving_size,
             'preparation_time' => $this->resource->preparation_time,
             'cooking_time' => $this->resource->cooking_time,
             'meal_times' => $this->when($this->relationLoaded('mealTimes'), function () {

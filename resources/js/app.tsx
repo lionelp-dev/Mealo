@@ -3,6 +3,7 @@ import '../css/app.css';
 import './lib/i18n';
 
 import { createInertiaApp } from '@inertiajs/react';
+import { Theme } from '@radix-ui/themes';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
 import { initializeTheme } from './hooks/use-appearance';
@@ -19,7 +20,11 @@ createInertiaApp({
   setup({ el, App, props }) {
     const root = createRoot(el);
 
-    root.render(<App {...props} />);
+    root.render(
+      <Theme>
+        <App {...props} />
+      </Theme>,
+    );
   },
   progress: {
     color: '#4B5563',

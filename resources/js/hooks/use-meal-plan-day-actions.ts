@@ -8,7 +8,7 @@ import { useMealPlanActions } from './use-meal-plan-actions';
 export const useMealPlanDayActions = (dayPlannedMeals: DayPlannedMeals) => {
   const { i18n } = useTranslation();
 
-  const [date, setDate] = useState(
+  const [date, setDate] = useState<DateTime>(
     dayPlannedMeals.date.setLocale(i18n.language),
   );
 

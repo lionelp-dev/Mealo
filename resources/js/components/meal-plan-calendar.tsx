@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { useEffect, useRef } from 'react';
 
 import { InfiniteScroll } from '@inertiajs/react';
 import { useMealPlanData } from '../hooks/use-meal-plan-data';
@@ -11,31 +10,16 @@ import MealPlanSlots from './meal-plan-slots';
 export default function MealPlanCalendar() {
   const { weekPlannedMeals, recipes } = useMealPlanData();
 
-  const today = DateTime.now();
-
-  const currentDayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    requestAnimationFrame(() => {
-      if (currentDayRef.current) {
-        currentDayRef.current.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }
-    });
-  }, []);
-
   return (
-    <div className="grid grid-cols-[repeat(auto-fit,minmax(22.5rem,1fr))] gap-x-6 gap-y-6">
+    <div className="grid grid-cols-[repeat(auto-fit,minmax(22.5rem,1fr))] gap-x-5 gap-y-6">
       {weekPlannedMeals.map((dayPlannedMeals) => {
         const { date } = dayPlannedMeals;
-        const isToday = date.hasSame(today, 'day');
+        const isToday = date.hasSame(DateTime.now(), 'day');
         return (
           <div
             key={date.toISODate()}
-            ref={isToday ? currentDayRef : null}
-            className="flex flex-col gap-5"
+            id={isToday ? 'today' : ''}
+            className="flex [scroll-margin-top:28px] flex-col gap-5"
           >
             <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
             <MealPlanSlots dayPlannedMeals={dayPlannedMeals} />

@@ -14,8 +14,8 @@ export function AppSidebarHeader({
   headerRightContent?: ReactNode;
 }) {
   return (
-    <header className="sticky mx-auto flex h-16 min-h-0 w-[92%] shrink-0 items-center gap-10 border-b border-sidebar-border/50 pb-[2px] transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-      <SidebarTrigger className="" />
+    <header className="sticky z-20 mx-auto flex h-16 min-h-0 w-[92%] shrink-0 items-center gap-10 border-b border-sidebar-border/50 pb-[2px] transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <SidebarTrigger className="-ml-9" />
       <Breadcrumbs breadcrumbs={breadcrumbs} />
       <div className="flex flex-1">{headerLeftContent}</div>
       <div className="flex flex-1 justify-end">{headerRightContent}</div>

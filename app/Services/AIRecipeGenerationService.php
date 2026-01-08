@@ -12,22 +12,7 @@ class AIRecipeGenerationService
 
     public function __construct()
     {
-        // Check if a mock client is available (for testing)
-        if (app()->bound('openai.client')) {
-            $this->client = app('openai.client');
-            return;
-        }
-
-        $apiKey = getenv('OPEN_ROUTER_API_KEY');
-
-        if ($apiKey) {
-            $this->client = OpenAI::factory()
-                ->withApiKey($apiKey)
-                ->withBaseUri('https://openrouter.ai/api/v1')
-                ->withHttpHeader('HTTP-Referer', 'http://localhost')
-                ->withHttpHeader('X-Title', 'Meal Planner')
-                ->make();
-        }
+        $this->client = app('openai.client');
     }
 
     /**
@@ -35,11 +20,6 @@ class AIRecipeGenerationService
      */
     public function generateRecipe(string $prompt): array
     {
-        // Vérifier si la clé API existe
-        $apiKey = getenv('OPEN_ROUTER_API_KEY');
-        if (!$apiKey || empty($apiKey)) {
-            throw new Exception('La génération de recettes par IA n\'est pas disponible pour le moment.');
-        }
 
         // Get available meal times from database
         $mealTimes = MealTime::all();
@@ -73,6 +53,12 @@ class AIRecipeGenerationService
                                     'cooking_time' => [
                                         'type' => 'integer',
                                         'description' => 'Cooking time in minutes',
+                                    ],
+                                    'serving_size' => [
+                                        'type' => 'integer',
+                                        'description' => 'Number of servings this recipe makes (1-50)',
+                                        'minimum' => 1,
+                                        'maximum' => 50,
                                     ],
                                     'meal_times' => [
                                         'type' => 'array',
@@ -147,7 +133,7 @@ class AIRecipeGenerationService
                                         ],
                                     ],
                                 ],
-                                'required' => ['name', 'description', 'preparation_time', 'cooking_time', 'meal_times', 'tags', 'ingredients', 'steps'],
+                                'required' => ['name', 'description', 'preparation_time', 'cooking_time', 'serving_size', 'meal_times', 'tags', 'ingredients', 'steps'],
                             ],
                         ],
                     ],
@@ -161,6 +147,7 @@ CHAMPS REQUIS :
 - description: Description détaillée de la recette
 - preparation_time: Temps de préparation en minutes (entier)
 - cooking_time: Temps de cuisson en minutes (entier)
+- serving_size: Nombre de portions que produit cette recette (entre 1 et 50, choisis selon le type de plat et les quantités d'ingrédients)
 - meal_times: Types de repas appropriés. Choisis EXACTEMENT dans cette liste: {$mealTimeListForPrompt}
 - tags: Tags descriptifs (cuisine, difficulté, régime, etc.). Format: [{'name': 'tag1'}, {'name': 'tag2'}]
 - ingredients: Liste complète avec quantités précises et unités

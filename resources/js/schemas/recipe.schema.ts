@@ -36,6 +36,10 @@ const recipeSchema = z.object({
     .min(1, 'Le titre ne peut pas être vide')
     .max(255, 'Le titre ne doit pas dépasser 255 caractères'),
   description: z.string().trim().min(1, 'La description ne peut pas être vide'),
+  serving_size: z
+    .number()
+    .min(1, 'Le nombre de portions doit être supérieur ou égal à 1')
+    .max(50, 'Le nombre de portions ne doit pas dépasser 50'),
   preparation_time: z
     .number()
     .min(0, 'Le temps de préparation doit être supérieur ou égal à 0'),

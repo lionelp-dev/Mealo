@@ -26,9 +26,16 @@ class Recipe extends Model
         'user_id',
         'name',
         'description',
+        'serving_size',
         'preparation_time',
         'cooking_time',
         'image_path',
+    ];
+
+    protected $casts = [
+        'serving_size' => 'integer',
+        'preparation_time' => 'integer',
+        'cooking_time' => 'integer',
     ];
 
     /**

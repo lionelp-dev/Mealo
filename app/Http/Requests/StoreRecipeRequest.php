@@ -24,6 +24,7 @@ class StoreRecipeRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
+            'serving_size' => ['required', 'integer', 'min:1', 'max:50'],
             'preparation_time' => ['required', 'integer', 'min:0'],
             'cooking_time' => ['required', 'integer', 'min:0'],
             'meal_times' => ['required', 'array'],

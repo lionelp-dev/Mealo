@@ -12,6 +12,7 @@ use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Services\ShoppingListService;
+use App\Services\AIMealPlanningService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,7 +22,8 @@ use Inertia\Inertia;
 class PlannedMealController extends Controller
 {
     public function __construct(
-        private ShoppingListService $shoppingListService
+        private ShoppingListService $shoppingListService,
+        private AIMealPlanningService $aiMealPlanningService
     ) {}
 
     /**
@@ -250,6 +252,60 @@ class PlannedMealController extends Controller
         }, attempts: 5);
     }
 
+    /**
+     * Generate a meal plan using AI
+     */
+    public function generatePlan(Request $request)
+    {
+        $user = $request->user();
+
+        $validated = $request->validate([
+            'startDate' => ['required', 'date'],
+            'days' => ['nullable', 'integer', 'min:1', 'max:7'],
+        ]);
+
+        $startDate = Carbon::parse($validated['startDate']);
+        $days = $validated['days'] ?? 7;
+
+        try {
+            // Generate meal plan using AI
+            $plannedMeals = $this->aiMealPlanningService->generateMealPlan([
+                'userId' => $user->id,
+                'days' => $days,
+                'startDate' => $startDate,
+            ]);
+
+            // Save the generated meal plans to database
+            $createdMeals = [];
+            $affectedDates = [];
+            foreach ($plannedMeals as $mealData) {
+                $createdMeals[] = PlannedMeal::create([
+                    'user_id' => $user->id,
+                    'recipe_id' => $mealData['recipe_id'],
+                    'planned_date' => $mealData['planned_date'],
+                    'meal_time_id' => $mealData['meal_time_id'],
+                ]);
+                $affectedDates[] = $mealData['planned_date'];
+            }
+
+            // Regenerate shopping lists for all affected weeks
+            $this->shoppingListService->regenerateAffectedShoppingLists(
+                $user->id,
+                $affectedDates
+            );
+
+            return redirect()->back()->with(
+                'success',
+                'Planning généré avec succès ! ' . count($createdMeals) . ' repas créés.'
+            );
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with(
+                'error',
+                'Erreur lors de la génération du planning : ' . $e->getMessage()
+            );
+        }
+    }
 
     /**
      * Apply time-based filters to recipe query.

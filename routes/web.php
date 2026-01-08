@@ -21,6 +21,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::resource('planned-meals', PlannedMealController::class)->except(['destroy']);
     Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
+    Route::post('planned-meals/generate', [PlannedMealController::class, 'generatePlan'])->name('planned-meals.generate');
     Route::get('shopping-lists', [ShoppingListController::class, 'index'])->name('shopping-lists.index');
     Route::put('shopping-lists/ingredients/{ingredient}', [ShoppingListController::class, 'toggleIngredient'])->name('shopping-lists.toggle-ingredient');
 });

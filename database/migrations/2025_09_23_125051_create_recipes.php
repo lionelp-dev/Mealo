@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignIdFor(User::class)->constrained();
             $table->string('name');
             $table->string('description');
+            $table->integer('serving_size')->default(1);
             $table->integer('preparation_time');
             $table->integer('cooking_time');
             $table->string('image_path')->nullable();

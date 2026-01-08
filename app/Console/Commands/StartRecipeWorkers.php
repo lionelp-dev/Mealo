@@ -8,7 +8,7 @@ use Symfony\Component\Process\Process;
 class StartRecipeWorkers extends Command
 {
     protected $signature = 'recipe:start-workers
-                            {--workers=4 : Number of workers to start}
+                            {--workers=5 : Number of workers to start}
                             {--timeout=300 : Worker timeout in seconds}
                             {--max-jobs=50 : Max jobs per worker}';
 

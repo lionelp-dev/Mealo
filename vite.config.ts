@@ -17,8 +17,8 @@ const dirname =
 export default defineConfig({
   server: {
     watch: {
-      ignored: ['**/worktrees/**']
-    }
+      // Don't ignore current worktree directory
+    },
   },
   plugins: [
     laravel({

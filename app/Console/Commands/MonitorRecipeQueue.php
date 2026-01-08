@@ -10,7 +10,7 @@ class MonitorRecipeQueue extends Command
 {
     protected $signature = 'queue:monitor-recipes
                             {--watch : Watch mode - refresh every few seconds}
-                            {--interval=3 : Refresh interval in seconds for watch mode}';
+                            {--interval=1 : Refresh interval in seconds for watch mode}';
     protected $description = 'Monitor recipe generation queue progress';
 
     public function handle()

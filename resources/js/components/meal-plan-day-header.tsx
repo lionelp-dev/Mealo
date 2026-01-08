@@ -30,17 +30,16 @@ export default function MealPlanDayHeader({
 
   return (
     <div
-      className={`flex h-14 items-center justify-between gap-2 rounded-lg border bg-background px-5 shadow-sm ${
-        isCurrentDay ? 'border-base-content' : 'border-base-300'
+      className={`flex h-12 items-center justify-between rounded-lg border bg-background px-5 shadow-xs ${
+        isCurrentDay ? 'border-2 border-secondary/55' : 'border-base-300/55'
       }`}
     >
-      <div className="flex items-center gap-2">
-        <div className={`text-base-content' } text-lg`}>{date.weekdayLong}</div>
-        <div
-          className={`text-base-content' } flex h-7 w-7 items-center justify-center rounded-full text-base font-medium`}
-        >
-          {date.day}
-        </div>
+      <div className="text-md flex items-center gap-3 font-normal text-base-content/80">
+        <span>
+          {date.weekdayLong && date.weekdayLong[0].toUpperCase()}
+          {date.weekdayLong?.slice(1)}
+        </span>
+        <span>{date.day}</span>
       </div>
       {(hasPlannedMeals || copiedDayPlannedMeals) && (
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
