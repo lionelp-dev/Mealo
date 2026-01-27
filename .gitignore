@@ -30,3 +30,5 @@ yarn-error.log
 *storybook.log
 storybook-static
 /worktrees
+.php-cs-fixer.cache
+.php-cs-fixer.dist.php

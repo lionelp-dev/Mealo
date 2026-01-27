@@ -1,5 +1,6 @@
 import { FlashMessage } from '@/types';
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 
 type Toast = {
   id: string;
@@ -15,7 +16,7 @@ function ToastItem({ message, type, onClose }: ToastItemProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, [onClose]);
@@ -35,7 +36,7 @@ function ToastItem({ message, type, onClose }: ToastItemProps) {
   };
 
   return (
-    <div className={`alert ${typeStyles[type]} mb-2`}>
+    <div className={`alert ${typeStyles[type]} z-30 mb-2`}>
       <span>{icons[type]}</span>
       <span>{message}</span>
     </div>
@@ -92,7 +93,7 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
   }
 
   return (
-    <div className="toast-end toast z-[1000]">
+    <>
       {toasts.map((toast) => (
         <ToastItem
           key={toast.id}
@@ -101,6 +102,14 @@ export default function Toast({ flash }: { flash: FlashMessage }) {
           onClose={() => removeToast(toast.id)}
         />
       ))}
-    </div>
+    </>
   );
 }
+
+Toast.Portal = ({ children }: { children: React.ReactNode }) => {
+  if (typeof window === 'undefined') return null;
+  return createPortal(
+    <div className="toast-bottom toast-end toast fixed z-60">{children}</div>,
+    document.body,
+  );
+};

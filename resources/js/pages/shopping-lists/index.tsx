@@ -1,18 +1,21 @@
 import { Head, usePage, usePrefetch } from '@inertiajs/react';
 
-import { LanguageSwitcher } from '@/components/language-switcher';
 import ShoppingListIngredientList from '@/components/shopping-list-ingredient-list';
 import ShoppingListProgress from '@/components/shopping-list-progress';
 import WeekSelector from '@/components/week-selector';
+import { WorkspaceSwitcher } from '@/components/workspace-switcher';
+import { WorkspaceDataProvider } from '@/contexts/workspace-context';
 import AppLayout from '@/layouts/app-layout';
 import shoppingLists from '@/routes/shopping-lists';
-import { ShoppingList } from '@/types';
+import { ShoppingList, WorkspaceData } from '@/types';
+import { ShoppingBasket } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
 type PageProps = {
   shoppingList: ShoppingList;
   weekStart: string;
+  workspace_data: WorkspaceData;
 };
 
 export default function ShoppingListsIndex() {
@@ -20,7 +23,9 @@ export default function ShoppingListsIndex() {
   const { flush } = usePrefetch();
   flush();
 
-  const { shoppingList, weekStart } = usePage<PageProps>().props;
+  const { shoppingList, weekStart, workspace_data } =
+    usePage<PageProps>().props;
+
   const ingredients = shoppingList?.data.ingredients || [];
   const totalCount = ingredients.length;
 
@@ -34,51 +39,68 @@ export default function ShoppingListsIndex() {
   );
 
   return (
-    <AppLayout
-      headerLeftContent={
-        <WeekSelector
-          currentWeek={DateTime.fromISO(weekStart)}
-          url={shoppingLists.index.url()}
-        />
-      }
-      headerRightContent={<LanguageSwitcher />}
-    >
-      <Head title={t('shoppingLists.pageTitle', 'Shopping Lists')} />
-      {ingredients.length === 0 ? (
-        <div className="flex items-center justify-center p-20 text-gray-500">
-          <div className="text-center">
-            <p className="text-lg text-base-content">
-              {t('shoppingLists.noIngredients', 'No ingredients in this shopping list')}
-            </p>
-            <p className="text-sm text-base-content">
-              {t('shoppingLists.planMealsHint', 'Plan some meals to add ingredients')}
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="mx-auto flex w-[90%] flex-1 flex-col gap-9 overflow-y-auto py-9">
-          <ShoppingListProgress
-            checkedCount={checkedCount}
-            totalCount={totalCount}
+    <WorkspaceDataProvider data={{ workspace_data }}>
+      <AppLayout
+        headerLeftContent={
+          <WeekSelector
+            currentWeek={DateTime.fromISO(weekStart)}
+            url={shoppingLists.index.url()}
           />
-
-          <div className="flex flex-1 gap-8 overflow-hidden max-xl:flex-col">
-            {uncheckedIngredients.length > 0 && (
-              <ShoppingListIngredientList
-                title={t('shoppingLists.toBuy', 'To buy')}
-                description={t('shoppingLists.itemsCount', {count: uncheckedIngredients.length, defaultValue: `${uncheckedIngredients.length} items`})}
-                ingredients={uncheckedIngredients}
-              />
-            )}
-
-            <ShoppingListIngredientList
-              title={t('shoppingLists.completed', 'Completed')}
-              description={t('shoppingLists.itemsCheckedOff', {count: checkedIngredients.length, defaultValue: `${checkedIngredients.length} items checked off`})}
-              ingredients={checkedIngredients}
-            />
+        }
+        headerRightContent={
+          <div className="flex items-center gap-4">
+            <WorkspaceSwitcher />
           </div>
+        }
+      >
+        <Head title={t('shoppingLists.pageTitle', 'Shopping Lists')} />
+        <div className="flex h-full flex-col">
+          {ingredients.length === 0 ? (
+            /* Empty State */
+            <div className="flex flex-col items-center pt-60">
+              <ShoppingBasket className="mb-4 h-12 w-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
+                {t('shoppingLists.empty.title', 'Aucune liste de courses')}
+              </h3>
+              <p className="mb-4 max-w-md text-center text-muted-foreground">
+                {t(
+                  'shoppingLists.empty.description',
+                  'Planifiez des repas pour créer automatiquement votre liste de courses.',
+                )}
+              </p>
+            </div>
+          ) : (
+            <div className="mx-auto flex w-[90%] flex-1 flex-col gap-9 overflow-y-auto py-9">
+              <ShoppingListProgress
+                checkedCount={checkedCount}
+                totalCount={totalCount}
+              />
+
+              <div className="flex flex-1 gap-8 overflow-hidden max-xl:flex-col">
+                {uncheckedIngredients.length > 0 && (
+                  <ShoppingListIngredientList
+                    title={t('shoppingLists.toBuy', 'To buy')}
+                    description={t('shoppingLists.itemsCount', {
+                      count: uncheckedIngredients.length,
+                      defaultValue: `${uncheckedIngredients.length} items`,
+                    })}
+                    ingredients={uncheckedIngredients}
+                  />
+                )}
+
+                <ShoppingListIngredientList
+                  title={t('shoppingLists.completed', 'Completed')}
+                  description={t('shoppingLists.itemsCheckedOff', {
+                    count: checkedIngredients.length,
+                    defaultValue: `${checkedIngredients.length} items checked off`,
+                  })}
+                  ingredients={checkedIngredients}
+                />
+              </div>
+            </div>
+          )}
         </div>
-      )}
-    </AppLayout>
+      </AppLayout>
+    </WorkspaceDataProvider>
   );
 }

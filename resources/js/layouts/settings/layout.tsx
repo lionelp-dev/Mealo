@@ -2,6 +2,7 @@ import Heading from '@/components/heading';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
+import language from '@/routes/language';
 import { edit as editPassword } from '@/routes/password';
 import { edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
@@ -14,14 +15,14 @@ import { useTranslation } from 'react-i18next';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
   const { t } = useTranslation();
-  
+
   // When server-side rendering, we only render the layout on the client...
   if (typeof window === 'undefined') {
     return null;
   }
 
   const currentPath = window.location.pathname;
-  
+
   const sidebarNavItems: NavItem[] = [
     {
       title: t('settings.profile.title', 'Profile'),
@@ -43,23 +44,31 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
       href: editAppearance(),
       icon: null,
     },
+    {
+      title: t('settings.appearance.language', 'Language'),
+      href: language.edit.url(),
+      icon: null,
+    },
   ];
 
   return (
     <div className="px-4 py-6">
       <Heading
         title={t('settings.title', 'Settings')}
-        description={t('settings.description', 'Manage your profile and account settings')}
+        description={t(
+          'settings.description',
+          'Manage your profile and account settings',
+        )}
       />
 
       <div className="flex flex-col lg:flex-row lg:space-x-12">
-        <aside className="w-full max-w-xl lg:w-48">
+        <aside className="w-full max-w-xl lg:w-60">
           <nav className="flex flex-col space-y-1 space-x-0">
             {sidebarNavItems.map((item, index) => (
               <Link
                 key={`${typeof item.href === 'string' ? item.href : item.href.url}-${index}`}
                 href={item.href}
-                className={cn('btn btn-sm btn-ghost w-full justify-start', {
+                className={cn('btn w-full justify-start btn-ghost btn-sm', {
                   'bg-muted':
                     currentPath ===
                     (typeof item.href === 'string' ? item.href : item.href.url),

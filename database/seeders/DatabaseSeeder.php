@@ -12,8 +12,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            RolesAndPermissionsSeeder::class,  // First: create roles & permissions
             MealTimeSeeder::class,
-            UserSeeder::class,
+            UserSeeder::class,  // Users need roles to be assigned
         ]);
     }
 }

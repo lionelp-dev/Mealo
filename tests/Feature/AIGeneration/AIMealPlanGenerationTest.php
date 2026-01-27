@@ -6,13 +6,15 @@ use App\Models\PlannedMeal;
 use App\Models\ShoppingList;
 use Carbon\Carbon;
 use Database\Seeders\MealTimeSeeder;
+use Tests\TestCase;
+use App\Models\User;
+
 
 require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
-    $this->user = \App\Models\User::factory()->create();
-    $this->otherUser = \App\Models\User::factory()->create();
-    $this->seed(MealTimeSeeder::class);
+    $this->user = User::factory()->create();
+    $this->otherUser = User::factory()->create();
 });
 
 function createMockSuccessfulAIResponse($plannedMeals)
@@ -179,6 +181,7 @@ test('handles openai api failure gracefully', function () {
 test('clears existing planned meals in date range before generating', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
+    $personalWorkspace = $this->user->getPersonalWorkspace();
 
     // Use specific dates for clarity
     $baseDate = Carbon::parse('2026-01-15'); // A Wednesday
@@ -189,14 +192,16 @@ test('clears existing planned meals in date range before generating', function (
         'user_id' => $this->user->id,
         'recipe_id' => $recipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => $generationStartDate->format('Y-m-d') // 15th
+        'planned_date' => $generationStartDate->format('Y-m-d'), // 15th
+        'workspace_id' => $personalWorkspace->id,
     ]);
 
     $existingMeal2 = PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
         'recipe_id' => $recipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => $generationStartDate->copy()->addDay()->format('Y-m-d') // 16th
+        'planned_date' => $generationStartDate->copy()->addDay()->format('Y-m-d'), // 16th
+        'workspace_id' => $personalWorkspace->id,
     ]);
 
     // Create meal outside the range (should not be deleted) - 20th
@@ -204,7 +209,8 @@ test('clears existing planned meals in date range before generating', function (
         'user_id' => $this->user->id,
         'recipe_id' => $recipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => $generationStartDate->copy()->addDays(5)->format('Y-m-d') // 20th
+        'planned_date' => $generationStartDate->copy()->addDays(5)->format('Y-m-d'), // 20th
+        'workspace_id' => $personalWorkspace->id,
     ]);
 
     // Verify we start with 3 meals
@@ -364,4 +370,3 @@ test('generation fails gracefully when user has no recipes', function () {
     // No planned meals should be created
     $this->assertDatabaseCount('planned_meals', 0);
 });
-

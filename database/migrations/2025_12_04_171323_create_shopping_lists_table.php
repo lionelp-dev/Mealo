@@ -14,11 +14,12 @@ return new class extends Migration
         Schema::create('shopping_lists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->date('week_start');
             $table->timestamps();
 
-            // Ensure unique shopping list per user per week
-            $table->unique(['user_id', 'week_start']);
+            // Ensure unique shopping list per workspace per week
+            $table->unique(['workspace_id', 'week_start']);
         });
     }
 

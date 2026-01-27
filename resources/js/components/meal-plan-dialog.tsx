@@ -4,12 +4,12 @@ import { useTranslation } from 'react-i18next';
 
 import { useRecipeSearchStore } from '@/stores/recipe-search';
 import { ReactNode, useState } from 'react';
-import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
 
 import i18n from '../lib/i18n';
 
+import { useMealPlanContext } from '@/contexts/meal-plan-context';
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useUrlFilterSync } from '@/hooks/use-url-filter-sync';
@@ -26,7 +26,7 @@ type MealPlanDialogProps = {
 export default function MealPlanDialog({ children }: MealPlanDialogProps) {
   const { t } = useTranslation();
 
-  const { recipes, mealTimes, tags } = useMealPlanData();
+  const { recipes, mealTimes, tags } = useMealPlanContext();
 
   const { isOpen, setIsOpen, selectedDate } = useMealPlanDialogStore();
 
@@ -96,7 +96,10 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                   onClick={clearAllFilters}
                   className="btn col-start-1 row-start-2 mb-[2px] w-fit items-center gap-3 text-sm text-base-content btn-link underline btn-sm hover:text-error disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {t('mealPlanning.dialog.filters.clearAllFilters', 'Clear all filters')}
+                  {t(
+                    'mealPlanning.dialog.filters.clearAllFilters',
+                    'Clear all filters',
+                  )}
                 </button>
               )}
               <RecipesPopoverFilters
@@ -143,7 +146,10 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                     clearSelectedRecipes();
                   }}
                 >
-                  {t('mealPlanning.dialog.multiSelect.clearSelection', 'Clear selection')}
+                  {t(
+                    'mealPlanning.dialog.multiSelect.clearSelection',
+                    'Clear selection',
+                  )}
                 </button>
 
                 <Popover.Root
@@ -202,6 +208,7 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                                     setIsMultiSelectMode(false);
                                     clearSelectedRecipes();
                                     setOpenPlanPopover(false);
+                                    setIsOpen(false);
                                   },
                                 });
                               }}

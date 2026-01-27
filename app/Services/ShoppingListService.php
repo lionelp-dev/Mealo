@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\DB;
 class ShoppingListService
 {
     /**
-     * Generate or update shopping list for a specific user and week
+     * Generate or update shopping list for a specific workspace and week
      */
-    public function generateShoppingListForWeek(int $userId, Carbon $weekStart): ShoppingList
+    public function generateShoppingListForWorkspace(int $workspaceId, Carbon $weekStart): ShoppingList
     {
         // Ensure we have the start of the week
         $weekStart = $weekStart->startOfWeek();
@@ -21,14 +21,19 @@ class ShoppingListService
 
         // Find or create the shopping list for this week
         // First, try to find existing shopping list
-        $shoppingList = ShoppingList::where('user_id', $userId)
+        $shoppingList = ShoppingList::where('workspace_id', $workspaceId)
             ->whereDate('week_start', $weekStart->toDateString())
             ->first();
 
         // If not found, create it
         if (!$shoppingList) {
+            // Get the workspace to find an owner user (needed for user_id field)
+            $workspace = \App\Models\Workspace::find($workspaceId);
+            $userId = $workspace->users()->first()->id;
+            
             $shoppingList = ShoppingList::create([
                 'user_id' => $userId,
+                'workspace_id' => $workspaceId,
                 'week_start' => $weekStart->toDateString(),
             ]);
         }
@@ -39,8 +44,8 @@ class ShoppingListService
         // Clear existing ingredients
         $shoppingList->ingredients()->delete();
 
-        // Aggregate ingredients from all planned meals in the week
-        $aggregatedIngredients = $this->getAggregatedIngredients($userId, $weekStart, $weekEnd);
+        // Aggregate ingredients from all planned meals in the week for this workspace
+        $aggregatedIngredients = $this->getAggregatedIngredientsForWorkspace($workspaceId, $weekStart, $weekEnd);
 
         // Create new shopping list ingredients
         foreach ($aggregatedIngredients as $ingredientData) {
@@ -75,9 +80,9 @@ class ShoppingListService
     }
 
     /**
-     * Aggregate ingredients from planned meals using complex JOIN query
+     * Aggregate ingredients from planned meals for a specific workspace
      */
-    private function getAggregatedIngredients(int $userId, Carbon $weekStart, Carbon $weekEnd): \Illuminate\Support\Collection
+    private function getAggregatedIngredientsForWorkspace(int $workspaceId, Carbon $weekStart, Carbon $weekEnd): \Illuminate\Support\Collection
     {
         return DB::table('planned_meals')
             ->join('recipes', 'planned_meals.recipe_id', '=', 'recipes.id')
@@ -89,7 +94,7 @@ class ShoppingListService
                 'recipe_ingredient.unit',
                 DB::raw('SUM(CAST(recipe_ingredient.quantity AS DECIMAL(10,2))) as total_quantity')
             )
-            ->where('planned_meals.user_id', $userId)
+            ->where('planned_meals.workspace_id', $workspaceId)
             ->whereBetween('planned_meals.planned_date', [
                 $weekStart->toDateString(),
                 $weekEnd->toDateString(),
@@ -101,14 +106,14 @@ class ShoppingListService
     }
 
     /**
-     * Get shopping list for a specific week
+     * Get shopping list for a specific workspace and week
      */
-    public function getShoppingListForWeek(int $userId, Carbon $weekStart): ?ShoppingList
+    public function getShoppingListForWorkspace(int $workspaceId, Carbon $weekStart): ?ShoppingList
     {
         $weekStart = $weekStart->startOfWeek();
 
         return ShoppingList::with('ingredientsWithDetails')
-            ->where('user_id', $userId)
+            ->where('workspace_id', $workspaceId)
             ->whereDate('week_start', $weekStart->toDateString())
             ->first();
     }
@@ -137,9 +142,9 @@ class ShoppingListService
     }
 
     /**
-     * Regenerate shopping lists for all affected weeks when planned meals change
+     * Regenerate shopping lists for all affected weeks when planned meals change in a workspace
      */
-    public function regenerateAffectedShoppingLists(int $userId, array $dates): void
+    public function regenerateAffectedShoppingListsForWorkspace(int $workspaceId, array $dates): void
     {
         $affectedWeeks = [];
 
@@ -150,16 +155,16 @@ class ShoppingListService
         }
 
         foreach ($affectedWeeks as $weekStart) {
-            $this->generateShoppingListForWeek($userId, $weekStart);
+            $this->generateShoppingListForWorkspace($workspaceId, $weekStart);
         }
     }
 
     /**
-     * Delete shopping lists that have no ingredients
+     * Delete shopping lists that have no ingredients for a workspace
      */
-    public function cleanupEmptyShoppingLists(int $userId): void
+    public function cleanupEmptyShoppingListsForWorkspace(int $workspaceId): void
     {
-        ShoppingList::where('user_id', $userId)
+        ShoppingList::where('workspace_id', $workspaceId)
             ->whereDoesntHave('ingredients')
             ->delete();
     }

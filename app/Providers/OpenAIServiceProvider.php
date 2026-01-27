@@ -14,9 +14,9 @@ class OpenAIServiceProvider extends ServiceProvider
     {
         $this->app->singleton('openai.client', function ($app) {
             $apiKey = config('services.openai.api_key');
-            
+
             if (!$apiKey) {
-                throw new \Exception('OpenAI API key is not configured');
+                return null;
             }
 
             return OpenAI::factory()
@@ -36,3 +36,4 @@ class OpenAIServiceProvider extends ServiceProvider
         //
     }
 }
+

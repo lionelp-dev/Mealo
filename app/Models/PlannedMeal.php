@@ -17,11 +17,17 @@ class PlannedMeal extends Model
         'recipe_id',
         'planned_date',
         'meal_time_id',
+        'workspace_id',
     ];
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
     }
 
     public function recipe(): BelongsTo
@@ -33,4 +39,5 @@ class PlannedMeal extends Model
     {
         return $this->belongsTo(MealTime::class, 'meal_time_id');
     }
+
 }

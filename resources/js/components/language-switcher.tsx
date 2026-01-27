@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Languages } from 'lucide-react';
+import { ChevronDown, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function LanguageSwitcher() {
@@ -21,7 +21,8 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="btn gap-3 pl-5 text-secondary btn-link">
+        <button className="btn gap-3 pl-4 btn-outline">
+          <ChevronDown className="h-4 w-4" />
           <span className="hidden sm:inline">{getCurrentLanguageLabel()}</span>
           <span className="sm:hidden">{i18n.language.toUpperCase()}</span>
           <Languages className="h-4 w-4" />

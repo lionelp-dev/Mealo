@@ -17,6 +17,7 @@ class ShoppingListResource extends JsonResource
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
+            'workspace_id' => $this->workspace_id,
             'week_start' => $this->week_start->toDateString(),
             'ingredients' => \App\Http\Resources\ShoppingListIngredientResource::collection($this->ingredientsWithDetails ?? []),
             'created_at' => $this->created_at,

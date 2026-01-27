@@ -1,11 +1,11 @@
+import { useMealPlanContext } from '@/contexts/meal-plan-context';
+import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { Clock, CookingPot } from 'lucide-react';
-import { useMealPlanData } from '../hooks/use-meal-plan-data';
-import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 
 function MealPlanDialogRecipes() {
-  const { recipes } = useMealPlanData();
+  const { recipes } = useMealPlanContext();
 
-  const { selectedRecipesId, toggleRecipeSelection } = useMealPlanDialogStore();
+  const { selectedRecipesId, toggleRecipeSelection } = useMultiSelectRecipe();
 
   return (
     <div className="grid w-full grid-cols-[repeat(auto-fit,minmax(24rem,1fr))] gap-6 p-1">

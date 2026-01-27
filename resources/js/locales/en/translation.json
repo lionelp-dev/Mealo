@@ -288,6 +288,12 @@
         "dark": "Dark",
         "system": "System"
       }
+    },
+    "language": {
+      "title": "Language",
+      "pageTitle": "Language settings",
+      "sectionTitle": "Language settings",
+      "sectionDescription": "Update your language setting"
     }
   },
   "deleteAccount": {
@@ -353,5 +359,83 @@
   "welcome": {
     "title": "Welcome",
     "description": "Welcome to your meal planning application"
+  },
+  "workspace": {
+    "createNew": "Create a workspace",
+    "name": "Name",
+    "description": "Description",
+    "create": {
+      "button": "Create a group"
+    },
+    "pageTitle": "My groups",
+    "title": "My groups",
+    "subtitle": "Shared planning spaces",
+    "manageMembers": "Manage members",
+    "manageMembersFor": "Manage members of",
+    "inviteByEmail": "Invite by email",
+    "inviteEmail": {
+      "placeholder": "Email address"
+    },
+    "invite": {
+      "button": "Invite"
+    },
+    "membersLabel": "members",
+    "pending_invitations": "Pending invitations",
+    "invitedBy": "Invited by",
+    "makeEditor": "Change to editor",
+    "makeViewer": "Change to viewer",
+    "removeMember": "Remove",
+    "current_workspace": "Current workspace",
+    "myGroups": "My groups",
+    "invitations": "Invitations",
+    "manageInvitations": "Manage invitations",
+    "delete": {
+      "title": "Delete group",
+      "message": "Are you sure you want to permanently delete the group \"{{name}}\"? This action is irreversible.",
+      "button": "Delete"
+    },
+    "leave": {
+      "message": "Are you sure you want to leave the group \"{{name}}\"?",
+      "button": "Leave group"
+    },
+    "empty": {
+      "title": "No shared groups",
+      "description": "Create your first group or request an invitation to collaborate with others on your meal plans."
+    },
+    "roles": {
+      "owner": "Owner",
+      "editor": "Editor",
+      "viewer": "Viewer"
+    },
+    "owner": {
+      "label": "Workspace owner"
+    },
+    "permissions": {
+      "title": "Permissions",
+      "viewPlanning": "View",
+      "editMeals": "Edit",
+      "manageMembers": "Manage"
+    },
+    "members": {
+      "title": "Members"
+    },
+    "invitation": {
+      "accept": "Accept",
+      "decline": "Decline"
+    },
+    "planning": "Planning",
+    "sharedSpaces": "Shared spaces"
+  },
+  "invitation": {
+    "pageTitle": "Invitations",
+    "title": "Group invitations",
+    "subtitle": "Manage your invitations to shared planning spaces",
+    "status": {
+      "pending": "Pending"
+    },
+    "empty": {
+      "title": "No pending invitations",
+      "description": "You currently have no invitations. When someone invites you to join a group, you'll see it here."
+    }
   }
 }

@@ -50,7 +50,12 @@ class PlannedMealPolicy
      */
     public function delete(User $user, PlannedMeal $plannedMeal): bool
     {
-        return $user->id === $plannedMeal->user_id;
+        if (!$plannedMeal->workspace || !$plannedMeal->workspace->hasUser($user)) {
+            return false;
+        }
+
+        setPermissionsTeamId($plannedMeal->workspace->id);
+        return $user->hasPermissionTo('planning.edit');
     }
 
     /**

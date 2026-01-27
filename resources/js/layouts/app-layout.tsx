@@ -27,7 +27,9 @@ export default ({
       {...props}
     >
       {children}
-      <Toast flash={flash} />
+      <Toast.Portal>
+        <Toast flash={flash} />
+      </Toast.Portal>
     </AppLayoutTemplate>
   );
 };

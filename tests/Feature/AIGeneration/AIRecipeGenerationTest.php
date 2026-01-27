@@ -4,13 +4,14 @@ namespace Tests\Feature\AIRecipeGeneration;
 
 use App\Http\Requests\GenerateRecipeRequest;
 use App\Http\Requests\StoreRecipeRequest;
-use Database\Seeders\MealTimeSeeder;
 use Illuminate\Support\Facades\Validator;
+use App\Models\User;
+
 
 beforeEach(function () {
-    $this->user = \App\Models\User::factory()->create();
-    $this->otherUser = \App\Models\User::factory()->create();
-    $this->seed(MealTimeSeeder::class);
+    $this->user = User::factory()->create();
+    $this->otherUser = User::factory()->create();
+
     $this->generateRecipeRequestRules = (new GenerateRecipeRequest())->rules();
     $this->storeRecipeRequestRules = (new StoreRecipeRequest())->rules();
 });
@@ -34,16 +35,16 @@ test('user can generate a recipe successfully with simple prompt', function () {
     $response->assertStatus(200);
     $response->assertInertia(
         fn($page) => $page
-        ->component('recipe/create')
-        ->has('generated_recipe')
-        ->has('generated_recipe.name')
-        ->has('generated_recipe.description')
-        ->has('generated_recipe.preparation_time')
-        ->has('generated_recipe.cooking_time')
-        ->has('generated_recipe.meal_times')
-        ->has('generated_recipe.tags')
-        ->has('generated_recipe.ingredients')
-        ->has('generated_recipe.steps')
+            ->component('recipe/create')
+            ->has('generated_recipe')
+            ->has('generated_recipe.name')
+            ->has('generated_recipe.description')
+            ->has('generated_recipe.preparation_time')
+            ->has('generated_recipe.cooking_time')
+            ->has('generated_recipe.meal_times')
+            ->has('generated_recipe.tags')
+            ->has('generated_recipe.ingredients')
+            ->has('generated_recipe.steps')
     );
 
     $data = $response->getOriginalContent()->getData()['page']['props'];

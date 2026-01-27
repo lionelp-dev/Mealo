@@ -6,17 +6,19 @@ import {
   PlannedMeal,
   Recipe,
   Tag,
+  WorkspaceData,
 } from '@/types';
 
-export interface MealPlanData {
+export interface MealPlanContextProps {
   weekStart: string;
   mealTimes: MealTime[];
   plannedMeals: PlannedMeal[];
   recipes: PaginatedCollection<Recipe>;
   tags: Tag[];
+  workspace_data: WorkspaceData;
 }
 
 const { Provider: MealPlanDataProvider, useContextValue: useMealPlanContext } =
-  useGenericContext<MealPlanData>();
+  useGenericContext<MealPlanContextProps>();
 
 export { MealPlanDataProvider, useMealPlanContext };

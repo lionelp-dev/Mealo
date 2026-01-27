@@ -1,4 +1,5 @@
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
+import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
 import { router } from '@inertiajs/react';
@@ -25,10 +26,12 @@ export default function MealPlanMealCard({
     router.visit(recipes.show.url({ recipe: recipe.id }));
   };
 
+  const { canEditMealPlan } = useWorkspacePermissions();
+
   return (
     <div
       key={id}
-      className="card rounded-md border border-base-300/50 bg-base-100 shadow-xs card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
+      className="card w-full overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
       onMouseLeave={() => setIsOpen(false)}
     >
       {recipe.image_url && (
@@ -40,19 +43,17 @@ export default function MealPlanMealCard({
           />
         </figure>
       )}
-      <div className="card-body py-1.5">
-        <div className="flex items-center justify-between">
-          <div className="card-title contents">
-            <span className="text-md overflow-hidden px-2.5 font-normal text-ellipsis whitespace-nowrap text-base-content">
-              {recipe.name}
-            </span>
-          </div>
+      <div className="card-body overflow-hidden py-1.5">
+        <div className="flex min-w-0 items-center justify-between gap-2">
+          <span className="truncate px-2.5 text-xs text-base-content">
+            {recipe.name}
+          </span>
           <Popover.Root open={isOpen} key={recipe.id}>
             <Popover.Trigger asChild>
               <button
                 id=""
                 onClick={() => setIsOpen(!isOpen)}
-                className={`meal-card-actions-btn btn invisible ${isOpen && 'visible'} btn-circle btn-ghost btn-sm hover:bg-base-200`}
+                className={`meal-card-actions-btn btn invisible flex-shrink-0 ${isOpen && 'visible'} btn-circle btn-ghost btn-sm hover:bg-base-200`}
               >
                 <Ellipsis size={15} className="text-base-content/75" />
               </button>
@@ -75,12 +76,14 @@ export default function MealPlanMealCard({
                     >
                       <li>{t('common.buttons.view', 'View')}</li>
                     </button>
-                    <button
-                      className="btn text-error btn-ghost btn-sm hover:border-error/5 hover:bg-error/10"
-                      onClick={() => unplanMeals([plannedMeal.id])}
-                    >
-                      <li>{t('common.buttons.delete', 'Delete')}</li>
-                    </button>
+                    {canEditMealPlan && (
+                      <button
+                        className="btn text-error btn-ghost btn-sm hover:border-error/5 hover:bg-error/10"
+                        onClick={() => unplanMeals([plannedMeal.id])}
+                      >
+                        <li>{t('common.buttons.delete', 'Delete')}</li>
+                      </button>
+                    )}
                   </ul>
                 </div>
               </Popover.Content>

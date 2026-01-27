@@ -44,7 +44,7 @@ export default function WeekSelector({ currentWeek, url }: WeekSelectorProps) {
             ? `${weekStart.day} - ${endOfWeek.day} ${weekStart.monthLong!} ${weekStart.year}`
             : `${weekStart.day} ${weekStart.monthShort!} ${weekStart.year !== endOfWeek.year ? weekStart.year : ''} - ${endOfWeek.day} ${endOfWeek.monthLong!} ${endOfWeek.year} `}
         </span>
-        <span className="-mb-[2px] badge rounded-full badge-soft badge-outline badge-sm pb-[0.3px] whitespace-nowrap badge-secondary">
+        <span className="-mb-[1px] badge rounded-full badge-soft badge-outline badge-sm pb-[0.3px] whitespace-nowrap badge-secondary">
           {t('mealPlanning.weekSelector.week', 'Week')}{' '}
           {currentWeek.weekNumber.toString().padStart(2, '0')}
         </span>

@@ -300,6 +300,12 @@
         "dark": "Sombre",
         "system": "Système"
       }
+    },
+    "language": {
+      "title": "Langue",
+      "pageTitle": "Paramètres de langue",
+      "sectionTitle": "Paramètres de langue",
+      "sectionDescription": "Mettez à jour vos paramètres de langue"
     }
   },
   "deleteAccount": {
@@ -366,5 +372,83 @@
   "welcome": {
     "title": "Bienvenue",
     "description": "Bienvenue dans votre application de planification de repas"
+  },
+  "workspace": {
+    "createNew": "Créer un espace",
+    "name": "Nom",
+    "description": "Description",
+    "create": {
+      "button": "Créer un groupe"
+    },
+    "pageTitle": "Mes groupes",
+    "title": "Mes groupes",
+    "subtitle": "Espaces de planification partagés",
+    "manageMembers": "Gérer les membres",
+    "manageMembersFor": "Gérer les membres de",
+    "inviteByEmail": "Inviter par email",
+    "inviteEmail": {
+      "placeholder": "Adresse email"
+    },
+    "invite": {
+      "button": "Inviter"
+    },
+    "membersLabel": "membres",
+    "pending_invitations": "Invitations en attente",
+    "invitedBy": "Invité par",
+    "makeEditor": "Changer en éditeur",
+    "makeViewer": "Changer en lecteur",
+    "removeMember": "Retirer",
+    "current_workspace": "Espace actuel",
+    "myGroups": "Mes groupes",
+    "invitations": "Invitations",
+    "manageInvitations": "Gérer les invitations",
+    "delete": {
+      "title": "Supprimer le groupe",
+      "message": "Êtes-vous sûr de vouloir supprimer définitivement le groupe \"{{name}}\" ? Cette action est irréversible.",
+      "button": "Supprimer"
+    },
+    "leave": {
+      "message": "Êtes-vous sûr de vouloir quitter le groupe \"{{name}}\" ?",
+      "button": "Quitter le groupe"
+    },
+    "empty": {
+      "title": "Aucun groupe partagé",
+      "description": "Créez votre premier groupe ou demandez une invitation pour collaborer avec d'autres personnes sur vos planifications de repas."
+    },
+    "roles": {
+      "owner": "Propriétaire",
+      "editor": "Éditeur",
+      "viewer": "Lecteur"
+    },
+    "owner": {
+      "label": "Propriétaire du workspace"
+    },
+    "permissions": {
+      "title": "Permissions",
+      "viewPlanning": "Consulter",
+      "editMeals": "Modifier",
+      "manageMembers": "Gérer"
+    },
+    "members": {
+      "title": "Membres"
+    },
+    "invitation": {
+      "accept": "Accepter",
+      "decline": "Décliner"
+    },
+    "planning": "Planning",
+    "sharedSpaces": "Espaces partagés"
+  },
+  "invitation": {
+    "pageTitle": "Invitations",
+    "title": "Invitations aux groupes",
+    "subtitle": "Gérez vos invitations aux espaces de planification partagés",
+    "status": {
+      "pending": "En attente"
+    },
+    "empty": {
+      "title": "Aucune invitation en attente",
+      "description": "Vous n'avez actuellement aucune invitation. Lorsque quelqu'un vous invitera à rejoindre un groupe, vous le verrez ici."
+    }
   }
 }

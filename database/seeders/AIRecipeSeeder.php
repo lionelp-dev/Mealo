@@ -8,17 +8,18 @@ use Illuminate\Database\Seeder;
 
 class AIRecipeSeeder extends Seeder
 {
+    public function __construct(private User $user) {}
+
     public function run(): void
     {
-        $user = User::where('email', 'test@example.com')->first();
 
-        if (!$user) {
+        if (!$this->user) {
             echo "❌ Test user not found. Please run UserSeeder first.\n";
             return;
         }
 
         $delayBetweenJobs = config('recipe-queue.rate_limit.delay_between_jobs', 6);
-        $totalRecipes = 80;
+        $totalRecipes = 20;
 
         echo "🚀 Dispatching {$totalRecipes} recipe generation jobs to queue\n";
 
@@ -30,7 +31,7 @@ class AIRecipeSeeder extends Seeder
 
             $delay = $i * $delayBetweenJobs;
 
-            GenerateRecipeJob::dispatch($user->id, $prompt, $i + 1)
+            GenerateRecipeJob::dispatch($this->user->id, $prompt, $i + 1)
                 ->delay(now()->addSeconds($delay));
 
             echo "📤 Queued recipe #" . ($i + 1) . " (delay: {$delay}s): {$prompt}\n";

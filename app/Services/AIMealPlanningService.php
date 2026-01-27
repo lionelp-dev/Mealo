@@ -22,13 +22,14 @@ class AIMealPlanningService
     /**
      * Generate a meal plan using user recipes with function calling
      *
-     * @param array $params Array with keys: userId (int), days (int, optional), startDate(string, optional)
+     * @param array $params Array with keys: userId (int), workspaceId (int), days (int, optional), startDate(string, optional)
      * @return array
      */
     public function generateMealPlan(array $params): array
     {
         // Extract parameters from array
         $userId = $params['userId'];
+        $workspaceId = $params['workspaceId'];
         $days = $params['days'] ?? 7;
         $startDate = new Carbon($params['startDate']);
 
@@ -49,9 +50,10 @@ class AIMealPlanningService
             throw new Exception('Aucune recette trouvée pour cet utilisateur.');
         }
 
-        // Supprimer les repas planifiés existants pour ce range
+        // Supprimer les repas planifiés existants pour ce range dans le workspace
         $endDate = (new Carbon($params['startDate']))->addDays($days - 1);
         PlannedMeal::where('user_id', $userId)
+            ->where('workspace_id', $workspaceId)
             ->whereBetween('planned_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
             ->delete();
 

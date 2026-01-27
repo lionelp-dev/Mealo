@@ -36,7 +36,13 @@ class ShoppingListPolicy
      */
     public function update(User $user, ShoppingList $shoppingList): bool
     {
-        return $user->id === $shoppingList->user_id;
+        // Check if user has planning.edit permission in the workspace
+        if (!$shoppingList->workspace || !$shoppingList->workspace->hasUser($user)) {
+            return false;
+        }
+
+        setPermissionsTeamId($shoppingList->workspace->id);
+        return $user->hasPermissionTo('planning.edit');
     }
 
     /**

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan make:migration:*)",
+      "Bash(php artisan migrate:*)",
+      "Bash(rm:*)",
+      "Bash(composer test:*)",
+      "Bash(php artisan test:*)",
+      "Bash(curl:*)",
+      "Bash(docker logs:*)",
+      "Bash(docker compose restart:*)",
+      "Bash(composer show:*)",
+      "Bash(composer:*)",
+      "Bash(php artisan make:seeder:*)",
+      "Bash(php artisan:*)",
+      "mcp__context7__resolve-library-id",
+      "mcp__context7__query-docs",
+      "Bash(find:*)",
+      "WebSearch",
+      "Bash(git mv:*)",
+      "Bash(git worktree:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

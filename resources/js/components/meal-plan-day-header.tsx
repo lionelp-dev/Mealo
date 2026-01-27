@@ -2,6 +2,8 @@ import * as Popover from '@radix-ui/react-popover';
 import { EllipsisVertical } from 'lucide-react';
 
 import { useMealPlanDayActions } from '@/hooks/use-meal-plan-day-actions';
+import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
+import { cn } from '@/lib/utils';
 import { DayPlannedMeals } from '@/types';
 import { Button } from '@headlessui/react';
 import { useTranslation } from 'react-i18next';
@@ -28,20 +30,27 @@ export default function MealPlanDayHeader({
     handleDeleteAll,
   } = useMealPlanDayActions(dayPlannedMeals);
 
+  const { canEditMealPlan } = useWorkspacePermissions();
+
   return (
     <div
-      className={`flex h-12 items-center justify-between rounded-lg border bg-background px-5 shadow-xs ${
-        isCurrentDay ? 'border-2 border-secondary/55' : 'border-base-300/55'
+      className={`flex h-12 items-center justify-between rounded-lg bg-background pr-3 pl-5 shadow-xs outline outline-base-300/40 ${
+        isCurrentDay && 'border-b-2 border-secondary/80 pb-[1px] text-secondary'
       }`}
     >
-      <div className="text-md flex items-center gap-3 font-normal text-base-content/80">
+      <div
+        className={cn(
+          'text-md flex items-center gap-2 font-normal text-base-content/80',
+          isCurrentDay && 'text-secondary',
+        )}
+      >
         <span>
           {date.weekdayLong && date.weekdayLong[0].toUpperCase()}
           {date.weekdayLong?.slice(1)}
         </span>
         <span>{date.day}</span>
       </div>
-      {(hasPlannedMeals || copiedDayPlannedMeals) && (
+      {canEditMealPlan && (hasPlannedMeals || copiedDayPlannedMeals) && (
         <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
           <Popover.Trigger asChild>
             <Button

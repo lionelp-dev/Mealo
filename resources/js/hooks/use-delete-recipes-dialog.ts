@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
-import { Recipe } from '@/types';
 import { useRecipeDeleteStore } from '@/stores/recipe-delete';
+import { Recipe } from '@/types';
+import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { useMultiSelectRecipe } from './use-multi-select-recipe';
 
 export function useDeleteRecipesDialog() {
@@ -29,7 +29,7 @@ export function useDeleteRecipesDialog() {
   // Wrapper pour la fonction de suppression avec intégration multi-select
   const handleDelete = async () => {
     await store.deleteRecipes();
-    
+
     // Fermer le mode multi-sélection après suppression réussie
     setIsMultiSelectMode(false);
     clearSelectedRecipes();
@@ -45,16 +45,17 @@ export function useDeleteRecipesDialog() {
     recipesToDelete: store.recipesToDelete,
     isDeleteDialogOpen: store.isDeleteDialogOpen,
     isDeleting: store.isDeleting,
-    
+
     // Actions
     deleteRecipe,
     deleteRecipes,
     openDeleteDialog: store.openDeleteDialog,
     closeDeleteDialog: handleCloseDialog,
     handleDelete,
-    
+
     // Utilitaires
     isMultiple: store.recipesToDelete.length > 1,
     isSingle: store.recipesToDelete.length === 1,
   };
 }
+

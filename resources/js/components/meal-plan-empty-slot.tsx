@@ -1,3 +1,4 @@
+import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { ChefHat } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { RefObject, useEffect, useRef, useState } from 'react';
@@ -95,24 +96,30 @@ export default function MealPlanEmptySlot({
       containerRef.current.scrollHeight > containerRef.current.clientHeight)
   );
 
+  const { canPlanMeal } = useWorkspacePermissions();
+
   return (
     <div
       ref={stickyElementRef}
-      className={`sticky right-0 bottom-0 left-0 flex flex-1 flex-col items-center justify-center gap-5 rounded-md py-5 text-gray-400 transition-all duration-200 ease-in-out ${
-        isStickyActive ? 'bg-base-200/70' : 'bg-base-200/50'
+      className={`sticky right-0 bottom-0 left-0 flex flex-1 flex-col items-center justify-center gap-5 rounded-md py-8 text-gray-400 transition-all duration-200 ease-in-out ${
+        isStickyActive
+          ? 'border border-dashed border-base-300 bg-base-100/80'
+          : 'border border-dashed border-base-300'
       }`}
       {...rest}
     >
       {/* showMealPlanSlotIcon && MealPlanSlotsIcons[date.weekday].icon*/}
-      <button
-        className="btn gap-2 rounded-full !border-0 pl-5 btn-sm btn-secondary"
-        onClick={() => openMealPlanDialog(date)}
-      >
-        <span className="font-normal text-secondary-content">
-          {t('mealPlanning.actions.planMeal', 'Plan meal')}
-        </span>
-        <ChefHat size={14} />
-      </button>
+      {canPlanMeal && (
+        <button
+          className="btn cursor-pointer items-center gap-2 rounded-full pl-4.5 outline outline-offset-0 outline-secondary/40 btn-sm btn-secondary"
+          onClick={() => openMealPlanDialog(date)}
+        >
+          <span className="leading-0 font-normal">
+            {t('mealPlanning.actions.planMeal', 'Plan meal')}
+          </span>
+          <ChefHat size={14} />
+        </button>
+      )}
     </div>
   );
 }

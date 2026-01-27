@@ -2,6 +2,7 @@ import { router } from '@inertiajs/react';
 import { useState } from 'react';
 
 import { Checkbox } from '@/components/ui/checkbox';
+import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { cn } from '@/lib/utils';
 import { ShoppingListIngredient } from '@/types';
 
@@ -13,6 +14,8 @@ export default function ShoppingListIngredientItem({
   ingredient,
 }: ShoppingListIngredientItemProps) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const { canEditShoppingList } = useWorkspacePermissions();
 
   const toggleChecked = async () => {
     if (isLoading) return;
@@ -40,12 +43,14 @@ export default function ShoppingListIngredientItem({
         isLoading && 'opacity-50',
       )}
     >
-      <Checkbox
-        checked={ingredient.is_checked}
-        onCheckedChange={toggleChecked}
-        disabled={isLoading}
-        className="flex-shrink-0"
-      />
+      {canEditShoppingList && (
+        <Checkbox
+          checked={ingredient.is_checked}
+          onCheckedChange={toggleChecked}
+          disabled={isLoading}
+          className="flex-shrink-0"
+        />
+      )}
 
       <div className="flex min-w-0 flex-col gap-1">
         <div

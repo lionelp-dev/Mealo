@@ -1,15 +1,15 @@
 import { Recipe } from '@/types';
 
+import { useMealPlanContext } from '@/contexts/meal-plan-context';
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
+import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import * as Popover from '@radix-ui/react-popover';
 import { Calendar, CalendarPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMealPlanData } from '../hooks/use-meal-plan-data';
 import i18n from '../lib/i18n';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
-import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -18,17 +18,18 @@ type RecipeCardProps = {
 export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
   const { t } = useTranslation();
 
-  const { mealTimes } = useMealPlanData();
+  const { mealTimes } = useMealPlanContext();
 
   const [openPlanPopover, setOpenPlanPopover] = useState<boolean>(false);
 
-  const { selectedDate } = useMealPlanDialogStore();
+  const { selectedDate, setIsOpen } = useMealPlanDialogStore();
 
   const { planMeals } = useMealPlanActions();
 
   const { isFilterActive } = useRecipeFiltersStore();
 
-  const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } = useMultiSelectRecipe();
+  const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } =
+    useMultiSelectRecipe();
 
   return (
     <div
@@ -113,12 +114,18 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                               planned_date: date,
                             },
                           ],
+                          onSuccess() {
+                            setIsOpen(false);
+                          },
                         });
 
                         setOpenPlanPopover(false);
                       }}
                     >
-                      {t(`mealPlanning.dialog.filters.${mealTime.name}`, mealTime.name)}
+                      {t(
+                        `mealPlanning.dialog.filters.${mealTime.name}`,
+                        mealTime.name,
+                      )}
                     </button>
                   ))}
                 </div>
@@ -147,7 +154,10 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                 key={meal_time.id}
                 className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
               >
-                {t(`mealPlanning.dialog.filters.${meal_time.name}`, meal_time.name)}
+                {t(
+                  `mealPlanning.dialog.filters.${meal_time.name}`,
+                  meal_time.name,
+                )}
               </span>
             ))}
             {recipe.tags.map((tag) => (

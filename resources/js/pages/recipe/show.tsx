@@ -1,7 +1,8 @@
 import { LanguageSwitcher } from '@/components/language-switcher';
+import { usePermissions } from '@/hooks/use-permissions';
 import AppLayout from '@/layouts/app-layout';
 import recipes from '@/routes/recipes';
-import type { Recipe } from '@/types';
+import type { Recipe, SharedData } from '@/types';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,36 +10,35 @@ type PageProps = {
   recipe: {
     data: Recipe;
   };
-};
+} & SharedData;
 
 function Recipe() {
   const { t } = useTranslation();
+
   const { recipe } = usePage<PageProps>().props;
+
+  const { canEditRecipe } = usePermissions();
+
   return (
     <AppLayout
       headerRightContent={
         <div className="flex items-center gap-8">
-          <div className="flex gap-4 self-end">
-            <button
-              className="btn btn-primary"
-              onClick={() =>
-                router.visit(recipes.edit.url({ id: recipe.data.id }))
-              }
-            >
-              {t('common.buttons.edit', 'Edit')}
-            </button>
-            <button
-              className="btn"
-              onClick={() => router.visit(recipes.index.url())}
-            >
-              {t('recipes.index.viewButton', 'View my recipes')}
-            </button>
-          </div>
+          {canEditRecipe(recipe.data.user_id) && (
+            <div className="flex gap-4 self-end">
+              <button
+                className="btn"
+                onClick={() => router.visit(recipes.index.url())}
+              >
+                {t('recipes.index.viewButton', 'View my recipes')}
+              </button>
+            </div>
+          )}
           <LanguageSwitcher />
         </div>
       }
     >
       <Head title={`${recipe.data.name}`}></Head>
+
       <div className="overflow-y-auto py-8">
         <div className="mx-auto flex max-w-[85%] flex-col gap-6">
           <div className="flex flex-col gap-2">
@@ -122,7 +122,9 @@ function Recipe() {
                   <thead>
                     <tr>
                       <th>{t('recipes.ingredients.nameLabel', 'Name')}</th>
-                      <th>{t('recipes.ingredients.quantityLabel', 'Quantity')}</th>
+                      <th>
+                        {t('recipes.ingredients.quantityLabel', 'Quantity')}
+                      </th>
                       <th>{t('recipes.ingredients.unitLabel', 'Unit')}</th>
                     </tr>
                   </thead>

@@ -1,7 +1,6 @@
 import AIRecipeGenerationModal from '@/components/ai-recipe-generation-modal';
 import { AppMainContent } from '@/components/app-main-content';
 import { ImageUpload } from '@/components/image-upload';
-import { LanguageSwitcher } from '@/components/language-switcher';
 import FieldInfo from '@/components/ui/form-field-info';
 import { MultiSelect } from '@/components/ui/multi-select';
 import { useAppForm } from '@/hooks/form-hook';
@@ -30,10 +29,10 @@ type PageProps = {
 
 interface CreateRecipeProps {
   should_open_ai_modal: boolean;
-  generated_recipe?: Omit<Recipe, 'id'> | null;
+  generated_recipe?: Omit<Recipe, 'user_id'> | null;
 }
 
-const defaultValues: Omit<Recipe, 'id'> = {
+const defaultValues: Omit<Recipe, 'id' | 'user_id'> = {
   name: '',
   description: '',
   serving_size: 1,
@@ -55,7 +54,7 @@ function CreateRecipe({
 
   const [showAIModal, setShowAIModal] = useState(false);
   const [formValues, setFormValues] =
-    useState<Omit<Recipe, 'id'>>(defaultValues);
+    useState<Omit<Recipe, 'id' | 'user_id'>>(defaultValues);
 
   useEffect(() => {
     if (should_open_ai_modal) {
@@ -95,7 +94,7 @@ function CreateRecipe({
                 <button
                   type="submit"
                   disabled={!canSubmit}
-                  className={`btn btn-primary`}
+                  className={`btn btn-secondary`}
                   onClick={() => form.handleSubmit()}
                 >
                   {isSubmitting ? '...' : t('common.buttons.add', 'Add')}
@@ -106,14 +105,14 @@ function CreateRecipe({
               {t('common.buttons.cancel', 'Cancel')}
             </button>
           </div>
-
-          <LanguageSwitcher />
         </div>
       }
     >
       <Head title={t('recipes.create.pageTitle', 'Create recipe')}></Head>
       <AppMainContent>
-        <h1 className="mb-6 text-2xl font-bold">{t('recipes.create.title', 'Create a new recipe')}</h1>
+        <h1 className="mb-6 text-2xl font-bold">
+          {t('recipes.create.title', 'Create a new recipe')}
+        </h1>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -127,7 +126,10 @@ function CreateRecipe({
               children={(field) => (
                 <field.TextField
                   label={t('recipes.form.nameLabel', 'Recipe name')}
-                  placeholder={t('recipes.form.namePlaceholder', 'Enter recipe name')}
+                  placeholder={t(
+                    'recipes.form.namePlaceholder',
+                    'Enter recipe name',
+                  )}
                 />
               )}
             />
@@ -137,7 +139,10 @@ function CreateRecipe({
               children={(field) => (
                 <field.TextAreaField
                   label={t('recipes.form.descriptionLabel', 'Description')}
-                  placeholder={t('recipes.form.descriptionPlaceholder', 'Describe your recipe')}
+                  placeholder={t(
+                    'recipes.form.descriptionPlaceholder',
+                    'Describe your recipe',
+                  )}
                   rows={10}
                 />
               )}
@@ -181,7 +186,10 @@ function CreateRecipe({
                 name="serving_size"
                 children={(field) => (
                   <field.NumberField
-                    label={t('recipes.form.servingSizeLabel', 'Nombre de portions')}
+                    label={t(
+                      'recipes.form.servingSizeLabel',
+                      'Nombre de portions',
+                    )}
                     placeholder="1"
                     min="1"
                     max="50"
@@ -193,7 +201,10 @@ function CreateRecipe({
                 name="preparation_time"
                 children={(field) => (
                   <field.NumberField
-                    label={t('recipes.form.preparationTimeLabel', 'Preparation time (minutes)')}
+                    label={t(
+                      'recipes.form.preparationTimeLabel',
+                      'Preparation time (minutes)',
+                    )}
                     placeholder="0"
                     min="0"
                   />
@@ -204,7 +215,10 @@ function CreateRecipe({
                 name="cooking_time"
                 children={(field) => (
                   <field.NumberField
-                    label={t('recipes.form.cookingTimeLabel', 'Cooking time (minutes)')}
+                    label={t(
+                      'recipes.form.cookingTimeLabel',
+                      'Cooking time (minutes)',
+                    )}
                     placeholder="0"
                     min="0"
                   />

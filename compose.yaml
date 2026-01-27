@@ -1,0 +1,18 @@
+services:
+  maildev:
+    image: maildev/maildev:latest
+    container_name: maildev
+    restart: unless-stopped
+    ports:
+      - '1080:1080'
+      - '1025:1025'
+    environment:
+      - MAILDEV_WEB_HOST=${MAILDEV_WEB_HOST}
+      - MAILDEV_WEB_PORT=${MAILDEV_WEB_PORT}
+      - MAILDEV_SMTP_HOST=${MAILDEV_SMTP_HOST}
+      - MAILDEV_SMTP_PORT=${MAILDEV_SMTP_PORT}
+    volumes:
+      - maildev_data:/tmp
+volumes:
+  maildev_data:
+

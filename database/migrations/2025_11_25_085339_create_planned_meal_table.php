@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -16,8 +15,11 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
             $table->foreignId('meal_time_id')->constrained('meal_times')->onDelete('cascade');
+            $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->date('planned_date');
             $table->timestamps();
+
+            $table->index(['workspace_id', 'planned_date']);
         });
     }
 

@@ -18,6 +18,7 @@ class ShoppingList extends Model
 
     protected $fillable = [
         'user_id',
+        'workspace_id',
         'week_start',
     ];
 
@@ -28,6 +29,11 @@ class ShoppingList extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
     }
 
     public function ingredients(): HasMany

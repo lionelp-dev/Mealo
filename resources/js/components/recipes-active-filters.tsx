@@ -12,7 +12,7 @@ export function RecipesActiveFilters({
 
   if (activeFilters.length > 0) {
     return (
-      <div className={cn('flex flex-wrap gap-x-4 gap-y-3', className)}>
+      <div className={cn('flex flex-nowrap gap-x-4 gap-y-3', className)}>
         {activeFilters.map((filter) => (
           <button
             key={`${filter.type}-${filter.value}`}

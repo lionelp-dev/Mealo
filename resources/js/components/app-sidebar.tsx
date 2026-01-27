@@ -1,5 +1,6 @@
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
+import { WorkspaceNav } from '@/components/workspace-nav';
 import {
   Sidebar,
   SidebarContent,
@@ -66,6 +67,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <NavMain items={mainNavItems} />
+        <WorkspaceNav />
       </SidebarContent>
 
       <SidebarFooter>

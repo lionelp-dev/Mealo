@@ -10,7 +10,12 @@ use Database\Seeders\MealTimeSeeder;
 require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
+    // Seed roles and permissions first
+    $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
+    
     $this->user = \App\Models\User::factory()->create();
+    \App\Models\Workspace::createPersonalWorkspace($this->user);
+    
     $this->seed(MealTimeSeeder::class);
     $this->storeRecipeRequestRules = (new StoreRecipeRequest())->rules();
 });
@@ -18,11 +23,13 @@ beforeEach(function () {
 test('user planned meals screen can be rendered', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
+    $workspace = $this->user->getPersonalWorkspace();
 
     \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
+        'workspace_id' => $workspace->id,
         'planned_date' => now()->startOfWeek()->addDays(1)->format('Y-m-d'),
     ]);
 
@@ -36,7 +43,7 @@ test('user planned meals screen can be rendered', function () {
             ->has('weekStart')
             ->has('mealTimes')
             ->has('tags')
-            ->where('plannedMeals.0.recipe.name', $recipe->resource->name)
+            ->where('plannedMeals.0.recipe.name', $recipe->name)
     );
 });
 
@@ -197,17 +204,20 @@ test('user can delete a planned meal successfully', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
     $plannedDate = now()->addDay()->format('Y-m-d');
+    $workspace = $this->user->getPersonalWorkspace();
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
         'recipe_id' => $recipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
+        'workspace_id' => $workspace->id,
     ]);
 
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-        'planned_meals' => [$plannedMeal->id]
-    ]);
+    $response = $this->withSession(['current_workspace_id' => $workspace->id])
+        ->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+            'planned_meals' => [$plannedMeal->id]
+        ]);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Planned meal successfully deleted');
@@ -333,12 +343,14 @@ test('user can delete multiple planned meals successfully', function () {
     $recipe1 = createRecipeResource($this->user->id);
     $recipe2 = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
+    $workspace = $this->user->getPersonalWorkspace();
 
     $plannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
         'recipe_id' => $recipe1->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'workspace_id' => $workspace->id,
     ]);
 
     $plannedMeal2 = \App\Models\PlannedMeal::factory()->create([
@@ -346,11 +358,13 @@ test('user can delete multiple planned meals successfully', function () {
         'recipe_id' => $recipe2->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'workspace_id' => $workspace->id,
     ]);
 
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-        'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id]
-    ]);
+    $response = $this->withSession(['current_workspace_id' => $workspace->id])
+        ->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+            'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id]
+        ]);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('planned-meals.index'));
@@ -405,17 +419,21 @@ test('user cannot access other users planned meals', function () {
 
 test('user cannot delete other users planned meals in bulk operation', function () {
     $otherUser = \App\Models\User::factory()->create();
+    \App\Models\Workspace::createPersonalWorkspace($otherUser);
     $otherRecipe1 = createRecipeResource($otherUser->id);
     $otherRecipe2 = createRecipeResource($otherUser->id);
     $ownRecipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
+    $userWorkspace = $this->user->getPersonalWorkspace();
+    $otherWorkspace = $otherUser->getPersonalWorkspace();
 
-    // Create planned meals for other user
+    // Create planned meals for other user (in their workspace)
     $otherUserPlannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $otherUser->id,
         'recipe_id' => $otherRecipe1->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'workspace_id' => $otherWorkspace->id,
     ]);
 
     $otherUserPlannedMeal2 = \App\Models\PlannedMeal::factory()->create([
@@ -423,24 +441,27 @@ test('user cannot delete other users planned meals in bulk operation', function 
         'recipe_id' => $otherRecipe2->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'workspace_id' => $otherWorkspace->id,
     ]);
 
-    // Create own planned meal
+    // Create own planned meal (in user's workspace)
     $ownPlannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
         'recipe_id' => $ownRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(3)->format('Y-m-d'),
+        'workspace_id' => $userWorkspace->id,
     ]);
 
     // Attempt to delete other users' planned meals mixed with own
-    $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-        'planned_meals' => [
-            $ownPlannedMeal->id,
-            $otherUserPlannedMeal1->id, // Not owned by user
-            $otherUserPlannedMeal2->id, // Not owned by user
-        ]
-    ]);
+    $response = $this->withSession(['current_workspace_id' => $userWorkspace->id])
+        ->actingAs($this->user)->delete(route('planned-meals.destroy'), [
+            'planned_meals' => [
+                $ownPlannedMeal->id,
+                $otherUserPlannedMeal1->id, // Not owned by user - in different workspace
+                $otherUserPlannedMeal2->id, // Not owned by user - in different workspace
+            ]
+        ]);
 
     $response->assertStatus(403);
 

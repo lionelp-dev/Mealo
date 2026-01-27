@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 #[UsePolicy(RecipePolicy::class)]
 class Recipe extends Model
@@ -163,6 +162,14 @@ class Recipe extends Model
         return $this->belongsToMany(Tag::class, 'recipe_tag')
             ->using(RecipeTag::class)
             ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<PlannedMeal, $this>
+     */
+    public function plannedMeals(): HasMany
+    {
+        return $this->hasMany(PlannedMeal::class);
     }
 
     /**

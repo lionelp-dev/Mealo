@@ -1,11 +1,10 @@
-import { useMealPlanContext } from '@/contexts/meal-plan-data-context';
+import { useMealPlanContext } from '@/contexts/meal-plan-context';
 import { DayPlannedMeals } from '@/types';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
-export function useMealPlanData() {
-  const context = useMealPlanContext();
-  const { weekStart, mealTimes, plannedMeals, recipes } = context;
+export function useWeekPlannedMeals() {
+  const { weekStart, mealTimes, plannedMeals } = useMealPlanContext();
 
   const currWeekStart = DateTime.fromISO(weekStart);
 
@@ -32,12 +31,6 @@ export function useMealPlanData() {
   }, [currWeekStart, mealTimes, plannedMeals]);
 
   return {
-    weekStart,
-    mealTimes,
-    plannedMeals,
-    recipes,
-    tags: context.tags,
-    currWeekStart,
     weekPlannedMeals,
   };
 }

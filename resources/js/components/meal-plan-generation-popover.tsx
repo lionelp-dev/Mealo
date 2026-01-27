@@ -107,15 +107,6 @@ export function MealPlanGenerationPopover() {
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
-      {isOpen && (
-        <div
-          onClick={(e: React.MouseEvent) => {
-            e.preventDefault();
-            e.stopPropagation();
-          }}
-          className="fixed top-0 right-0 bottom-0 left-0 bg-black/50"
-        />
-      )}
     </>
   );
 }

@@ -53,9 +53,9 @@ class RecipeController extends Controller
         ]);
 
         $recipesQuery = Recipe::query()
-                    ->where('user_id', $user->id)
-                    ->orderBy('created_at', 'desc')
-                    ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
+            ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
+            ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         // Search filter
         if (!empty($validated['search'])) {
@@ -115,15 +115,15 @@ class RecipeController extends Controller
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
         if (!empty($validated['ingredients_search'])) {
             $ingredientsQuery = $ingredientsQuery
-            ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
-            ->orderBy('name');
+                ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+                ->orderBy('name');
         }
 
         $tagsQuery = Tag::query()->where('user_id', $user->id);
         if (!empty($validated['tags_search'])) {
             $tagsQuery = $tagsQuery
-            ->where('name', 'like', '%' . $validated['tags_search'] . '%')
-            ->orderBy('name');
+                ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+                ->orderBy('name');
         }
 
         return Inertia::render(
@@ -143,6 +143,10 @@ class RecipeController extends Controller
     public function generateRecipeWithAI(Request $request): Response|RedirectResponse
     {
         Gate::authorize('create', Recipe::class);
+
+        if (!config('services.openai.api_key')) {
+            return to_route('recipes.create')->with('error', 'La génération de recettes par IA n\'est pas disponible.');
+        }
 
         $request->validate([
             'prompt' => ['required', 'string', 'min:5', 'max:500'],
@@ -166,7 +170,6 @@ class RecipeController extends Controller
                     'generated_recipe' => $recipe,
                 ]
             );
-
         } catch (\Exception $e) {
             return to_route('recipes.create')->with('error', $e->getMessage());
         }
@@ -245,15 +248,15 @@ class RecipeController extends Controller
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
         if (!empty($validated['ingredients_search'])) {
             $ingredientsQuery = $ingredientsQuery
-            ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
-            ->orderBy('name');
+                ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+                ->orderBy('name');
         }
 
         $tagsQuery = Tag::query()->where('user_id', $user->id);
         if (!empty($validated['tags_search'])) {
             $tagsQuery = $tagsQuery
-            ->where('name', 'like', '%' . $validated['tags_search'] . '%')
-            ->orderBy('name');
+                ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+                ->orderBy('name');
         }
 
         return Inertia::render('recipe/edit', [
@@ -401,5 +404,4 @@ class RecipeController extends Controller
                 return $query;
         }
     }
-
 }
