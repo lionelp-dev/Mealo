@@ -19,12 +19,12 @@ export function useRecipeSearch() {
           ) as HTMLInputElement;
           if (searchInput) {
             searchInput.focus();
-            const len = searchTerm.length;
+            const len = searchInput.value.length;
             searchInput.setSelectionRange(len, len);
           }
         },
       }),
-    [triggerRecipesRequest, setIsSearching, searchTerm],
+    [triggerRecipesRequest, setIsSearching],
   );
 
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);

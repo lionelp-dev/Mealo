@@ -5,6 +5,7 @@ import WorkspaceCreationModal from '@/components/workspace-creation-modal';
 import { WorkspaceInvitationModal } from '@/components/workspace-invitation-modal';
 import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { MealPlanDataProvider } from '@/contexts/meal-plan-context';
+import { RecipeFiltersDataProvider } from '@/contexts/recipe-filters-context';
 import { WorkspaceDataProvider } from '@/contexts/workspace-context';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import AppLayout from '@/layouts/app-layout';
@@ -21,7 +22,7 @@ import {
 } from '@/types';
 
 import { Head, usePage, usePoll } from '@inertiajs/react';
-import { DateTime, Settings } from 'luxon';
+import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
 type PageProps = {
@@ -53,21 +54,20 @@ export default function PlannedMeals() {
       }}
     >
       <WorkspaceDataProvider data={{ workspace_data }}>
-        <PlannedMealsView />
+        <RecipeFiltersDataProvider data={{ recipes, tags }}>
+          <PlannedMealsView />
+        </RecipeFiltersDataProvider>
       </WorkspaceDataProvider>
     </MealPlanDataProvider>
   );
 }
 
 function PlannedMealsView() {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   const { weekStart } = usePage<PageProps>().props;
 
   const { canGenerateMealPlan } = useWorkspacePermissions();
-
-  // Set Luxon locale based on i18n language
-  Settings.defaultLocale = i18n.language;
 
   return AppLayout({
     children: (

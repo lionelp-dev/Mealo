@@ -9,9 +9,9 @@ export default function MealPlanDialogSearchRecipes() {
   const { searchTerm, setSearchTerm, isSearching } = useRecipeSearch();
 
   return (
-    <label className="input col-start-1 col-end-3 input-md flex w-full gap-3 border-secondary/50 input-secondary">
+    <label className="input input-md flex w-full gap-3 rounded-xl border-secondary input-secondary">
       <Search
-        className={`mb-[2px] text-secondary transition-transform duration-300`}
+        className={`text-secondary transition-transform duration-300`}
         size={16}
       />
       <input
@@ -19,7 +19,7 @@ export default function MealPlanDialogSearchRecipes() {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         placeholder={t('mealPlanning.searchRecipes', 'Search recipes...')}
-        disabled={isSearching}
+        className="pb-[2px]"
       />
       <span
         className={cn(

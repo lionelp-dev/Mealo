@@ -1,454 +1,464 @@
 {
-  "auth": {
-    "login": {
-      "title": "Connectez-vous à votre compte",
-      "description": "Entrez votre email et mot de passe ci-dessous pour vous connecter",
-      "pageTitle": "Se connecter",
-      "emailLabel": "Adresse email",
-      "emailPlaceholder": "email@exemple.com",
-      "passwordLabel": "Mot de passe",
-      "passwordPlaceholder": "Mot de passe",
-      "rememberMe": "Se souvenir de moi",
-      "forgotPassword": "Mot de passe oublié ?",
-      "loginButton": "Se connecter",
-      "noAccount": "Pas de compte ?",
-      "signUp": "S'inscrire"
+    "auth": {
+        "login": {
+            "title": "Connectez-vous à votre compte",
+            "description": "Entrez votre email et mot de passe ci-dessous pour vous connecter",
+            "pageTitle": "Se connecter",
+            "emailLabel": "Adresse email",
+            "emailPlaceholder": "email@exemple.com",
+            "passwordLabel": "Mot de passe",
+            "passwordPlaceholder": "Mot de passe",
+            "rememberMe": "Se souvenir de moi",
+            "forgotPassword": "Mot de passe oublié ?",
+            "loginButton": "Se connecter",
+            "noAccount": "Pas de compte ?",
+            "signUp": "S'inscrire"
+        },
+        "register": {
+            "title": "Créer un compte",
+            "description": "Entrez vos informations ci-dessous pour créer votre compte",
+            "pageTitle": "S'inscrire",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Votre nom",
+            "emailLabel": "Adresse email",
+            "emailPlaceholder": "email@exemple.com",
+            "passwordLabel": "Mot de passe",
+            "passwordPlaceholder": "Mot de passe",
+            "confirmPasswordLabel": "Confirmer le mot de passe",
+            "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+            "registerButton": "S'inscrire",
+            "alreadyHaveAccount": "Vous avez déjà un compte ?",
+            "logIn": "Se connecter"
+        },
+        "forgotPassword": {
+            "title": "Mot de passe oublié",
+            "description": "Entrez votre email pour recevoir un lien de réinitialisation",
+            "pageTitle": "Mot de passe oublié",
+            "emailLabel": "Adresse email",
+            "emailPlaceholder": "email@exemple.com",
+            "sendLinkButton": "Envoyer le lien de réinitialisation",
+            "backToLogin": "Retour à la connexion"
+        },
+        "resetPassword": {
+            "title": "Réinitialiser le mot de passe",
+            "description": "Entrez votre nouveau mot de passe",
+            "pageTitle": "Réinitialiser le mot de passe",
+            "emailLabel": "Adresse email",
+            "passwordLabel": "Nouveau mot de passe",
+            "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
+            "resetButton": "Réinitialiser le mot de passe"
+        },
+        "verifyEmail": {
+            "title": "Vérifier votre email",
+            "description": "Un lien de vérification a été envoyé à votre adresse email",
+            "pageTitle": "Vérification email",
+            "resendButton": "Renvoyer l'email de vérification",
+            "logoutButton": "Se déconnecter"
+        },
+        "twoFactor": {
+            "title": "Authentification à deux facteurs",
+            "description": "Veuillez confirmer l'accès à votre compte en entrant le code d'authentification fourni par votre application d'authentification",
+            "pageTitle": "Authentification à deux facteurs",
+            "codeLabel": "Code",
+            "codePlaceholder": "Code d'authentification",
+            "confirmButton": "Confirmer",
+            "useRecoveryCode": "Utiliser un code de récupération"
+        }
     },
-    "register": {
-      "title": "Créer un compte",
-      "description": "Entrez vos informations ci-dessous pour créer votre compte",
-      "pageTitle": "S'inscrire",
-      "nameLabel": "Nom",
-      "namePlaceholder": "Votre nom",
-      "emailLabel": "Adresse email",
-      "emailPlaceholder": "email@exemple.com",
-      "passwordLabel": "Mot de passe",
-      "passwordPlaceholder": "Mot de passe",
-      "confirmPasswordLabel": "Confirmer le mot de passe",
-      "confirmPasswordPlaceholder": "Confirmer le mot de passe",
-      "registerButton": "S'inscrire",
-      "alreadyHaveAccount": "Vous avez déjà un compte ?",
-      "logIn": "Se connecter"
+    "navigation": {
+        "platform": "Plateforme",
+        "dashboard": "Tableau de bord",
+        "recipes": "Recettes",
+        "mealPlanning": "Planification des repas",
+        "shoppingLists": "Listes de courses",
+        "settings": "Paramètres"
     },
-    "forgotPassword": {
-      "title": "Mot de passe oublié",
-      "description": "Entrez votre email pour recevoir un lien de réinitialisation",
-      "pageTitle": "Mot de passe oublié",
-      "emailLabel": "Adresse email",
-      "emailPlaceholder": "email@exemple.com",
-      "sendLinkButton": "Envoyer le lien de réinitialisation",
-      "backToLogin": "Retour à la connexion"
+    "dashboard": {
+        "title": "Tableau de bord",
+        "pageTitle": "Tableau de bord"
     },
-    "resetPassword": {
-      "title": "Réinitialiser le mot de passe",
-      "description": "Entrez votre nouveau mot de passe",
-      "pageTitle": "Réinitialiser le mot de passe",
-      "emailLabel": "Adresse email",
-      "passwordLabel": "Nouveau mot de passe",
-      "confirmPasswordLabel": "Confirmer le nouveau mot de passe",
-      "resetButton": "Réinitialiser le mot de passe"
+    "recipes": {
+        "title": "Recettes",
+        "pageTitle": "Mes recettes",
+        "create": {
+            "title": "Créer une nouvelle recette",
+            "pageTitle": "Créer une recette",
+            "button": "Créer une recette"
+        },
+        "generate": {
+            "button": "Générer une recette",
+            "modalTitle": "Générer une recette avec IA",
+            "generating": "Génération en cours...",
+            "prompt": {
+                "label": "Description de la recette",
+                "placeholder": "Décrivez la recette que vous voulez créer, ex: 'Un plat méditerranéen sain au poulet avec des légumes'"
+            }
+        },
+        "edit": {
+            "title": "Modifier la recette",
+            "pageTitle": "Modifier la recette"
+        },
+        "show": {
+            "pageTitle": "Voir la recette"
+        },
+        "index": {
+            "createButton": "Créer une recette",
+            "viewButton": "Voir mes recettes"
+        },
+        "table": {
+            "name": "Nom",
+            "description": "Description",
+            "preparationTime": "Temps de préparation",
+            "cookingTime": "Temps de cuisson",
+            "actions": "Actions"
+        },
+        "form": {
+            "detailsTitle": "Détails de la recette",
+            "nameLabel": "Nom de la recette",
+            "namePlaceholder": "Entrez le nom de la recette",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Décrivez votre recette",
+            "preparationTimeLabel": "Temps de préparation",
+            "cookingTimeLabel": "Temps de cuisson",
+            "ingredientsTitle": "Ingrédients",
+            "stepsTitle": "Étapes",
+            "tagsTitle": "Tags",
+            "mealTimesTitle": "Moments du repas",
+            "mealTimesPlaceholder": "Sélectionnez les moments du repas...",
+            "saveButton": "Enregistrer la recette",
+            "cancelButton": "Annuler"
+        },
+        "ingredients": {
+            "addButton": "Ajouter un ingrédient",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Nom de l'ingrédient",
+            "quantityLabel": "Quantité",
+            "quantityPlaceholder": "Quantité",
+            "unitLabel": "Unité",
+            "unitPlaceholder": "Unité (g, ml, cuillères...)",
+            "removeButton": "Supprimer"
+        },
+        "steps": {
+            "addButton": "Ajouter une étape",
+            "instructionLabel": "Instruction",
+            "instructionPlaceholder": "Décrivez cette étape",
+            "orderLabel": "Ordre",
+            "removeButton": "Supprimer"
+        },
+        "tags": {
+            "addButton": "Ajouter un tag",
+            "nameLabel": "Nom du tag",
+            "namePlaceholder": "Nom du tag",
+            "removeButton": "Supprimer",
+            "noTagsAvailable": "Aucun tag disponible"
+        },
+        "delete": {
+            "confirmTitle": "Supprimer la recette ?",
+            "confirmTitleMultiple": "Supprimer ces recettes ?",
+            "confirmDescription": "Cette action est irréversible. La recette \"{{recipeName}}\" sera définitivement effacée.",
+            "confirmDescriptionMultiple": "Cette action est irréversible. Ces {{count}} recettes seront définitivement effacées.",
+            "confirmButton": "Confirmer",
+            "cancelButton": "Annuler"
+        },
+        "selected": {
+            "singular": "recette sélectionnée",
+            "plural": "recettes sélectionnées"
+        }
     },
-    "verifyEmail": {
-      "title": "Vérifier votre email",
-      "description": "Un lien de vérification a été envoyé à votre adresse email",
-      "pageTitle": "Vérification email",
-      "resendButton": "Renvoyer l'email de vérification",
-      "logoutButton": "Se déconnecter"
+    "mealPlanning": {
+        "title": "Planification des repas",
+        "pageTitle": "Planification des repas",
+        "mealTimeSelection": "Moment du repas",
+        "actions": {
+            "copy": "Copier",
+            "paste": "Coller",
+            "deleteAll": "Supprimer tout",
+            "planMeal": "Planifier un repas"
+        },
+        "searchRecipes": "Rechercher une recette ...",
+        "searchingRecipes": "Recherche de recettes ...",
+        "noRecipesFound": "Aucune recette trouvée",
+        "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou vos filtres",
+        "weekSelector": {
+            "today": "Aujourd'hui",
+            "week": "Semaine"
+        },
+        "planDish": "Planifier le plat",
+        "planDishes": "Planifier les plats",
+        "dialog": {
+            "title": "Planifier des repas",
+            "filterRecipes": "Filtrer les recettes",
+            "addFilters": "Ajouter des filtres",
+            "whenToEat": "Quand souhaitez-vous manger cela ?",
+            "multiSelect": "Mode sélection",
+            "multiSelectActions": {
+                "abandon": "Abandonner",
+                "clearSelection": "Effacer sélection",
+                "plan": "Plannifier"
+            },
+            "filters": {
+                "mealTime": "Moment du repas",
+                "preparationTime": "Temps de préparation",
+                "cookingTime": "Temps de cuisson",
+                "tags": "Tags",
+                "breakfast": "Petit-déjeuner",
+                "lunch": "Déjeuner",
+                "dinner": "Dîner",
+                "diner": "Dîner",
+                "snack": "Collation",
+                "clearAllFilters": "Effacer tout",
+                "prep": "Prép: ",
+                "cook": "Cuiss: ",
+                "filter": "filtre",
+                "filters": "filtres"
+            }
+        },
+        "generatePlan": "Générer un planning",
+        "generatePlanTitle": "Générer votre planning de repas",
+        "generatePlanDescription": "Créez automatiquement un planning de repas équilibré avec vos recettes existantes.",
+        "planningPeriod": "Pour quelle periode ?",
+        "startDate": "Date de début",
+        "numberOfDays": "Nombre de jours",
+        "days": "jours",
+        "generateNow": "Générer mon planning"
     },
-    "twoFactor": {
-      "title": "Authentification à deux facteurs",
-      "description": "Veuillez confirmer l'accès à votre compte en entrant le code d'authentification fourni par votre application d'authentification",
-      "pageTitle": "Authentification à deux facteurs",
-      "codeLabel": "Code",
-      "codePlaceholder": "Code d'authentification",
-      "confirmButton": "Confirmer",
-      "useRecoveryCode": "Utiliser un code de récupération"
-    }
-  },
-  "navigation": {
-    "platform": "Plateforme",
-    "dashboard": "Tableau de bord",
-    "recipes": "Recettes",
-    "mealPlanning": "Planification des repas",
-    "shoppingLists": "Listes de courses",
-    "settings": "Paramètres"
-  },
-  "dashboard": {
-    "title": "Tableau de bord",
-    "pageTitle": "Tableau de bord"
-  },
-  "recipes": {
-    "title": "Recettes",
-    "pageTitle": "Mes recettes",
-    "create": {
-      "title": "Créer une nouvelle recette",
-      "pageTitle": "Créer une recette",
-      "button": "Créer une recette"
+    "shoppingLists": {
+        "title": "Listes de courses",
+        "pageTitle": "Listes de courses",
+        "viewByIngredients": "Ingrédients",
+        "viewByRecipes": "Recettes",
+        "toBuy": "À acheter",
+        "completed": "Complété",
+        "itemsCount": "{{count}} article(s)",
+        "itemsCheckedOff": "{{count}} article(s) cochés",
+        "empty": {
+            "title": "Aucune liste de courses",
+            "description": "Planifiez des repas pour créer automatiquement votre liste de courses."
+        }
     },
-    "generate": {
-      "button": "Générer une recette",
-      "modalTitle": "Générer une recette avec IA",
-      "generating": "Génération en cours...",
-      "prompt": {
-        "label": "Description de la recette",
-        "placeholder": "Décrivez la recette que vous voulez créer, ex: 'Un plat méditerranéen sain au poulet avec des légumes'"
-      }
+    "settings": {
+        "title": "Paramètres",
+        "description": "Gérez votre profil et les paramètres de votre compte",
+        "pageTitle": "Paramètres",
+        "profile": {
+            "title": "Profil",
+            "pageTitle": "Paramètres du profil",
+            "sectionTitle": "Informations du profil",
+            "sectionDescription": "Mettez à jour votre nom et votre adresse email",
+            "nameLabel": "Nom",
+            "namePlaceholder": "Votre nom",
+            "emailLabel": "Email",
+            "emailPlaceholder": "votre@email.com",
+            "saveButton": "Enregistrer"
+        },
+        "password": {
+            "title": "Mot de passe",
+            "pageTitle": "Paramètres du mot de passe",
+            "sectionTitle": "Mettre à jour le mot de passe",
+            "sectionDescription": "Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé",
+            "currentPasswordLabel": "Mot de passe actuel",
+            "currentPasswordPlaceholder": "Mot de passe actuel",
+            "newPasswordLabel": "Nouveau mot de passe",
+            "newPasswordPlaceholder": "Nouveau mot de passe",
+            "confirmPasswordLabel": "Confirmer le mot de passe",
+            "confirmPasswordPlaceholder": "Confirmer le mot de passe",
+            "saveButton": "Enregistrer"
+        },
+        "twoFactor": {
+            "title": "Authentification à 2 facteurs",
+            "pageTitle": "Authentification à deux facteurs",
+            "sectionTitle": "Authentification à deux facteurs",
+            "sectionDescription": "Gérez vos paramètres d'authentification à deux facteurs",
+            "enabled": "Activée",
+            "disabled": "Désactivée",
+            "enableButton": "Activer l'A2F",
+            "disableButton": "Désactiver l'A2F",
+            "continueSetup": "Continuer la configuration",
+            "enabledDescription": "Avec l'authentification à deux facteurs activée, vous devrez saisir un code de sécurité aléatoire lors de la connexion, que vous pourrez récupérer depuis l'application TOTP sur votre téléphone.",
+            "disabledDescription": "Quand vous activez l'authentification à deux facteurs, vous devrez saisir un code de sécurité lors de la connexion. Ce code peut être récupéré depuis une application TOTP sur votre téléphone.",
+            "recoveryCodesTitle": "Codes de récupération A2F",
+            "recoveryCodesDescription": "Les codes de récupération vous permettent de retrouver l'accès si vous perdez votre appareil A2F. Stockez-les dans un gestionnaire de mots de passe sécurisé.",
+            "viewCodes": "Voir",
+            "hideCodes": "Masquer",
+            "recoveryCodesLabel": "Codes de récupération",
+            "regenerateCodes": "Regénérer les codes",
+            "regenerateCodesInstruction": "Cliquez sur Regénérer les codes ci-dessus.",
+            "setupModal": {
+                "title": "Configurer l'authentification à deux facteurs",
+                "scanQrTitle": "Scannez le code QR",
+                "scanQrDescription": "Utilisez votre application d'authentification pour scanner le code QR ci-dessous.",
+                "manualSetupTitle": "Configuration manuelle",
+                "manualSetupDescription": "Si vous ne pouvez pas scanner le code QR, entrez cette clé de configuration dans votre application d'authentification :",
+                "verifyTitle": "Vérifier le code d'authentification",
+                "verifyDescription": "Entrez le code à 6 chiffres de votre application d'authentification.",
+                "codeInputLabel": "Code d'authentification",
+                "continueButton": "Continuer",
+                "closeButton": "Fermer",
+                "copyKey": "Copier la clé",
+                "keyCopied": "Clé copiée !",
+                "loadingQr": "Chargement du code QR...",
+                "loadingKey": "Chargement de la clé..."
+            }
+        },
+        "appearance": {
+            "title": "Apparence",
+            "pageTitle": "Paramètres d'apparence",
+            "sectionTitle": "Paramètres d'apparence",
+            "sectionDescription": "Mettez à jour les paramètres d'apparence de votre compte",
+            "themes": {
+                "light": "Clair",
+                "dark": "Sombre",
+                "system": "Système"
+            }
+        },
+        "language": {
+            "title": "Langue",
+            "pageTitle": "Paramètres de langue",
+            "sectionTitle": "Paramètres de langue",
+            "sectionDescription": "Mettez à jour vos paramètres de langue"
+        }
     },
-    "edit": {
-      "title": "Modifier la recette",
-      "pageTitle": "Modifier la recette"
+    "deleteAccount": {
+        "title": "Supprimer le compte",
+        "description": "Supprimez votre compte et toutes ses ressources",
+        "warning": "Attention",
+        "warningText": "Veuillez procéder avec prudence, cette action ne peut pas être annulée.",
+        "confirmPassword": "Mot de passe",
+        "deleteButton": "Supprimer le compte",
+        "cancelButton": "Annuler",
+        "confirmTitle": "Êtes-vous sûr de vouloir supprimer votre compte ?",
+        "confirmDescription": "Une fois votre compte supprimé, toutes ses ressources et données seront également supprimées définitivement. Veuillez saisir votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte."
     },
-    "show": {
-      "pageTitle": "Voir la recette"
+    "common": {
+        "buttons": {
+            "save": "Enregistrer",
+            "cancel": "Annuler",
+            "delete": "Supprimer",
+            "edit": "Modifier",
+            "view": "Voir",
+            "create": "Créer",
+            "add": "Ajouter",
+            "remove": "Supprimer",
+            "confirm": "Confirmer",
+            "back": "Retour",
+            "next": "Suivant",
+            "previous": "Précédent",
+            "close": "Fermer",
+            "submit": "Soumettre",
+            "reset": "Réinitialiser",
+            "update": "Mettre à jour",
+            "abandon": "Abandonner",
+            "clearSelection": "Effacer la selection",
+            "selected": {
+                "singular": "sélectionné",
+                "plural": "sélectionnés"
+            }
+        },
+        "clear": "Effacer",
+        "status": {
+            "loading": "Chargement...",
+            "success": "Succès",
+            "error": "Erreur",
+            "saved": "Enregistré",
+            "updated": "Mis à jour",
+            "deleted": "Supprimé",
+            "created": "Créé"
+        },
+        "validation": {
+            "required": "Ce champ est requis",
+            "email": "Veuillez entrer une adresse email valide",
+            "minLength": "Doit contenir au moins {{count}} caractères",
+            "maxLength": "Ne peut pas contenir plus de {{count}} caractères",
+            "passwordConfirmation": "Les mots de passe ne correspondent pas"
+        },
+        "actions": {
+            "view": "Voir",
+            "edit": "Modifier",
+            "delete": "Supprimer",
+            "duplicate": "Dupliquer",
+            "archive": "Archiver"
+        }
     },
-    "index": {
-      "createButton": "Créer une recette",
-      "viewButton": "Voir mes recettes"
+    "welcome": {
+        "title": "Bienvenue",
+        "description": "Bienvenue dans votre application de planification de repas"
     },
-    "table": {
-      "name": "Nom",
-      "description": "Description",
-      "preparationTime": "Temps de préparation",
-      "cookingTime": "Temps de cuisson",
-      "actions": "Actions"
-    },
-    "form": {
-      "detailsTitle": "Détails de la recette",
-      "nameLabel": "Nom de la recette",
-      "namePlaceholder": "Entrez le nom de la recette",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Décrivez votre recette",
-      "preparationTimeLabel": "Temps de préparation",
-      "cookingTimeLabel": "Temps de cuisson",
-      "ingredientsTitle": "Ingrédients",
-      "stepsTitle": "Étapes",
-      "tagsTitle": "Tags",
-      "mealTimesTitle": "Moments du repas",
-      "mealTimesPlaceholder": "Sélectionnez les moments du repas...",
-      "saveButton": "Enregistrer la recette",
-      "cancelButton": "Annuler"
-    },
-    "ingredients": {
-      "addButton": "Ajouter un ingrédient",
-      "nameLabel": "Nom",
-      "namePlaceholder": "Nom de l'ingrédient",
-      "quantityLabel": "Quantité",
-      "quantityPlaceholder": "Quantité",
-      "unitLabel": "Unité",
-      "unitPlaceholder": "Unité (g, ml, cuillères...)",
-      "removeButton": "Supprimer"
-    },
-    "steps": {
-      "addButton": "Ajouter une étape",
-      "instructionLabel": "Instruction",
-      "instructionPlaceholder": "Décrivez cette étape",
-      "orderLabel": "Ordre",
-      "removeButton": "Supprimer"
-    },
-    "tags": {
-      "addButton": "Ajouter un tag",
-      "nameLabel": "Nom du tag",
-      "namePlaceholder": "Nom du tag",
-      "removeButton": "Supprimer",
-      "noTagsAvailable": "Aucun tag disponible"
-    },
-    "delete": {
-      "confirmTitle": "Supprimer la recette ?",
-      "confirmTitleMultiple": "Supprimer ces recettes ?",
-      "confirmDescription": "Cette action est irréversible. La recette \"{{recipeName}}\" sera définitivement effacée.",
-      "confirmDescriptionMultiple": "Cette action est irréversible. Ces {{count}} recettes seront définitivement effacées.",
-      "confirmButton": "Confirmer",
-      "cancelButton": "Annuler"
-    },
-    "selected": {
-      "singular": "recette sélectionnée",
-      "plural": "recettes sélectionnées"
-    }
-  },
-  "mealPlanning": {
-    "title": "Planification des repas",
-    "pageTitle": "Planification des repas",
-    "mealTimeSelection": "Moment du repas",
-    "actions": {
-      "copy": "Copier",
-      "paste": "Coller",
-      "deleteAll": "Supprimer tout",
-      "planMeal": "Planifier un repas"
-    },
-    "searchRecipes": "Rechercher...",
-    "searchingRecipes": "Recherche de recettes...",
-    "noRecipesFound": "Aucune recette trouvée",
-    "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou vos filtres",
-    "weekSelector": {
-      "today": "Aujourd'hui",
-      "week": "Semaine"
-    },
-    "planDish": "Planifier le plat",
-    "planDishes": "Planifier les plats",
-    "dialog": {
-      "title": "Planifier des repas",
-      "filterRecipes": "Filtrer les recettes",
-      "addFilters": "Ajouter des filtres",
-      "whenToEat": "Quand souhaitez-vous manger cela ?",
-      "multiSelect": "Mode sélection",
-      "multiSelectActions": {
-        "abandon": "Abandonner",
-        "clearSelection": "Effacer sélection",
-        "plan": "Plannifier"
-      },
-      "filters": {
-        "mealTime": "Moment du repas",
-        "preparationTime": "Temps de préparation",
-        "cookingTime": "Temps de cuisson",
-        "tags": "Tags",
-        "breakfast": "Petit-déjeuner",
-        "lunch": "Déjeuner",
-        "dinner": "Dîner",
-        "diner": "Dîner",
-        "snack": "Collation",
-        "clearAllFilters": "Supprimer tout",
-        "prep": "Prép: ",
-        "cook": "Cuiss: ",
-        "filter": "filtre",
-        "filters": "filtres"
-      }
-    },
-    "generatePlan": "Générer un planning",
-    "generatePlanTitle": "Générer votre planning de repas",
-    "generatePlanDescription": "Créez automatiquement un planning de repas équilibré avec vos recettes existantes.",
-    "planningPeriod": "Période de planning",
-    "startDate": "Date de début",
-    "numberOfDays": "Nombre de jours",
-    "days": "jours",
-    "generateNow": "Générer mon planning"
-  },
-  "shoppingLists": {
-    "title": "Listes de courses",
-    "pageTitle": "Listes de courses"
-  },
-  "settings": {
-    "title": "Paramètres",
-    "description": "Gérez votre profil et les paramètres de votre compte",
-    "pageTitle": "Paramètres",
-    "profile": {
-      "title": "Profil",
-      "pageTitle": "Paramètres du profil",
-      "sectionTitle": "Informations du profil",
-      "sectionDescription": "Mettez à jour votre nom et votre adresse email",
-      "nameLabel": "Nom",
-      "namePlaceholder": "Votre nom",
-      "emailLabel": "Email",
-      "emailPlaceholder": "votre@email.com",
-      "saveButton": "Enregistrer"
-    },
-    "password": {
-      "title": "Mot de passe",
-      "pageTitle": "Paramètres du mot de passe",
-      "sectionTitle": "Mettre à jour le mot de passe",
-      "sectionDescription": "Assurez-vous que votre compte utilise un mot de passe long et aléatoire pour rester sécurisé",
-      "currentPasswordLabel": "Mot de passe actuel",
-      "currentPasswordPlaceholder": "Mot de passe actuel",
-      "newPasswordLabel": "Nouveau mot de passe",
-      "newPasswordPlaceholder": "Nouveau mot de passe",
-      "confirmPasswordLabel": "Confirmer le mot de passe",
-      "confirmPasswordPlaceholder": "Confirmer le mot de passe",
-      "saveButton": "Enregistrer"
-    },
-    "twoFactor": {
-      "title": "Authentification à 2 facteurs",
-      "pageTitle": "Authentification à deux facteurs",
-      "sectionTitle": "Authentification à deux facteurs",
-      "sectionDescription": "Gérez vos paramètres d'authentification à deux facteurs",
-      "enabled": "Activée",
-      "disabled": "Désactivée",
-      "enableButton": "Activer l'A2F",
-      "disableButton": "Désactiver l'A2F",
-      "continueSetup": "Continuer la configuration",
-      "enabledDescription": "Avec l'authentification à deux facteurs activée, vous devrez saisir un code de sécurité aléatoire lors de la connexion, que vous pourrez récupérer depuis l'application TOTP sur votre téléphone.",
-      "disabledDescription": "Quand vous activez l'authentification à deux facteurs, vous devrez saisir un code de sécurité lors de la connexion. Ce code peut être récupéré depuis une application TOTP sur votre téléphone.",
-      "recoveryCodesTitle": "Codes de récupération A2F",
-      "recoveryCodesDescription": "Les codes de récupération vous permettent de retrouver l'accès si vous perdez votre appareil A2F. Stockez-les dans un gestionnaire de mots de passe sécurisé.",
-      "viewCodes": "Voir",
-      "hideCodes": "Masquer",
-      "recoveryCodesLabel": "Codes de récupération",
-      "regenerateCodes": "Regénérer les codes",
-      "regenerateCodesInstruction": "Cliquez sur Regénérer les codes ci-dessus.",
-      "setupModal": {
-        "title": "Configurer l'authentification à deux facteurs",
-        "scanQrTitle": "Scannez le code QR",
-        "scanQrDescription": "Utilisez votre application d'authentification pour scanner le code QR ci-dessous.",
-        "manualSetupTitle": "Configuration manuelle",
-        "manualSetupDescription": "Si vous ne pouvez pas scanner le code QR, entrez cette clé de configuration dans votre application d'authentification :",
-        "verifyTitle": "Vérifier le code d'authentification",
-        "verifyDescription": "Entrez le code à 6 chiffres de votre application d'authentification.",
-        "codeInputLabel": "Code d'authentification",
-        "continueButton": "Continuer",
-        "closeButton": "Fermer",
-        "copyKey": "Copier la clé",
-        "keyCopied": "Clé copiée !",
-        "loadingQr": "Chargement du code QR...",
-        "loadingKey": "Chargement de la clé..."
-      }
-    },
-    "appearance": {
-      "title": "Apparence",
-      "pageTitle": "Paramètres d'apparence",
-      "sectionTitle": "Paramètres d'apparence",
-      "sectionDescription": "Mettez à jour les paramètres d'apparence de votre compte",
-      "themes": {
-        "light": "Clair",
-        "dark": "Sombre",
-        "system": "Système"
-      }
-    },
-    "language": {
-      "title": "Langue",
-      "pageTitle": "Paramètres de langue",
-      "sectionTitle": "Paramètres de langue",
-      "sectionDescription": "Mettez à jour vos paramètres de langue"
-    }
-  },
-  "deleteAccount": {
-    "title": "Supprimer le compte",
-    "description": "Supprimez votre compte et toutes ses ressources",
-    "warning": "Attention",
-    "warningText": "Veuillez procéder avec prudence, cette action ne peut pas être annulée.",
-    "confirmPassword": "Mot de passe",
-    "deleteButton": "Supprimer le compte",
-    "cancelButton": "Annuler",
-    "confirmTitle": "Êtes-vous sûr de vouloir supprimer votre compte ?",
-    "confirmDescription": "Une fois votre compte supprimé, toutes ses ressources et données seront également supprimées définitivement. Veuillez saisir votre mot de passe pour confirmer que vous souhaitez supprimer définitivement votre compte."
-  },
-  "common": {
-    "buttons": {
-      "save": "Enregistrer",
-      "cancel": "Annuler",
-      "delete": "Supprimer",
-      "edit": "Modifier",
-      "view": "Voir",
-      "create": "Créer",
-      "add": "Ajouter",
-      "remove": "Supprimer",
-      "confirm": "Confirmer",
-      "back": "Retour",
-      "next": "Suivant",
-      "previous": "Précédent",
-      "close": "Fermer",
-      "submit": "Soumettre",
-      "reset": "Réinitialiser",
-      "update": "Mettre à jour",
-      "abandon": "Abandonner",
-      "clearSelection": "Effacer la selection",
-      "selected": {
-        "singular": "sélectionné",
-        "plural": "sélectionnés"
-      }
-    },
-    "clear": "Effacer",
-    "status": {
-      "loading": "Chargement...",
-      "success": "Succès",
-      "error": "Erreur",
-      "saved": "Enregistré",
-      "updated": "Mis à jour",
-      "deleted": "Supprimé",
-      "created": "Créé"
-    },
-    "validation": {
-      "required": "Ce champ est requis",
-      "email": "Veuillez entrer une adresse email valide",
-      "minLength": "Doit contenir au moins {{count}} caractères",
-      "maxLength": "Ne peut pas contenir plus de {{count}} caractères",
-      "passwordConfirmation": "Les mots de passe ne correspondent pas"
-    },
-    "actions": {
-      "view": "Voir",
-      "edit": "Modifier",
-      "delete": "Supprimer",
-      "duplicate": "Dupliquer",
-      "archive": "Archiver"
-    }
-  },
-  "welcome": {
-    "title": "Bienvenue",
-    "description": "Bienvenue dans votre application de planification de repas"
-  },
-  "workspace": {
-    "createNew": "Créer un espace",
-    "name": "Nom",
-    "description": "Description",
-    "create": {
-      "button": "Créer un groupe"
-    },
-    "pageTitle": "Mes groupes",
-    "title": "Mes groupes",
-    "subtitle": "Espaces de planification partagés",
-    "manageMembers": "Gérer les membres",
-    "manageMembersFor": "Gérer les membres de",
-    "inviteByEmail": "Inviter par email",
-    "inviteEmail": {
-      "placeholder": "Adresse email"
-    },
-    "invite": {
-      "button": "Inviter"
-    },
-    "membersLabel": "membres",
-    "pending_invitations": "Invitations en attente",
-    "invitedBy": "Invité par",
-    "makeEditor": "Changer en éditeur",
-    "makeViewer": "Changer en lecteur",
-    "removeMember": "Retirer",
-    "current_workspace": "Espace actuel",
-    "myGroups": "Mes groupes",
-    "invitations": "Invitations",
-    "manageInvitations": "Gérer les invitations",
-    "delete": {
-      "title": "Supprimer le groupe",
-      "message": "Êtes-vous sûr de vouloir supprimer définitivement le groupe \"{{name}}\" ? Cette action est irréversible.",
-      "button": "Supprimer"
-    },
-    "leave": {
-      "message": "Êtes-vous sûr de vouloir quitter le groupe \"{{name}}\" ?",
-      "button": "Quitter le groupe"
-    },
-    "empty": {
-      "title": "Aucun groupe partagé",
-      "description": "Créez votre premier groupe ou demandez une invitation pour collaborer avec d'autres personnes sur vos planifications de repas."
-    },
-    "roles": {
-      "owner": "Propriétaire",
-      "editor": "Éditeur",
-      "viewer": "Lecteur"
-    },
-    "owner": {
-      "label": "Propriétaire du workspace"
-    },
-    "permissions": {
-      "title": "Permissions",
-      "viewPlanning": "Consulter",
-      "editMeals": "Modifier",
-      "manageMembers": "Gérer"
-    },
-    "members": {
-      "title": "Membres"
+    "workspace": {
+        "createNew": "Créer un espace",
+        "name": "Nom",
+        "description": "Description",
+        "create": {
+            "button": "Créer un groupe"
+        },
+        "pageTitle": "Mes groupes",
+        "title": "Mes groupes",
+        "subtitle": "Espaces de planification partagés",
+        "manageMembers": "Gérer les membres",
+        "manageMembersFor": "Gérer les membres de",
+        "inviteByEmail": "Inviter par email",
+        "inviteEmail": {
+            "placeholder": "Adresse email"
+        },
+        "invite": {
+            "button": "Inviter"
+        },
+        "membersLabel": "membres",
+        "pending_invitations": "Invitations en attente",
+        "invitedBy": "Invité par",
+        "makeEditor": "Changer en éditeur",
+        "makeViewer": "Changer en lecteur",
+        "removeMember": "Retirer",
+        "current_workspace": "Espace actuel",
+        "myGroups": "Mes groupes",
+        "invitations": "Invitations",
+        "manageInvitations": "Gérer les invitations",
+        "delete": {
+            "title": "Supprimer le groupe",
+            "message": "Êtes-vous sûr de vouloir supprimer définitivement le groupe \"{{name}}\" ? Cette action est irréversible.",
+            "button": "Supprimer"
+        },
+        "leave": {
+            "message": "Êtes-vous sûr de vouloir quitter le groupe \"{{name}}\" ?",
+            "button": "Quitter le groupe"
+        },
+        "empty": {
+            "title": "Aucun groupe partagé",
+            "description": "Créez votre premier groupe ou demandez une invitation pour collaborer avec d'autres personnes sur vos planifications de repas."
+        },
+        "roles": {
+            "owner": "Propriétaire",
+            "editor": "Éditeur",
+            "viewer": "Lecteur"
+        },
+        "owner": {
+            "label": "Propriétaire du workspace"
+        },
+        "permissions": {
+            "title": "Permissions",
+            "viewPlanning": "Consulter",
+            "editMeals": "Modifier",
+            "manageMembers": "Gérer"
+        },
+        "members": {
+            "title": "Membres"
+        },
+        "invitation": {
+            "accept": "Accepter",
+            "decline": "Décliner"
+        },
+        "planning": "Planning",
+        "sharedSpaces": "Espaces partagés"
     },
     "invitation": {
-      "accept": "Accepter",
-      "decline": "Décliner"
-    },
-    "planning": "Planning",
-    "sharedSpaces": "Espaces partagés"
-  },
-  "invitation": {
-    "pageTitle": "Invitations",
-    "title": "Invitations aux groupes",
-    "subtitle": "Gérez vos invitations aux espaces de planification partagés",
-    "status": {
-      "pending": "En attente"
-    },
-    "empty": {
-      "title": "Aucune invitation en attente",
-      "description": "Vous n'avez actuellement aucune invitation. Lorsque quelqu'un vous invitera à rejoindre un groupe, vous le verrez ici."
+        "pageTitle": "Invitations",
+        "title": "Invitations aux groupes",
+        "subtitle": "Gérez vos invitations aux espaces de planification partagés",
+        "status": {
+            "pending": "En attente"
+        },
+        "empty": {
+            "title": "Aucune invitation en attente",
+            "description": "Vous n'avez actuellement aucune invitation. Lorsque quelqu'un vous invitera à rejoindre un groupe, vous le verrez ici."
+        }
     }
-  }
 }

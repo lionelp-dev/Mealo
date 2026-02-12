@@ -126,6 +126,7 @@ const IngredientFormSection = withFieldGroup({
                           name={`ingredients[${index}].quantity`}
                           children={(field) => (
                             <field.NumberField
+                              value={field.state.value}
                               min="0"
                               step="0.01"
                               onChange={(e) =>
@@ -224,6 +225,7 @@ const IngredientFormSection = withFieldGroup({
                         name="quantity"
                         children={(field) => (
                           <field.NumberField
+                            value={field.state.value}
                             min="0"
                             step="0.01"
                             onChange={(e) =>

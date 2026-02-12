@@ -1,3 +1,4 @@
+import { useRecipeFiltersContext } from '@/contexts/recipe-filters-context';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipesRequestCoordination } from '@/hooks/use-recipes-request-coordination';
 import { cn } from '@/lib/utils';
@@ -5,17 +6,10 @@ import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import { Filter, FilterSection, Option, Tag } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
 import { ClassValue } from 'clsx';
-import { FilterIcon } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MealPlanDialogFilterOption } from './meal-plan-dialog-filter-option';
-
-enum MealTimeEnum {
-  BREAKFAST = '1',
-  LUNCH = '2',
-  DINNER = '3',
-  SNACK = '4',
-}
 
 export const TIME_OPTIONS: Option[] = [
   { label: '0 - 15 min', value: '[0..15]' },
@@ -24,41 +18,22 @@ export const TIME_OPTIONS: Option[] = [
   { label: '+ 1h', value: '>60' },
 ];
 
-export const MEAL_TIME_OPTIONS: Option[] = [
-  {
-    label: 'breakfast',
-    value: MealTimeEnum.BREAKFAST,
-  },
-  {
-    label: 'lunch',
-    value: MealTimeEnum.LUNCH,
-  },
-  {
-    label: 'dinner',
-    value: MealTimeEnum.DINNER,
-  },
-  {
-    label: 'snack',
-    value: MealTimeEnum.SNACK,
-  },
-];
-
 type Props = {
-  tags: Tag[];
   className?: ClassValue;
   side?: Popover.PopoverContentProps['side'];
   align?: Popover.PopoverContentProps['align'];
   sideOffset?: Popover.PopoverContentProps['sideOffset'];
 };
 
-export function RecipesPopoverFilters({
-  tags,
+export function RecipeFiltersPopover({
   className,
   side = 'bottom',
   align = 'end',
-  sideOffset = 5,
+  sideOffset = 6,
 }: Props) {
   const { t } = useTranslation();
+
+  const { tags } = useRecipeFiltersContext();
 
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
 
@@ -78,11 +53,6 @@ export function RecipesPopoverFilters({
     triggerRecipesRequest();
   }, [activeFilters]);
 
-  const filterButtonLabel =
-    activeFilters.length === 0
-      ? t('mealPlanning.dialog.addFilters', 'Add filters')
-      : `${activeFilters.length} ${activeFilters.length > 1 ? t('mealPlanning.dialog.filters.filters', 'filters') : t('mealPlanning.dialog.filters.filter', 'filter')} ${activeFilters.length > 1 ? t('common.buttons.selected.plural', 'selected') : t('common.buttons.selected.singular', 'selected')}`;
-
   const createTagsSection = (tags: Tag[]): FilterSection => ({
     title: 'tags',
     type: 'tag',
@@ -93,11 +63,6 @@ export function RecipesPopoverFilters({
   });
 
   const FILTERS_SECTIONS: FilterSection[] = [
-    {
-      title: 'mealTime',
-      type: 'meal_time',
-      options: MEAL_TIME_OPTIONS,
-    },
     { ...createTagsSection(tags) },
     {
       title: 'preparationTime',
@@ -111,12 +76,14 @@ export function RecipesPopoverFilters({
     },
   ];
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Popover.Root>
+    <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
         <button
           className={cn(
-            `btn col-start-5 w-fit items-center gap-[5px] justify-self-end`,
+            `btn h-fit w-fit items-center gap-1 justify-self-end p-0 pt-1 text-secondary btn-link`,
             className,
           )}
           onClick={() => {
@@ -124,14 +91,14 @@ export function RecipesPopoverFilters({
             clearSelectedRecipes();
           }}
         >
-          {filterButtonLabel}
-          <FilterIcon size={14} className="mb-[1px]" />
+          <span className="">Filtres avancés</span>
+          <ChevronDown className="h-4.5 w-4.5 pt-[2px]" />
         </button>
       </Popover.Trigger>
 
       <Popover.Portal>
         <Popover.Content
-          className="z-50 min-w-[225px] rounded-lg border border-base-300 bg-base-100 p-4 shadow-lg"
+          className="z-50 min-w-[225px] rounded-md border border-base-300 bg-base-100 p-2 shadow-lg"
           style={{
             overflowY: 'auto',
           }}
@@ -140,19 +107,19 @@ export function RecipesPopoverFilters({
           sideOffset={sideOffset}
           onWheel={(e: React.MouseEvent) => e.stopPropagation()}
         >
-          <div className="flex flex-col gap-4 divide-y divide-base-300/70">
+          <div className="flex flex-col gap-1.5">
             {FILTERS_SECTIONS.map((section) => (
               <div
                 key={section.type}
-                className="flex max-h-[calc(21.5_*_1vh)] flex-col"
+                className="flex max-h-[calc(26_*_1vh)] flex-col"
               >
-                <span className="text-sm font-medium">
+                <span className="px-2 pb-1 text-sm font-medium">
                   {t(
                     `mealPlanning.dialog.filters.${section.title}`,
                     section.title,
                   )}
                 </span>
-                <div className="overflow-y-scroll">
+                <div className="divide-y divide-base-300/40 overflow-y-scroll">
                   {section.options.map((option) => {
                     const filter: Filter = {
                       type: section.type,
@@ -162,7 +129,10 @@ export function RecipesPopoverFilters({
                     return (
                       <MealPlanDialogFilterOption
                         filter={filter}
-                        handleCheckedChange={() => toggleFilter(filter)}
+                        handleCheckedChange={() => {
+                          toggleFilter(filter);
+                          setIsOpen(false);
+                        }}
                         isActive={isFilterActive(filter)}
                       />
                     );

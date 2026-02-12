@@ -64,6 +64,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return HasMany<PlannedMeal, $this>
+     */
+    public function plannedMeals(): HasMany
+    {
+        return $this->hasMany(PlannedMeal::class);
+    }
+
+    /**
      * @return HasMany<Workspace, $this>
      */
     public function ownedWorkspaces(): HasMany

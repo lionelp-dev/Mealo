@@ -11,21 +11,15 @@ function ShoppingListProgress({
     totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
 
   return (
-    <div className="w-full flex-col px-2">
-      <div className="mb-2 flex items-center justify-between">
-        <span className="text-md font-medium text-base-content">
-          Shopping list progress
-        </span>
-        <span className="text-sm text-base-content">
-          {checkedCount} of {totalCount} completed
-        </span>
-      </div>
-      <div className="h-2 w-full rounded-full bg-base-300">
-        <div
-          className="h-2 rounded-full bg-success transition-all duration-300"
-          style={{ width: `${progressPercentage}%` }}
-        />
-      </div>
+    <div className="flex w-full shrink-0 items-center gap-5">
+      <progress
+        className="progress progress-secondary"
+        value={progressPercentage}
+        max="100"
+      />
+      <span className="self-end text-xs whitespace-nowrap text-base-content">
+        {checkedCount} of {totalCount} completed
+      </span>
     </div>
   );
 }

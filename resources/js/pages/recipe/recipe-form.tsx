@@ -138,6 +138,7 @@ export function RecipeForm({
             name="serving_size"
             children={(field) => (
               <field.NumberField
+                value={field.state.value}
                 label={t('recipes.form.servingSizeLabel', 'Serving size')}
                 placeholder="1"
                 min="1"
@@ -150,6 +151,7 @@ export function RecipeForm({
             name="preparation_time"
             children={(field) => (
               <field.NumberField
+                value={field.state.value}
                 label={t(
                   'recipes.form.preparationTimeLabel',
                   'Preparation time',
@@ -164,6 +166,7 @@ export function RecipeForm({
             name="cooking_time"
             children={(field) => (
               <field.NumberField
+                value={field.state.value}
                 label={t('recipes.form.cookingTimeLabel', 'Cooking time')}
                 placeholder="0"
                 min="0"

@@ -16,8 +16,12 @@ class ShoppingListFactory extends Factory
      */
     public function definition(): array
     {
+        $user = \App\Models\User::factory()->create();
+        $workspace = \App\Models\Workspace::createPersonalWorkspace($user);
+
         return [
-            'user_id' => \App\Models\User::factory(),
+            'user_id' => $user->id,
+            'workspace_id' => $workspace->id,
             'week_start' => $this->faker->dateTimeBetween('-2 weeks', '+2 weeks')->format('Y-m-d'),
         ];
     }

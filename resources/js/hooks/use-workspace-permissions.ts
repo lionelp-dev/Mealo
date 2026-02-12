@@ -15,8 +15,6 @@ export const useWorkspacePermissions = () => {
     (member) => member.id === auth.user.id,
   )?.role;
 
-  console.log(workspace_data);
-
   const isOwner = current_user_role === ROLES.OWNER;
   const isEditor = current_user_role === ROLES.EDITOR;
   const isViewer = current_user_role === ROLES.VIEWER;

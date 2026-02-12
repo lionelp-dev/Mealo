@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
-import { Settings } from 'luxon';
 import { initReactI18next } from 'react-i18next';
 
 // Import translation files directly
@@ -23,7 +22,7 @@ i18n
     resources,
     fallbackLng: 'en',
     lng: 'fr', // Default to French
-    debug: process.env.NODE_ENV === 'development',
+    debug: false,
 
     interpolation: {
       escapeValue: false, // React already escapes by default

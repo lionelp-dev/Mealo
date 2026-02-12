@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
+use App\Enums\Unit;
 use App\Models\MealTime;
 use OpenAI;
 use Exception;
+use UnitEnum;
 
 class AIRecipeGenerationService
 {
@@ -20,11 +22,11 @@ class AIRecipeGenerationService
      */
     public function generateRecipe(string $prompt): array
     {
-
-        // Get available meal times from database
         $mealTimes = MealTime::all();
         $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
+
+        $units = json_encode(Unit::values());
 
         try {
             $response = $this->client->chat()->create([
@@ -108,7 +110,7 @@ class AIRecipeGenerationService
                                                 ],
                                                 'unit' => [
                                                     'type' => 'string',
-                                                    'description' => 'Ingredient unit',
+                                                    'description' => "Ingredient unit. You can choose one from this exact list: {$units}",
                                                 ],
                                             ],
                                             'required' => ['name', 'quantity', 'unit'],
@@ -153,11 +155,33 @@ CHAMPS REQUIS :
 - ingredients: Liste complète avec quantités précises et unités
 - steps: Étapes numérotées et détaillées
 
-IMPORTANT :
-- Chaque ingrédient doit avoir une quantité précise (jamais vide) et une unité de mesure
-- Pour les assaisonnements comme sel, poivre, utilisez des quantités comme '1' avec des unités comme 'pincée', 'cuillère à café', etc.
-- Les temps doivent être réalistes et en entiers
-- Choisis les meal_times appropriés selon le type de plat"],
+ # CONTRAINTES STRICTES
+
+ ## Unités de Mesure
+ Utilisez UNIQUEMENT ces unités (format exact) : {$units}
+
+ Sélection par type d'ingrédient :
+ - Liquides : ml, l, cup, fl oz
+ - Solides : g, kg, oz, lb
+ - Épices : tsp, tbsp, pinch, dash
+ - Items comptables : piece, slice, clove
+ - Assaisonnement facultatif : to taste, as needed (avec parcimonie)
+
+ ## Temps Réalistes
+ - preparation_time : 5-120 min (découpe, mélange, assemblage)
+ - cooking_time : 0-240 min (cuisson, four, mijotage)
+ Exemples : salade = 15min prep / 0min cuisson, boeuf bourguignon = 30min prep / 180min cuisson
+
+ ## Portions (serving_size)
+ Choisir selon le type de plat :
+ - Plats principaux : 2-8 portions
+ - Desserts : 4-12 portions
+ - Apéritifs : 6-20 portions
+
+ ## Meal Times
+ Sélectionner parmi : {$mealTimeListForPrompt}
+ Choisir tous les moments appropriés (ex: omelette → breakfast, brunch, lunch)
+"],
                     ['role' => 'user', 'content' => $prompt],
                 ],
             ]);

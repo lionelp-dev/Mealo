@@ -7,7 +7,6 @@ use App\Models\MealTime;
 use App\Models\PlannedMeal;
 use App\Http\Resources\RecipeResource;
 use Carbon\Carbon;
-use OpenAI;
 use Exception;
 
 class AIMealPlanningService
@@ -21,8 +20,6 @@ class AIMealPlanningService
 
     /**
      * Generate a meal plan using user recipes with function calling
-     *
-     * @param array $params Array with keys: userId (int), workspaceId (int), days (int, optional), startDate(string, optional)
      * @return array
      */
     public function generateMealPlan(array $params): array
@@ -30,8 +27,12 @@ class AIMealPlanningService
         // Extract parameters from array
         $userId = $params['userId'];
         $workspaceId = $params['workspaceId'];
-        $days = $params['days'] ?? 7;
         $startDate = new Carbon($params['startDate']);
+        $endDate = new Carbon($params['endDate']);
+        $days = Carbon::parse($startDate)
+              ->diffInDays(
+                  Carbon::parse($endDate)
+              ) + 1;
 
 
         // Récupérer un échantillon aléatoire de recettes pour optimiser
@@ -51,7 +52,6 @@ class AIMealPlanningService
         }
 
         // Supprimer les repas planifiés existants pour ce range dans le workspace
-        $endDate = (new Carbon($params['startDate']))->addDays($days - 1);
         PlannedMeal::where('user_id', $userId)
             ->where('workspace_id', $workspaceId)
             ->whereBetween('planned_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
@@ -94,7 +94,7 @@ class AIMealPlanningService
 
         try {
             $response = $this->client->chat()->create([
-                'model' => 'google/gemini-3-pro-preview',
+                'model' => 'openai/gpt-5-mini',
                 'tools' => [
                     [
                         'type' => 'function',
@@ -139,68 +139,68 @@ class AIMealPlanningService
                         'role' => 'system',
                         'content' => "🧠 GÉNÉRATEUR DE PLANNING DE REPAS — MODE TIMELINE STRICT
 
-Tu es un moteur de planification de repas DÉTERMINISTE.
-Tu produis UNIQUEMENT un planning JSON exploitable par un backend.
-AUCUNE liberté créative.
+        Tu es un moteur de planification de repas DÉTERMINISTE.
+        Tu produis UNIQUEMENT un planning JSON exploitable par un backend.
+        AUCUNE liberté créative.
 
-────────────────────────────────────────
-📦 SOURCE UNIQUE DE VÉRITÉ
-────────────────────────────────────────
+        ────────────────────────────────────────
+        📦 SOURCE UNIQUE DE VÉRITÉ
+        ────────────────────────────────────────
 
-Recettes filtrées par meal_time :
-" . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
+        Recettes filtrées par meal_time :
+        " . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
 
-Meal times autorisés :
-{$mealTimeListForPrompt}
+        Meal times autorisés :
+        {$mealTimeListForPrompt}
 
-────────────────────────────────────────
-🕒 MODE DE CONSTRUCTION OBLIGATOIRE — STRICT
-────────────────────────────────────────
+        ────────────────────────────────────────
+        🕒 MODE DE CONSTRUCTION OBLIGATOIRE — STRICT
+        ────────────────────────────────────────
 
-1. Construire une TIMELINE jour par jour (dates STRICTEMENT croissantes)
-2. Pour chaque jour, générer EXACTEMENT 4 repas dans l'ordre :
-   - 1 breakfast (utiliser le meal_time_id correspondant à 'breakfast' dans la liste)
-   - 1 lunch (utiliser le meal_time_id correspondant à 'lunch' dans la liste)
-   - 1 dinner (utiliser le meal_time_id correspondant à 'dinner' dans la liste)
-   - 1 snack (utiliser le meal_time_id correspondant à 'snack' dans la liste)
-3. INTERDICTION de raisonner par type de repas
-4. INTERDICTION de recomposer après coup
+        1. Construire une TIMELINE jour par jour (dates STRICTEMENT croissantes)
+        2. Pour chaque jour, générer EXACTEMENT 4 repas dans l'ordre :
+           - 1 breakfast (utiliser le meal_time_id correspondant à 'breakfast' dans la liste)
+           - 1 lunch (utiliser le meal_time_id correspondant à 'lunch' dans la liste)
+           - 1 dinner (utiliser le meal_time_id correspondant à 'dinner' dans la liste)
+           - 1 snack (utiliser le meal_time_id correspondant à 'snack' dans la liste)
+        3. INTERDICTION de raisonner par type de repas
+        4. INTERDICTION de recomposer après coup
 
-Meal times disponibles avec leurs IDs exacts :
-{$mealTimeListForPrompt}
+        Meal times disponibles avec leurs IDs exacts :
+        {$mealTimeListForPrompt}
 
-────────────────────────────────────────
-🍳 CLUSTERING & DLC — STRICT
-────────────────────────────────────────
+        ────────────────────────────────────────
+        🍳 CLUSTERING & DLC — STRICT
+        ────────────────────────────────────────
 
-- Une recette répétée DOIT être utilisée sur des jours STRICTEMENT consécutifs
-- INTERDICTION ABSOLUE de toute réapparition après interruption
-- MAXIMUM 3 utilisations consécutives par recette
-- Toute violation = PLANNING INVALIDE
+        - Une recette répétée DOIT être utilisée sur des jours STRICTEMENT consécutifs
+        - INTERDICTION ABSOLUE de toute réapparition après interruption
+        - MAXIMUM 3 utilisations consécutives par recette
+        - Toute violation = PLANNING INVALIDE
 
-────────────────────────────────────────
-🧮 PROPORTIONS & QUANTITÉS — STRICT
-────────────────────────────────────────
+        ────────────────────────────────────────
+        🧮 PROPORTIONS & QUANTITÉS — STRICT
+        ────────────────────────────────────────
 
-- Les proportions et quantités des recettes sont IMMUTABLES
-- INTERDICTION de modifier, ajuster, optimiser ou arrondir
-- Si une recette est utilisée N fois → ses quantités sont comptées N fois
-- Respect STRICT de la serving_size
-- L’IA NE CALCULE PAS les courses
+        - Les proportions et quantités des recettes sont IMMUTABLES
+        - INTERDICTION de modifier, ajuster, optimiser ou arrondir
+        - Si une recette est utilisée N fois → ses quantités sont comptées N fois
+        - Respect STRICT de la serving_size
+        - L’IA NE CALCULE PAS les courses
 
-Si une quantité n’est pas explicitement fournie :
-→ NE PAS l’inventer
+        Si une quantité n’est pas explicitement fournie :
+        → NE PAS l’inventer
 
-────────────────────────────────────────
-⚙️ CONTRAINTES TECHNIQUES — STRICT
-────────────────────────────────────────
-- Période : {$days} jours consécutifs
-- Date de début : {$startDate->format('Y-m-d')}
-- Dates au format YYYY-MM-DD
-- Utiliser UNIQUEMENT les recipe_id fournis
-- Respect STRICT des meal_time_id
-- TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . " repas
-",
+        ────────────────────────────────────────
+        ⚙️ CONTRAINTES TECHNIQUES — STRICT
+        ────────────────────────────────────────
+        - Période : {$days} jours consécutifs
+        - Date de début : {$startDate->format('Y-m-d')}
+        - Dates au format YYYY-MM-DD
+        - Utiliser UNIQUEMENT les recipe_id fournis
+        - Respect STRICT des meal_time_id
+        - TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . " repas
+        ",
                     ],
                     [
                         'role' => 'user',
@@ -214,7 +214,6 @@ Si une quantité n’est pas explicitement fournie :
                 foreach ($response->choices[0]->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_meal_plan') {
                         $args = json_decode($toolCall->function->arguments, true);
-
                         return $args['planned_meals'];
                     }
                 }
