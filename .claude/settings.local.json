@@ -18,9 +18,28 @@
       "Bash(find:*)",
       "WebSearch",
       "Bash(git mv:*)",
-      "Bash(git worktree:*)"
+      "Bash(git worktree:*)",
+      "mcp__laravel-boost__search-docs",
+      "mcp__laravel-boost__get-config",
+      "mcp__laravel-boost__list-available-env-vars",
+      "mcp__laravel-boost__database-query",
+      "mcp__laravel-boost__database-schema",
+      "mcp__laravel-boost__tinker",
+      "WebFetch(domain:tanstack.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(npm run types:*)",
+      "WebFetch(domain:ui.shadcn.com)",
+      "mcp__laravel-boost__browser-logs",
+      "WebFetch(domain:dev.to)",
+      "mcp__laravel-boost__read-log-entries",
+      "Bash(cat:*)",
+      "mcp__laravel-boost__last-error"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
 }

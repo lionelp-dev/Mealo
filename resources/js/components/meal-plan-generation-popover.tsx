@@ -1,20 +1,59 @@
+import { useAppForm } from '@/hooks/form-hook';
 import { useMealPlanGeneration } from '@/hooks/use-meal-plan-generation';
+import plannedMeals from '@/routes/planned-meals';
+import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Bot, ChefHat } from 'lucide-react';
+import 'cally';
+import { Bot, CalendarRange, Minus, Plus } from 'lucide-react';
+import { DateTime, Interval } from 'luxon';
 import { useTranslation } from 'react-i18next';
+
+type MealPlanGenerationForm = {
+  range: {
+    startDate: DateTime;
+    endDate: DateTime;
+  };
+  serving_size: number;
+};
 
 export function MealPlanGenerationPopover() {
   const { t } = useTranslation();
-  const {
-    isGenerating,
-    startDate,
-    setStartDate,
-    days,
-    setDays,
-    handleGeneratePlan,
-    isOpen,
-    setIsOpen,
-  } = useMealPlanGeneration();
+
+  const { weekStart } = usePage<{ weekStart: string }>().props;
+
+  const { isGenerating, setIsGenerating, isOpen, setIsOpen } =
+    useMealPlanGeneration();
+
+  const defaultValues: MealPlanGenerationForm = {
+    range: {
+      startDate: DateTime.fromISO(weekStart),
+      endDate: DateTime.fromISO(weekStart).endOf('week'),
+    },
+    serving_size: 1,
+  };
+
+  const form = useAppForm({
+    defaultValues,
+    onSubmit: ({ value }) => {
+      setIsGenerating(true);
+
+      router.post(
+        plannedMeals.generate.url(),
+        {
+          startDate: value.range.startDate.toISODate(),
+          endDate: value.range.endDate.toISODate(),
+          serving_size: value.serving_size,
+        },
+        {
+          onFinish: () => {
+            setIsGenerating(false);
+            setIsOpen(false);
+          },
+          onError: () => setIsGenerating(false),
+        },
+      );
+    },
+  });
 
   return (
     <>
@@ -31,7 +70,7 @@ export function MealPlanGenerationPopover() {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content
-            className="z-10 flex w-80 rounded-md border border-base-300 bg-base-100 p-4"
+            className="z-10 flex w-85 rounded-md border border-base-300 bg-base-100 p-4 text-secondary"
             align="end"
             sideOffset={7}
           >
@@ -46,61 +85,157 @@ export function MealPlanGenerationPopover() {
                 )}
               </p>
 
-              <h3 className="text-md leading-none font-medium">
-                {t('mealPlanning.planningPeriod', 'Planning period')}
-              </h3>
+              <form.AppField
+                name="serving_size"
+                children={(field: any) => (
+                  <div className="-mt-0.5 flex flex-col gap-2.5">
+                    <span className="text-md w-full font-medium whitespace-nowrap text-secondary">
+                      {t(
+                        'mealPlanning.dialog.persons',
+                        'Pour combien de personnes ?',
+                      )}
+                    </span>
+                    <div className="join w-fit shrink-0 items-center gap-2 px-2.5 pb-0.5">
+                      <button
+                        className="btn join-item rounded-md px-2 btn-outline btn-soft btn-sm btn-secondary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if ((field.state.value as number) > 1) {
+                            field.setValue((field.state.value as number) - 1);
+                          }
+                        }}
+                        children={<Minus className="h-4 w-4" />}
+                      />
+                      <field.NumberField
+                        className="btn join-item w-fit [appearance:textfield] rounded-md px-0 btn-sm [&::-webkit-inner-spin-button]:appearance-none"
+                        min={1}
+                        max={20}
+                      />
+                      <button
+                        className="btn join-item rounded-md px-2 btn-outline btn-soft btn-sm btn-secondary"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          if ((field.state.value as number) < 255) {
+                            field.setValue((field.state.value as number) + 1);
+                          }
+                        }}
+                        children={<Plus className="h-4 w-4" />}
+                      />
+                    </div>
+                  </div>
+                )}
+              />
 
               <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium">
-                  {t('mealPlanning.startDate', 'Start date')}
-                </label>
-                <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="input input-sm w-full"
-                />
-              </div>
+                <h3 className="text-md leading-none font-medium text-secondary">
+                  {t('mealPlanning.planningPeriod', 'Planning period')}
+                </h3>
+                <form.Field name="range">
+                  {(field) => {
+                    const startDate = form.state.values.range.startDate;
+                    const endDate = form.state.values.range.endDate;
+                    const interval = Math.ceil(
+                      Interval.fromDateTimes(startDate, endDate).length(
+                        'days',
+                      ) + 1,
+                    );
 
-              <div className="flex shrink-0 flex-col gap-1">
-                <label className="text-sm font-medium">
-                  {t('mealPlanning.numberOfDays', 'Number of days')}
-                </label>
-                <div className="flex items-center gap-3">
-                  <input
-                    type="range"
-                    min="1"
-                    max="7"
-                    value={days}
-                    onChange={(e) => setDays(Number(e.target.value))}
-                    className="text-black-300 range [--range-fill:0] [--range-thumb:black] range-sm"
-                  />
-                  <div className="flex items-center gap-1">
-                    <input
-                      type="number"
-                      min="1"
-                      max="7"
-                      value={days}
-                      onChange={(e) => setDays(Number(e.target.value))}
-                      className="input input-sm w-16 text-center"
-                    />
-                    <span className="text-sm text-muted-foreground">
-                      {t('mealPlanning.days', 'days')}
-                    </span>
-                  </div>
-                </div>
+                    return (
+                      <Popover.Root>
+                        <Popover.Trigger asChild>
+                          <div className="flex items-center gap-2 text-base-content">
+                            <button className="input-bordered input w-fit justify-between gap-2 pl-4 text-left">
+                              {DateTime.isDateTime(startDate) &&
+                              DateTime.isDateTime(endDate)
+                                ? `${startDate.toLocaleString(DateTime.DATE_MED)} → ${endDate.toLocaleString(DateTime.DATE_MED)}`
+                                : 'Pick a date range'}
+                              <CalendarRange className="h-5" />
+                            </button>
+                            <span className="text- text-sm whitespace-nowrap">
+                              {'/ '}
+                              {interval}
+                              {' Jours'}
+                            </span>
+                          </div>
+                        </Popover.Trigger>
+                        <Popover.Portal>
+                          <Popover.Content
+                            className="z-20 rounded-md border border-base-300 bg-base-100 p-3 shadow-lg"
+                            align="end"
+                            alignOffset={90}
+                            side="bottom"
+                            sideOffset={5}
+                          >
+                            <calendar-range
+                              className="cally [&_::part(button_day_today)]:bg-inherit [&_::part(button_day_today)]:text-base-content [&_::part(day):disabled]:bg-secondary/15 [&_::part(day):hover]:bg-secondary/20 [&_::part(selected)]:bg-secondary [&_::part(selected)]:text-secondary-content [&_::part(selected):hover]:bg-secondary/20"
+                              months={1}
+                              min={DateTime.fromISO(weekStart).toISODate()}
+                              max={DateTime.fromISO(weekStart)
+                                .endOf('week')
+                                .toISODate()}
+                              value={[
+                                field.state.value.startDate.toISODate(),
+                                field.state.value.endDate.toISODate(),
+                              ].join('/')}
+                              onchange={(event) => {
+                                const target = event.target as EventTarget & {
+                                  value: string;
+                                };
+                                const rangeValue = target.value;
+
+                                if (rangeValue && rangeValue.includes('/')) {
+                                  const [start, end] = rangeValue.split('/');
+                                  field.setValue({
+                                    startDate: DateTime.fromISO(start),
+                                    endDate: DateTime.fromISO(end),
+                                  });
+                                }
+                              }}
+                            >
+                              <svg
+                                aria-label="Previous"
+                                className="size-4 fill-current"
+                                slot="previous"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="M15.75 19.5 8.25 12l7.5-7.5"
+                                ></path>
+                              </svg>
+                              <svg
+                                aria-label="Next"
+                                className="size-4 fill-current"
+                                slot="next"
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  fill="currentColor"
+                                  d="m8.25 4.5 7.5 7.5-7.5 7.5"
+                                ></path>
+                              </svg>
+                              <calendar-month></calendar-month>
+                            </calendar-range>
+                          </Popover.Content>
+                        </Popover.Portal>
+                      </Popover.Root>
+                    );
+                  }}
+                </form.Field>
               </div>
 
               <button
-                onClick={handleGeneratePlan}
+                onClick={() => form.handleSubmit()}
                 disabled={isGenerating}
                 className="btn w-full"
               >
                 {t('mealPlanning.generateNow', 'Generate my meal plan')}
-                {isGenerating ? (
+                {isGenerating && (
                   <span className="loading loading-sm loading-spinner"></span>
-                ) : (
-                  <ChefHat className="h-4.5 w-4.5" />
                 )}
               </button>
             </div>

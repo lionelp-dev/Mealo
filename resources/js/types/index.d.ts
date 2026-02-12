@@ -116,10 +116,11 @@ export type Recipe = {
 
 export type PlannedMeal = {
   id: number;
-  planned_date: string;
-  meal_time_id: number;
-  recipe: Pick<Recipe, 'id' | 'name' | 'image_url'>;
   workspace_id?: number;
+  meal_time_id: number;
+  planned_date: string;
+  recipe: Pick<Recipe, 'id' | 'name' | 'image_url'>;
+  serving_size: number;
 };
 
 export type PlannedMealsSlot = {
@@ -130,32 +131,6 @@ export type PlannedMealsSlot = {
 export type DayPlannedMeals = {
   date: DateTime;
   plannedMealsSlots: PlannedMealsSlot[];
-};
-
-export type ShoppingList = {
-  data: {
-    id: number;
-    user_id: number;
-    week_start: string;
-    ingredients?: ShoppingListIngredient[];
-    created_at: string;
-    updated_at: string;
-  };
-};
-
-export type ShoppingListIngredient = {
-  id: number;
-  shopping_list_id: number;
-  ingredient_id: number;
-  ingredient: {
-    id: number;
-    name: string;
-  };
-  quantity: number;
-  unit: string;
-  is_checked: boolean;
-  created_at: string;
-  updated_at: string;
 };
 
 export type Option = { value: string; label: string };
@@ -243,4 +218,62 @@ export type PendingInvitation = {
 export type CreateWorkspace = {
   name: string;
   description: string;
+};
+
+export type PlannedMealIngredient = {
+  shopping_list_id: number;
+  ingredient_id: number;
+  name: string;
+  total_quantity: number;
+  unit: string;
+  is_checked: boolean;
+  from_planned_meals: {
+    planned_meal_id: number;
+    recipe_id: number;
+    recipe_name: string;
+    ingredient_quantity: number;
+    ingredient_unit: number;
+    is_checked: boolean;
+  }[];
+  from_recipes: {
+    recipe_id: number;
+    recipe_name: string;
+    ingredient_quantity: number;
+    ingredient_unit: number;
+  }[];
+};
+
+export type PlannedMealRecipeIngredient = {
+  shopping_list_id: number;
+  ingredient_id: number;
+  name: string;
+  total_quantity: number;
+  unit: string;
+  is_checked: boolean;
+  from_planned_meals: {
+    planned_meal_id: number;
+    quantity: number;
+    is_checked: boolean;
+  }[];
+};
+
+export type ShoppingList = {
+  id: number;
+  user_id: number;
+  workspace_id: number;
+  week_start: string;
+  created_at: string;
+  updated_at: string;
+  by_ingredients: {
+    checked: PlannedMealIngredient[];
+    unchecked: PlannedMealIngredient[];
+  };
+  by_recipes: {
+    recipe_id: number;
+    recipe_name: string;
+    ingredients: {
+      checked: PlannedMealRecipeIngredient[];
+      unchecked: PlannedMealRecipeIngredient[];
+    };
+  }[];
 };

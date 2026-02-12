@@ -27,12 +27,22 @@ function Recipe() {
             <div className="flex gap-4 self-end">
               <button
                 className="btn"
-                onClick={() => router.visit(recipes.index.url())}
+                onClick={() =>
+                  router.visit(recipes.edit.url({ id: recipe.data.id }))
+                }
               >
-                {t('recipes.index.viewButton', 'View my recipes')}
+                {t('recipes.index.editBtn', 'Modify')}
               </button>
             </div>
           )}
+          <div className="flex gap-4 self-end">
+            <button
+              className="btn"
+              onClick={() => router.visit(recipes.index.url())}
+            >
+              {t('recipes.index.viewButton', 'View my recipes')}
+            </button>
+          </div>
           <LanguageSwitcher />
         </div>
       }

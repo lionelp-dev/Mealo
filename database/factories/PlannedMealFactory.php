@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class PlannedMealFactory extends Factory
 {
-
     /**
      * Define the model's default state.
      *
@@ -18,7 +17,7 @@ class PlannedMealFactory extends Factory
     public function definition(): array
     {
         $user = \App\Models\User::factory()->create();
-        $recipe = \App\Models\Recipe::factory()->create(['user_id' => $user->id]);
+        $recipe = \App\Models\Recipe::factory()->withIngredients(10)->create(['user_id' => $user->id]);
 
         return [
             'user_id' => $user->id,

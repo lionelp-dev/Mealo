@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePlannedMealRequest;
 use App\Http\Requests\UpdatePlannedMeal;
+use App\Http\Requests\UpdatePlannedMealRequest;
 use App\Http\Resources\PlannedMealResource;
 use App\Http\Resources\RecipeCollection;
 use App\Http\Resources\TagResource;
@@ -11,19 +13,21 @@ use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Services\AIMealPlanningService;
-use App\Services\ShoppingListService;
 use App\Services\WorkspaceDataService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
+use App\Enums\Unit;
 
 class PlannedMealController extends Controller
 {
     public function __construct(
-        private ShoppingListService $shoppingListService,
         private AIMealPlanningService $aiMealPlanningService,
         private WorkspaceDataService $workspaceDataService
     ) {}
@@ -31,7 +35,7 @@ class PlannedMealController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $user = $request->user();
 
@@ -61,8 +65,8 @@ class PlannedMealController extends Controller
             ->where('workspace_id', $currentWorkspace->id)
             ->with(['recipe:id,name,image_path', 'user:id,name'])
             ->whereBetween('planned_date', [
-                $weekStart->toDateString(),
-                $weekEnd->toDateString(),
+                $weekStart,
+                $weekEnd,
             ])
             ->get();
 
@@ -116,7 +120,7 @@ class PlannedMealController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
@@ -124,7 +128,7 @@ class PlannedMealController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PlannedMeal $plannedMeal)
+    public function show(PlannedMeal $plannedMeal): JsonResponse
     {
         Gate::authorize('view', $plannedMeal);
 
@@ -134,7 +138,7 @@ class PlannedMealController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(PlannedMeal $plannedMeal)
+    public function edit(PlannedMeal $plannedMeal): void
     {
         //
     }
@@ -142,7 +146,7 @@ class PlannedMealController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdatePlannedMeal $request, PlannedMeal $plannedMeal)
+    public function update(UpdatePlannedMealRequest $request, PlannedMeal $plannedMeal): mixed
     {
         return DB::transaction(function () use ($request, $plannedMeal) {
             Gate::authorize('update', $plannedMeal);
@@ -153,6 +157,7 @@ class PlannedMealController extends Controller
                 'recipe_id',
                 'meal_time_id',
                 'planned_date',
+                'serving_size',
             ]);
 
             $recipe = Recipe::findOrFail($validated['recipe_id']);
@@ -162,10 +167,6 @@ class PlannedMealController extends Controller
 
             // Regenerate shopping lists for both original and new weeks (if different)
             $affectedDates = [$originalDate, $plannedMeal->planned_date];
-            $this->shoppingListService->regenerateAffectedShoppingListsForWorkspace(
-                $plannedMeal->workspace_id,
-                $affectedDates
-            );
 
             return to_route('planned-meals.index')->with('success', 'Planned meal successfully updated');
         }, attempts: 5);
@@ -174,66 +175,58 @@ class PlannedMealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePlannedMealRequest $request): mixed
     {
         return DB::transaction(function () use ($request) {
-            $validated = $request->validate([
-                'planned_meals' => ['required', 'array'],
-                'planned_meals.*.recipe_id' => ['required', 'integer', 'exists:recipes,id'],
-                'planned_meals.*.meal_time_id' => ['required', 'integer', 'exists:meal_times,id'],
-                'planned_meals.*.planned_date' => ['required', 'date'],
-            ]);
+            $validated = $request->validated();
 
-            $plannedMealsInput = $validated['planned_meals'];
-
-            $plannedMealsData = [];
-            $affectedDates = [];
-
-            // Get current workspace
             $user = $request->user();
+
             $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($user);
 
             try {
                 Gate::authorize('editPlanning', $currentWorkspace);
+
+                try {
+                    foreach ($validated['planned_meals'] as $plannedMealData) {
+                        $parsedDate = Carbon::parse($plannedMealData['planned_date'])->format('Y-m-d');
+
+                        $plannedMeal = PlannedMeal::query()
+                            ->where('user_id', $user->id)
+                            ->where('workspace_id', $currentWorkspace->id)
+                            ->where('recipe_id', $plannedMealData['recipe_id'])
+                            ->where('meal_time_id', $plannedMealData['meal_time_id'])
+                            ->whereDate('planned_date', $parsedDate)
+                            ->first();
+
+                        if ($plannedMeal) {
+                            $plannedMeal->serving_size += $plannedMealData['serving_size'];
+                            $plannedMeal->save();
+                        } else {
+                            PlannedMeal::create([
+                                'user_id' => $user->id,
+                                'workspace_id' => $currentWorkspace->id,
+                                'recipe_id' => $plannedMealData['recipe_id'],
+                                'meal_time_id' => $plannedMealData['meal_time_id'],
+                                'planned_date' => $plannedMealData['planned_date'],
+                                'serving_size' => $plannedMealData['serving_size'],
+                            ]);
+                        }
+                    }
+                    return back()->with('success', 'Meal successfully planned');
+                } catch (Exception $e) {
+                    return back()->with('error', 'Meal doesnt successfully planned: ');
+                }
             } catch (Exception $e) {
                 return back()->with('error', 'This action is unauthorized');
-            }
-
-            foreach ($plannedMealsInput as $plannedMealData) {
-                $recipe = Recipe::findOrFail($plannedMealData['recipe_id']);
-                Gate::authorize('create', [PlannedMeal::class, $recipe]);
-
-                $plannedMealsData[] = [
-                    'user_id' => $user->id,
-                    'recipe_id' => $plannedMealData['recipe_id'],
-                    'meal_time_id' => $plannedMealData['meal_time_id'],
-                    'planned_date' => $plannedMealData['planned_date'],
-                    'workspace_id' => $currentWorkspace->id,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-
-                $affectedDates[] = $plannedMealData['planned_date'];
-            }
-
-            PlannedMeal::insert($plannedMealsData);
-
-            // Regenerate shopping lists for all affected weeks
-            $this->shoppingListService->regenerateAffectedShoppingListsForWorkspace(
-                $currentWorkspace->id,
-                $affectedDates
-            );
-
-            $successMessage = count($plannedMealsInput) > 1 ? 'Meals successfully planned' : 'Meal successfully planned';
-
-            return to_route('planned-meals.index')->with('success', $successMessage);
+            };
         }, attempts: 5);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request): mixed
     {
         return DB::transaction(function () use ($request) {
             $validated = $request->validate([
@@ -247,7 +240,7 @@ class PlannedMealController extends Controller
             $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($request->user());
 
             // Fetch planned meals from current workspace
-            $plannedMeals = PlannedMeal::whereIn('id', $plannedMealIds)
+            $plannedMeals = PlannedMeal::query()->whereIn('id', $plannedMealIds)
                 ->where('workspace_id', $currentWorkspace->id)
                 ->get();
 
@@ -267,24 +260,20 @@ class PlannedMealController extends Controller
             // Collect affected dates before deletion
             $affectedDates = $plannedMeals->pluck('planned_date')->toArray();
 
-            PlannedMeal::whereIn('id', $plannedMeals->pluck('id'))->delete();
-
-            // Regenerate shopping lists for all affected weeks
-            $this->shoppingListService->regenerateAffectedShoppingListsForWorkspace(
-                $currentWorkspace->id,
-                $affectedDates
-            );
+            foreach ($plannedMeals as $plannedMeal) {
+                $plannedMeal->delete();
+            };
 
             $successMessage = $plannedMeals->count() > 1 ? 'Planned meals successfully deleted' : 'Planned meal successfully deleted';
 
-            return to_route('planned-meals.index')->with('success', $successMessage);
+            return back()->with('success', $successMessage);
         }, attempts: 5);
     }
 
     /**
      * Generate a meal plan using AI
      */
-    public function generatePlan(Request $request)
+    public function generatePlan(Request $request): RedirectResponse
     {
         $user = $request->user();
 
@@ -294,11 +283,12 @@ class PlannedMealController extends Controller
 
         $validated = $request->validate([
             'startDate' => ['required', 'date'],
-            'days' => ['nullable', 'integer', 'min:1', 'max:7'],
+            'endDate' => ['required', 'date'],
+            'serving_size' => ['required', 'integer', 'min:1', 'max:255'],
         ]);
 
         $startDate = Carbon::parse($validated['startDate']);
-        $days = $validated['days'] ?? 7;
+        $endDate = Carbon::parse($validated['endDate']);
 
         // Get current workspace
         $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($user);
@@ -314,8 +304,8 @@ class PlannedMealController extends Controller
             $plannedMeals = $this->aiMealPlanningService->generateMealPlan([
                 'userId' => $user->id,
                 'workspaceId' => $currentWorkspace->id,
-                'days' => $days,
                 'startDate' => $startDate,
+                'endDate' => $endDate,
             ]);
 
             // Save the generated meal plans to database
@@ -328,15 +318,10 @@ class PlannedMealController extends Controller
                     'planned_date' => $mealData['planned_date'],
                     'meal_time_id' => $mealData['meal_time_id'],
                     'workspace_id' => $currentWorkspace->id,
+                    'serving_size' => $validated['serving_size'],
                 ]);
                 $affectedDates[] = $mealData['planned_date'];
             }
-
-            // Regenerate shopping lists for all affected weeks
-            $this->shoppingListService->regenerateAffectedShoppingListsForWorkspace(
-                $currentWorkspace->id,
-                $affectedDates
-            );
 
             return redirect()->back()->with(
                 'success',
@@ -350,9 +335,7 @@ class PlannedMealController extends Controller
         }
     }
 
-    /**
-     * Apply time-based filters to recipe query.
-     */
+
     private function applyTimeFilter($query, $field, $timeRange)
     {
         switch ($timeRange) {

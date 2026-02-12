@@ -4,7 +4,7 @@ import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
 import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,7 +15,7 @@ export default function MealPlanMealCard({
 }) {
   const { t } = useTranslation();
 
-  const { id, recipe } = plannedMeal;
+  const { id, recipe, serving_size } = plannedMeal;
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
@@ -43,10 +43,16 @@ export default function MealPlanMealCard({
           />
         </figure>
       )}
-      <div className="card-body overflow-hidden py-1.5">
-        <div className="flex min-w-0 items-center justify-between gap-2">
-          <span className="truncate px-2.5 text-xs text-base-content">
-            {recipe.name}
+      <div className="card-body overflow-hidden py-1.5 pr-2 pl-3.5">
+        <div className="flex min-w-0 items-center justify-between gap-4">
+          <span className="flex w-full min-w-0 items-end">
+            <span className="flex items-center truncate">
+              <span className="text-md">{serving_size}</span>
+              <X className="-ml-[7px] h-[11px] pt-[1px]" />
+            </span>
+            <span className="-ml-1 truncate text-xs text-base-content">
+              {recipe.name}
+            </span>
           </span>
           <Popover.Root open={isOpen} key={recipe.id}>
             <Popover.Trigger asChild>

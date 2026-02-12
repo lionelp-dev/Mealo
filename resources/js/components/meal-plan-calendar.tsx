@@ -33,7 +33,7 @@ export default function MealPlanCalendar() {
           <InfiniteScroll data="recipes">
             <div className="grid w-full grid-cols-[repeat(auto-fill,minmax(22rem,1fr))] gap-4 gap-y-5 p-1">
               {recipes.data.map((recipe) => {
-                return <MealPlanRecipeCard recipe={recipe} key={recipe.id} />;
+                return <MealPlanRecipeCard recipe={recipe} />;
               })}
             </div>
           </InfiniteScroll>

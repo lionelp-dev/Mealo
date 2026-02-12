@@ -57,6 +57,7 @@ export const useMealPlanDayActions = (dayPlannedMeals: DayPlannedMeals) => {
           meal_time_id: mealSlot.mealTime.id,
           recipe_id: meal.recipe.id,
           planned_date: date,
+          serving_size: meal.serving_size,
         })),
       ),
     });

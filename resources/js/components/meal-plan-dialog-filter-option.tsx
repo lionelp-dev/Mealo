@@ -1,3 +1,4 @@
+import { capitalize } from '@/lib/utils';
 import { Filter } from '@/types';
 import { useTranslation } from 'react-i18next';
 import { Checkbox } from './ui/checkbox';
@@ -17,20 +18,20 @@ export function MealPlanDialogFilterOption({
   const key = `${filter.type}-${filter.value}`;
   return (
     <label
-      className={`flex cursor-pointer items-center gap-4 rounded px-1 py-[5px] text-sm text-base-content transition-colors select-none ${
-        isActive ? 'bg-base-200 text-base-content' : 'hover:bg-base-200'
-      }`}
+      className={`first:border-t-none flex cursor-pointer items-center justify-between gap-4 px-4 py-[4px] text-sm text-base-content transition-colors select-none last:border-b last:border-base-300/40 hover:bg-base-300/30`}
       htmlFor={key}
     >
+      <span>
+        {capitalize(
+          t(`mealPlanning.dialog.filters.${filter.label}`, filter.label),
+        )}
+      </span>
       <Checkbox
         id={key}
         checked={isActive}
         onCheckedChange={handleCheckedChange}
         className="flex-shrink-0"
       />
-      <span>
-        {t(`mealPlanning.dialog.filters.${filter.label}`, filter.label)}
-      </span>
     </label>
   );
 }

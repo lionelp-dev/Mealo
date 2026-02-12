@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use App\Observers\RecipeObserver;
 use App\Policies\RecipePolicy;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +16,7 @@ use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 #[UsePolicy(RecipePolicy::class)]
+#[ObservedBy([RecipeObserver::class])]
 class Recipe extends Model
 {
     /** @use HasFactory<\Database\Factories\RecipeFactory> */
@@ -38,19 +41,82 @@ class Recipe extends Model
     ];
 
     /**
+     * @return BelongsTo<User>
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+
+    /**
+     * @return BelongsToMany<Recipe>
+     */
+    public function mealTimes(): BelongsToMany
+    {
+        return $this->belongsToMany(MealTime::class, 'recipe_meal_time')
+            ->using(RecipeMealTime::class)
+            ->withTimestamps();
+    }
+
+    /**
+     * @return BelongsToMany<Ingredient, $this>
+     */
+    public function ingredients(): BelongsToMany
+    {
+        return $this->belongsToMany(Ingredient::class, 'recipe_ingredient')
+            ->using(RecipeIngredient::class)
+            ->withPivot(['quantity', 'unit'])
+            ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<Step, $this >
+     */
+    public function steps(): HasMany
+    {
+        return $this->hasMany(Step::class);
+    }
+
+    /**
+     * @return BelongsToMany<Recipe>
+     */
+    public function tags(): BelongsToMany
+    {
+        return $this->belongsToMany(Tag::class, 'recipe_tag')
+            ->using(RecipeTag::class)
+            ->withTimestamps();
+    }
+
+    /**
+     * @return HasMany<PlannedMeal, $this>
+     */
+    public function plannedMeals(): HasMany
+    {
+        return $this->hasMany(PlannedMeal::class);
+    }
+
+    /**
      * @param array<Ingredient> $ingredients_data
      */
     public function syncIngredients($ingredients_data): void
     {
-        $pivotData = collect($ingredients_data)->mapWithKeys(function ($ingredient_data) {
-            $ingredient = Ingredient::query()->firstOrCreate([
-                'name' => $ingredient_data['name'],
-                'user_id' => $this->user_id,
-            ]);
-            return [$ingredient->id => Arr::only($ingredient_data, ['quantity', 'unit'])];
-        });
+        $pivotData = collect($ingredients_data)
+            ->map(function ($ingredient_data) {
+                $ingredient = Ingredient::query()->updateOrCreate([
+                    'user_id' => $this->user_id,
+                    'name' => $ingredient_data['name'],
+                ]);
 
-        $this->ingredients()->sync($pivotData->toArray());
+                RecipeIngredient::query()->updateOrCreate(
+                    [
+                        'recipe_id' => $this->id,
+                        'ingredient_id' => $ingredient->id,
+                        'quantity' => $ingredient_data['quantity'],
+                        'unit' => $ingredient_data['unit'],
+                    ]
+                );
+            });
     }
 
     /**
@@ -116,61 +182,6 @@ class Recipe extends Model
         $this->steps()->createMany($steps_data);
     }
 
-    /**
-     * @return BelongsTo<User>
-     */
-    public function users(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-
-    /**
-     * @return BelongsToMany<Recipe>
-     */
-    public function mealTimes(): BelongsToMany
-    {
-        return $this->belongsToMany(MealTime::class, 'recipe_meal_time')
-            ->using(RecipeMealTime::class)
-            ->withTimestamps();
-    }
-
-    /**
-     * @return BelongsToMany<Ingredient, $this>
-     */
-    public function ingredients(): BelongsToMany
-    {
-        return $this->belongsToMany(Ingredient::class, 'recipe_ingredient')
-            ->using(RecipeIngredient::class)
-            ->withPivot(['quantity', 'unit'])
-            ->withTimestamps();
-    }
-
-    /**
-     * @return HasMany<Step, $this >
-     */
-    public function steps(): HasMany
-    {
-        return $this->hasMany(Step::class);
-    }
-
-    /**
-     * @return BelongsToMany<Recipe>
-     */
-    public function tags(): BelongsToMany
-    {
-        return $this->belongsToMany(Tag::class, 'recipe_tag')
-            ->using(RecipeTag::class)
-            ->withTimestamps();
-    }
-
-    /**
-     * @return HasMany<PlannedMeal, $this>
-     */
-    public function plannedMeals(): HasMany
-    {
-        return $this->hasMany(PlannedMeal::class);
-    }
 
     /**
      * Upload and store a recipe image
@@ -222,4 +233,5 @@ class Recipe extends Model
             $recipe->deleteImage();
         });
     }
+
 }

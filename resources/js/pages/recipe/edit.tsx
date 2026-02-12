@@ -158,6 +158,7 @@ function EditRecipe() {
                 name="serving_size"
                 children={(field) => (
                   <field.NumberField
+                    value={field.state.value}
                     label={t(
                       'recipes.form.servingSizeLabel',
                       'Nombre de portions',
@@ -173,6 +174,7 @@ function EditRecipe() {
                 name="preparation_time"
                 children={(field) => (
                   <field.NumberField
+                    value={field.state.value}
                     label={t(
                       'recipes.form.preparationTimeLabel',
                       'Preparation time (minutes)',
@@ -187,6 +189,7 @@ function EditRecipe() {
                 name="cooking_time"
                 children={(field) => (
                   <field.NumberField
+                    value={field.state.value}
                     label={t(
                       'recipes.form.cookingTimeLabel',
                       'Cooking time (minutes)',

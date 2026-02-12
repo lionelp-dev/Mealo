@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
     Route::post('planned-meals/generate', [PlannedMealController::class, 'generatePlan'])->name('planned-meals.generate');
     Route::get('shopping-lists', [ShoppingListController::class, 'index'])->name('shopping-lists.index');
-    Route::put('shopping-lists/ingredients/{ingredient}', [ShoppingListController::class, 'toggleIngredient'])->name('shopping-lists.toggle-ingredient');
+    Route::put('shopping-lists', [ShoppingListController::class, 'update'])->name('shopping-lists.update');
 
     // Workspace routes
     Route::get('workspaces', [WorkspaceController::class, 'index'])->name('workspaces.index');
@@ -45,7 +45,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Authenticated invitation accept/decline routes
     Route::post('workspace-invitations/{invitation}/accept', [WorkspaceInvitationController::class, 'acceptAuthenticated'])->name('workspace-invitations.accept-authenticated');
     Route::post('workspace-invitations/{invitation}/decline', [WorkspaceInvitationController::class, 'declineAuthenticated'])->name('workspace-invitations.decline-authenticated');
-
 });
 
 Route::post('invitations/{token}/accept', [WorkspaceInvitationController::class, 'accept'])->name('workspace-invitations.accept');

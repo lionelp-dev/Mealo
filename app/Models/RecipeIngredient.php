@@ -20,7 +20,7 @@ class RecipeIngredient extends Pivot
     /**
      * @return BelongsTo<Recipe, $this, Pivot>
      */
-    public function Recipes(): BelongsTo
+    public function Recipe(): BelongsTo
     {
         return $this->belongsTo(Recipe::class);
     }
@@ -28,7 +28,7 @@ class RecipeIngredient extends Pivot
     /**
      * @return BelongsTo<Ingredient, $this, Pivot>
      */
-    public function Ingredients(): BelongsTo
+    public function Ingredient(): BelongsTo
     {
         return $this->belongsTo(Ingredient::class);
     }

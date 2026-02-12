@@ -1,15 +1,10 @@
 import { Recipe } from '@/types';
 
-import { useMealPlanContext } from '@/contexts/meal-plan-context';
-import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
-import * as Popover from '@radix-ui/react-popover';
-import { Calendar, CalendarPlus } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import i18n from '../lib/i18n';
-import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
+import MealPlanningPopover from './meal-planning-popover';
 
 type RecipeCardProps = {
   recipe: Recipe;
@@ -18,18 +13,13 @@ type RecipeCardProps = {
 export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
   const { t } = useTranslation();
 
-  const { mealTimes } = useMealPlanContext();
-
-  const [openPlanPopover, setOpenPlanPopover] = useState<boolean>(false);
-
-  const { selectedDate, setIsOpen } = useMealPlanDialogStore();
-
-  const { planMeals } = useMealPlanActions();
-
   const { isFilterActive } = useRecipeFiltersStore();
 
   const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } =
     useMultiSelectRecipe();
+
+  const [isMealPlanningPopoverOpen, setIsMealPlanningPopoverOpen] =
+    useState<boolean>(false);
 
   return (
     <div
@@ -39,7 +29,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
         if (isMultiSelectMode) {
           return toggleRecipeSelection(recipe.id);
         }
-        setOpenPlanPopover(true);
+        setIsMealPlanningPopoverOpen(true);
       }}
     >
       <div className="relative">
@@ -56,84 +46,13 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
             }}
           />
         )}
-        <Popover.Root open={openPlanPopover} onOpenChange={setOpenPlanPopover}>
-          <Popover.Trigger asChild>
-            <button
-              className={`plan-meal-btn btn absolute top-4 right-3 btn-circle border-base-300/75 opacity-0 btn-lg`}
-              onClick={(e) => e.stopPropagation()}
-              disabled={isMultiSelectMode}
-            >
-              <span>
-                <CalendarPlus size={16} />
-              </span>
-            </button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              className="z-[10000] min-w-[200px] rounded-lg border border-base-300 bg-base-100 p-2 shadow-xl"
-              side="top"
-              align="end"
-              sideOffset={8}
-              alignOffset={-4}
-              onPointerLeave={() => {
-                setOpenPlanPopover(false);
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                {selectedDate && (
-                  <div className="flex gap-2 rounded-sm bg-base-200 px-2 py-2 text-xs text-base-content/60">
-                    <Calendar size={14} />
-                    {selectedDate
-                      ?.setLocale(i18n.language)
-                      .toFormat('EEEE d MMMM')[0]
-                      .toUpperCase() +
-                      selectedDate
-                        ?.setLocale(i18n.language)
-                        .toFormat('EEEE d MMMM')
-                        .slice(1)}
-                  </div>
-                )}
-                <div className="flex flex-col gap-1">
-                  {mealTimes.map((mealTime) => (
-                    <button
-                      key={mealTime.id}
-                      className="flex items-center gap-2 rounded-md px-3 py-2 text-left transition-colors hover:bg-base-200 disabled:opacity-50"
-                      onClick={async (e) => {
-                        e.stopPropagation();
-                        e.preventDefault();
 
-                        const date = selectedDate?.toISODate();
-
-                        if (!date) return;
-
-                        await planMeals({
-                          meals: [
-                            {
-                              recipe_id: recipe.id,
-                              meal_time_id: mealTime.id,
-                              planned_date: date,
-                            },
-                          ],
-                          onSuccess() {
-                            setIsOpen(false);
-                          },
-                        });
-
-                        setOpenPlanPopover(false);
-                      }}
-                    >
-                      {t(
-                        `mealPlanning.dialog.filters.${mealTime.name}`,
-                        mealTime.name,
-                      )}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <Popover.Arrow className="fill-base-100 stroke-base-300" />
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+        <MealPlanningPopover
+          recipe={recipe}
+          isMultiSelectMode={isMultiSelectMode}
+          isMealPlanningPopoverOpen={isMealPlanningPopoverOpen}
+          setIsMealPlanningPopoverOpen={setIsMealPlanningPopoverOpen}
+        />
 
         {recipe.image_url ? (
           <figure className="h-42">

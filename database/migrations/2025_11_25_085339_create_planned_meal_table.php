@@ -13,13 +13,16 @@ return new class extends Migration {
         Schema::create('planned_meals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
             $table->foreignId('meal_time_id')->constrained('meal_times')->onDelete('cascade');
-            $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->date('planned_date');
+            $table->integer('serving_size')->default(1);
+
             $table->timestamps();
 
             $table->index(['workspace_id', 'planned_date']);
+            $table->unique(['user_id', 'workspace_id', 'recipe_id', 'meal_time_id', 'planned_date']);
         });
     }
 

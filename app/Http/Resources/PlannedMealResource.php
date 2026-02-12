@@ -18,11 +18,14 @@ class PlannedMealResource extends JsonResource
             'id' => $this->resource->id,
             'planned_date' => $this->resource->planned_date,
             'meal_time_id' => $this->resource->meal_time_id,
-            'recipe' => [
-                'id' => $this->resource->recipe->id,
-                'name' => $this->resource->recipe->name,
-                'image_url' => $this->resource->recipe->getImageUrl(),
-            ],
+            'serving_size' => $this->resource->serving_size,
+            'recipe' => $this->whenLoaded('recipe', function () {
+                return [
+                    'id' => $this->resource->recipe->id,
+                    'name' => $this->resource->recipe->name,
+                    'image_url' => $this->resource->recipe->getImageUrl(),
+                ];
+            }),
         ];
     }
 }

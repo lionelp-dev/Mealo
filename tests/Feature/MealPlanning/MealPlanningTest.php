@@ -56,13 +56,14 @@ test('user can plan a meal successfully', function () {
         'recipe_id' => $recipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), ['planned_meals' => [$plannedMeal]]);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Meal successfully planned');
-    $response->assertRedirect(route('planned-meals.index'));
+    $response->assertRedirect();
 
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
@@ -105,7 +106,7 @@ test('user cannot plan meal with invalid data', function () {
     ]);
 });
 
-test('user cannot create planned meal with other users recipe', function () {
+test('user can create planned meal with other users recipe in their workspace', function () {
     $otherUser = \App\Models\User::factory()->create();
     $otherRecipe = createRecipeResource($otherUser->id);
     $mealTime = \App\Models\MealTime::first();
@@ -114,13 +115,15 @@ test('user cannot create planned meal with other users recipe', function () {
         'recipe_id' => $otherRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), ['planned_meals' => [$plannedMeal]]);
 
-    // Should be forbidden due to recipe ownership policy
-    $response->assertStatus(403);
-    $this->assertDatabaseMissing('planned_meals', [
+    // Should succeed - users can plan meals with any recipe in their workspace
+    $response->assertStatus(302);
+    $response->assertSessionHas('success');
+    $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
         'recipe_id' => $otherRecipe->resource->id,
     ]);
@@ -145,22 +148,21 @@ test('user can update a planned meal successfully', function () {
         'recipe_id' => $newRecipe->resource->id,
         'meal_time_id' => $newMealTime->id,
         'planned_date' => $newDate,
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->user)->put(route('planned-meals.update', $plannedMeal), $updateData);
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Planned meal successfully updated');
-    $response->assertRedirect(route('planned-meals.index'));
+    $response->assertRedirect();
 
     // Verify all fields were updated correctly
-    $this->assertDatabaseHas('planned_meals', [
-        'id' => $plannedMeal->id,
-        'user_id' => $this->user->id,
-        'recipe_id' => $newRecipe->resource->id,
-        'meal_time_id' => $newMealTime->id,
-        'planned_date' => $newDate,
-    ]);
+    $plannedMeal->refresh();
+    expect($plannedMeal->user_id)->toBe($this->user->id);
+    expect($plannedMeal->recipe_id)->toBe($newRecipe->resource->id);
+    expect($plannedMeal->meal_time_id)->toBe($newMealTime->id);
+    expect($plannedMeal->planned_date->format('Y-m-d'))->toBe($newDate);
 });
 
 test('user cannot update planned meal with other users recipe', function () {
@@ -180,6 +182,7 @@ test('user cannot update planned meal with other users recipe', function () {
         'recipe_id' => $otherRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->user)->put(route('planned-meals.update', $plannedMeal), $updateData);
@@ -221,7 +224,7 @@ test('user can delete a planned meal successfully', function () {
 
     $response->assertStatus(302);
     $response->assertSessionHas('success', 'Planned meal successfully deleted');
-    $response->assertRedirect(route('planned-meals.index'));
+    $response->assertRedirect();
 
     // Planned meal should be removed from database
     $this->assertDatabaseMissing('planned_meals', [
@@ -241,11 +244,13 @@ test('user can store multiple planned meals successfully', function () {
                 'recipe_id' => $recipe1->resource->id,
                 'meal_time_id' => $mealTime1->id,
                 'planned_date' => now()->addDay()->format('Y-m-d'),
+                'serving_size' => 1,
             ],
             [
                 'recipe_id' => $recipe2->resource->id,
                 'meal_time_id' => $mealTime2->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
+                'serving_size' => 1,
             ]
         ]
     ];
@@ -253,8 +258,8 @@ test('user can store multiple planned meals successfully', function () {
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
 
     $response->assertStatus(302);
-    $response->assertSessionHas('success', 'Meals successfully planned');
-    $response->assertRedirect(route('planned-meals.index'));
+    $response->assertSessionHas('success', 'Meal successfully planned');
+    $response->assertRedirect();
 
     // Both planned meals should be created
     $this->assertDatabaseHas('planned_meals', [
@@ -309,7 +314,7 @@ test('user cannot store multiple planned meals with invalid data', function () {
     ]);
 });
 
-test('user cannot store multiple planned meals with other users recipes', function () {
+test('user can store multiple planned meals including other users recipes', function () {
     $otherUser = \App\Models\User::factory()->create();
     $otherRecipe = createRecipeResource($otherUser->id);
     $ownRecipe = createRecipeResource($this->user->id);
@@ -321,21 +326,29 @@ test('user cannot store multiple planned meals with other users recipes', functi
                 'recipe_id' => $ownRecipe->resource->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->addDay()->format('Y-m-d'),
+                'serving_size' => 1,
             ],
             [
-                'recipe_id' => $otherRecipe->resource->id, // Not owned by user
+                'recipe_id' => $otherRecipe->resource->id, // Not owned by user but should work
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
+                'serving_size' => 1,
             ]
         ]
     ];
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
 
-    // Should be forbidden due to recipe ownership policy
-    $response->assertStatus(403);
-    $this->assertDatabaseMissing('planned_meals', [
+    // Should succeed - users can plan meals with any recipe in their workspace
+    $response->assertStatus(302);
+    $response->assertSessionHas('success');
+    $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
+        'recipe_id' => $ownRecipe->resource->id,
+    ]);
+    $this->assertDatabaseHas('planned_meals', [
+        'user_id' => $this->user->id,
+        'recipe_id' => $otherRecipe->resource->id,
     ]);
 });
 
@@ -367,7 +380,7 @@ test('user can delete multiple planned meals successfully', function () {
         ]);
 
     $response->assertStatus(302);
-    $response->assertRedirect(route('planned-meals.index'));
+    $response->assertRedirect();
     $response->assertSessionHas('success', 'Planned meals successfully deleted');
 
     // Both planned meals should be removed from database
@@ -401,6 +414,7 @@ test('user cannot access other users planned meals', function () {
         'recipe_id' => $otherRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'serving_size' => 1,
     ]);
     $response->assertStatus(403);
 

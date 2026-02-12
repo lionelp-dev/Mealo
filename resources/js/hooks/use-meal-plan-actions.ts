@@ -9,6 +9,7 @@ export function useMealPlanActions() {
       recipe_id: number;
       meal_time_id: number;
       planned_date: string;
+      serving_size: number;
     }[];
     onSuccess?: () => void;
   }) => {

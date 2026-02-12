@@ -125,6 +125,7 @@ test('workspace members can plan meals in shared workspace', function () {
         'recipe_id' => $this->editorRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->editor)
@@ -148,6 +149,7 @@ test('viewers cannot plan meals in shared workspace', function () {
         'recipe_id' => $this->viewerRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->viewer)
@@ -169,6 +171,7 @@ test('outsiders cannot plan meals in workspace', function () {
         'recipe_id' => $this->outsiderRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     // Try to set session to shared workspace (outsider doesn't have access)
@@ -208,12 +211,12 @@ test('workspace editors can delete any meal in shared workspace', function () {
         'workspace_id' => $this->workspace->id,
     ]);
 
-    // Create meal by editor
+    // Create meal by editor in a different week to avoid UNIQUE constraint on shopping_lists
     $editorMeal = PlannedMeal::create([
         'user_id' => $this->editor->id,
         'recipe_id' => $this->editorRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'planned_date' => now()->addWeek()->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
     ]);
 
@@ -276,6 +279,7 @@ test('planned meals are created with current workspace id', function () {
         'recipe_id' => $this->ownerRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
+        'serving_size' => 1,
     ];
 
     $response = $this->actingAs($this->owner)
@@ -302,6 +306,7 @@ test('workspace members can view planned recipes from other members', function (
                 'recipe_id' => $this->ownerRecipe->resource->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->format('Y-m-d'),
+                'serving_size' => 1,
             ]]
         ]);
     
@@ -342,6 +347,7 @@ test('outsiders cannot view workspace planned recipes', function () {
                 'recipe_id' => $this->ownerRecipe->resource->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->format('Y-m-d'),
+                'serving_size' => 1,
             ]]
         ]);
     

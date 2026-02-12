@@ -26,23 +26,27 @@ class ShoppingList extends Model
         'week_start' => 'date',
     ];
 
+    /**
+     * @return BelongsTo<User,ShoppingList>
+     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
+    /**
+     * @return BelongsTo<Workspace,ShoppingList>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
-    public function ingredients(): HasMany
+    /**
+     * @return HasMany<ShoppingListIngredient,ShoppingList>
+     */
+    public function plannedMealIngredients(): HasMany
     {
-        return $this->hasMany(ShoppingListIngredient::class);
-    }
-
-    public function ingredientsWithDetails(): HasMany
-    {
-        return $this->ingredients()->with('ingredient');
+        return $this->hasMany(ShoppingListPlannedMealIngredient::class);
     }
 }
