@@ -1,6 +1,5 @@
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
-import { WorkspaceNav } from '@/components/workspace-nav';
 import {
   Sidebar,
   SidebarContent,
@@ -10,6 +9,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { WorkspaceNav } from '@/components/workspace-nav';
 import { dashboard } from '@/routes';
 import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';
@@ -56,7 +56,7 @@ export function AppSidebar() {
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton size="lg" asChild className="h-fit">
               <Link href={dashboard()} prefetch>
                 <AppLogo />
               </Link>

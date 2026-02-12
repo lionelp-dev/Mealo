@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 /*! 🌼 daisyUI 5.1.14 */
 @import 'tailwindcss';
 
@@ -13,6 +14,8 @@
         'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
         'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
         'Noto Color Emoji';
+
+    --font-logo: 'DM Serif Display';
 
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
