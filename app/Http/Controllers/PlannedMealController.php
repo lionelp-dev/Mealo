@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StorePlannedMealRequest;
-use App\Http\Requests\UpdatePlannedMeal;
 use App\Http\Requests\UpdatePlannedMealRequest;
 use App\Http\Resources\PlannedMealResource;
 use App\Http\Resources\RecipeCollection;
@@ -23,7 +22,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
-use App\Enums\Unit;
 
 class PlannedMealController extends Controller
 {
@@ -78,7 +76,7 @@ class PlannedMealController extends Controller
 
         // Search filter
         if (! empty($validated['search'])) {
-            $recipesQuery = $recipesQuery->where('name', 'LIKE', '%' . $validated['search'] . '%');
+            $recipesQuery = $recipesQuery->where('name', 'LIKE', '%'.$validated['search'].'%');
         }
 
         // Preparation time filter
@@ -112,7 +110,7 @@ class PlannedMealController extends Controller
             'mealTimes' => $mealTimes,
             'plannedMeals' => PlannedMealResource::collection($plannedMeals)->toArray($request),
             'tags' => TagResource::collection(Tag::query()->where('user_id', $user->id)->get())->toArray($request),
-            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipesQuery->paginate(10))),
+            'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipesQuery->paginate(10))),
             'workspace_data' => $workspaceData,
         ]);
     }
@@ -213,13 +211,14 @@ class PlannedMealController extends Controller
                             ]);
                         }
                     }
+
                     return back()->with('success', 'Meal successfully planned');
                 } catch (Exception $e) {
                     return back()->with('error', 'Meal doesnt successfully planned: ');
                 }
             } catch (Exception $e) {
                 return back()->with('error', 'This action is unauthorized');
-            };
+            }
         }, attempts: 5);
     }
 
@@ -262,7 +261,7 @@ class PlannedMealController extends Controller
 
             foreach ($plannedMeals as $plannedMeal) {
                 $plannedMeal->delete();
-            };
+            }
 
             $successMessage = $plannedMeals->count() > 1 ? 'Planned meals successfully deleted' : 'Planned meal successfully deleted';
 
@@ -277,7 +276,7 @@ class PlannedMealController extends Controller
     {
         $user = $request->user();
 
-        if (!config('services.openai.api_key')) {
+        if (! config('services.openai.api_key')) {
             return back()->with('error', 'La génération de planning par IA n\'est pas disponible.');
         }
 
@@ -325,16 +324,15 @@ class PlannedMealController extends Controller
 
             return redirect()->back()->with(
                 'success',
-                'Planning généré avec succès ! ' . count($createdMeals) . ' repas créés.'
+                'Planning généré avec succès ! '.count($createdMeals).' repas créés.'
             );
         } catch (\Exception $e) {
             return redirect()->back()->with(
                 'error',
-                'Erreur lors de la génération du planning : ' . $e->getMessage()
+                'Erreur lors de la génération du planning : '.$e->getMessage()
             );
         }
     }
-
 
     private function applyTimeFilter($query, $field, $timeRange)
     {

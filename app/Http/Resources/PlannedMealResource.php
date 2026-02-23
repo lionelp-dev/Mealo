@@ -18,6 +18,9 @@ class PlannedMealResource extends JsonResource
             'id' => $this->resource->id,
             'planned_date' => $this->resource->planned_date,
             'meal_time_id' => $this->resource->meal_time_id,
+            'meal_time_name' => $this->whenLoaded('mealTime', function () {
+                return $this->resource->mealTime->name;
+            }),
             'serving_size' => $this->resource->serving_size,
             'recipe' => $this->whenLoaded('recipe', function () {
                 return [

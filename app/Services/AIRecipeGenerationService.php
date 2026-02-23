@@ -4,9 +4,7 @@ namespace App\Services;
 
 use App\Enums\Unit;
 use App\Models\MealTime;
-use OpenAI;
 use Exception;
-use UnitEnum;
 
 class AIRecipeGenerationService
 {
@@ -23,7 +21,7 @@ class AIRecipeGenerationService
     public function generateRecipe(string $prompt): array
     {
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         $units = json_encode(Unit::values());
@@ -191,6 +189,7 @@ CHAMPS REQUIS :
                 foreach ($response->choices[0]->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_recipe') {
                         $args = json_decode($toolCall->function->arguments, true);
+
                         return $args;
                     }
                 }
@@ -208,10 +207,8 @@ CHAMPS REQUIS :
             }
 
             throw new Exception('No valid recipe generated from OpenAI response');
-
         } catch (Exception $e) {
-            throw new Exception('Failed to generate recipe: ' . $e->getMessage());
+            throw new Exception('Failed to generate recipe: '.$e->getMessage());
         }
     }
-
 }

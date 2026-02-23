@@ -5,7 +5,6 @@ namespace Tests\Feature\Workspace;
 use App\Models\User;
 use App\Models\Workspace;
 
-
 beforeEach(function () {
 
     $this->user = User::factory()->create();
@@ -40,7 +39,7 @@ test('user can view their workspaces', function () {
 test('user can create a new workspace', function () {
     $workspaceData = [
         'name' => 'My New Workspace',
-        'description' => 'A workspace for testing',
+        'is_personal' => false,
     ];
 
     $response = $this->actingAs($this->user)->post(route('workspaces.store'), $workspaceData);
@@ -50,7 +49,6 @@ test('user can create a new workspace', function () {
 
     $this->assertDatabaseHas('workspaces', [
         'name' => 'My New Workspace',
-        'description' => 'A workspace for testing',
         'owner_id' => $this->user->id,
         'is_personal' => false,
     ]);
@@ -65,7 +63,7 @@ test('user can create a new workspace', function () {
 test('user cannot create workspace with invalid data', function () {
     // Missing name
     $response = $this->actingAs($this->user)->post(route('workspaces.store'), [
-        'description' => 'Test description'
+        'is_personal' => true,
     ]);
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['name']);
@@ -73,31 +71,28 @@ test('user cannot create workspace with invalid data', function () {
     // Name too long
     $response = $this->actingAs($this->user)->post(route('workspaces.store'), [
         'name' => str_repeat('a', 256),
-        'description' => 'Test description'
+        'is_personal' => true,
     ]);
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['name']);
 
-    // Description too long
+    // Missing is_personal
     $response = $this->actingAs($this->user)->post(route('workspaces.store'), [
         'name' => 'Valid Name',
-        'description' => str_repeat('a', 1001)
     ]);
     $response->assertStatus(302);
-    $response->assertSessionHasErrors(['description']);
+    $response->assertSessionHasErrors(['is_personal']);
 });
 
 test('workspace owner can update workspace', function () {
     $workspace = Workspace::create([
         'name' => 'Original Name',
-        'description' => 'Original description',
         'owner_id' => $this->user->id,
         'is_personal' => false,
     ]);
 
     $updateData = [
         'name' => 'Updated Name',
-        'description' => 'Updated description',
     ];
 
     $response = $this->actingAs($this->user)->put(route('workspaces.update', $workspace), $updateData);
@@ -108,7 +103,6 @@ test('workspace owner can update workspace', function () {
     $this->assertDatabaseHas('workspaces', [
         'id' => $workspace->id,
         'name' => 'Updated Name',
-        'description' => 'Updated description',
     ]);
 });
 
@@ -319,4 +313,3 @@ test('non-owner cannot manage members', function () {
     ]);
     $response->assertStatus(403);
 });
-

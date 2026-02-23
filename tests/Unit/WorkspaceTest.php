@@ -8,7 +8,6 @@ use App\Models\WorkspaceInvitation;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
@@ -24,7 +23,6 @@ test('workspace can be created with valid data', function () {
 
     expect($workspace)->toBeInstanceOf(Workspace::class);
     expect($workspace->name)->toBe('Test Workspace');
-    expect($workspace->description)->toBe('A test workspace');
     expect($workspace->owner_id)->toBe($this->user->id);
     expect($workspace->is_personal)->toBeFalse();
 });
@@ -165,7 +163,7 @@ test('can create personal workspace for new user', function () {
     Workspace::createPersonalWorkspace($newUser);
     $personalWorkspace = $newUser->getPersonalWorkspace();
 
-    expect($personalWorkspace->name)->toBe('Mes repas');
+    expect($personalWorkspace->name)->toBe('Mon espace');
     expect($personalWorkspace->is_personal)->toBeTrue();
     expect($personalWorkspace->owner_id)->toBe($newUser->id);
     expect($personalWorkspace->users)->toHaveCount(1);
@@ -204,4 +202,3 @@ test('user model has workspace methods', function () {
     // Personal workspace should come first
     expect($accessibleWorkspaces->first()->is_personal)->toBeTrue();
 });
-

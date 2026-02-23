@@ -43,7 +43,7 @@ export default function ShoppingListByRecipesIngredientItem({
     <label
       className={cn(
         'flex items-center gap-3 px-7 py-4 hover:bg-secondary/5',
-        ingredient.is_checked ? 'bg-base-200' : '',
+        ingredient.is_checked ? 'bg-secondary/10' : '',
       )}
     >
       {canEditShoppingList && (
@@ -61,7 +61,7 @@ export default function ShoppingListByRecipesIngredientItem({
       <span className="flex min-w-0 flex-1 items-center justify-start gap-1 px-1 pb-[1px]">
         <span
           className={cn(
-            'text-md min-w-0 truncate font-medium text-base-content transition-all duration-200',
+            'text-base min-w-0 truncate font-medium text-base-content transition-all duration-200',
             ingredient.is_checked && 'line-through opacity-60',
           )}
         >

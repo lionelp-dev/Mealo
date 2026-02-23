@@ -49,8 +49,8 @@ export default function ShoppingListByRecipes() {
               <>
                 {recipe.ingredients.checked.length > 0 && (
                   <>
-                    <div className="flex max-w-full flex-col border-l-3 border-l-secondary px-7 py-5 font-medium text-base-content outline outline-offset-0 outline-base-300/50">
-                      <span className="items-center truncate text-lg font-medium text-secondary transition-all duration-200">
+                    <div className="flex max-w-full flex-col border-l-3 px-7 py-5 font-medium text-base-content outline outline-offset-0 outline-base-300/50">
+                      <span className="items-center truncate text-lg font-medium text-base-content/50 line-through transition-all duration-200">
                         {recipe.recipe_name}
                       </span>
                     </div>

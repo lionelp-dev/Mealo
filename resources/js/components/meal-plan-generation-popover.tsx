@@ -35,8 +35,6 @@ export function MealPlanGenerationPopover() {
   const form = useAppForm({
     defaultValues,
     onSubmit: ({ value }) => {
-      setIsGenerating(true);
-
       router.post(
         plannedMeals.generate.url(),
         {
@@ -45,11 +43,16 @@ export function MealPlanGenerationPopover() {
           serving_size: value.serving_size,
         },
         {
-          onFinish: () => {
-            setIsGenerating(false);
+          onStart: () => {
+            setIsGenerating(true);
             setIsOpen(false);
           },
-          onError: () => setIsGenerating(false),
+          onFinish: () => {
+            setIsGenerating(false);
+          },
+          onError: () => {
+            setIsGenerating(false);
+          },
         },
       );
     },
@@ -59,7 +62,7 @@ export function MealPlanGenerationPopover() {
     <>
       <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild>
-          <button className="btn gap-2 pl-5">
+          <button className="btn gap-2 border border-secondary/40 pl-5 btn-outline btn-soft btn-secondary">
             {t('mealPlanning.generatePlan', 'Generate Plan')}
             {isGenerating ? (
               <span className="loading loading-sm loading-spinner"></span>
@@ -89,7 +92,7 @@ export function MealPlanGenerationPopover() {
                 name="serving_size"
                 children={(field: any) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
-                    <span className="text-md w-full font-medium whitespace-nowrap text-secondary">
+                    <span className="text-base w-full font-medium whitespace-nowrap text-secondary">
                       {t(
                         'mealPlanning.dialog.persons',
                         'Pour combien de personnes ?',
@@ -129,7 +132,7 @@ export function MealPlanGenerationPopover() {
               />
 
               <div className="flex flex-col gap-3">
-                <h3 className="text-md leading-none font-medium text-secondary">
+                <h3 className="text-base leading-none font-medium text-secondary">
                   {t('mealPlanning.planningPeriod', 'Planning period')}
                 </h3>
                 <form.Field name="range">
@@ -231,7 +234,7 @@ export function MealPlanGenerationPopover() {
               <button
                 onClick={() => form.handleSubmit()}
                 disabled={isGenerating}
-                className="btn w-full"
+                className="btn w-full border-secondary/20 btn-soft btn-secondary"
               >
                 {t('mealPlanning.generateNow', 'Generate my meal plan')}
                 {isGenerating && (
@@ -242,6 +245,26 @@ export function MealPlanGenerationPopover() {
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
+      {isGenerating && (
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/80 text-white">
+          <span className="loading loading-xl loading-spinner"></span>
+          <div className="flex flex-col items-center gap-2">
+            <p className="text-lg font-medium">
+              {t(
+                'mealPlanning.generatingPlan',
+                'Génération de votre plan de repas en cours',
+              )}
+            </p>
+            <p className="text text-white/60">
+              {t(
+                'mealPlanning.estimatedTime',
+                'Cela peut prendre quelques instants',
+              )}{' '}
+              <span className="loading loading-xs loading-dots"></span>
+            </p>
+          </div>
+        </div>
+      )}
     </>
   );
 }

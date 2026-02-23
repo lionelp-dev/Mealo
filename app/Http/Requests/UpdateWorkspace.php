@@ -15,7 +15,16 @@ class UpdateWorkspace extends FormRequest
     {
         return [
             'name' => 'sometimes|required|string|max:255',
-            'description' => 'sometimes|nullable|string|max:1000',
+            'is_personal' => [
+                'sometimes',
+                'boolean',
+                function ($attribute, $value, $fail) {
+                    $workspace = $this->route('workspace');
+                    if ($workspace->is_default && $value !== $workspace->is_personal) {
+                        $fail('Le type d\'un espace par défaut ne peut pas être modifié.');
+                    }
+                },
+            ],
         ];
     }
 
@@ -24,7 +33,6 @@ class UpdateWorkspace extends FormRequest
         return [
             'name.required' => 'Le nom de l\'espace est obligatoire.',
             'name.max' => 'Le nom de l\'espace ne peut pas dépasser 255 caractères.',
-            'description.max' => 'La description ne peut pas dépasser 1000 caractères.',
         ];
     }
 }

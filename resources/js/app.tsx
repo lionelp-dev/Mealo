@@ -21,7 +21,7 @@ createInertiaApp({
     const root = createRoot(el);
 
     root.render(
-      <Theme>
+      <Theme style={{ fontFamily: 'var(--font-sans)' }}>
         <App {...props} />
       </Theme>,
     );

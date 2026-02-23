@@ -1,12 +1,12 @@
 import { AppMainContent } from '@/components/app-main-content';
-import { Card } from '@/components/ui/card';
 import { WorkspaceDataProvider } from '@/contexts/workspace-context';
 import { useInitials } from '@/hooks/use-initials';
 import { useWorkspaces } from '@/hooks/use-workspaces';
 import AppLayout from '@/layouts/app-layout';
+import { capitalize, pluralize } from '@/lib/utils';
 import { SharedData, WorkspaceData, WorkspaceInvitation } from '@/types';
 import { Head, usePage } from '@inertiajs/react';
-import { Check, Clock, MailOpen, X, XCircle } from 'lucide-react';
+import { Check, Clock, MailOpen, User, Users, XCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export default function InvitationsPage() {
@@ -34,19 +34,19 @@ export default function InvitationsPage() {
         <Head title={t('invitation.pageTitle', 'Invitations')} />
 
         <AppMainContent>
-          <div className="grid h-full gap-10">
+          <div className="grid h-full gap-8">
             {/* Header Section */}
-            <div className="flex flex-col gap-2.5">
-              <h1 className="text-2xl font-bold text-base-content">
+            <span className="flex flex-col">
+              <span className="text-3xl leading-11 font-bold text-secondary">
                 {t('invitation.title', 'Invitations aux groupes')}
-              </h1>
-              <span className="text-md text-muted-foreground/90">
+              </span>
+              <span className="text-muted-foreground">
                 {t(
                   'invitation.subtitle',
                   'Gérez vos invitations aux espaces de planification partagés',
                 )}
               </span>
-            </div>
+            </span>
 
             {/* Invitations List */}
             {pending_invitations.length > 0 ? (
@@ -57,153 +57,132 @@ export default function InvitationsPage() {
                   );
 
                   return (
-                    <Card
+                    <div
                       key={invitation.id}
-                      className="flex flex-col gap-4 overflow-hidden border-1 border-base-300 px-3 pt-6.5 transition-all hover:shadow-lg"
+                      className="card rounded-xl border-t-3 border-secondary bg-base-100 py-1 shadow-sm card-sm"
                     >
-                      <div className="flex flex-col gap-5 px-3">
-                        <div className="flex justify-between">
-                          <div className="flex flex-col gap-4">
-                            {/* Status Badge */}
-                            <div className="badge inline-flex items-center gap-1.5 badge-soft badge-secondary">
-                              <MailOpen className="h-3 w-3" />
+                      <div className="card-body gap-4">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex w-full items-center justify-between">
+                            <span className="badge inline-flex items-center gap-1.5 rounded-full badge-soft badge-sm badge-secondary">
+                              <Clock className="h-4 w-4" />
                               {t('invitation.status.pending', 'En attente')}
-                            </div>
-
-                            {/* Title & Description */}
-                            <span className="px-3">
-                              <h3 className="text-lg font-semibold text-foreground">
-                                {invitation.workspace.name}
-                              </h3>
-                              {invitation.workspace.description && (
-                                <p className="line-clamp-2 text-sm text-muted-foreground">
-                                  {invitation.workspace.description}
-                                </p>
-                              )}
                             </span>
-
-                            {/* Invited By */}
-                            <div className="flex items-center gap-3 px-3">
-                              <div className="relative h-12.5 w-12.5 shrink-0 overflow-hidden rounded-full bg-gradient-to-br from-primary to-primary/60">
-                                <div className="flex h-full items-center justify-center font-semibold text-white">
-                                  {getInitials(invitation.invited_by.name)}
-                                </div>
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="truncate text-sm font-medium text-foreground">
-                                  <span>{t('workspace.invitedBy', 'Invited by')} </span>
-                                  {invitation.invited_by.name}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                  {t(
-                                    'workspace.owner.label',
-                                    'Owner du workspace',
-                                  )}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-
-                          <div className="flex basis-[30%] flex-col gap-5">
-                            {/* Role */}
-                            <span className="badge items-center self-end badge-soft bg-base-200/30 badge-sm overflow-ellipsis whitespace-nowrap text-muted-foreground/70">
-                              {invitation.role === 'editor'
-                                ? t('workspace.roles.editor', 'Éditeur')
-                                : t(
-                                    'workspace.roles.viewer',
-                                    'Accès en lecture seul',
-                                  )}
-                            </span>
-
-                            {/* Permissions Section */}
-                            <div className="rounded-lg bg-base-200/30 px-5 py-4">
-                              <h4 className="mb-2 text-xs font-semibold text-muted-foreground uppercase">
-                                {t(
-                                  'workspace.permissions.title',
-                                  'Permissions',
-                                )}
-                              </h4>
-                              <div className="space-y-1.5">
-                                <div className="flex items-center gap-2 text-sm">
-                                  <Check className="h-3.5 w-3.5 shrink-0 text-green-600" />
-                                  <span className="text-xs text-muted-foreground">
-                                    {t(
-                                      'workspace.permissions.viewPlanning',
-                                      'Consulter',
-                                    )}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                  {invitation.role === 'editor' ? (
-                                    <Check className="h-3.5 w-3.5 shrink-0 text-green-600" />
-                                  ) : (
-                                    <X className="h-3.5 w-3.5 shrink-0 text-red-500" />
-                                  )}
-                                  <span className="text-xs text-muted-foreground">
-                                    {t(
-                                      'workspace.permissions.editMeals',
-                                      'Modifier',
-                                    )}
-                                  </span>
-                                </div>
-                                <div className="flex items-center gap-2 text-sm">
-                                  <X className="h-3.5 w-3.5 shrink-0 text-red-500" />
-                                  <span className="text-xs text-muted-foreground">
-                                    {t(
-                                      'workspace.permissions.manageMembers',
-                                      'Gérer',
-                                    )}
-                                  </span>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex justify-between">
-                          {/* Members */}
-                          <span className="badge flex gap-1 self-center badge-soft badge-sm font-medium text-muted-foreground badge-secondary">
-                            {t('workspace.members.title', 'Membres')}
-                            <span>
-                              ({invitation.workspace.users_count ?? 0})
-                            </span>
-                          </span>
-
-                          {/* Expiration */}
-                          <div className="flex basis-[60%] flex-col gap-2 self-center">
                             <span className="flex items-center gap-2">
-                              <Clock className="h-3.5 w-3.5 text-orange-800 dark:text-orange-400" />
-                              <span className="text-xs font-medium text-orange-800 dark:text-orange-400">
+                              <span className="text-xs font-medium text-muted-foreground">
                                 {formatExpirationDate(invitation.expires_at)}
                               </span>
                             </span>
-                            <progress
-                              className="progress progress-warning"
-                              value={progress.current}
-                              max={progress.total}
-                            ></progress>
+                          </div>
+                          <progress
+                            className="progress h-[3px] progress-warning"
+                            value={progress.current}
+                            max={progress.total}
+                          ></progress>
+                        </div>
+                        <div className="flex items-center gap-4">
+                          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-secondary/10 text-secondary">
+                            <Users className="h-6 w-6" />
+                          </span>
+                          <div className="flex flex-col gap-1">
+                            <span className="card-title pl-1 text-secondary">
+                              {capitalize(invitation.workspace.name)}
+                            </span>
+                            <span className="flex gap-2">
+                              <span className="badge rounded-full badge-soft badge-sm badge-secondary">
+                                {t('workspace.type.shared', 'Espace partagé')}
+                              </span>
+                              <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <span>{invitation.workspace.users_count}</span>
+                                <span>
+                                  {pluralize(
+                                    t('workspace.member', 'membre'),
+                                    invitation.workspace.users_count,
+                                  )}
+                                </span>
+                                <span>
+                                  {invitation.workspace.users_count === 1 ? (
+                                    <User className="h-4 w-4" />
+                                  ) : (
+                                    <Users className="h-4 w-4" />
+                                  )}
+                                </span>
+                              </span>
+                            </span>
                           </div>
                         </div>
-                      </div>
 
-                      {/* Action Buttons */}
-                      <div className="flex gap-4 border-t border-base-300/30 bg-muted/20 px-3 pt-5">
-                        <button
-                          className="btn flex-1 border-2 btn-secondary"
-                          onClick={() => handleAccept(invitation.id)}
-                        >
-                          {t('workspace.invitation.accept', 'Accepter')}
-                          <Check className="h-4 w-4" />
-                        </button>
-                        <button
-                          className="btn flex-1 border-2"
-                          onClick={() => handleDecline(invitation.id)}
-                        >
-                          {t('workspace.invitation.decline', 'Décliner')}
-                          <XCircle className="h-4 w-4" />
-                        </button>
+                        <div className="flex flex-col gap-1 rounded-xl bg-secondary/5 p-4 font-normal text-muted-foreground">
+                          <div className="flex items-center justify-between">
+                            <span>{t('invitation.yourRole', 'Votre rôle')}</span>
+                            <span className="badge rounded-full badge-soft badge-sm badge-secondary">
+                              {capitalize(invitation.role)}
+                            </span>
+                          </div>
+                          {invitation.role === 'editor' && (
+                            <>
+                              <span className="text-xs">
+                                {t(
+                                  'workspace.permissions.editorDescription',
+                                  'Consulter et modifier les repas',
+                                )}
+                              </span>
+                              <span className="text-xs italic">
+                                {t(
+                                  'workspace.permissions.editorNote',
+                                  'Gestion des membres non incluse',
+                                )}
+                              </span>
+                            </>
+                          )}
+                          {invitation.role === 'viewer' && (
+                            <>
+                              <span className="text-xs">
+                                {t(
+                                  'workspace.permissions.viewerDescription',
+                                  'Consulter les repas plannifiés',
+                                )}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
+                        <span className="flex min-w-0 flex-1 items-center gap-2 text-xs text-muted-foreground">
+                          <span className="text-seconday flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-secondary/10">
+                            {getInitials(invitation.invited_by.name)}
+                          </span>
+                          <span className="flex gap-1">
+                            <span>
+                              {t('workspace.invitedBy', 'Invited by')}{' '}
+                            </span>
+                            <span className="font-semibold">
+                              {invitation.invited_by.name}
+                            </span>
+                            <span>
+                              {t('workspace.roles.ownerLabel', '· Propriétaire')}
+                            </span>
+                          </span>
+                        </span>
+
+                        {/* Action Buttons */}
+                        <div className="flex gap-4 border-t border-base-300/30 bg-muted/20 px-3 pt-5">
+                          <button
+                            className="btn flex-1 border-2 btn-secondary"
+                            onClick={() => handleAccept(invitation.id)}
+                          >
+                            {t('workspace.invitation.accept', 'Accepter')}
+                            <Check className="h-4 w-4" />
+                          </button>
+                          <button
+                            className="btn flex-1 border-2"
+                            onClick={() => handleDecline(invitation.id)}
+                          >
+                            {t('workspace.invitation.decline', 'Décliner')}
+                            <XCircle className="h-4 w-4" />
+                          </button>
+                        </div>
                       </div>
-                    </Card>
+                    </div>
                   );
                 })}
               </div>

@@ -5,32 +5,29 @@ namespace Tests\Unit;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Policies\WorkspacePolicy;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
-
 
 beforeEach(function () {
     // Seed roles and permissions first
     $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
-    
-    $this->policy = new WorkspacePolicy();
+
+    $this->policy = new WorkspacePolicy;
     $this->owner = User::factory()->create();
     $this->editor = User::factory()->create();
     $this->viewer = User::factory()->create();
     $this->outsider = User::factory()->create();
-    
+
     $this->workspace = Workspace::create([
         'name' => 'Test Workspace',
         'owner_id' => $this->owner->id,
         'is_personal' => false,
     ]);
-    
+
     // Add members with different roles using Spatie
     $this->workspace->users()->attach($this->editor->id, [
         'joined_at' => now(),
     ]);
     $this->workspace->giveEditorPermissions($this->editor);
-    
+
     $this->workspace->users()->attach($this->viewer->id, [
         'joined_at' => now(),
     ]);
@@ -75,14 +72,26 @@ test('only owner can delete non-personal workspace', function () {
     expect($this->policy->delete($this->outsider, $this->workspace))->toBeFalse();
 });
 
-test('cannot delete personal workspace', function () {
+test('cannot delete default workspace', function () {
+    $defaultWorkspace = Workspace::create([
+        'name' => 'Default Workspace',
+        'owner_id' => $this->owner->id,
+        'is_personal' => true,
+        'is_default' => true,
+    ]);
+
+    expect($this->policy->delete($this->owner, $defaultWorkspace))->toBeFalse();
+});
+
+test('owner can delete a non-default personal workspace', function () {
     $personalWorkspace = Workspace::create([
         'name' => 'Personal Workspace',
         'owner_id' => $this->owner->id,
         'is_personal' => true,
+        'is_default' => false,
     ]);
-    
-    expect($this->policy->delete($this->owner, $personalWorkspace))->toBeFalse();
+
+    expect($this->policy->delete($this->owner, $personalWorkspace))->toBeTrue();
 });
 
 test('only owner can manage members', function () {

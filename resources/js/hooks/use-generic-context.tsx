@@ -20,8 +20,13 @@ export function useGenericContext<T>() {
     return context;
   }
 
+  function useOptionalContextValue(): T | null {
+    return useContext(Context);
+  }
+
   return {
     Provider,
     useContextValue,
+    useOptionalContextValue,
   };
 }

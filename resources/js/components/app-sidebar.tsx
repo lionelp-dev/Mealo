@@ -9,7 +9,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { WorkspaceNav } from '@/components/workspace-nav';
 import { dashboard } from '@/routes';
 import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';
@@ -19,6 +18,7 @@ import { Link } from '@inertiajs/react';
 import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AppLogo from './app-logo';
+import { NavWorkspace } from './nav-workspace';
 
 export function AppSidebar() {
   const { t } = useTranslation();
@@ -67,7 +67,7 @@ export function AppSidebar() {
 
       <SidebarContent>
         <NavMain items={mainNavItems} />
-        <WorkspaceNav />
+        <NavWorkspace />
       </SidebarContent>
 
       <SidebarFooter>

@@ -65,14 +65,11 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
           <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
             <Popover.Trigger asChild>
               <button
-                className="recipe-card-actions-btn btn invisible btn-circle border-base-300 bg-base-300/80 btn-sm hover:bg-base-200"
+                className="recipe-card-actions-btn btn invisible btn-circle bg-secondary/15 btn-soft btn-sm btn-secondary hover:bg-secondary hover:text-secondary-content"
                 disabled={isMultiSelectMode}
                 onClick={(e) => e.stopPropagation()}
               >
-                <EllipsisVertical
-                  size={14}
-                  className="rotate-90 text-base-content/75"
-                />
+                <EllipsisVertical size={14} className="rotate-90" />
               </button>
             </Popover.Trigger>
             <Popover.Portal>
@@ -83,7 +80,7 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
                 sideOffset={8}
                 alignOffset={-4}
               >
-                <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-end">
+                <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-center">
                   <button className="btn btn-ghost btn-sm" onClick={handleView}>
                     <li>{t('common.buttons.view', 'View')}</li>
                   </button>
@@ -112,7 +109,7 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
             />
           </figure>
         ) : (
-          <figure className="flex h-42 items-center justify-center bg-base-200"></figure>
+          <figure className="flex h-42 items-center justify-center bg-secondary/15"></figure>
         )}
 
         <div className="absolute right-0 bottom-0 left-0 flex max-h-[1.5lh] flex-wrap justify-start gap-2 overflow-hidden px-2 py-2">
@@ -121,7 +118,10 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
               key={meal_time.id}
               className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
             >
-              {t(`mealPlanning.dialog.filters.${meal_time.name}`, meal_time.name)}
+              {t(
+                `mealPlanning.dialog.filters.${meal_time.name}`,
+                meal_time.name,
+              )}
             </span>
           ))}
           {recipe.tags.map((tag) => (
@@ -136,11 +136,13 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
       </div>
 
       <div className="card-body">
-        <div className="flex flex-col gap-1">
-          <h2 className="card-title text-base-content">{recipe.name}</h2>
-          <p className="line-clamp-2 text-base-content/70">
+        <div className="flex min-w-0 flex-col gap-1">
+          <span className="card-title block truncate text-base-content">
+            {recipe.name}
+          </span>
+          <span className="line-clamp-2 text-base-content/70">
             {recipe.description}
-          </p>
+          </span>
         </div>
       </div>
     </div>

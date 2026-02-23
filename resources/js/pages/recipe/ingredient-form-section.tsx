@@ -5,7 +5,7 @@ import { useIngredientSearchStore } from '@/stores/ingredient-search';
 import { Ingredient, Recipe } from '@/types';
 import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Plus, Trash2 } from 'lucide-react';
+import { PlusIcon, Trash2 } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -108,7 +108,9 @@ const IngredientFormSection = withFieldGroup({
                       {t('recipes.ingredients.unitLabel', 'Unit')}
                     </th>
                     {field.state.value.length !== 0 && (
-                      <th className="w-[10%]">{t('recipes.table.actions', 'Actions')}</th>
+                      <th className="w-[10%]">
+                        {t('recipes.table.actions', 'Actions')}
+                      </th>
                     )}
                   </tr>
                 </thead>
@@ -260,9 +262,12 @@ const IngredientFormSection = withFieldGroup({
                     onClick={() => {
                       form.handleSubmit();
                     }}
-                    className="btn w-fit"
+                    className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
                   >
-                    <Plus size={16} /> {t('recipes.ingredients.addButton', 'Add ingredient')}
+                    <span>
+                      {t('recipes.ingredients.addButton', 'Add ingredient')}
+                    </span>
+                    <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}
               </form.Subscribe>

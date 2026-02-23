@@ -27,5 +27,6 @@ export const useWorkspacePermissions = () => {
     canEditMealPlan: isOwner || isEditor,
     canPlanMeal: isOwner || isEditor,
     canEditShoppingList: isOwner || isEditor,
+    canEditCurrentWorkspace: isOwner,
   };
 };

@@ -1,12 +1,11 @@
 import { useRecipeFiltersContext } from '@/contexts/recipe-filters-context';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipesRequestCoordination } from '@/hooks/use-recipes-request-coordination';
-import { cn } from '@/lib/utils';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import { Filter, FilterSection, Option, Tag } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
 import { ClassValue } from 'clsx';
-import { ChevronDown } from 'lucide-react';
+import { FilterIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MealPlanDialogFilterOption } from './meal-plan-dialog-filter-option';
@@ -82,17 +81,14 @@ export function RecipeFiltersPopover({
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
         <button
-          className={cn(
-            `btn h-fit w-fit items-center gap-1 justify-self-end p-0 pt-1 text-secondary btn-link`,
-            className,
-          )}
+          className={`btn col-start-4 row-start-1 items-center gap-1.5 self-start border border-secondary/40 pr-3.5 pl-5 whitespace-nowrap text-secondary btn-outline btn-soft btn-secondary hover:text-secondary-content`}
           onClick={() => {
             setIsMultiSelectMode(false);
             clearSelectedRecipes();
           }}
         >
-          <span className="">Filtres avancés</span>
-          <ChevronDown className="h-4.5 w-4.5 pt-[2px]" />
+          <span>Filtres avancés</span>
+          <FilterIcon className={'h-4 w-auto pt-[2px]'} />
         </button>
       </Popover.Trigger>
 

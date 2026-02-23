@@ -22,11 +22,20 @@ export type NavItem = {
   isActive?: boolean;
 };
 
+export type Flash = {
+  message: string | null;
+  success: string | null;
+  error: string | null;
+  warning: string | null;
+  new_workspace_id: number | null;
+};
+
 export type SharedData = {
   name: string;
   quote: { message: string; author: string };
   auth: Auth;
   sidebarOpen: boolean;
+  flash: Flash;
   [key: string]: unknown;
 };
 
@@ -169,6 +178,7 @@ export type Workspace = {
   description?: string;
   owner_id: number;
   is_personal: boolean;
+  is_default: boolean;
   users_count?: number;
   user_role?: 'owner' | 'editor' | 'viewer';
   members: Member[];
@@ -194,9 +204,7 @@ export type WorkspaceUser = {
 export type WorkspaceInvitation = {
   id: number;
   workspace_id: number;
-  workspace: Pick<Workspace, 'id' | 'name' | 'description' | 'users_count'> & {
-    users?: Pick<User, 'id' | 'name'>[];
-  };
+  workspace: Workspace;
   email: string;
   role: 'editor' | 'viewer';
   token: string;
@@ -213,11 +221,6 @@ export type PendingInvitation = {
   workspace: Workspace & {
     owner: Pick<User, 'id' | 'name'>;
   };
-};
-
-export type CreateWorkspace = {
-  name: string;
-  description: string;
 };
 
 export type PlannedMealIngredient = {

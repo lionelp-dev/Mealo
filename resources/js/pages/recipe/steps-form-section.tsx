@@ -2,7 +2,7 @@ import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { stepSchema } from '@/schemas/recipe.schema';
 import { Recipe } from '@/types';
-import { Plus, Trash2 } from 'lucide-react';
+import { PlusIcon, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 const defaultValues: Pick<Recipe, 'steps'> = {
@@ -78,7 +78,10 @@ const StepsFormSection = withFieldGroup({
                 children={(field) => (
                   <field.TextAreaField
                     rows={10}
-                    placeholder={t('recipes.steps.instructionPlaceholder', 'Describe this step')}
+                    placeholder={t(
+                      'recipes.steps.instructionPlaceholder',
+                      'Describe this step',
+                    )}
                   />
                 )}
               />
@@ -93,9 +96,10 @@ const StepsFormSection = withFieldGroup({
                     onClick={() => {
                       form.handleSubmit();
                     }}
-                    className="btn w-fit"
+                    className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
                   >
-                    <Plus size={16} /> {t('recipes.steps.addButton', 'Add step')}
+                    {t('recipes.steps.addButton', 'Add step')}
+                    <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}
               </form.Subscribe>

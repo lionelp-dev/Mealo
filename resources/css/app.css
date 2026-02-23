@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&display=swap');
 /*! 🌼 daisyUI 5.1.14 */
 @import 'tailwindcss';
 
@@ -11,9 +10,8 @@
 
 @theme {
     --font-sans:
-        'Instrument Sans', ui-sans-serif, system-ui, sans-serif,
-        'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-        'Noto Color Emoji';
+        'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --font-logo: 'DM Serif Display';
 
@@ -140,7 +138,7 @@
     }
 
     body {
-        @apply bg-background text-foreground;
+        @apply bg-background font-sans text-foreground;
     }
 }
 
@@ -156,6 +154,7 @@
     default: false;
     prefersdark: false;
     color-scheme: 'light';
+    font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
     --color-base-100: oklch(100% 0 0);
     --color-base-200: oklch(93% 0 0);
     --color-base-300: oklch(86% 0 0);
@@ -191,6 +190,7 @@
     default: false;
     prefersdark: false;
     color-scheme: 'dark';
+    font-family: 'Inter Tight', ui-sans-serif, system-ui, sans-serif;
     --color-base-100: oklch(32% 0 0);
     --color-base-200: oklch(36.6% 0 0);
     --color-base-300: oklch(45.4% 0 0);
@@ -219,4 +219,72 @@
     --border: 1px;
     --depth: 0;
     --noise: 0;
+}
+
+/* Responsive table styles - CSS pur basé sur best practices */
+@media (max-width: 970px) {
+    /* Force tous les éléments du tableau en block */
+    .responsive-table,
+    .responsive-table thead,
+    .responsive-table tbody,
+    .responsive-table th,
+    .responsive-table td,
+    .responsive-table tr {
+        display: block;
+    }
+
+    /* Cacher le thead hors de l'écran au lieu de display: none pour l'accessibilité */
+    .responsive-table thead tr {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+
+    /* Chaque ligne devient une carte */
+    .responsive-table tbody tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--color-base-300);
+        border-radius: 0.5rem;
+    }
+
+    /* Chaque cellule prend toute la largeur avec padding à gauche pour le label */
+    .responsive-table tbody td {
+        position: relative;
+        padding-left: 50%;
+        padding-top: 0.75rem;
+        padding-bottom: 0.75rem;
+        padding-right: 1rem;
+        border-bottom: 1px solid var(--color-base-300);
+        text-align: left;
+    }
+
+    .responsive-table tbody td:last-child {
+        border-bottom: none;
+    }
+
+    /* Le label à gauche via ::before */
+    .responsive-table tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        top: 0.75rem;
+        left: 1rem;
+        width: 45%;
+        padding-right: 0.5rem;
+        white-space: nowrap;
+        font-weight: 700;
+        text-align: left;
+    }
+
+    /* Désactiver truncate sur mobile pour afficher le texte */
+    .responsive-table tbody td .truncate {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: normal;
+        word-break: break-word;
+    }
+
+    /* Cacher les cellules vides sur mobile */
+    .responsive-table tbody td:has(.truncate:empty) {
+        display: none;
+    }
 }

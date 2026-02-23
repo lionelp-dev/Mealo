@@ -15,7 +15,7 @@ class StoreWorkspace extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:1000',
+            'is_personal' => 'required|boolean',
         ];
     }
 
@@ -24,7 +24,6 @@ class StoreWorkspace extends FormRequest
         return [
             'name.required' => 'Le nom de l\'espace est obligatoire.',
             'name.max' => 'Le nom de l\'espace ne peut pas dépasser 255 caractères.',
-            'description.max' => 'La description ne peut pas dépasser 1000 caractères.',
         ];
     }
 }

@@ -18,7 +18,7 @@ export default function EmailField({
   return (
     <div className={cn('flex flex-1 flex-col gap-3', className)}>
       {label && (
-        <label htmlFor={field.name} className="text-md text-base-content">
+        <label htmlFor={field.name} className="text-base text-base-content">
           {label}
         </label>
       )}

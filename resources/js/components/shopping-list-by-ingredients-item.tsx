@@ -53,7 +53,7 @@ export default function ShoppingListByIngredientsItem({
       className={cn(
         'flex items-center gap-5 px-5 select-none',
         ingredient.is_checked
-          ? 'bg-base-200 hover:bg-secondary/15'
+          ? 'bg-secondary/10 hover:bg-secondary/15'
           : 'hover:bg-secondary/5',
         isLoading && 'opacity-50',
       )}
@@ -75,7 +75,7 @@ export default function ShoppingListByIngredientsItem({
         <span className="-mb-1 flex h-fit items-center gap-1 self-end px-1">
           <span
             className={cn(
-              'text-md flex items-center gap-2 font-medium text-base-content transition-all duration-200',
+              'text-base flex items-center gap-2 font-medium text-base-content transition-all duration-200',
               ingredient.is_checked && 'line-through',
             )}
           >

@@ -6,7 +6,7 @@ import { useTagSearchStore } from '@/stores/tag-search';
 import { Recipe, Tag } from '@/types';
 import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
-import { Plus, X } from 'lucide-react';
+import { PlusIcon, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -90,7 +90,7 @@ const TagsFormSection = withFieldGroup({
         mode="array"
         children={(tags_field) => (
           <div className="flex flex-col gap-4">
-            <span className="text-md text-base-content">
+            <span className="text-base text-base-content">
               {t('recipes.form.tagsTitle', 'Tags')}
             </span>
 
@@ -196,14 +196,14 @@ const TagsFormSection = withFieldGroup({
                 {(state) => (
                   <button
                     disabled={!state.canSubmit || isSearching}
-                    className="btn w-fit"
+                    className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
                     onClick={(e) => {
                       e.preventDefault();
                       form.handleSubmit();
                     }}
                   >
-                    <Plus size={16} />
                     {t('recipes.tags.addButton', 'Add tag')}
+                    <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}
               </form.Subscribe>

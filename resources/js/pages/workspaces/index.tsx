@@ -1,69 +1,69 @@
 import { AppMainContent } from '@/components/app-main-content';
 import { ConfirmDialog, useConfirmDialog } from '@/components/confirm-dialog';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import WorkspaceCreationModal from '@/components/workspace-creation-modal';
+import { WorkspaceEditModal } from '@/components/workspace-edit-modal';
 import { WorkspaceInvitationModal } from '@/components/workspace-invitation-modal';
 import { WorkspaceDataProvider } from '@/contexts/workspace-context';
+import { usePermissions } from '@/hooks/use-permissions';
+import { useWorkspaces } from '@/hooks/use-workspaces';
 import AppLayout from '@/layouts/app-layout';
-import plannedMeals from '@/routes/planned-meals';
+import { capitalize, cn, pluralize } from '@/lib/utils';
 import workspacesRoute from '@/routes/workspaces';
 import { workspaceCreationStore } from '@/stores/workspace-creation-modal-store';
+import { workspaceEditStore } from '@/stores/workspace-edit-modal-store';
 import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-modal-store';
 import { SharedData, WorkspaceData } from '@/types';
-import { Head, router, usePage } from '@inertiajs/react';
-import { Crown, Edit, Eye, MoreHorizontal, Plus, Users } from 'lucide-react';
+import { Head, router, usePage, usePoll } from '@inertiajs/react';
+import {
+  MoreHorizontal,
+  Plus,
+  PlusIcon,
+  UserIcon,
+  Users,
+  UsersIcon,
+} from 'lucide-react';
+import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
 export default function WorkspaceIndex() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { workspace_data, auth } = usePage<
     { workspace_data: WorkspaceData } & SharedData
   >().props;
 
-  const { workspaces, current_workspace } = workspace_data;
-
-  const sharedWorkspaces = workspaces.filter((w) => !w.is_personal);
+  const { workspaces } = workspace_data;
 
   const { openWorkspaceCreationModal } = workspaceCreationStore();
+  const { openWorkspaceEditModal } = workspaceEditStore();
 
   const { openWorkspaceInvitationModal } = workspaceInvitationModalStore();
 
   const { confirm, dialogProps } = useConfirmDialog();
 
-  const getRoleIcon = (role?: string, isOwner?: boolean) => {
-    if (isOwner) return <Crown className="h-4 w-4 text-yellow-500" />;
-    if (role === 'editor') return <Edit className="h-4 w-4 text-blue-500" />;
-    return <Eye className="h-4 w-4 text-gray-500" />;
-  };
+  const { getRoleLabel } = useWorkspaces();
 
-  const getRoleLabel = (role?: string, isOwner?: boolean) => {
-    if (isOwner) return t('workspace.roles.owner', 'Propriétaire');
-    if (role === 'editor') return t('workspace.roles.editor', 'Éditeur');
-    return t('workspace.roles.viewer', 'Lecteur');
-  };
+  const { canEditWorkspace } = usePermissions();
+
+  usePoll(15000, {
+    only: ['workspace_data'],
+  });
 
   return (
     <WorkspaceDataProvider data={{ workspace_data }}>
       <AppLayout
         headerRightContent={
           <button
-            className="btn pl-6"
+            className="btn pl-6 btn-secondary"
             onClick={() => openWorkspaceCreationModal()}
           >
-            {t('workspace.create.button', 'Créer un groupe')}
+            {t('workspace.create.button', 'Créer un espace')}
             <Plus className="h-4 w-4" />
           </button>
         }
@@ -71,93 +71,150 @@ export default function WorkspaceIndex() {
         <Head title={t('workspace.pageTitle', 'Mes groupes')} />
 
         <AppMainContent>
-          <div className="grid h-full gap-10">
-            {/* Header Section */}
-            <div className="flex flex-col gap-2.5">
-              <h1 className="text-2xl font-bold text-foreground">
-                {t('workspace.title', 'Mes groupes')}
-              </h1>
-              <span className="text-muted-foreground">
-                {t('workspace.subtitle', 'Espaces de planification partagés')}
+          <div className="grid h-full gap-8">
+            <span className="flex flex-col">
+              <span className="text-3xl leading-11 font-bold text-secondary">
+                {t('workspace.mySpaces', 'Mes espaces')}
               </span>
-            </div>
-
-            {/* Workspaces Grid */}
-            <div className="grid grid-cols-[repeat(auto-fill,25rem)] gap-9">
-              {sharedWorkspaces.map((workspace) => (
-                <Card
-                  key={workspace.id}
-                  className="cursor-pointer justify-between gap-9 border-base-300 px-1 py-8 transition-shadow hover:shadow-md"
-                  onClick={() => {
-                    router.post(
-                      workspacesRoute.switch.url({
-                        workspace: { id: workspace.id },
-                      }),
-                      {},
-                      { onFinish: () => router.get(plannedMeals.index.url()) },
-                    );
-                  }}
-                >
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <CardTitle className="text-lg">
-                          {workspace.name}
-                        </CardTitle>
-                        {workspace.description && (
-                          <CardDescription className="mt-1">
-                            {workspace.description}
-                          </CardDescription>
-                        )}
-                      </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <button
-                            className="btn btn-circle btn-ghost btn-sm hover:bg-base-200"
-                            onClick={(e) => e.stopPropagation()}
+              <span className="text-muted-foreground">
+                {t(
+                  'workspace.indexSubtitle',
+                  'Gérez vos espaces personnels et collaboratifs',
+                )}
+              </span>
+            </span>
+            <div className="grid auto-rows-fr grid-cols-[repeat(auto-fit,minmax(min(354px,100%),1fr))] gap-8">
+              {workspaces.map((workspace, idx) => {
+                const member = {
+                  role:
+                    workspace.members.find(
+                      (member) => member.id === auth.user.id,
+                    )?.role ?? 'viewer',
+                };
+                const last_update = DateTime.fromISO(
+                  workspace.updated_at,
+                ).toRelative({ locale: i18n.language });
+                return (
+                  <div
+                    className={cn(
+                      'card rounded-xl border-t-2 bg-base-100 shadow-sm card-sm hover:scale-101',
+                      workspace.is_personal
+                        ? 'border-secondary'
+                        : 'border-warning',
+                    )}
+                    key={idx}
+                  >
+                    <div className="card-body flex flex-col gap-3 pb-2.5">
+                      <div className="flex justify-between">
+                        <span className="card-title pl-1 text-secondary">
+                          {capitalize(workspace.name)}
+                        </span>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <button
+                              className="btn btn-circle btn-ghost btn-sm hover:bg-base-200"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <MoreHorizontal className="h-4 w-4" />
+                            </button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="space-y-2"
                           >
-                            <MoreHorizontal className="h-4 w-4" />
-                          </button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="space-y-2">
-                          {workspace.owner_id === auth.user.id ? (
-                            <>
+                            {canEditWorkspace(workspace) ? (
+                              <>
+                                <DropdownMenuItem asChild>
+                                  <button
+                                    className="btn btn-wide justify-center px-4 btn-ghost btn-sm hover:outline-none"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      openWorkspaceEditModal(workspace.id);
+                                    }}
+                                  >
+                                    {t('common.actions.edit', 'Modifier')}
+                                  </button>
+                                </DropdownMenuItem>
+                                {!workspace.is_default && (
+                                  <>
+                                    <DropdownMenuItem asChild>
+                                      <button
+                                        className="btn btn-wide justify-center px-4 btn-ghost btn-sm hover:outline-none"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          openWorkspaceInvitationModal(
+                                            workspace.id,
+                                          );
+                                        }}
+                                      >
+                                        {t(
+                                          'workspace.manageMembers',
+                                          'Gérer les membres',
+                                        )}
+                                      </button>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem
+                                      className="hover:!bg-none"
+                                      asChild
+                                    >
+                                      <button
+                                        className="btn btn-wide justify-center px-4 btn-ghost btn-sm hover:!bg-error/20 hover:outline-none"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          confirm({
+                                            title: t(
+                                              'workspace.delete.title',
+                                              'Supprimer le groupe',
+                                            ),
+                                            message: t(
+                                              'workspace.delete.message',
+                                              `Êtes-vous sûr de vouloir supprimer définitivement le groupe "${workspace.name}" ? Cette action est irréversible.`,
+                                              { name: workspace.name },
+                                            ),
+                                            submitBtnLabel: t(
+                                              'common.buttons.delete',
+                                              'Supprimer',
+                                            ),
+                                            onConfirm: () => {
+                                              router.delete(
+                                                workspacesRoute.destroy.url({
+                                                  workspace: {
+                                                    id: workspace.id,
+                                                  },
+                                                }),
+                                              );
+                                            },
+                                          });
+                                        }}
+                                      >
+                                        {t(
+                                          'workspace.delete.button',
+                                          'Supprimer',
+                                        )}
+                                      </button>
+                                    </DropdownMenuItem>
+                                  </>
+                                )}
+                              </>
+                            ) : (
                               <DropdownMenuItem asChild>
                                 <button
-                                  className="btn btn-wide justify-start px-4 btn-ghost btn-sm hover:outline-none"
-                                  onClick={() =>
-                                    openWorkspaceInvitationModal(workspace)
-                                  }
-                                >
-                                  {t(
-                                    'workspace.manageMembers',
-                                    'Gérer les membres',
-                                  )}
-                                </button>
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                className="hover:!bg-none"
-                                asChild
-                              >
-                                <button
-                                  className="btn btn-wide justify-start px-4 btn-ghost btn-sm hover:!bg-error/20 hover:outline-none"
+                                  className="text-error"
                                   onClick={(e) => {
-                                    e.preventDefault();
                                     e.stopPropagation();
                                     confirm({
-                                      title: t(
-                                        'workspace.delete.title',
-                                        'Supprimer le groupe',
-                                      ),
                                       message: t(
-                                        'workspace.delete.message',
-                                        `Êtes-vous sûr de vouloir supprimer définitivement le groupe "${workspace.name}" ? Cette action est irréversible.`,
+                                        'workspace.leave.message',
+                                        `Êtes-vous sûr de vouloir quitter le groupe "${workspace.name}" ?`,
                                         { name: workspace.name },
                                       ),
-                                      submitBtnLabel: 'supprimer',
+                                      submitBtnLabel: t(
+                                        'workspace.leave.confirmButton',
+                                        'Quitter',
+                                      ),
                                       onConfirm: () => {
-                                        router.delete(
-                                          workspacesRoute.destroy.url({
+                                        router.post(
+                                          workspacesRoute.leave.url({
                                             workspace: { id: workspace.id },
                                           }),
                                         );
@@ -165,73 +222,80 @@ export default function WorkspaceIndex() {
                                     });
                                   }}
                                 >
-                                  {t('workspace.delete.button', 'Supprimer')}
+                                  {t(
+                                    'workspace.leave.button',
+                                    'Quitter le groupe',
+                                  )}
                                 </button>
                               </DropdownMenuItem>
-                            </>
-                          ) : (
-                            <DropdownMenuItem asChild>
-                              <button
-                                className="text-error"
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  confirm({
-                                    message: t(
-                                      'workspace.leave.message',
-                                      `Êtes-vous sûr de vouloir quitter le groupe "${workspace.name}" ?`,
-                                      { name: workspace.name },
-                                    ),
-                                    submitBtnLabel: 'Quitter',
-                                    onConfirm: () => {
-                                      router.post(
-                                        workspacesRoute.leave.url({
-                                          workspace: { id: workspace.id },
-                                        }),
-                                      );
-                                    },
-                                  });
-                                }}
-                              >
-                                {t(
-                                  'workspace.leave.button',
-                                  'Quitter le groupe',
-                                )}
-                              </button>
-                            </DropdownMenuItem>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        {getRoleIcon(
-                          workspace.user_role,
-                          workspace.owner_id === current_workspace?.owner_id,
-                        )}
-                        <span className="text-sm text-muted-foreground">
-                          {getRoleLabel(
-                            workspace.members.find(
-                              (member) => member.id === auth.user.id,
-                            )?.role,
-                            auth.user.id === workspace.owner_id,
-                          )}
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                      <div className="flex flex-col gap-2 divide-y divide-base-300/40">
+                        <div className="flex flex-col gap-4 pb-3">
+                          <div className="flex gap-2">
+                            <span
+                              className={cn(
+                                'badge rounded-full badge-sm',
+                                workspace.is_personal
+                                  ? 'badge-soft badge-secondary'
+                                  : 'badge-soft badge-warning',
+                              )}
+                            >
+                              {capitalize(
+                                workspace.is_personal
+                                  ? t('workspace.type.personal', 'Personnel')
+                                  : t('workspace.type.shared', 'Partagé'),
+                              )}
+                            </span>
+                            <span
+                              className={cn(
+                                'badge rounded-full badge-soft badge-sm badge-secondary',
+                              )}
+                            >
+                              {getRoleLabel(member.role)}
+                            </span>
+                          </div>
+                          <span className="flex w-fit items-center gap-1 rounded-full text-muted-foreground">
+                            {workspace.users_count === 1 ? (
+                              <UserIcon className="h-3.5 w-3.5" />
+                            ) : (
+                              <UsersIcon className="h-3.5 w-3.5" />
+                            )}
+                            <span className="leading-none">
+                              {workspace.users_count}
+                            </span>
+                            <span>
+                              {pluralize(
+                                t('workspace.member', 'membre'),
+                                workspace.users_count,
+                              )}
+                            </span>
+                          </span>
+                        </div>
+                        <span className="flex w-full justify-end text-muted-foreground/80">
+                          <span>{last_update}</span>
                         </span>
                       </div>
-                      <span className="badge badge-soft badge-secondary">
-                        {workspace.users_count}{' '}
-                        {t('workspace.membersLabel', 'members')}
-                      </span>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
+                  </div>
+                );
+              })}
+              <button
+                className="card h-auto flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-secondary/20 bg-none text-secondary card-sm hover:border-secondary/60 hover:bg-secondary/5"
+                onClick={() => openWorkspaceCreationModal()}
+              >
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10">
+                  <PlusIcon className="h-5 w-5 text-secondary/60" />
+                </span>
+                <span className="text-sm">
+                  {t('workspace.create.newSpace', 'Nouvel espace')}
+                </span>
+              </button>
             </div>
-
             {/* Empty State */}
-            {sharedWorkspaces.length === 0 && (
+            {workspaces.length === 0 && (
               <div className="row-start-4 flex flex-1 flex-col items-center justify-center">
                 <Users className="mb-4 h-12 w-12 text-muted-foreground" />
                 <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
@@ -248,9 +312,10 @@ export default function WorkspaceIndex() {
           </div>
         </AppMainContent>
         {dialogProps && <ConfirmDialog {...dialogProps} />}
-        <WorkspaceInvitationModal />
-        <WorkspaceCreationModal />
-      </AppLayout>
+      </AppLayout>{' '}
+      <WorkspaceInvitationModal />
+      <WorkspaceCreationModal />
+      <WorkspaceEditModal />
     </WorkspaceDataProvider>
   );
 }

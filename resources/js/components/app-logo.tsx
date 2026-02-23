@@ -6,8 +6,8 @@ export default function AppLogo() {
           MP
         </span>
       </div>
-      <span className="flex h-fit origin-top flex-col overflow-hidden text-left font-logo text-[43px] leading-tight font-semibold text-secondary group-data-[state=collapsed]:scale-y-0 group-data-[state=collapsed]:opacity-0 [&_span]:-my-[6px]">
-        <span>Mealo</span>
+      <span className="flex h-fit origin-top flex-col overflow-hidden text-left font-logo text-[40px] leading-tight font-semibold text-secondary group-data-[state=collapsed]:scale-y-0 group-data-[state=collapsed]:opacity-0 [&_span]:-my-[6px]">
+        <span className="text-[52px]">Mealo</span>
         <span>Planner</span>
       </span>
     </>

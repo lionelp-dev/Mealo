@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PlannedMealController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ShoppingListController;
@@ -13,8 +14,11 @@ Route::get('/', function () {
 })->name('home');
 
 Route::middleware(['auth', 'verified'])->group(function () {
+    /*
+        Route::get('dashboard', [DashboardController::class,'index'])->name('dashboard');
+         */
     Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
+        return to_route('planned-meals.index');
     })->name('dashboard');
     Route::resource('recipes', RecipeController::class)->except(['destroy']);
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
@@ -50,5 +54,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::post('invitations/{token}/accept', [WorkspaceInvitationController::class, 'accept'])->name('workspace-invitations.accept');
 Route::post('invitations/{token}/decline', [WorkspaceInvitationController::class, 'decline'])->name('workspace-invitations.decline');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';

@@ -21,7 +21,6 @@ class WorkspaceDataService
             $currentWorkspace = $user->workspaces()
                 ->where('workspaces.id', $currentWorkspaceId)
                 ->first();
-
             // User found in workspace, return it
             if ($currentWorkspace) {
                 return $currentWorkspace;
@@ -29,11 +28,12 @@ class WorkspaceDataService
 
             // Check if workspace exists but user doesn't have access anymore
             $workspace = Workspace::find($currentWorkspaceId);
-            if ($workspace && !$workspace->is_personal) {
+            if ($workspace && ! $workspace->is_personal) {
                 // User no longer has access to this workspace
                 $personalWorkspace = $user->getPersonalWorkspace();
                 session(['current_workspace_id' => $personalWorkspace->id]);
                 session()->flash('warning', 'You no longer have access to this workspace. Switched to your personal workspace.');
+
                 return $personalWorkspace;
             }
         }
@@ -41,6 +41,7 @@ class WorkspaceDataService
         // No workspace in session or workspace not found, fallback to personal workspace
         $personalWorkspace = $user->getPersonalWorkspace();
         session(['current_workspace_id' => $personalWorkspace->id]);
+
         return $personalWorkspace;
     }
 
@@ -82,6 +83,7 @@ class WorkspaceDataService
             $workspace->members = $this->formatMembersForWorkspace($workspace);
             $workspace->pending_invitations = $this->formatInvitations($workspace);
         }
+
         return $workspaces;
     }
 
@@ -93,7 +95,7 @@ class WorkspaceDataService
         return $workspace->users()
             ->withPivot('joined_at')
             ->get()
-            ->map(fn($user) => [
+            ->map(fn ($user) => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -111,7 +113,7 @@ class WorkspaceDataService
         return $workspace->users()
             ->withPivot('joined_at')
             ->get()
-            ->map(fn($user) => [
+            ->map(fn ($user) => [
                 'id' => $user->id,
                 'name' => $user->name,
                 'email' => $user->email,
@@ -130,7 +132,7 @@ class WorkspaceDataService
             ->where('expires_at', '>', now())
             ->with('invitedBy:id,name')
             ->get()
-            ->map(fn($invitation) => [
+            ->map(fn ($invitation) => [
                 'id' => $invitation->id,
                 'email' => $invitation->email,
                 'role' => $invitation->role,
@@ -162,7 +164,7 @@ class WorkspaceDataService
     {
         return WorkspaceInvitation::query()->where('email', $user->email)
             ->where('expires_at', '>', now())
-            ->with(['workspace','invitedBy'])
+            ->with(['workspace', 'invitedBy'])
             ->get();
     }
 }

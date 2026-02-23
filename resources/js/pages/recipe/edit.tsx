@@ -129,7 +129,7 @@ function EditRecipe() {
                 }));
                 return (
                   <div className="flex flex-col gap-4">
-                    <label className="text-md text-base-content">
+                    <label className="text-base text-base-content">
                       {t('recipes.form.mealTimesTitle', 'Meal times')}
                     </label>
                     <MultiSelect

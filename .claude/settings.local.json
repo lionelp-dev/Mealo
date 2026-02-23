@@ -33,7 +33,19 @@
       "WebFetch(domain:dev.to)",
       "mcp__laravel-boost__read-log-entries",
       "Bash(cat:*)",
-      "mcp__laravel-boost__last-error"
+      "mcp__laravel-boost__last-error",
+      "mcp__claude_ai_Context7__resolve-library-id",
+      "mcp__claude_ai_Context7__query-docs",
+      "Bash(php -i:*)",
+      "WebFetch(domain:daisyui.com)",
+      "WebFetch(domain:css-tricks.com)",
+      "WebFetch(domain:www.tailwindtap.com)",
+      "WebFetch(domain:tailwindcomponents.com)",
+      "WebFetch(domain:www.creative-tim.com)",
+      "Bash(xargs sed:*)",
+      "WebFetch(domain:inertiajs.com)",
+      "Bash(vendor/bin/pint:*)",
+      "WebFetch(domain:www.answeroverflow.com)"
     ],
     "deny": [],
     "ask": []

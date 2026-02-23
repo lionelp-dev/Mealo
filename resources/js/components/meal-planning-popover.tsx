@@ -118,7 +118,7 @@ export default function MealPlanningPopover({
           >
             <div className="flex flex-col gap-3">
               <div className="flex flex-col rounded-sm bg-secondary/10 px-4 py-2 text-secondary">
-                <span className="text-md font-medium">{recipe.name}</span>
+                <span className="text-base font-medium">{recipe.name}</span>
               </div>
 
               <form.AppField

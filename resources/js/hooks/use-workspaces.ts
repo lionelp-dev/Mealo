@@ -1,5 +1,6 @@
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
-import { CreateWorkspace } from '@/types';
+import workspaces from '@/routes/workspaces';
+import { SharedData, Workspace } from '@/types';
 import { router } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
@@ -8,10 +9,10 @@ export function useWorkspaces() {
   const { t } = useTranslation();
 
   const handleCreateWorkspace = (
-    data: CreateWorkspace,
+    data: Pick<Workspace, 'name' | 'is_personal'>,
     callbacks?: {
       onStart?: () => void;
-      onSuccess?: () => void;
+      onSuccess?: (page: { props: SharedData }) => void;
       onError?: (error: any) => void;
     },
   ) => {
@@ -19,11 +20,35 @@ export function useWorkspaces() {
       '/workspaces',
       {
         name: data.name.trim(),
-        description: data.description.trim(),
+        is_personal: data.is_personal,
       },
       {
         onStart: callbacks?.onStart,
-        onSuccess: callbacks?.onSuccess,
+        onSuccess: (page) =>
+          callbacks?.onSuccess?.(page as unknown as { props: SharedData }),
+        onError: callbacks?.onError,
+      },
+    );
+  };
+
+  const handleUpdateWorkspace = (
+    data: Pick<Workspace, 'id' | 'name' | 'is_personal'>,
+    callbacks?: {
+      onStart?: () => void;
+      onSuccess?: (page: { props: SharedData }) => void;
+      onError?: (error: any) => void;
+    },
+  ) => {
+    router.put(
+      workspaces.update.url({ workspace: { id: data.id } }),
+      {
+        name: data.name.trim(),
+        is_personal: data.is_personal,
+      },
+      {
+        onStart: callbacks?.onStart,
+        onSuccess: (page) =>
+          callbacks?.onSuccess?.(page as unknown as { props: SharedData }),
         onError: callbacks?.onError,
       },
     );
@@ -129,7 +154,8 @@ export function useWorkspaces() {
       return t('invitation.expires.today', "Expire aujourd'hui");
     } else {
       const days = Math.floor(diffInHours / 24);
-      return t('invitation.expires.inDays', `Expire dans ${days} jours`, {
+      return t('invitation.expires.inDays', `Expire dans ${days} jour`, {
+        count: days,
         days,
       });
     }
@@ -153,11 +179,11 @@ export function useWorkspaces() {
   const getRoleBadgeVariant = (memberRole: string) => {
     switch (memberRole) {
       case 'owner':
-        return 'primary';
+        return 'badge-warning';
       case 'editor':
-        return 'secondary';
+        return 'badge-secondary';
       case 'viewer':
-        return 'outline';
+        return 'border-base-300';
       default:
         return 'default';
     }
@@ -178,6 +204,7 @@ export function useWorkspaces() {
 
   return {
     handleCreateWorkspace,
+    handleUpdateWorkspace,
     handleInvite,
     handleRemoveMember,
     handleChangeRole,

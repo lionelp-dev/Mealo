@@ -14,11 +14,11 @@ export default function TextField({
   const field = useFieldContext<string>();
 
   return (
-    <div className="flex flex-1 flex-col gap-4">
+    <div className="flex flex-1 flex-col">
       {label && (
         <label
           htmlFor={field.name}
-          className="text-md text-left text-base-content"
+          className="text-left text-base leading-10 text-base-content"
         >
           {label}
         </label>

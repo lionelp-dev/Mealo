@@ -6,6 +6,7 @@ use App\Mail\WorkspaceInvitationMail;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
+use App\Services\WorkspaceDataService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
@@ -13,6 +14,10 @@ use Illuminate\Validation\Rule;
 
 class WorkspaceInvitationController extends Controller
 {
+    public function __construct(
+        private WorkspaceDataService $workspaceDataService,
+    ) {}
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -23,14 +28,17 @@ class WorkspaceInvitationController extends Controller
             },
             'invitedBy',
         ])
+            ->whereHas('workspace')
             ->where('email', $user->email)
             ->where('expires_at', '>', now())
             ->orderBy('created_at', 'desc')
             ->get();
 
+        $workspaceData = $this->workspaceDataService->getWorkspaceDataForUser($user);
+
         return inertia('workspaces/invitations', [
             'pending_invitations' => $pendingInvitations,
-            'workspace_data' => app(\App\Services\WorkspaceDataService::class)->getWorkspaceDataForUser($user),
+            'workspace_data' => $workspaceData,
         ]);
     }
 
@@ -71,7 +79,7 @@ class WorkspaceInvitationController extends Controller
     public function accept(Request $request, $token)
     {
         $invitation = WorkspaceInvitation::where('token', $token)->firstOrFail();
-        if (!$invitation->isValid()) {
+        if (! $invitation->isValid()) {
             return response()->json(['message' => 'Invitation expired or invalid'], 410);
         }
 
@@ -110,7 +118,7 @@ class WorkspaceInvitationController extends Controller
             return back()->with('error', 'Cette invitation ne vous est pas destinée.');
         }
 
-        if (!$invitation->isValid()) {
+        if (! $invitation->isValid()) {
             return back()->with('error', 'Cette invitation a expiré ou n\'est plus valide.');
         }
 

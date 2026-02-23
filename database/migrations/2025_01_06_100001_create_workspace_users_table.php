@@ -14,7 +14,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamp('joined_at');
             $table->timestamps();
-            
+
             $table->unique(['workspace_id', 'user_id']);
         });
     }

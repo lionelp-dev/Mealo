@@ -5,6 +5,7 @@ import { WorkspaceData } from '@/types';
 const {
   Provider: WorkspaceDataProvider,
   useContextValue: useWorkspaceContext,
+  useOptionalContextValue: useOptionalWorkspaceContext,
 } = useGenericContext<{ workspace_data: WorkspaceData }>();
 
-export { useWorkspaceContext, WorkspaceDataProvider };
+export { useWorkspaceContext, useOptionalWorkspaceContext, WorkspaceDataProvider };

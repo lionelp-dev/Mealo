@@ -1,15 +1,19 @@
 import { useFormContext } from '@/hooks/form-context';
+import { cn } from '@/lib/utils';
+import { ReactNode } from 'react';
 
 interface SubmitButtonProps {
-  label: string;
+  label?: string;
   loadingLabel?: string;
   className?: string;
+  children?: ReactNode;
 }
 
 export default function SubmitButton({
   label,
   loadingLabel = '...',
   className,
+  children,
 }: SubmitButtonProps) {
   const form = useFormContext();
 
@@ -19,8 +23,9 @@ export default function SubmitButton({
         <button
           type="submit"
           disabled={!canSubmit}
-          className={`btn btn-secondary ${className || ''}`}
+          className={cn(`btn btn-secondary`, className)}
         >
+          {children}
           {isSubmitting ? loadingLabel : label}
         </button>
       )}

@@ -1,10 +1,10 @@
 import { Head, usePage, usePrefetch } from '@inertiajs/react';
 
+import { NavWorkspaceSwitcher } from '@/components/nav-workspace-switcher';
 import { ShoppingListByIngredients } from '@/components/shopping-list-by-ingredients';
 import ShoppingListByRecipes from '@/components/shopping-list-by-recipes';
 import ShoppingListProgress from '@/components/shopping-list-progress';
 import WeekSelector from '@/components/week-selector';
-import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { WorkspaceDataProvider } from '@/contexts/workspace-context';
 import { useShoppingList } from '@/hooks/use-shopping-list';
 import AppLayout from '@/layouts/app-layout';
@@ -41,7 +41,7 @@ export default function ShoppingListsIndex() {
         }
         headerRightContent={
           <div className="flex items-center gap-4">
-            <WorkspaceSwitcher />
+            <NavWorkspaceSwitcher />
           </div>
         }
       >
@@ -49,7 +49,7 @@ export default function ShoppingListsIndex() {
         <div className="flex h-full flex-col overflow-y-hidden">
           {total > 0 && (
             <div className="mx-auto flex w-[90%] flex-1 flex-col gap-4 overflow-y-auto py-4">
-              <div className="tabs-boxed tabs h-8 w-fit shrink-0 rounded-md bg-base-200 tabs-xs">
+              <div className="tabs-boxed tabs h-8 w-fit shrink-0 rounded-md bg-secondary/15 tabs-xs">
                 <button
                   className={cn(
                     '-pl-[15px] tab h-8 rounded-md px-4',
@@ -63,7 +63,7 @@ export default function ShoppingListsIndex() {
                 </button>
                 <button
                   className={cn(
-                    '-pr-[15px] tab h-8 rounded-md px-4',
+                    '-pr-[15px] tab h-8 rounded-md px-4 text-secondary',
                     viewMode === 'recipes' &&
                       'tab-active bg-secondary text-secondary-content hover:text-white',
                   )}

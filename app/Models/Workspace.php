@@ -17,13 +17,14 @@ class Workspace extends Model
 
     protected $fillable = [
         'name',
-        'description',
         'owner_id',
         'is_personal',
+        'is_default',
     ];
 
     protected $casts = [
         'is_personal' => 'boolean',
+        'is_default' => 'boolean',
     ];
 
     public function owner(): BelongsTo
@@ -51,10 +52,10 @@ class Workspace extends Model
     public static function createPersonalWorkspace(User $user): self
     {
         return self::create([
-            'name' => 'Mes repas',
-            'description' => 'Mon espace personnel de planification de repas',
+            'name' => 'Mon espace',
             'owner_id' => $user->id,
             'is_personal' => true,
+            'is_default' => true,
         ]);
     }
 
@@ -110,11 +111,27 @@ class Workspace extends Model
     }
 
     /**
+     * Remove all non-owner members and their permissions from this workspace
+     */
+    public function removeAllNonOwnerMembers(): void
+    {
+        $nonOwners = $this->users()->where('user_id', '!=', $this->owner_id)->get();
+
+        foreach ($nonOwners as $user) {
+            setPermissionsTeamId($this->id);
+            $this->removeUserPermissions($user);
+            $this->plannedMeals()->where('user_id', $user->id)->delete();
+            $this->users()->detach($user->id);
+        }
+    }
+
+    /**
      * Check if user can edit planning (Spatie version)
      */
     public function canUserEditPlanning(User $user): bool
     {
         setPermissionsTeamId($this->id);
+
         return $user->hasPermissionTo('planning.edit');
     }
 
@@ -124,6 +141,7 @@ class Workspace extends Model
     public function canUserManageWorkspace(User $user): bool
     {
         setPermissionsTeamId($this->id);
+
         return $user->hasPermissionTo('workspace.manage');
     }
 

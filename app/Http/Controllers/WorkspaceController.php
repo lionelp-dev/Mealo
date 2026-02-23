@@ -6,7 +6,6 @@ use App\Http\Requests\StoreWorkspace;
 use App\Http\Requests\UpdateWorkspace;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
 use App\Services\WorkspaceDataService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -34,12 +33,11 @@ class WorkspaceController extends Controller
         return DB::transaction(function () use ($request) {
             $workspace = Workspace::create([
                 'name' => $request->validated('name'),
-                'description' => $request->validated('description'),
                 'owner_id' => $request->user()->id,
-                'is_personal' => false,
+                'is_personal' => $request->validated('is_personal'),
             ]);
 
-            return back()->with('success', 'Workspace created successfully');
+            return back()->with(['success' => 'Workspace created successfully', 'new_workspace_id' => $workspace->id]);
         });
     }
 
@@ -47,7 +45,16 @@ class WorkspaceController extends Controller
     {
         Gate::authorize('update', $workspace);
 
-        $workspace->update($request->validated());
+        $convertingToPersonal = $request->validated('is_personal') === true && !$workspace->is_default;
+
+        DB::transaction(function () use ($workspace, $request, $convertingToPersonal) {
+            $workspace->update($request->validated());
+
+            if ($convertingToPersonal) {
+                $workspace->removeAllNonOwnerMembers();
+                $workspace->invitations()->delete();
+            }
+        });
 
         return back()->with('success', 'Workspace updated successfully');
     }
@@ -136,7 +143,7 @@ class WorkspaceController extends Controller
         }
 
         // Check if user is a member
-        if (!$workspace->hasUser($user)) {
+        if (! $workspace->hasUser($user)) {
             return back()->with('error', 'Vous n\'êtes pas membre de ce groupe.');
         }
 

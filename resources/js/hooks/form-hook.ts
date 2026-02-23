@@ -3,6 +3,7 @@ import { fieldContext, formContext } from './form-context';
 
 import CheckboxField from '@/components/ui/form-checkbox-field';
 import EmailField from '@/components/ui/form-email-field';
+import RadioField from '@/components/ui/form-radio-field';
 import SelectField from '@/components/ui/form-select-field';
 import SubmitButton from '@/components/ui/form-submit-button';
 import TextAreaField from '@/components/ui/form-textarea-field';
@@ -17,6 +18,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
     EmailField,
     SelectField,
     CheckboxField,
+    RadioField,
   },
   formComponents: {
     SubmitButton,

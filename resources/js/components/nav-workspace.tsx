@@ -13,7 +13,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { Bell, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export function WorkspaceNav({}) {
+export function NavWorkspace({}) {
   const { t } = useTranslation();
 
   const { workspace_data } = usePage<{ workspace_data: WorkspaceData }>().props;
@@ -26,40 +26,29 @@ export function WorkspaceNav({}) {
 
   const sharedWorkspaces = workspaces?.filter((w: any) => !w.is_personal);
 
-  // Don't render if no workspace data or no shared workspaces/invitations
-  if (
-    workspaces.length === 0 &&
-    sharedWorkspaces.length === 0 &&
-    pendingInvitationsCount === 0
-  ) {
-    return null;
-  }
-
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>
-        {t('workspace.sharedSpaces', 'Espaces partagés')}
+      <SidebarGroupLabel className="text-secondary uppercase">
+        {t('workspace.sharedSpace', 'Espace partagé')}
       </SidebarGroupLabel>
       <SidebarGroupContent>
         <SidebarMenu>
-          {sharedWorkspaces.length > 0 && (
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link
-                  href={workspacesRoute.index.url()}
-                  className="flex items-center justify-between"
-                >
-                  <span className="mb-[3px] flex items-center gap-3">
-                    <Users className="h-4 w-4" />
-                    <span>{t('workspace.myGroups', 'Mes groupes')}</span>
-                  </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-xs text-secondary-content">
-                    {sharedWorkspaces.length}
-                  </span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link
+                href={workspacesRoute.index.url()}
+                className="flex items-center justify-between"
+              >
+                <span className="mb-[3px] flex items-center gap-3">
+                  <Users className="h-4 w-4" />
+                  <span>{t('workspace.mySpaces', 'Mes espaces')}</span>
+                </span>
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-xs text-secondary-content">
+                  {sharedWorkspaces.length}
+                </span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
           {pendingInvitationsCount > 0 && (
             <SidebarMenuItem>

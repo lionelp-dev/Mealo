@@ -1,9 +1,7 @@
 import MealPlanCalendar from '@/components/meal-plan-calendar';
 import { MealPlanGenerationPopover } from '@/components/meal-plan-generation-popover';
+import { NavWorkspaceSwitcher } from '@/components/nav-workspace-switcher';
 import WeekSelector from '@/components/week-selector';
-import WorkspaceCreationModal from '@/components/workspace-creation-modal';
-import { WorkspaceInvitationModal } from '@/components/workspace-invitation-modal';
-import { WorkspaceSwitcher } from '@/components/workspace-switcher';
 import { MealPlanDataProvider } from '@/contexts/meal-plan-context';
 import { RecipeFiltersDataProvider } from '@/contexts/recipe-filters-context';
 import { WorkspaceDataProvider } from '@/contexts/workspace-context';
@@ -71,14 +69,10 @@ function PlannedMealsView() {
 
   return AppLayout({
     children: (
-      <>
-        <div className="w-full overflow-y-scroll py-7 pr-6 pl-7.5">
-          <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
-          <MealPlanCalendar />
-        </div>
-        <WorkspaceInvitationModal />
-        <WorkspaceCreationModal />
-      </>
+      <div className="w-full overflow-y-scroll py-7 pr-6 pl-7.5">
+        <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
+        <MealPlanCalendar />
+      </div>
     ),
     headerLeftContent: (
       <div className="flex items-center gap-4">
@@ -90,8 +84,8 @@ function PlannedMealsView() {
     ),
     headerRightContent: (
       <div className="flex items-center gap-4">
-        <WorkspaceSwitcher />
         {canGenerateMealPlan && <MealPlanGenerationPopover />}
+        <NavWorkspaceSwitcher />
       </div>
     ),
   });

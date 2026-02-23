@@ -32,7 +32,7 @@ export default function SelectField({
   return (
     <div className={cn('flex flex-col gap-3')}>
       {label && (
-        <label htmlFor={field.name} className="text-md text-base-content">
+        <label htmlFor={field.name} className="text-base text-base-content">
           {label}
         </label>
       )}
@@ -40,7 +40,7 @@ export default function SelectField({
         value={field.state.value}
         onValueChange={(value) => field.handleChange(value)}
       >
-        <SelectTrigger className={cn('w-fit pr-10 pl-5', className)}>
+        <SelectTrigger className={cn('w-fit pr-9 pl-4.5', className)}>
           <SelectValue placeholder={placeholder}>
             {field.state.value
               ? options.find((opt) => opt.value === field.state.value)?.label

@@ -327,6 +327,7 @@
       "update": "Update",
       "abandon": "Cancel",
       "clearSelection": "Clear selection",
+      "continue": "Continue",
       "selected": {
         "singular": "selected",
         "plural": "selected"
@@ -339,7 +340,8 @@
       "saved": "Saved",
       "updated": "Updated",
       "deleted": "Deleted",
-      "created": "Created"
+      "created": "Created",
+      "saving": "Saving..."
     },
     "validation": {
       "required": "This field is required",
@@ -354,7 +356,8 @@
       "delete": "Delete",
       "duplicate": "Duplicate",
       "archive": "Archive"
-    }
+    },
+    "clear": "Clear"
   },
   "welcome": {
     "title": "Welcome",
@@ -365,11 +368,40 @@
     "name": "Name",
     "description": "Description",
     "create": {
-      "button": "Create a group"
+      "button": "Create a group",
+      "title": "Create a workspace",
+      "newSpace": "New workspace"
+    },
+    "edit": {
+      "title": "Edit workspace",
+      "makePersonalWarning": {
+        "title": "Switch to personal mode?",
+        "currentlyHas": "This workspace currently has",
+        "intro": "By switching to personal mode:",
+        "item1": "All members will be removed from the workspace",
+        "item2": "Their planned meals will be deleted",
+        "item3": "Only you will have access",
+        "irreversible": "This action is irreversible."
+      }
+    },
+    "type": {
+      "personal": "Personal",
+      "shared": "Shared",
+      "personalHint": "Your daily meals",
+      "sharedHint": "Family, roommates, friends..."
+    },
+    "fields": {
+      "name": "Workspace name",
+      "namePlaceholder": "E.g.: Family, Roommates..."
+    },
+    "hints": {
+      "personal": "Manage your personal meals and schedules.",
+      "shared": "Collaborate with your family, roommates or friends."
     },
     "pageTitle": "My groups",
     "title": "My groups",
     "subtitle": "Shared planning spaces",
+    "indexSubtitle": "Manage your personal and collaborative workspaces",
     "manageMembers": "Manage members",
     "manageMembersFor": "Manage members of",
     "inviteByEmail": "Invite by email",
@@ -380,6 +412,7 @@
       "button": "Invite"
     },
     "membersLabel": "members",
+    "member": "member",
     "pending_invitations": "Pending invitations",
     "invitedBy": "Invited by",
     "makeEditor": "Change to editor",
@@ -387,6 +420,7 @@
     "removeMember": "Remove",
     "current_workspace": "Current workspace",
     "myGroups": "My groups",
+    "mySpaces": "My spaces",
     "invitations": "Invitations",
     "manageInvitations": "Manage invitations",
     "delete": {
@@ -396,16 +430,23 @@
     },
     "leave": {
       "message": "Are you sure you want to leave the group \"{{name}}\"?",
-      "button": "Leave group"
+      "button": "Leave group",
+      "confirmButton": "Leave"
     },
     "empty": {
       "title": "No shared groups",
       "description": "Create your first group or request an invitation to collaborate with others on your meal plans."
     },
-    "roles": {
+    "role": {
       "owner": "Owner",
       "editor": "Editor",
       "viewer": "Viewer"
+    },
+    "roles": {
+      "owner": "Owner",
+      "editor": "Editor",
+      "viewer": "Viewer",
+      "ownerLabel": "· Owner"
     },
     "owner": {
       "label": "Workspace owner"
@@ -414,7 +455,10 @@
       "title": "Permissions",
       "viewPlanning": "View",
       "editMeals": "Edit",
-      "manageMembers": "Manage"
+      "manageMembers": "Manage",
+      "editorDescription": "View and edit meals",
+      "editorNote": "Member management not included",
+      "viewerDescription": "View planned meals"
     },
     "members": {
       "title": "Members"
@@ -424,14 +468,24 @@
       "decline": "Decline"
     },
     "planning": "Planning",
-    "sharedSpaces": "Shared spaces"
+    "sharedSpaces": "Shared spaces",
+    "sharedSpace": "Shared space",
+    "label": "Workspace",
+    "actions": "Actions",
+    "modified": "Modified"
   },
   "invitation": {
     "pageTitle": "Invitations",
     "title": "Group invitations",
     "subtitle": "Manage your invitations to shared planning spaces",
+    "yourRole": "Your role",
     "status": {
       "pending": "Pending"
+    },
+    "expires": {
+      "today": "Expires today",
+      "inDays": "Expires in {{days}} day",
+      "inDays_plural": "Expires in {{days}} days"
     },
     "empty": {
       "title": "No pending invitations",

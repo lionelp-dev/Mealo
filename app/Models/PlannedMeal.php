@@ -16,6 +16,11 @@ class PlannedMeal extends Model
 
     protected $table = 'planned_meals';
 
+    /**
+     * @var array<int, string>
+     */
+    protected $touches = ['workspace'];
+
     protected $fillable = [
         'user_id',
         'workspace_id',

@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
             ]
         );
 
-
         $editor = User::query()->firstOrCreate(
             ['email' => 'editor@mail.com'],
             [
@@ -40,10 +39,8 @@ class UserSeeder extends Seeder
             ]
         );
 
-
         $sharedWorkspace = Workspace::create([
             'name' => 'Test Shared Workspace',
-            'description' => 'A workspace for testing collaboration features',
             'owner_id' => $owner->id,
             'is_personal' => false,
         ]);
@@ -61,7 +58,6 @@ class UserSeeder extends Seeder
         // Give appropriate Spatie permissions
         $sharedWorkspace->giveEditorPermissions($editor);
         $sharedWorkspace->giveViewerPermissions($viewer);
-
 
         new AIRecipeSeeder($owner)->run();
 

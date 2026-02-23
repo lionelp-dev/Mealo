@@ -16,6 +16,7 @@ class WorkspacePolicy
     {
         // Check if user is member of workspace and has view permissions
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.view');
     }
 
@@ -28,17 +29,19 @@ class WorkspacePolicy
     {
         // Check if user is member and has edit permissions (owner or editor roles)
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.edit');
     }
 
     public function delete(User $user, Workspace $workspace): bool
     {
-        if ($workspace->is_personal) {
+        if ($workspace->is_default) {
             return false;
         }
 
         // Only owners can delete workspaces
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
     }
 
@@ -46,13 +49,18 @@ class WorkspacePolicy
     {
         // Only owners can manage members
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
     }
 
     public function invite(User $user, Workspace $workspace): bool
     {
+        if ($workspace->is_default) {
+            return false;
+        }
         // Only owners can send invitations
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
     }
 
@@ -60,7 +68,7 @@ class WorkspacePolicy
     {
         // Check if user is member and can edit planning (owners and editors)
         setPermissionsTeamId($workspace->id);
+
         return $workspace->hasUser($user) && $user->hasPermissionTo('planning.edit');
     }
 }
-

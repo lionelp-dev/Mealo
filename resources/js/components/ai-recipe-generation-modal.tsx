@@ -46,18 +46,18 @@ export default function AIRecipeGenerationModal({
 
   return (
     <div className="modal-open modal">
-      <div className="modal-box flex max-w-2xl flex-col gap-1">
-        <div className="flex items-center justify-between">
-          <h2 className="flex items-center gap-3 text-xl font-semibold">
-            <Wand2 className="h-5 w-5" />
-{t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
+      <div className="modal-box flex max-w-2xl flex-col gap-1 divide-y divide-base-300/50 rounded-xl px-8">
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="flex items-center gap-3.5 pt-4 pb-2.5 text-xl font-semibold text-secondary">
+            <Wand2 className="mb-1 h-8 w-8" />
+            {t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
           </h2>
           <button
             onClick={onClose}
-            className="btn btn-square btn-ghost btn-sm"
+            className="btn btn-circle btn-square btn-ghost btn-sm"
             disabled={isLoading}
           >
-            <X className="h-4 w-4" />
+            <X className="h-6 w-6" />
           </button>
         </div>
 
@@ -67,47 +67,49 @@ export default function AIRecipeGenerationModal({
             e.stopPropagation();
             form.handleSubmit();
           }}
-          className="flex flex-col gap-2"
+          className="flex flex-col"
         >
-          <label className="label">
-<span className="label-text">{t('recipes.generate.prompt.label', 'Recipe Description')}</span>
+          <label className="label flex flex-col items-start gap-2.5">
+            <form.Field
+              name="prompt"
+              children={(field) => (
+                <textarea
+                  className="textarea-bordered textarea w-full rounded-xl pt-4 pl-5 text-sm"
+                  placeholder={t(
+                    'recipes.generate.prompt.placeholder',
+                    "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'",
+                  )}
+                  value={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                  disabled={isLoading}
+                  rows={10}
+                />
+              )}
+            />
           </label>
-          <form.Field
-            name="prompt"
-            children={(field) => (
-              <textarea
-                className="textarea-bordered textarea w-full"
-placeholder={t('recipes.generate.prompt.placeholder', 'Describe the recipe you want to create, e.g., \'A healthy Mediterranean chicken dish with vegetables\'')}
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-                disabled={isLoading}
-                rows={10}
-              />
-            )}
-          />
-          <div className="modal-action">
+          <div className="modal-action gap-4">
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-ghost"
+              className="btn"
               disabled={isLoading}
             >
-{t('common.buttons.cancel', 'Cancel')}
+              {t('common.buttons.cancel', 'Cancel')}
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn gap-2 pl-4.5 btn-secondary"
               disabled={isLoading}
             >
               {isLoading ? (
                 <>
                   <span className="loading loading-sm loading-spinner"></span>
-{t('recipes.generate.generating', 'Generating...')}
+                  {t('recipes.generate.generating', 'Generating...')}
                 </>
               ) : (
                 <>
+                  {t('recipes.generate.button', 'Generate recipe')}
                   <Wand2 className="h-4 w-4" />
-{t('recipes.generate.button', 'Generate recipe')}
                 </>
               )}
             </button>

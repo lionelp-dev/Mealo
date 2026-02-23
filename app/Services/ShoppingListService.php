@@ -31,7 +31,8 @@ class ShoppingListService
             ->get()
             ->mapWithKeys(function ($item) {
                 // Key: planned_meal_id:ingredient_id:unit
-                $key = $item->planned_meal_id . ':' . $item->ingredient_id . ':' . $item->unit;
+                $key = $item->planned_meal_id.':'.$item->ingredient_id.':'.$item->unit;
+
                 return [$key => $item->is_checked];
             });
 
@@ -46,12 +47,13 @@ class ShoppingListService
 
         $aggregatedPlannedMealIngredients = collect($plannedMeals)->flatMap(function ($plannedMeal) use ($shoppingList, $existingCheckedStatuses) {
             $ingredients = $plannedMeal->recipe->ingredients;
+
             return collect($ingredients)->map(function ($ingredient) use ($shoppingList, $plannedMeal, $existingCheckedStatuses) {
                 // Get unit from recipe_ingredients pivot
                 $unit = $ingredient->pivot->unit;
 
                 // Restore checked status if it existed
-                $key = $plannedMeal->id . ':' . $ingredient->id . ':' . $unit;
+                $key = $plannedMeal->id.':'.$ingredient->id.':'.$unit;
                 $isChecked = $existingCheckedStatuses->get($key, false);
 
                 return [
@@ -92,11 +94,11 @@ class ShoppingListService
                     ->first();
                 $ingredient_quantity = round(($pivotData->quantity / $recipe->serving_size) * $plannedMeal->serving_size, 2);
 
-                $key = $ingredient->id . ':' . $pivotData->unit;
+                $key = $ingredient->id.':'.$pivotData->unit;
 
                 $statusKey = $plannedMealIngredient->is_checked ? 'checked' : 'unchecked';
 
-                if (!isset($acc[$statusKey][$key])) {
+                if (! isset($acc[$statusKey][$key])) {
                     $acc[$statusKey][$key] = [
                         'shopping_list_id' => $shoppingList->id,
                         'ingredient_id' => $ingredient->id,
@@ -119,7 +121,7 @@ class ShoppingListService
                         'is_checked' => $plannedMealIngredient->is_checked,
                     ];
 
-                if (!isset($acc[$statusKey][$key]['from_recipes'][$recipe->id])) {
+                if (! isset($acc[$statusKey][$key]['from_recipes'][$recipe->id])) {
                     $acc[$statusKey][$key]['from_recipes'][$recipe->id] = [
                         'recipe_id' => $recipe->id,
                         'recipe_name' => $recipe->name,
@@ -172,15 +174,15 @@ class ShoppingListService
 
                 $ingredient_quantity = round(($pivotData->quantity / $recipe->serving_size) * $plannedMeal->serving_size, 2);
 
-                $shoppingListRecipeKey = $shoppingList->id . ':' . $recipe->id;
+                $shoppingListRecipeKey = $shoppingList->id.':'.$recipe->id;
 
-                $plannedMealIngredientKey = $plannedMeal->id . ':' . $ingredient->id . ':' . $pivotData->unit;
+                $plannedMealIngredientKey = $plannedMeal->id.':'.$ingredient->id.':'.$pivotData->unit;
 
                 $ingredientKey = $ingredient->id;
 
                 $statusKey = $plannedMealIngredient->is_checked ? 'checked' : 'unchecked';
 
-                if (!isset($acc[$shoppingListRecipeKey])) {
+                if (! isset($acc[$shoppingListRecipeKey])) {
                     $acc[$shoppingListRecipeKey] = [
                         'recipe_id' => $recipe->id,
                         'recipe_name' => $recipe->name,

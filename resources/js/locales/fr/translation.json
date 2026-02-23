@@ -349,6 +349,7 @@
             "update": "Mettre à jour",
             "abandon": "Abandonner",
             "clearSelection": "Effacer la selection",
+            "continue": "Continuer",
             "selected": {
                 "singular": "sélectionné",
                 "plural": "sélectionnés"
@@ -362,7 +363,8 @@
             "saved": "Enregistré",
             "updated": "Mis à jour",
             "deleted": "Supprimé",
-            "created": "Créé"
+            "created": "Créé",
+            "saving": "Sauvegarde..."
         },
         "validation": {
             "required": "Ce champ est requis",
@@ -388,11 +390,40 @@
         "name": "Nom",
         "description": "Description",
         "create": {
-            "button": "Créer un groupe"
+            "button": "Créer un groupe",
+            "title": "Créer un espace",
+            "newSpace": "Nouvel espace"
+        },
+        "edit": {
+            "title": "Modifier l'espace",
+            "makePersonalWarning": {
+                "title": "Passer en mode personnel ?",
+                "currentlyHas": "Cet espace compte actuellement",
+                "intro": "En passant en mode personnel :",
+                "item1": "Tous les membres seront retirés de l'espace",
+                "item2": "Leurs repas planifiés seront supprimés",
+                "item3": "Seul vous y aurez accès",
+                "irreversible": "Cette action est irréversible."
+            }
+        },
+        "type": {
+            "personal": "Personnel",
+            "shared": "Partagé",
+            "personalHint": "Vos repas au quotidien",
+            "sharedHint": "Famille, coloc, ami(e)s..."
+        },
+        "fields": {
+            "name": "Nom de l'espace",
+            "namePlaceholder": "Ex : Famille, Colocation…"
+        },
+        "hints": {
+            "personal": "Gérez vos repas et plannings personnels.",
+            "shared": "Collaborez avec votre famille, colocataires ou amis."
         },
         "pageTitle": "Mes groupes",
         "title": "Mes groupes",
         "subtitle": "Espaces de planification partagés",
+        "indexSubtitle": "Gérez vos espaces personnels et collaboratifs",
         "manageMembers": "Gérer les membres",
         "manageMembersFor": "Gérer les membres de",
         "inviteByEmail": "Inviter par email",
@@ -403,6 +434,7 @@
             "button": "Inviter"
         },
         "membersLabel": "membres",
+        "member": "membre",
         "pending_invitations": "Invitations en attente",
         "invitedBy": "Invité par",
         "makeEditor": "Changer en éditeur",
@@ -410,6 +442,7 @@
         "removeMember": "Retirer",
         "current_workspace": "Espace actuel",
         "myGroups": "Mes groupes",
+        "mySpaces": "Mes espaces",
         "invitations": "Invitations",
         "manageInvitations": "Gérer les invitations",
         "delete": {
@@ -419,16 +452,23 @@
         },
         "leave": {
             "message": "Êtes-vous sûr de vouloir quitter le groupe \"{{name}}\" ?",
-            "button": "Quitter le groupe"
+            "button": "Quitter le groupe",
+            "confirmButton": "Quitter"
         },
         "empty": {
             "title": "Aucun groupe partagé",
             "description": "Créez votre premier groupe ou demandez une invitation pour collaborer avec d'autres personnes sur vos planifications de repas."
         },
-        "roles": {
+        "role": {
             "owner": "Propriétaire",
             "editor": "Éditeur",
             "viewer": "Lecteur"
+        },
+        "roles": {
+            "owner": "Propriétaire",
+            "editor": "Éditeur",
+            "viewer": "Lecteur",
+            "ownerLabel": "· Propriétaire"
         },
         "owner": {
             "label": "Propriétaire du workspace"
@@ -437,7 +477,10 @@
             "title": "Permissions",
             "viewPlanning": "Consulter",
             "editMeals": "Modifier",
-            "manageMembers": "Gérer"
+            "manageMembers": "Gérer",
+            "editorDescription": "Consulter et modifier les repas",
+            "editorNote": "Gestion des membres non incluse",
+            "viewerDescription": "Consulter les repas plannifiés"
         },
         "members": {
             "title": "Membres"
@@ -447,14 +490,24 @@
             "decline": "Décliner"
         },
         "planning": "Planning",
-        "sharedSpaces": "Espaces partagés"
+        "sharedSpaces": "Espaces partagés",
+        "sharedSpace": "Espace partagé",
+        "label": "Espace",
+        "actions": "Actions",
+        "modified": "Modifié"
     },
     "invitation": {
         "pageTitle": "Invitations",
         "title": "Invitations aux groupes",
         "subtitle": "Gérez vos invitations aux espaces de planification partagés",
+        "yourRole": "Votre rôle",
         "status": {
             "pending": "En attente"
+        },
+        "expires": {
+            "today": "Expire aujourd'hui",
+            "inDays": "Expire dans {{days}} jour",
+            "inDays_plural": "Expire dans {{days}} jours"
         },
         "empty": {
             "title": "Aucune invitation en attente",
