@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { DateTime } from 'luxon';
-import { MealPlanProvider } from '../contexts/meal-plan-context';
+import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import {
   DayPlannedMeals,
   MealTime,
@@ -40,6 +40,20 @@ const contextData = {
   plannedMeals: [] as PlannedMeal[],
   recipes,
   tags: [] as Tag[],
+  workspace_data: {
+    current_workspace: {
+      id: 1,
+      name: 'Test',
+      owner_id: 1,
+      is_personal: true,
+      is_default: true,
+      members: [],
+      pending_invitations: [],
+      created_at: '2024-01-01T00:00:00.000000Z',
+      updated_at: '2024-01-01T00:00:00.000000Z',
+    },
+    workspaces: [],
+  },
 };
 
 const meta: Meta<typeof MealPlanDayHeader> = {
@@ -57,9 +71,9 @@ const meta: Meta<typeof MealPlanDayHeader> = {
   decorators: [
     (Story) => (
       <div className="w-96 p-4">
-        <MealPlanProvider data={contextData}>
+        <MealPlanDataProvider data={contextData}>
           <Story />
-        </MealPlanProvider>
+        </MealPlanDataProvider>
       </div>
     ),
   ],
@@ -83,12 +97,14 @@ const createDayPlannedMeals = (
         id: 1,
         planned_date: dateStr,
         meal_time_id: 1,
+        serving_size: 1,
         recipe: { id: 1, name: 'Smoothie Bowl' },
       },
       {
         id: 2,
         planned_date: dateStr,
         meal_time_id: 3,
+        serving_size: 4,
         recipe: { id: 2, name: 'Pâtes Carbonara' },
       },
     ];
@@ -97,6 +113,7 @@ const createDayPlannedMeals = (
       id: index + 1,
       planned_date: dateStr,
       meal_time_id: mealTime.id,
+      serving_size: 2,
       recipe: { id: index + 1, name: `Recette ${mealTime.name}` },
     }));
   }

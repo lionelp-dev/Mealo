@@ -15,7 +15,7 @@ class IngredientResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            "id" => $this->resource->id,
+            'id' => $this->resource->id,
             'name' => $this->resource->name,
             'quantity' => $this->when($this->relationLoaded('pivot'), function () {
                 return $this->pivot->quantity;

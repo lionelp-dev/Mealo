@@ -1,6 +1,6 @@
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { DateTime } from 'luxon';
-import { MealPlanProvider } from '../contexts/meal-plan-context';
+import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import {
   Ingredient,
@@ -45,8 +45,10 @@ const steps: Step[] = [
 const sampleRecipes: Recipe[] = [
   {
     id: 1,
+    user_id: 1,
     name: 'Crêpes aux fruits',
     description: 'Délicieuses crêpes garnies de fruits frais',
+    serving_size: 2,
     preparation_time: 15,
     cooking_time: 20,
     meal_times: [mealTimes[0]],
@@ -56,8 +58,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 2,
+    user_id: 1,
     name: 'Salade Caprese',
     description: 'Salade italienne aux tomates et mozzarella',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[1]],
@@ -73,8 +77,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 3,
+    user_id: 1,
     name: 'Pasta Carbonara',
     description: 'Pâtes crémeuses aux lardons',
+    serving_size: 2,
     preparation_time: 5,
     cooking_time: 15,
     meal_times: [mealTimes[2]],
@@ -92,8 +98,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 4,
+    user_id: 1,
     name: 'Smoothie Bowl',
     description: 'Bowl énergétique aux fruits',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[0]],
@@ -110,8 +118,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 2,
+    user_id: 1,
     name: 'Salade Caprese',
     description: 'Salade italienne aux tomates et mozzarella',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[1]],
@@ -127,8 +137,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 3,
+    user_id: 1,
     name: 'Pasta Carbonara',
     description: 'Pâtes crémeuses aux lardons',
+    serving_size: 2,
     preparation_time: 5,
     cooking_time: 15,
     meal_times: [mealTimes[2]],
@@ -146,8 +158,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 4,
+    user_id: 1,
     name: 'Smoothie Bowl',
     description: 'Bowl énergétique aux fruits',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[0]],
@@ -164,8 +178,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 2,
+    user_id: 1,
     name: 'Salade Caprese',
     description: 'Salade italienne aux tomates et mozzarella',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[1]],
@@ -181,8 +197,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 3,
+    user_id: 1,
     name: 'Pasta Carbonara',
     description: 'Pâtes crémeuses aux lardons',
+    serving_size: 2,
     preparation_time: 5,
     cooking_time: 15,
     meal_times: [mealTimes[2]],
@@ -200,8 +218,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 4,
+    user_id: 1,
     name: 'Smoothie Bowl',
     description: 'Bowl énergétique aux fruits',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[0]],
@@ -218,8 +238,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 2,
+    user_id: 1,
     name: 'Salade Caprese',
     description: 'Salade italienne aux tomates et mozzarella',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[1]],
@@ -235,8 +257,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 3,
+    user_id: 1,
     name: 'Pasta Carbonara',
     description: 'Pâtes crémeuses aux lardons',
+    serving_size: 2,
     preparation_time: 5,
     cooking_time: 15,
     meal_times: [mealTimes[2]],
@@ -254,8 +278,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 4,
+    user_id: 1,
     name: 'Smoothie Bowl',
     description: 'Bowl énergétique aux fruits',
+    serving_size: 2,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[0]],
@@ -294,12 +320,14 @@ const plannedMeals: PlannedMeal[] = [
     planned_date: '2024-01-15',
     meal_time_id: 1,
     recipe: { id: 1, name: 'Crêpes aux fruits' },
+    serving_size: 2,
   },
   {
     id: 2,
     planned_date: '2024-01-16',
     meal_time_id: 2,
     recipe: { id: 2, name: 'Salade Caprese' },
+    serving_size: 2,
   },
 ];
 
@@ -309,6 +337,20 @@ const contextData = {
   plannedMeals,
   recipes,
   tags,
+  workspace_data: {
+    current_workspace: {
+      id: 1,
+      name: 'Test',
+      owner_id: 1,
+      is_personal: true,
+      is_default: true,
+      members: [],
+      pending_invitations: [],
+      created_at: '2024-01-01T00:00:00.000000Z',
+      updated_at: '2024-01-01T00:00:00.000000Z',
+    },
+    workspaces: [],
+  },
 };
 
 const meta: Meta<typeof MealPlanDialog> = {
@@ -333,9 +375,9 @@ const meta: Meta<typeof MealPlanDialog> = {
   decorators: [
     (Story, context) => (
       <div className="min-h-screen bg-gray-50">
-        <MealPlanProvider data={contextData}>
+        <MealPlanDataProvider data={contextData}>
           <Story {...context.args} />
-        </MealPlanProvider>
+        </MealPlanDataProvider>
       </div>
     ),
   ],

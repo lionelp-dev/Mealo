@@ -15,7 +15,7 @@ class OpenAIServiceProvider extends ServiceProvider
         $this->app->singleton('openai.client', function ($app) {
             $apiKey = config('services.openai.api_key');
 
-            if (!$apiKey) {
+            if (! $apiKey) {
                 return null;
             }
 
@@ -36,4 +36,3 @@ class OpenAIServiceProvider extends ServiceProvider
         //
     }
 }
-

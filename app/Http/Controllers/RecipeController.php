@@ -16,9 +16,9 @@ use App\Models\Recipe;
 use App\Models\Tag;
 use App\Models\User;
 use App\Services\AIRecipeGenerationService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
@@ -32,6 +32,7 @@ class RecipeController extends Controller
     public function __construct(
         private AIRecipeGenerationService $aiRecipeGenerationService
     ) {}
+
     /**
      * Display a listing of the resource.
      */
@@ -58,22 +59,22 @@ class RecipeController extends Controller
             ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         // Search filter
-        if (!empty($validated['search'])) {
-            $recipesQuery = $recipesQuery->where('name', 'LIKE', '%' . $validated['search'] . '%');
+        if (! empty($validated['search'])) {
+            $recipesQuery = $recipesQuery->where('name', 'LIKE', '%'.$validated['search'].'%');
         }
 
         // Preparation time filter
-        if (!empty($validated['preparation_time'])) {
+        if (! empty($validated['preparation_time'])) {
             $recipesQuery = $this->applyTimeFilter($recipesQuery, 'preparation_time', $validated['preparation_time']);
         }
 
         // Cooking time filter
-        if (!empty($validated['cooking_time'])) {
+        if (! empty($validated['cooking_time'])) {
             $recipesQuery = $this->applyTimeFilter($recipesQuery, 'cooking_time', $validated['cooking_time']);
         }
 
         // Tags filter (AND logic - recipe must have ALL selected tags)
-        if (!empty($validated['tags']) && count($validated['tags']) > 0) {
+        if (! empty($validated['tags']) && count($validated['tags']) > 0) {
             foreach ($validated['tags'] as $tagId) {
                 $recipesQuery = $recipesQuery->whereHas('tags', function ($query) use ($tagId) {
                     $query->where('tags.id', $tagId);
@@ -82,7 +83,7 @@ class RecipeController extends Controller
         }
 
         // Meal times filter
-        if (!empty($validated['meal_times']) && count($validated['meal_times']) > 0) {
+        if (! empty($validated['meal_times']) && count($validated['meal_times']) > 0) {
             $recipesQuery = $recipesQuery->whereHas('mealTimes', function ($query) use ($validated) {
                 $query->whereIn('meal_times.id', $validated['meal_times']);
             });
@@ -92,7 +93,7 @@ class RecipeController extends Controller
 
         return Inertia::render('recipe/index', [
             'recipes' => Inertia::scroll(new RecipeCollection($recipesQuery->paginate(15))),
-            'tags' =>  TagResource::collection($tags)->toArray($request),
+            'tags' => TagResource::collection($tags)->toArray($request),
         ]);
     }
 
@@ -113,16 +114,16 @@ class RecipeController extends Controller
         ]);
 
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
-        if (!empty($validated['ingredients_search'])) {
+        if (! empty($validated['ingredients_search'])) {
             $ingredientsQuery = $ingredientsQuery
-                ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+                ->where('name', 'like', '%'.$validated['ingredients_search'].'%')
                 ->orderBy('name');
         }
 
         $tagsQuery = Tag::query()->where('user_id', $user->id);
-        if (!empty($validated['tags_search'])) {
+        if (! empty($validated['tags_search'])) {
             $tagsQuery = $tagsQuery
-                ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+                ->where('name', 'like', '%'.$validated['tags_search'].'%')
                 ->orderBy('name');
         }
 
@@ -144,7 +145,7 @@ class RecipeController extends Controller
     {
         Gate::authorize('create', Recipe::class);
 
-        if (!config('services.openai.api_key')) {
+        if (! config('services.openai.api_key')) {
             return to_route('recipes.create')->with('error', 'La génération de recettes par IA n\'est pas disponible.');
         }
 
@@ -246,16 +247,16 @@ class RecipeController extends Controller
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         $ingredientsQuery = Ingredient::query()->where('user_id', $user->id);
-        if (!empty($validated['ingredients_search'])) {
+        if (! empty($validated['ingredients_search'])) {
             $ingredientsQuery = $ingredientsQuery
-                ->where('name', 'like', '%' . $validated['ingredients_search'] . '%')
+                ->where('name', 'like', '%'.$validated['ingredients_search'].'%')
                 ->orderBy('name');
         }
 
         $tagsQuery = Tag::query()->where('user_id', $user->id);
-        if (!empty($validated['tags_search'])) {
+        if (! empty($validated['tags_search'])) {
             $tagsQuery = $tagsQuery
-                ->where('name', 'like', '%' . $validated['tags_search'] . '%')
+                ->where('name', 'like', '%'.$validated['tags_search'].'%')
                 ->orderBy('name');
         }
 
@@ -285,7 +286,6 @@ class RecipeController extends Controller
             'steps',
             'tags',
         ]);
-
 
         DB::transaction(function () use ($recipe, $validated) {
             $recipe->update(Arr::except($validated, ['ingredients', 'meal_times', 'steps', 'tags']));
@@ -326,7 +326,7 @@ class RecipeController extends Controller
             foreach ($recipe_ids as $recipe_id) {
                 $recipe = Recipe::query()->where('user_id', $user->id)->where('id', $recipe_id)->first();
 
-                if (!$recipe) {
+                if (! $recipe) {
                     continue;
                 }
 
@@ -367,11 +367,11 @@ class RecipeController extends Controller
             abort(403, 'Unauthorized access to this recipe image');
         }
 
-        if (!$recipe->image_path) {
+        if (! $recipe->image_path) {
             abort(404, 'Image not found');
         }
 
-        if (!Storage::disk('recipe_images')->exists($recipe->image_path)) {
+        if (! Storage::disk('recipe_images')->exists($recipe->image_path)) {
             abort(404, 'Image not found');
         }
 

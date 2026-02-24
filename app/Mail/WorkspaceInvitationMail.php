@@ -36,7 +36,7 @@ class WorkspaceInvitationMail extends Mailable
     {
         return new Content(
             view: 'mails.WorkspaceInvitation',
-            with: ['acceptUrl' => route("workspace-invitations.accept", ['token' => $this->invitation->token]) ]
+            with: ['acceptUrl' => route('workspace-invitations.accept', ['token' => $this->invitation->token])]
         );
     }
 

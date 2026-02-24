@@ -11,6 +11,7 @@ class MonitorRecipeQueue extends Command
     protected $signature = 'queue:monitor-recipes
                             {--watch : Watch mode - refresh every few seconds}
                             {--interval=1 : Refresh interval in seconds for watch mode}';
+
     protected $description = 'Monitor recipe generation queue progress';
 
     public function handle()
@@ -26,7 +27,7 @@ class MonitorRecipeQueue extends Command
     {
         $interval = (int) $this->option('interval');
 
-        $this->info("📊 Recipe Queue Monitor - Watch Mode");
+        $this->info('📊 Recipe Queue Monitor - Watch Mode');
         $this->info("Refreshing every {$interval} seconds... Press Ctrl+C to stop");
         $this->newLine();
 
@@ -109,7 +110,7 @@ class MonitorRecipeQueue extends Command
 
         if ($isWatchMode) {
             $this->newLine();
-            $this->comment("Press Ctrl+C to stop monitoring");
+            $this->comment('Press Ctrl+C to stop monitoring');
         }
     }
 

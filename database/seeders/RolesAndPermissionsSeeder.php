@@ -19,14 +19,14 @@ class RolesAndPermissionsSeeder extends Seeder
 
         // 1. Créer les permissions
         $permissions = [
-            "workspace.view",
-            "workspace.edit",
-            "workspace.manage",
-            "workspace.planned-meal.create",
-            "workspace.planned-meal.update",
-            "workspace.planned-meal.view",
-            "workspace.planned-meal.destroy",
-            "planning.edit",
+            'workspace.view',
+            'workspace.edit',
+            'workspace.manage',
+            'workspace.planned-meal.create',
+            'workspace.planned-meal.update',
+            'workspace.planned-meal.view',
+            'workspace.planned-meal.destroy',
+            'planning.edit',
         ];
 
         foreach ($permissions as $permissionName) {

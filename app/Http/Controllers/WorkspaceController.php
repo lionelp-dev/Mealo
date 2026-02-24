@@ -45,7 +45,7 @@ class WorkspaceController extends Controller
     {
         Gate::authorize('update', $workspace);
 
-        $convertingToPersonal = $request->validated('is_personal') === true && !$workspace->is_default;
+        $convertingToPersonal = $request->validated('is_personal') === true && ! $workspace->is_default;
 
         DB::transaction(function () use ($workspace, $request, $convertingToPersonal) {
             $workspace->update($request->validated());

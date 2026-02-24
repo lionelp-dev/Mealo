@@ -12,7 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Storage;
 
 #[UsePolicy(RecipePolicy::class)]
@@ -47,7 +46,6 @@ class Recipe extends Model
     {
         return $this->belongsTo(User::class);
     }
-
 
     /**
      * @return BelongsToMany<Recipe>
@@ -97,7 +95,7 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<Ingredient> $ingredients_data
+     * @param  array<Ingredient>  $ingredients_data
      */
     public function syncIngredients($ingredients_data): void
     {
@@ -120,7 +118,7 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<Tag> $tags_data
+     * @param  array<Tag>  $tags_data
      */
     public function syncTags($tags_data): void
     {
@@ -129,6 +127,7 @@ class Recipe extends Model
                 'name' => $tag_data['name'],
                 'user_id' => $this->user_id,
             ]);
+
             return $tag->id;
         });
 
@@ -136,13 +135,14 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<MealTime> $meal_times_data
+     * @param  array<MealTime>  $meal_times_data
      */
     public function syncMealTimes($meal_times_data): void
     {
 
         $meal_times_ids = collect($meal_times_data)->map(function ($meal_time_data) {
             $meal_time = MealTime::query()->where('name', $meal_time_data['name'])->first();
+
             return $meal_time->id;
         })->toArray();
 
@@ -150,7 +150,7 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<Ingredient> $ingredients_data
+     * @param  array<Ingredient>  $ingredients_data
      */
     public function attachIngredients($ingredients_data): void
     {
@@ -158,7 +158,7 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<Tag> $tags_data
+     * @param  array<Tag>  $tags_data
      */
     public function attachTags($tags_data): void
     {
@@ -166,7 +166,7 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<MealTime> $meal_times_data
+     * @param  array<MealTime>  $meal_times_data
      */
     public function attachMealTimes($meal_times_data): void
     {
@@ -174,14 +174,13 @@ class Recipe extends Model
     }
 
     /**
-     * @param array<Step> $steps_data
+     * @param  array<Step>  $steps_data
      */
     public function syncSteps($steps_data): void
     {
         $this->steps()->delete();
         $this->steps()->createMany($steps_data);
     }
-
 
     /**
      * Upload and store a recipe image
@@ -190,8 +189,8 @@ class Recipe extends Model
     {
         $this->deleteImage();
 
-        $filename = 'recipe_' . $this->id . '_' . $file->hashName();
-        $directory = 'user_' . $this->user_id;
+        $filename = 'recipe_'.$this->id.'_'.$file->hashName();
+        $directory = 'user_'.$this->user_id;
 
         $path = $file->storeAs($directory, $filename, 'recipe_images');
 
@@ -216,12 +215,13 @@ class Recipe extends Model
      */
     public function getImageUrl(): ?string
     {
-        if (!$this->image_path) {
+        if (! $this->image_path) {
             return null;
         }
 
         $timestamp = $this->updated_at ? $this->updated_at->timestamp : time();
-        return route('recipes.image', ['recipe' => $this->id]) . '?v=' . $timestamp;
+
+        return route('recipes.image', ['recipe' => $this->id]).'?v='.$timestamp;
     }
 
     /**
@@ -233,5 +233,4 @@ class Recipe extends Model
             $recipe->deleteImage();
         });
     }
-
 }

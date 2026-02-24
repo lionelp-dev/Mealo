@@ -2,10 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Recipe;
+use App\Http\Resources\RecipeResource;
 use App\Models\MealTime;
 use App\Models\PlannedMeal;
-use App\Http\Resources\RecipeResource;
+use App\Models\Recipe;
 use Carbon\Carbon;
 use Exception;
 
@@ -20,7 +20,6 @@ class AIMealPlanningService
 
     /**
      * Generate a meal plan using user recipes with function calling
-     * @return array
      */
     public function generateMealPlan(array $params): array
     {
@@ -30,10 +29,9 @@ class AIMealPlanningService
         $startDate = new Carbon($params['startDate']);
         $endDate = new Carbon($params['endDate']);
         $days = Carbon::parse($startDate)
-              ->diffInDays(
-                  Carbon::parse($endDate)
-              ) + 1;
-
+            ->diffInDays(
+                Carbon::parse($endDate)
+            ) + 1;
 
         // Récupérer un échantillon aléatoire de recettes pour optimiser
         $totalRecipes = Recipe::where('user_id', $userId)->count();
@@ -59,7 +57,7 @@ class AIMealPlanningService
 
         // Get available meal times from database
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         // Filter recipes by meal_time to prevent inappropriate assignments
@@ -137,7 +135,7 @@ class AIMealPlanningService
                 'messages' => [
                     [
                         'role' => 'system',
-                        'content' => "🧠 GÉNÉRATEUR DE PLANNING DE REPAS — MODE TIMELINE STRICT
+                        'content' => '🧠 GÉNÉRATEUR DE PLANNING DE REPAS — MODE TIMELINE STRICT
 
         Tu es un moteur de planification de repas DÉTERMINISTE.
         Tu produis UNIQUEMENT un planning JSON exploitable par un backend.
@@ -148,7 +146,7 @@ class AIMealPlanningService
         ────────────────────────────────────────
 
         Recettes filtrées par meal_time :
-        " . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
+        '.json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."
 
         Meal times autorisés :
         {$mealTimeListForPrompt}
@@ -199,8 +197,8 @@ class AIMealPlanningService
         - Dates au format YYYY-MM-DD
         - Utiliser UNIQUEMENT les recipe_id fournis
         - Respect STRICT des meal_time_id
-        - TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . " repas
-        ",
+        - TOTAL ATTENDU : {$days} jours × 4 repas = ".($days * 4).' repas
+        ',
                     ],
                     [
                         'role' => 'user',
@@ -214,6 +212,7 @@ class AIMealPlanningService
                 foreach ($response->choices[0]->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_meal_plan') {
                         $args = json_decode($toolCall->function->arguments, true);
+
                         return $args['planned_meals'];
                     }
                 }
@@ -231,9 +230,8 @@ class AIMealPlanningService
             }
 
             throw new Exception('No valid meal plan generated from AI response');
-
         } catch (Exception $e) {
-            throw new Exception('Failed to generate meal plan: ' . $e->getMessage());
+            throw new Exception('Failed to generate meal plan: '.$e->getMessage());
         }
     }
 }

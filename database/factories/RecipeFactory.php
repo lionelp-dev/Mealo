@@ -34,8 +34,7 @@ class RecipeFactory extends Factory
     /**
      * Attach random existing meal times to the recipe.
      *
-     * @param int $count Number of meal times to attach
-     * @return static
+     * @param  int  $count  Number of meal times to attach
      */
     public function withMealTime($count): static
     {
@@ -49,14 +48,14 @@ class RecipeFactory extends Factory
     /**
      * Create and attach ingredients with pivot data to the recipe.
      *
-     * @param int $count Number of ingredients to create and attach
-     * @return static
+     * @param  int  $count  Number of ingredients to create and attach
      */
     public function withIngredients($count): static
     {
         return $this->afterMaking(function (Recipe $recipe) use ($count) {
             $ingredients = Ingredient::factory()->count($count)->make()->map(function ($ingredient) {
                 $ingredient->pivot = RecipeIngredient::factory()->make();
+
                 return $ingredient;
             });
             $recipe->setRelation('ingredients', $ingredients);
@@ -73,8 +72,7 @@ class RecipeFactory extends Factory
     /**
      * Create and associate preparation steps with the recipe.
      *
-     * @param int $count Number of steps to create
-     * @return static
+     * @param  int  $count  Number of steps to create
      */
     public function withSteps($count): static
     {
@@ -88,8 +86,7 @@ class RecipeFactory extends Factory
     /**
      * Create and attach tags to the recipe.
      *
-     * @param int $count Number of tags to create and attach
-     * @return static
+     * @param  int  $count  Number of tags to create and attach
      */
     public function withTags($count): static
     {

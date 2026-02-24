@@ -1,17 +1,28 @@
 <?php
 
+use App\Http\Resources\RecipeResource;
+use App\Models\Recipe;
+use App\Models\User;
+use App\Models\Workspace;
+use Database\Seeders\MealTimeSeeder;
+use Database\Seeders\RolesAndPermissionsSeeder;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
 |--------------------------------------------------------------------------
 |
-| The closure you provide to your test functions is always bound to a specific PHPUnit test
-| case class. By default, that class is "PHPUnit\Framework\TestCase". Of course, you may
-| need to change it using the "pest()" function to bind a different classes or traits.
+| Reference data (roles, permissions, meal times) is seeded before every
+| Feature test so individual test files do not need to call seed() for
+| these static lookup tables.
 |
 */
 
 pest()->extend(Tests\TestCase::class)
+    ->beforeEach(function () {
+        $this->seed(RolesAndPermissionsSeeder::class);
+        $this->seed(MealTimeSeeder::class);
+    })
     ->in('Feature');
 
 pest()->extend(Tests\TestCase::class)
@@ -21,11 +32,6 @@ pest()->extend(Tests\TestCase::class)
 |--------------------------------------------------------------------------
 | Expectations
 |--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
 */
 
 expect()->extend('toBeOne', function () {
@@ -34,16 +40,54 @@ expect()->extend('toBeOne', function () {
 
 /*
 |--------------------------------------------------------------------------
-| Functions
+| Helpers
 |--------------------------------------------------------------------------
 |
-| While Pest is very powerful out-of-the-box, you may have some testing code specific to your
-| project that you don't want to repeat in every file. Here you can also expose helpers as
-| global functions to help you to reduce the number of lines of code in your test files.
+| Global helpers auto-loaded by Pest across all test files.
+| No need for `require_once` in individual test files.
 |
 */
 
-function something()
+/**
+ * Create a user with a personal workspace.
+ */
+function createUserWithWorkspace(array $attributes = []): User
 {
-    // ..
+    $user = User::factory()->create($attributes);
+    Workspace::createPersonalWorkspace($user);
+
+    return $user;
+}
+
+/**
+ * Create a fully-loaded recipe (meal times, ingredients, steps, tags)
+ * owned by the given user and return it as a RecipeResource.
+ *
+ * Use this when you need a valid payload to POST/PUT to the API.
+ */
+function recipeResourceFor(User $user, array $attributes = []): RecipeResource
+{
+    $recipe = Recipe::factory()
+        ->withMealTime(2)
+        ->withIngredients(10)
+        ->withSteps(10)
+        ->withTags(5)
+        ->create(array_merge(['user_id' => $user->id], $attributes));
+
+    $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
+
+    return new RecipeResource($recipe);
+}
+
+/**
+ * Create a minimal recipe (no relations) owned by the given user.
+ *
+ * Use this when you only need the recipe to exist in the DB (e.g. for
+ * delete / access-control tests) and don't need a full resource payload.
+ */
+function createRecipeFor(User $user, array $attributes = []): Recipe
+{
+    return Recipe::factory()->create(
+        array_merge(['user_id' => $user->id], $attributes)
+    );
 }

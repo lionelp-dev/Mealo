@@ -9,11 +9,13 @@ import { useTranslation } from 'react-i18next';
 import StepsFormSection from './steps-form-section';
 import TagsFormSection from './tags-form-section';
 
+type RecipeFormData = Omit<Recipe, 'id' | 'user_id'>;
+
 type RecipeFormProps = {
-  defaultValues: Omit<Recipe, 'id'>;
+  defaultValues: RecipeFormData;
   mode: 'create' | 'edit';
   submitLabel?: string;
-  onSubmit: (props: { value: Omit<Recipe, 'id'> }) => void;
+  onSubmit: (props: { value: RecipeFormData }) => void;
   cancelLabel?: string;
   onCancel?: () => void;
   meal_times: {

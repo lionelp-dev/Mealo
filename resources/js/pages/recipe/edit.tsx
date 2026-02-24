@@ -39,7 +39,7 @@ function EditRecipe() {
   } = usePage<PageProps>().props;
 
   const form = useAppForm({
-    defaultValues: recipe.data as Omit<Recipe, 'id'>,
+    defaultValues: recipe.data as Omit<Recipe, 'id' | 'user_id'>,
     validators: {
       onChange: recipeSchema,
     },

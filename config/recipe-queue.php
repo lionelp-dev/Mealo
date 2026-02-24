@@ -16,4 +16,3 @@ return [
         'delay_between_jobs' => env('RECIPE_JOB_DELAY', 6), // 6 seconds between jobs
     ],
 ];
-

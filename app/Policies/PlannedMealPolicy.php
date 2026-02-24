@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class PlannedMealPolicy
 {
@@ -50,11 +49,12 @@ class PlannedMealPolicy
      */
     public function delete(User $user, PlannedMeal $plannedMeal): bool
     {
-        if (!$plannedMeal->workspace || !$plannedMeal->workspace->hasUser($user)) {
+        if (! $plannedMeal->workspace || ! $plannedMeal->workspace->hasUser($user)) {
             return false;
         }
 
         setPermissionsTeamId($plannedMeal->workspace->id);
+
         return $user->hasPermissionTo('planning.edit');
     }
 

@@ -10,7 +10,7 @@ function createRecipeResource($userId = null, $withRelations = true, $attributes
     $recipe = Recipe::factory()->create($recipeData);
 
     // Attach custom tags if provided, otherwise use factory defaults
-    if (!empty($tagIds)) {
+    if (! empty($tagIds)) {
         $recipe->tags()->attach($tagIds);
     } else {
         $recipe = Recipe::factory()
@@ -19,7 +19,7 @@ function createRecipeResource($userId = null, $withRelations = true, $attributes
     }
 
     // Attach custom meal times if provided, otherwise use factory defaults
-    if (!empty($mealTimeIds)) {
+    if (! empty($mealTimeIds)) {
         $recipe->mealTimes()->attach($mealTimeIds);
     } elseif (empty($tagIds)) { // Only if we haven't recreated the recipe
         $recipe = Recipe::factory()
@@ -54,11 +54,11 @@ function createRecipeWithCustomData($userId, $attributes = [], $tagIds = [], $me
 {
     $recipe = Recipe::factory()->create(array_merge(['user_id' => $userId], $attributes));
 
-    if (!empty($tagIds)) {
+    if (! empty($tagIds)) {
         $recipe->tags()->attach($tagIds);
     }
 
-    if (!empty($mealTimeIds)) {
+    if (! empty($mealTimeIds)) {
         $recipe->mealTimes()->attach($mealTimeIds);
     }
 

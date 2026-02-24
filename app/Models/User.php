@@ -15,10 +15,10 @@ class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
+
+    use HasRoles;
     use Notifiable;
     use TwoFactorAuthenticatable;
-    use HasRoles;
-
 
     /**
      * The attributes that are mass assignable.
@@ -54,7 +54,6 @@ class User extends Authenticatable
         ];
     }
 
-
     /**
      * @return HasMany<Recipe, $this >
      */
@@ -78,7 +77,6 @@ class User extends Authenticatable
     {
         return $this->hasMany(Workspace::class, 'owner_id');
     }
-
 
     /**
      * @return BelongsToMany<Workspace>

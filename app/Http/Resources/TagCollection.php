@@ -15,24 +15,19 @@ class TagCollection extends ResourceCollection
     public function toArray(Request $request): array
     {
         return [
-            "data" => $this->collection
+            'data' => $this->collection,
         ];
     }
 
     /**
-
      * Customize the pagination information for the resource.
 
      *
 
      * @param  \Illuminate\Http\Request  $request
-
-     * @param  array $paginated
-
-     * @param  array $default
-
+     * @param  array  $paginated
+     * @param  array  $default
      * @return array
-
      */
     public function paginationInformation($request, $paginated, $default)
     {

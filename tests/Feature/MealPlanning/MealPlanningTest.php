@@ -7,17 +7,17 @@ namespace Tests\Feature\MealPlanning;
 use App\Http\Requests\StoreRecipeRequest;
 use Database\Seeders\MealTimeSeeder;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     // Seed roles and permissions first
     $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
-    
+
     $this->user = \App\Models\User::factory()->create();
     \App\Models\Workspace::createPersonalWorkspace($this->user);
-    
+
     $this->seed(MealTimeSeeder::class);
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest())->rules();
+    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
 
 test('user planned meals screen can be rendered', function () {
@@ -37,7 +37,7 @@ test('user planned meals screen can be rendered', function () {
     $response->assertStatus(200);
 
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('planned-meals/index')
             ->has('plannedMeals')
             ->has('weekStart')
@@ -84,7 +84,7 @@ test('user cannot plan meal with invalid data', function () {
             'recipe_id' => 'invalid',
             'planned_date' => 'invalid-date',
             'meal_time_id' => 'invalid',
-        ]]
+        ]],
     ]);
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['planned_meals.0.recipe_id', 'planned_meals.0.planned_date', 'planned_meals.0.meal_time_id']);
@@ -95,7 +95,7 @@ test('user cannot plan meal with invalid data', function () {
             'recipe_id' => 999999,
             'planned_date' => now()->format('Y-m-d'),
             'meal_time_id' => 999999,
-        ]]
+        ]],
     ]);
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['planned_meals.0.recipe_id', 'planned_meals.0.meal_time_id']);
@@ -219,7 +219,7 @@ test('user can delete a planned meal successfully', function () {
 
     $response = $this->withSession(['current_workspace_id' => $workspace->id])
         ->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-            'planned_meals' => [$plannedMeal->id]
+            'planned_meals' => [$plannedMeal->id],
         ]);
 
     $response->assertStatus(302);
@@ -251,8 +251,8 @@ test('user can store multiple planned meals successfully', function () {
                 'meal_time_id' => $mealTime2->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
                 'serving_size' => 1,
-            ]
-        ]
+            ],
+        ],
     ];
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
@@ -293,8 +293,8 @@ test('user cannot store multiple planned meals with invalid data', function () {
                 'recipe_id' => 999999,
                 'meal_time_id' => 999999,
                 'planned_date' => 'another-invalid-date',
-            ]
-        ]
+            ],
+        ],
     ]);
     $response->assertStatus(302);
 
@@ -305,7 +305,7 @@ test('user cannot store multiple planned meals with invalid data', function () {
         'planned_meals.0.planned_date',
         'planned_meals.1.recipe_id',
         'planned_meals.1.meal_time_id',
-        'planned_meals.1.planned_date'
+        'planned_meals.1.planned_date',
     ]);
 
     // No planned meals should be created after failed validation
@@ -333,8 +333,8 @@ test('user can store multiple planned meals including other users recipes', func
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
                 'serving_size' => 1,
-            ]
-        ]
+            ],
+        ],
     ];
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.store'), $plannedMealsData);
@@ -376,7 +376,7 @@ test('user can delete multiple planned meals successfully', function () {
 
     $response = $this->withSession(['current_workspace_id' => $workspace->id])
         ->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-            'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id]
+            'planned_meals' => [$plannedMeal1->id, $plannedMeal2->id],
         ]);
 
     $response->assertStatus(302);
@@ -420,7 +420,7 @@ test('user cannot access other users planned meals', function () {
 
     // Should not be able to delete other user's planned meal
     $response = $this->actingAs($this->user)->delete(route('planned-meals.destroy'), [
-        'planned_meals' => [$otherUserPlannedMeal->id]
+        'planned_meals' => [$otherUserPlannedMeal->id],
     ]);
     $response->assertStatus(403);
 
@@ -474,7 +474,7 @@ test('user cannot delete other users planned meals in bulk operation', function 
                 $ownPlannedMeal->id,
                 $otherUserPlannedMeal1->id, // Not owned by user - in different workspace
                 $otherUserPlannedMeal2->id, // Not owned by user - in different workspace
-            ]
+            ],
         ]);
 
     $response->assertStatus(403);
@@ -497,21 +497,21 @@ test('user cannot delete other users planned meals in bulk operation', function 
 test('can search recipes by name in planned meals index', function () {
     $recipe1 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pasta Carbonara'
+        'name' => 'Pasta Carbonara',
     ]);
     $recipe2 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Chicken Curry'
+        'name' => 'Chicken Curry',
     ]);
     $recipe3 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pasta Bolognese'
+        'name' => 'Pasta Bolognese',
     ]);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['search' => 'Pasta']));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($recipe1, $recipe3) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -526,26 +526,26 @@ test('can filter recipes by tags in planned meals index', function () {
 
     $recipe1 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pasta'
+        'name' => 'Pasta',
     ]);
     $recipe1->tags()->attach($tag1->id);
 
     $recipe2 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Curry'
+        'name' => 'Curry',
     ]);
     $recipe2->tags()->attach($tag2->id);
 
     $recipe3 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pizza'
+        'name' => 'Pizza',
     ]);
     $recipe3->tags()->attach($tag1->id);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['tags' => [$tag1->id]]));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($recipe1, $recipe3) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -560,20 +560,20 @@ test('can filter recipes by meal times in planned meals index', function () {
 
     $recipe1 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Cereal'
+        'name' => 'Cereal',
     ]);
     $recipe1->mealTimes()->attach($breakfast->id);
 
     $recipe2 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Sandwich'
+        'name' => 'Sandwich',
     ]);
     $recipe2->mealTimes()->attach($lunch->id);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['meal_times' => [$breakfast->id]]));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($recipe1) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -586,19 +586,19 @@ test('can filter recipes by preparation time in planned meals index', function (
     $quickRecipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Quick Snack',
-        'preparation_time' => 10
+        'preparation_time' => 10,
     ]);
 
     $slowRecipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Slow Cook',
-        'preparation_time' => 45
+        'preparation_time' => 45,
     ]);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['preparation_time' => '[0..15]']));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($quickRecipe) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -611,19 +611,19 @@ test('can filter recipes by cooking time in planned meals index', function () {
     $quickRecipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Quick Cook',
-        'cooking_time' => 5
+        'cooking_time' => 5,
     ]);
 
     $longRecipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Long Cook',
-        'cooking_time' => 90
+        'cooking_time' => 90,
     ]);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['cooking_time' => '>60']));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($longRecipe) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -638,31 +638,31 @@ test('can combine search and filters in planned meals index', function () {
     $recipe1 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Pasta Carbonara',
-        'preparation_time' => 10
+        'preparation_time' => 10,
     ]);
     $recipe1->tags()->attach($tag->id);
 
     $recipe2 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Pasta Bolognese',
-        'preparation_time' => 45
+        'preparation_time' => 45,
     ]);
     $recipe2->tags()->attach($tag->id);
 
     $recipe3 = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
         'name' => 'Quick Pasta',
-        'preparation_time' => 10
+        'preparation_time' => 10,
     ]);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', [
         'search' => 'Pasta',
         'tags' => [$tag->id],
-        'preparation_time' => '[0..15]'
+        'preparation_time' => '[0..15]',
     ]));
 
     $response->assertStatus(200);
-    $response->assertInertia(function ($page) use ($recipe1) {
+    $response->assertInertia(function ($page) {
         $recipes = $page->toArray()['props']['recipes']['data'];
         $recipeNames = collect($recipes)->pluck('name');
 
@@ -674,7 +674,7 @@ test('can combine search and filters in planned meals index', function () {
 test('returns no recipes when search has no matches', function () {
     $recipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pasta Carbonara'
+        'name' => 'Pasta Carbonara',
     ]);
 
     $response = $this->actingAs($this->user)->get(route('planned-meals.index', ['search' => 'Sushi']));
@@ -692,7 +692,7 @@ test('returns no recipes when filters have no matches', function () {
 
     $recipe = \App\Models\Recipe::factory()->create([
         'user_id' => $this->user->id,
-        'name' => 'Pasta'
+        'name' => 'Pasta',
     ]);
     $recipe->tags()->attach($tag1->id);
 

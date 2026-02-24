@@ -2,10 +2,10 @@
 
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
-use Database\Seeders\MealTimeSeeder;
 use Carbon\Carbon;
+use Database\Seeders\MealTimeSeeder;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     // Seed roles and permissions first
@@ -23,7 +23,7 @@ test('user shopping list screen can be rendered', function () {
     $response->assertStatus(200);
 
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('shopping-lists/index')
             ->has('shopping_list_data')
             ->has('weekStart')
@@ -163,22 +163,19 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
 
     // Find tomatoes entry (aggregated)
     $tomatoesEntry = collect($uncheckedIngredients)->first(
-        fn($item)
-        => $item['ingredient_id'] === $ingredient1->id && $item['unit'] === 'pieces'
+        fn ($item) => $item['ingredient_id'] === $ingredient1->id && $item['unit'] === 'pieces'
     );
     expect($tomatoesEntry['total_quantity'])->toBe(5.0);
 
     // Find onions in pieces (not aggregated with kg)
     $onionsPiecesEntry = collect($uncheckedIngredients)->first(
-        fn($item)
-        => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'pieces'
+        fn ($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'pieces'
     );
     expect($onionsPiecesEntry['total_quantity'])->toBe(1.0);
 
     // Find onions in kg (separate entry due to different unit)
     $onionsKgEntry = collect($uncheckedIngredients)->first(
-        fn($item)
-        => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'kg'
+        fn ($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'kg'
     );
     expect($onionsKgEntry['total_quantity'])->toBe(2.0);
 });
@@ -483,12 +480,12 @@ test('shopping list only shows current week by default', function () {
 
     $this->assertDatabaseHas('shopping_lists', [
         'user_id' => $this->user->id,
-        'week_start' => $thisWeekStart->format('Y-m-d') . ' 00:00:00',
+        'week_start' => $thisWeekStart->format('Y-m-d').' 00:00:00',
     ]);
 
     $this->assertDatabaseHas('shopping_lists', [
         'user_id' => $this->user->id,
-        'week_start' => $nextWeekStart->format('Y-m-d') . ' 00:00:00',
+        'week_start' => $nextWeekStart->format('Y-m-d').' 00:00:00',
     ]);
 
     // Default API call should return current week
@@ -497,6 +494,7 @@ test('shopping list only shows current week by default', function () {
 
     $response->assertInertia(function ($page) use ($thisWeekStart) {
         expect($page->toArray()['props']['weekStart'])->toBe($thisWeekStart->format('Y-m-d'));
+
         return true;
     });
 });
@@ -528,6 +526,7 @@ test('shopping list can be filtered by week', function () {
     $response->assertStatus(200);
     $response->assertInertia(function ($page) use ($nextWeekStart) {
         expect($page->toArray()['props']['weekStart'])->toBe($nextWeekStart->format('Y-m-d'));
+
         return true;
     });
 });
@@ -540,6 +539,7 @@ test('empty shopping list is returned when no planned meals for week', function 
     $response->assertInertia(function ($page) {
         $shoppingList = $page->toArray()['props']['shopping_list_data'];
         expect($shoppingList)->toBeEmpty();
+
         return true;
     });
 });
@@ -905,6 +905,7 @@ test('shopping list controller uses current workspace context', function () {
         $shoppingList = $page->toArray()['props']['shopping_list_data'];
         expect($shoppingList)->not->toBeNull();
         expect($shoppingList['workspace_id'])->toBe($this->workspace->id);
+
         return true;
     });
 });

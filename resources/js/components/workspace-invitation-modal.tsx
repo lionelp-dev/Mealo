@@ -60,7 +60,7 @@ export function WorkspaceInvitationModal() {
     defaultValues: defaultValues,
     onSubmit: ({ value }) => {
       if (!workspace) return;
-      handleInvite(workspace.id, value, {
+      handleInvite(workspace.id, value as { email: string; role: 'editor' | 'viewer' }, {
         onBefore: () => setWorkspaceInviting(true),
         onFinish: () => setWorkspaceInviting(false),
       });

@@ -13,8 +13,9 @@ class AIRecipeSeeder extends Seeder
     public function run(): void
     {
 
-        if (!$this->user) {
+        if (! $this->user) {
             echo "❌ Test user not found. Please run UserSeeder first.\n";
+
             return;
         }
 
@@ -27,14 +28,14 @@ class AIRecipeSeeder extends Seeder
             $mealTimes = ['petit-déjeuner', 'déjeuner', 'dîner', 'collation'];
             $styles = ['traditionnel', 'moderne', 'épicé', 'léger', 'crémeux', 'dessert'];
 
-            $prompt = "Plat " . fake()->randomElement($styles) . " pour " . fake()->randomElement($mealTimes);
+            $prompt = 'Plat '.fake()->randomElement($styles).' pour '.fake()->randomElement($mealTimes);
 
             $delay = $i * $delayBetweenJobs;
 
             GenerateRecipeJob::dispatch($this->user->id, $prompt, $i + 1)
                 ->delay(now()->addSeconds($delay));
 
-            echo "📤 Queued recipe #" . ($i + 1) . " (delay: {$delay}s): {$prompt}\n";
+            echo '📤 Queued recipe #'.($i + 1)." (delay: {$delay}s): {$prompt}\n";
         }
 
         echo "\n✅ All {$totalRecipes} recipe jobs queued successfully!\n";

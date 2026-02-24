@@ -6,4 +6,4 @@ $_ENV['APP_ENV'] = 'testing';
 $_SERVER['APP_ENV'] = 'testing';
 
 // Load the Laravel autoloader
-require dirname(__DIR__) . '/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';

@@ -24,11 +24,11 @@ class RecipePolicy
         if ($user->id === $recipe->user_id) {
             return true;
         }
-        
+
         // Recette utilisée dans un workspace accessible à l'utilisateur
         return $recipe->plannedMeals()
-            ->whereHas('workspace', function($query) use ($user) {
-                $query->whereHas('users', function($q) use ($user) {
+            ->whereHas('workspace', function ($query) use ($user) {
+                $query->whereHas('users', function ($q) use ($user) {
                     $q->where('users.id', $user->id);
                 });
             })
