@@ -8,13 +8,13 @@ use App\Services\ShoppingListService;
 beforeEach(function () {
     $this->shoppingList = ShoppingList::factory()->create();
     $this->plannedMeal = PlannedMeal::factory()->create();
-    $this->shoppingListService = new ShoppingListService();
+    $this->shoppingListService = new ShoppingListService;
 });
 
 test('groups ingredients by checked status', function () {
     $ingredients = $this->plannedMeal->load('recipe')->recipe->load('ingredients')->ingredients->toArray();
 
-    for ($i = 0; $i < 5;$i++) {
+    for ($i = 0; $i < 5; $i++) {
         ShoppingListPlannedMealIngredient::factory()->checked()->create(
             [
                 'shopping_list_id' => $this->shoppingList->id,
@@ -24,7 +24,7 @@ test('groups ingredients by checked status', function () {
         );
     }
 
-    for ($i = 5; $i < 10;$i++) {
+    for ($i = 5; $i < 10; $i++) {
         ShoppingListPlannedMealIngredient::factory()->unchecked()->create(
             [
                 'shopping_list_id' => $this->shoppingList->id,

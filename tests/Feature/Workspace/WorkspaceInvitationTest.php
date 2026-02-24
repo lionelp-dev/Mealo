@@ -9,11 +9,11 @@ use App\Models\WorkspaceInvitation;
 beforeEach(function () {
     // Seed roles and permissions first
     $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
-    
+
     $this->owner = User::factory()->create();
     $this->invitee = User::factory()->create(['email' => 'invitee@example.com']);
     $this->otherUser = User::factory()->create();
-    
+
     $this->workspace = Workspace::create([
         'name' => 'Test Workspace',
         'owner_id' => $this->owner->id,

@@ -26,7 +26,7 @@ test('user can view their workspaces', function () {
 
     $response->assertStatus(200);
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('workspaces/index')
             ->has('workspace_data')
             ->has('workspace_data.workspaces')
@@ -57,7 +57,7 @@ test('user can create a new workspace', function () {
     $workspace = Workspace::where('name', 'My New Workspace')->first();
     expect($workspace->hasUser($this->user))->toBeTrue();
     expect($this->user->hasRole('owner'))->toBeTrue();
-    expect($this->user->hasPermissionTo("workspace.manage"))->toBeTrue();
+    expect($this->user->hasPermissionTo('workspace.manage'))->toBeTrue();
 });
 
 test('user cannot create workspace with invalid data', function () {

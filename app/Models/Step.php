@@ -18,7 +18,7 @@ class Step extends Model
     ];
 
     /**
-     *  @return BelongsTo<Recipe,$this>
+     * @return BelongsTo<Recipe,$this>
      */
     public function recipes(): BelongsTo
     {

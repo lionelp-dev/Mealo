@@ -16,12 +16,14 @@ use Illuminate\Validation\Validator as ValidationValidator;
 
 class GenerateRecipeJob implements ShouldQueue
 {
-    use Queueable;
     use InteractsWithQueue;
+    use Queueable;
     use SerializesModels;
 
     public int $tries = 3;
+
     public int $timeout = 120;
+
     public int $backoff = 30;
 
     public function __construct(
@@ -69,7 +71,7 @@ class GenerateRecipeJob implements ShouldQueue
 
     private function validateRecipeData(array $recipeData): ValidationValidator
     {
-        $validator = Validator::make($recipeData, (new StoreRecipeRequest())->rules());
+        $validator = Validator::make($recipeData, (new StoreRecipeRequest)->rules());
 
         if ($validator->fails()) {
             $errors = $validator->errors()->all();
@@ -77,10 +79,11 @@ class GenerateRecipeJob implements ShouldQueue
             foreach ($errors as $error) {
                 echo "  - {$error}\n";
             }
-            throw new \Exception("Recipe validation failed: " . implode(', ', $errors));
+            throw new \Exception('Recipe validation failed: '.implode(', ', $errors));
         }
 
         echo "✅ Recipe data validation passed\n";
+
         return $validator;
     }
 }

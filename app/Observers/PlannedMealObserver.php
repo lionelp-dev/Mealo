@@ -32,5 +32,4 @@ class PlannedMealObserver
     {
         $this->shoppingListService->sync($plannedMeal);
     }
-
 }

@@ -207,7 +207,7 @@ export default function MealPlanningPopover({
                             </div>
                             <field.CheckboxField
                               className="checkbox checkbox-sm"
-                              onChange={(e) => {
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                 if (e.target.checked) {
                                   field.pushValue(mealTime.id as never);
                                 } else {

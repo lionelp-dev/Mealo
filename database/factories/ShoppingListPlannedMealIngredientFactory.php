@@ -30,7 +30,7 @@ class ShoppingListPlannedMealIngredientFactory extends Factory
      */
     public function checked(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_checked' => true,
         ]);
     }
@@ -40,7 +40,7 @@ class ShoppingListPlannedMealIngredientFactory extends Factory
      */
     public function unchecked(): static
     {
-        return $this->state(fn(array $attributes) => [
+        return $this->state(fn (array $attributes) => [
             'is_checked' => false,
         ]);
     }

@@ -2,8 +2,6 @@
 
 namespace Tests;
 
-use App\Models\User;
-use App\Models\Workspace;
 use Database\Seeders\TestDatabaseSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;

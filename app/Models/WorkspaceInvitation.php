@@ -53,12 +53,12 @@ class WorkspaceInvitation extends Model
 
     public function isValid(): bool
     {
-        return !$this->isExpired();
+        return ! $this->isExpired();
     }
 
     public function accept(User $user): bool
     {
-        if (!$this->isValid()) {
+        if (! $this->isValid()) {
             return false;
         }
 

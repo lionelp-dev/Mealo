@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('invited_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('expires_at');
             $table->timestamps();
-            
+
             $table->index(['workspace_id', 'email']);
             $table->index(['token', 'expires_at']);
         });

@@ -11,10 +11,10 @@ class RecipeIngredient extends Pivot
     use HasFactory;
 
     protected $fillable = [
-        "recipe_id",
-        "ingredient_id",
-        "quantity",
-        "unit",
+        'recipe_id',
+        'ingredient_id',
+        'quantity',
+        'unit',
     ];
 
     /**

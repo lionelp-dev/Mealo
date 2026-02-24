@@ -18,7 +18,7 @@ class RecipeIngredientFactory extends Factory
     {
         return [
             'quantity' => fake()->randomFloat(2, 0, 10),
-            'unit' => fake()->randomElement(['g', 'kg', 'ml', 'l', 'cup', 'tbsp', 'tsp', 'oz', 'lb', 'piece'])
+            'unit' => fake()->randomElement(['g', 'kg', 'ml', 'l', 'cup', 'tbsp', 'tsp', 'oz', 'lb', 'piece']),
         ];
     }
 }

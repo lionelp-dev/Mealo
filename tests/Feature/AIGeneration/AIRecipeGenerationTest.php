@@ -4,16 +4,15 @@ namespace Tests\Feature\AIRecipeGeneration;
 
 use App\Http\Requests\GenerateRecipeRequest;
 use App\Http\Requests\StoreRecipeRequest;
-use Illuminate\Support\Facades\Validator;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Validator;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
 
-    $this->generateRecipeRequestRules = (new GenerateRecipeRequest())->rules();
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest())->rules();
+    $this->generateRecipeRequestRules = (new GenerateRecipeRequest)->rules();
+    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
 
 function assertValidData(array $data, array $rules): void
@@ -34,7 +33,7 @@ test('user can generate a recipe successfully with simple prompt', function () {
 
     $response->assertStatus(200);
     $response->assertInertia(
-        fn($page) => $page
+        fn ($page) => $page
             ->component('recipe/create')
             ->has('generated_recipe')
             ->has('generated_recipe.name')
@@ -77,7 +76,6 @@ test('guest user cannot generate recipe', function () {
     $response = $this->post(route('recipes.generate'), $promptData);
     $response->assertRedirect(route('login'));
 });
-
 
 test('handles openai api failure gracefully', function () {
     $mockClient = \Mockery::mock();

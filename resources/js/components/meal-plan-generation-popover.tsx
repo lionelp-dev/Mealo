@@ -175,10 +175,10 @@ export function MealPlanGenerationPopover() {
                             <calendar-range
                               className="cally [&_::part(button_day_today)]:bg-inherit [&_::part(button_day_today)]:text-base-content [&_::part(day):disabled]:bg-secondary/15 [&_::part(day):hover]:bg-secondary/20 [&_::part(selected)]:bg-secondary [&_::part(selected)]:text-secondary-content [&_::part(selected):hover]:bg-secondary/20"
                               months={1}
-                              min={DateTime.fromISO(weekStart).toISODate()}
+                              min={DateTime.fromISO(weekStart).toISODate() ?? undefined}
                               max={DateTime.fromISO(weekStart)
                                 .endOf('week')
-                                .toISODate()}
+                                .toISODate() ?? undefined}
                               value={[
                                 field.state.value.startDate.toISODate(),
                                 field.state.value.endDate.toISODate(),
@@ -201,7 +201,8 @@ export function MealPlanGenerationPopover() {
                               <svg
                                 aria-label="Previous"
                                 className="size-4 fill-current"
-                                slot="previous"
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                {...({ slot: 'previous' } as any)}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                               >
@@ -213,7 +214,8 @@ export function MealPlanGenerationPopover() {
                               <svg
                                 aria-label="Next"
                                 className="size-4 fill-current"
-                                slot="next"
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                {...({ slot: 'next' } as any)}
                                 xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 24 24"
                               >

@@ -31,8 +31,8 @@ class StartRecipeWorkers extends Command
 
         $this->info("✅ All {$workerCount} workers started successfully!");
         $this->newLine();
-        $this->info("📊 Monitor progress: php artisan queue:monitor-recipes");
-        $this->info("🛑 Stop all workers: Ctrl+C");
+        $this->info('📊 Monitor progress: php artisan queue:monitor-recipes');
+        $this->info('🛑 Stop all workers: Ctrl+C');
         $this->newLine();
 
         $this->waitForWorkers();
@@ -47,9 +47,9 @@ class StartRecipeWorkers extends Command
             '--queue=recipes',
             '--sleep=3',
             '--tries=3',
-            '--timeout=' . $timeout,
-            '--max-jobs=' . $maxJobs,
-            '--name=recipe-worker-' . $workerId,
+            '--timeout='.$timeout,
+            '--max-jobs='.$maxJobs,
+            '--name=recipe-worker-'.$workerId,
         ]);
 
         $process->start();
@@ -60,7 +60,7 @@ class StartRecipeWorkers extends Command
 
     private function waitForWorkers(): void
     {
-        $this->info("⏳ Workers are running... Press Ctrl+C to stop all workers");
+        $this->info('⏳ Workers are running... Press Ctrl+C to stop all workers');
 
         // Gérer Ctrl+C pour arrêter proprement
         pcntl_signal(SIGINT, function () {
@@ -98,6 +98,6 @@ class StartRecipeWorkers extends Command
             }
         }
 
-        $this->info("✅ All workers stopped");
+        $this->info('✅ All workers stopped');
     }
 }

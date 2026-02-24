@@ -25,6 +25,4 @@ class GenerateRecipeRequest extends FormRequest
             'prompt' => 'required|string|min:3|max:500',
         ];
     }
-
 }
-

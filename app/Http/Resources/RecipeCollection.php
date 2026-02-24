@@ -20,19 +20,14 @@ class RecipeCollection extends ResourceCollection
     }
 
     /**
-
      * Customize the pagination information for the resource.
 
      *
 
      * @param  \Illuminate\Http\Request  $request
-
-     * @param  array $paginated
-
-     * @param  array $default
-
+     * @param  array  $paginated
+     * @param  array  $default
      * @return array
-
      */
     public function paginationInformation($request, $paginated, $default)
     {

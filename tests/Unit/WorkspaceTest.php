@@ -4,9 +4,6 @@ namespace Tests\Unit;
 
 use App\Models\User;
 use App\Models\Workspace;
-use App\Models\WorkspaceInvitation;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 
 beforeEach(function () {
     $this->user = User::factory()->create();

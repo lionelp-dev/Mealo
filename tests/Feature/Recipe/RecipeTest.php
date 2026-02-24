@@ -6,13 +6,13 @@ use App\Http\Requests\StoreRecipeRequest;
 use Database\Seeders\MealTimeSeeder;
 use Illuminate\Support\Facades\Validator;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     $this->user = \App\Models\User::factory()->create();
     $this->otherUser = \App\Models\User::factory()->create();
     $this->seed(MealTimeSeeder::class);
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest())->rules();
+    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
 
 // Helper function to reduce code duplication
@@ -85,8 +85,8 @@ test('user can update a recipe successfully', function () {
     $recipe = createRecipeResource($this->user->id, true);
 
     $updatedData = $recipe->toArray(request());
-    $updatedData['name'] = "Updated Recipe Name";
-    $updatedData['description'] = "Updated Recipe Description";
+    $updatedData['name'] = 'Updated Recipe Name';
+    $updatedData['description'] = 'Updated Recipe Description';
 
     // Validate both original and updated data
     assertValidData($recipe->toArray(request()), $this->storeRecipeRequestRules);
@@ -110,7 +110,7 @@ test('user can delete a recipe successfully', function () {
     $recipe = createRecipeResource($this->user->id, false);
 
     $response = $this->actingAs($this->user)->delete(route('recipes.destroy'), [
-        'recipe_ids' => [$recipe->resource->id]
+        'recipe_ids' => [$recipe->resource->id],
     ]);
 
     $response->assertStatus(302);
@@ -134,10 +134,10 @@ test('user cannot access other users recipes', function () {
 
     // Should not be able to delete other user's recipe - silently ignored
     $response = $this->actingAs($this->user)->delete(route('recipes.destroy'), [
-        'recipe_ids' => [$recipe->resource->id]
+        'recipe_ids' => [$recipe->resource->id],
     ]);
     $response->assertStatus(302); // Returns success but doesn't actually delete
-    
+
     // Verify the recipe was NOT deleted (still exists)
     $this->assertDatabaseHas('recipes', ['id' => $recipe->resource->id]);
 });
@@ -170,7 +170,7 @@ test('user cannot update other users recipe', function () {
     $otherUserRecipe = createRecipeResource($this->otherUser->id, true);
 
     $updatedData = $otherUserRecipe->toArray(request());
-    $updatedData['name'] = "Any Recipe Name";
+    $updatedData['name'] = 'Any Recipe Name';
 
     $response = $this->actingAs($this->user)->put(route('recipes.update', $otherUserRecipe->resource), $updatedData);
 
@@ -185,7 +185,7 @@ test('user cannot update other users recipe', function () {
 
     $this->assertDatabaseMissing('recipes', [
         'id' => $otherUserRecipe->resource->id,
-        'name' => "Hacked Recipe Name",
+        'name' => 'Hacked Recipe Name',
     ]);
 });
 

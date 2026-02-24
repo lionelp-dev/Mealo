@@ -4,13 +4,10 @@ namespace Tests\Feature\AIGeneration;
 
 use App\Models\PlannedMeal;
 use App\Models\ShoppingList;
-use Carbon\Carbon;
-use Database\Seeders\MealTimeSeeder;
-use Tests\TestCase;
 use App\Models\User;
+use Carbon\Carbon;
 
-
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -31,14 +28,14 @@ function createMockSuccessfulAIResponse($plannedMeals)
                             'function' => (object) [
                                 'name' => 'generate_meal_plan',
                                 'arguments' => json_encode([
-                                    'planned_meals' => $plannedMeals
-                                ])
-                            ]
-                        ]
-                    ]
-                ]
-            ]
-        ]
+                                    'planned_meals' => $plannedMeals,
+                                ]),
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ],
     ];
 
     $mockChat->shouldReceive('create')->andReturn($mockResponse);
@@ -283,7 +280,7 @@ test('generates shopping list after creating planned meals', function () {
     $weekStart = Carbon::parse($startDate)->startOfWeek();
     $this->assertDatabaseHas('shopping_lists', [
         'user_id' => $this->user->id,
-        'week_start' => $weekStart->format('Y-m-d H:i:s')
+        'week_start' => $weekStart->format('Y-m-d H:i:s'),
     ]);
 
     // Verify shopping list has ingredients
@@ -323,13 +320,13 @@ test('user can only generate meals with their own recipes', function () {
     // Only user's recipes should be used
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $userRecipe->resource->id
+        'recipe_id' => $userRecipe->resource->id,
     ]);
 
     // Other user's recipe should not be used
     $this->assertDatabaseMissing('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $otherUserRecipe->resource->id
+        'recipe_id' => $otherUserRecipe->resource->id,
     ]);
 });
 

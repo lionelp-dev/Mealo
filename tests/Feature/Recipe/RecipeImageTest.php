@@ -6,7 +6,7 @@ use Database\Seeders\MealTimeSeeder;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -207,7 +207,7 @@ test('deleting recipe removes associated image', function () {
 
     $response = $this->actingAs($this->user)
         ->delete(route('recipes.destroy'), [
-            'recipe_ids' => [$this->recipe->id]
+            'recipe_ids' => [$this->recipe->id],
         ]);
 
     $response->assertStatus(302);

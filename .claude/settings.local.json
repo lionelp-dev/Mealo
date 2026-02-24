@@ -48,7 +48,10 @@
       "WebFetch(domain:www.answeroverflow.com)",
       "Bash(ls:*)",
       "Bash(grep:*)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "Bash(act:*)",
+      "Bash(pnpm run types:*)",
+      "Bash(pnpm tsc:*)"
     ],
     "deny": [],
     "ask": []

@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ShoppingListResource;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
-use App\Models\RecipeIngredient;
 use App\Services\WorkspaceDataService;
 use Carbon\Carbon;
 use Exception;
@@ -47,7 +46,7 @@ class ShoppingListController extends Controller
         return Inertia::render('shopping-lists/index', [
             'weekStart' => $weekStart->toDateString(),
             'workspace_data' => $workspaceData,
-            'shopping_list_data' =>  $shoppingListData,
+            'shopping_list_data' => $shoppingListData,
         ]);
     }
 

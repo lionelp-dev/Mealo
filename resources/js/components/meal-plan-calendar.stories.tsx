@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { MealPlanProvider } from '../contexts/meal-plan-context';
+import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import {
   MealTime,
   PaginatedCollection,
@@ -19,8 +19,10 @@ const mealTimes: MealTime[] = [
 const sampleRecipes: Recipe[] = [
   {
     id: 1,
+    user_id: 1,
     name: 'Salade César',
     description: 'Salade fraîche',
+    serving_size: 2,
     preparation_time: 15,
     cooking_time: 5,
     meal_times: [mealTimes[1]],
@@ -30,8 +32,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 2,
+    user_id: 1,
     name: 'Pâtes Carbonara',
     description: 'Pâtes crémeuses',
+    serving_size: 4,
     preparation_time: 10,
     cooking_time: 20,
     meal_times: [mealTimes[2]],
@@ -41,8 +45,10 @@ const sampleRecipes: Recipe[] = [
   },
   {
     id: 3,
+    user_id: 1,
     name: 'Smoothie Bowl',
     description: 'Smoothie aux fruits',
+    serving_size: 1,
     preparation_time: 10,
     cooking_time: 0,
     meal_times: [mealTimes[0]],
@@ -77,30 +83,35 @@ const createContextData = (scenario: 'empty' | 'partial' | 'full') => {
         id: 1,
         planned_date: '2024-01-15',
         meal_time_id: 1,
+        serving_size: 1,
         recipe: { id: 3, name: 'Smoothie Bowl' },
       },
       {
         id: 2,
         planned_date: '2024-01-15',
         meal_time_id: 2,
+        serving_size: 2,
         recipe: { id: 1, name: 'Salade César' },
       },
       {
         id: 3,
         planned_date: '2024-01-16',
         meal_time_id: 3,
+        serving_size: 4,
         recipe: { id: 2, name: 'Pâtes Carbonara' },
       },
       {
         id: 4,
         planned_date: '2024-01-17',
         meal_time_id: 2,
+        serving_size: 2,
         recipe: { id: 1, name: 'Salade César' },
       },
       {
         id: 5,
         planned_date: '2024-01-19',
         meal_time_id: 1,
+        serving_size: 1,
         recipe: { id: 3, name: 'Smoothie Bowl' },
       },
     ];
@@ -120,6 +131,7 @@ const createContextData = (scenario: 'empty' | 'partial' | 'full') => {
         id: dayIndex * 3 + mealIndex + 1,
         planned_date: date,
         meal_time_id: mealTime.id,
+        serving_size: 2,
         recipe: {
           id: ((dayIndex * 3 + mealIndex) % sampleRecipes.length) + 1,
           name: sampleRecipes[(dayIndex * 3 + mealIndex) % sampleRecipes.length]
@@ -153,9 +165,9 @@ const meta: Meta<typeof MealPlanCalendar> = {
   decorators: [
     (Story, { parameters }) => (
       <div className="p-4">
-        <MealPlanProvider data={parameters.contextData}>
+        <MealPlanDataProvider data={parameters.contextData}>
           <Story />
-        </MealPlanProvider>
+        </MealPlanDataProvider>
       </div>
     ),
   ],
