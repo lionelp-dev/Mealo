@@ -40,7 +40,7 @@ export default function MealPlanDayHeader({
     >
       <div
         className={cn(
-          'text-base flex items-center gap-2 font-normal text-base-content/80',
+          'flex items-center gap-2 text-base font-normal text-base-content/80',
           isCurrentDay && 'text-secondary',
         )}
       >

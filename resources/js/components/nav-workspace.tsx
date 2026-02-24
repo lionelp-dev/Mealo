@@ -8,12 +8,12 @@ import {
 } from '@/components/ui/sidebar';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspacesRoute from '@/routes/workspaces';
-import { WorkspaceData } from '@/types';
+import { Workspace, WorkspaceData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { Bell, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export function NavWorkspace({}) {
+export function NavWorkspace() {
   const { t } = useTranslation();
 
   const { workspace_data } = usePage<{ workspace_data: WorkspaceData }>().props;
@@ -24,7 +24,9 @@ export function NavWorkspace({}) {
   const pendingInvitationsCount =
     workspace_data.pending_invitations?.length || 0;
 
-  const sharedWorkspaces = workspaces?.filter((w: any) => !w.is_personal);
+  const sharedWorkspaces = workspaces?.filter(
+    (w: Workspace) => !w.is_personal,
+  );
 
   return (
     <SidebarGroup>

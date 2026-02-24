@@ -37,7 +37,7 @@ const FILTERS_SECTIONS: FilterSection[] = [
   },
 ];
 
-export function RecipeFilters({ className }: React.ComponentProps<'div'>) {
+export function RecipeFilters() {
   const { t } = useTranslation();
 
   const {

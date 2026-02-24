@@ -56,13 +56,13 @@ export const useConfirmDialog = () => {
   };
 
   const handleConfirm = () => {
-    config?.onConfirm && config.onConfirm();
+    config?.onConfirm?.();
     setIsOpen(false);
     setConfig(null);
   };
 
   const handleCancel = () => {
-    config?.onCancel && config.onCancel();
+    config?.onCancel?.();
     setIsOpen(false);
     setConfig(null);
   };

@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta = {
   title: 'UI/Input',
-} satisfies Meta<{}>;
+} satisfies Meta<Record<string, never>>;
 
 export default meta;
 

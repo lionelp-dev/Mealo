@@ -35,7 +35,10 @@ export default function Password() {
         <div className="space-y-6">
           <HeadingSmall
             title={t('settings.password.sectionTitle', 'Update password')}
-            description={t('settings.password.sectionDescription', 'Ensure your account is using a long, random password to stay secure')}
+            description={t(
+              'settings.password.sectionDescription',
+              'Ensure your account is using a long, random password to stay secure',
+            )}
           />
 
           <Form
@@ -63,7 +66,12 @@ export default function Password() {
             {({ errors, processing, recentlySuccessful }) => (
               <>
                 <div className="grid gap-2">
-                  <Label htmlFor="current_password">{t('settings.password.currentPasswordLabel', 'Current password')}</Label>
+                  <Label htmlFor="current_password">
+                    {t(
+                      'settings.password.currentPasswordLabel',
+                      'Current password',
+                    )}
+                  </Label>
 
                   <Input
                     id="current_password"
@@ -72,14 +80,19 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="current-password"
-                    placeholder={t('settings.password.currentPasswordPlaceholder', 'Current password')}
+                    placeholder={t(
+                      'settings.password.currentPasswordPlaceholder',
+                      'Current password',
+                    )}
                   />
 
                   <InputError message={errors.current_password} />
                 </div>
 
                 <div className="grid gap-2">
-                  <Label htmlFor="password">{t('settings.password.newPasswordLabel', 'New password')}</Label>
+                  <Label htmlFor="password">
+                    {t('settings.password.newPasswordLabel', 'New password')}
+                  </Label>
 
                   <Input
                     id="password"
@@ -88,7 +101,10 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="new-password"
-                    placeholder={t('settings.password.newPasswordPlaceholder', 'New password')}
+                    placeholder={t(
+                      'settings.password.newPasswordPlaceholder',
+                      'New password',
+                    )}
                   />
 
                   <InputError message={errors.password} />
@@ -96,7 +112,10 @@ export default function Password() {
 
                 <div className="grid gap-2">
                   <Label htmlFor="password_confirmation">
-                    {t('settings.password.confirmPasswordLabel', 'Confirm password')}
+                    {t(
+                      'settings.password.confirmPasswordLabel',
+                      'Confirm password',
+                    )}
                   </Label>
 
                   <Input
@@ -105,7 +124,10 @@ export default function Password() {
                     type="password"
                     className="mt-1 block w-full"
                     autoComplete="new-password"
-                    placeholder={t('settings.password.confirmPasswordPlaceholder', 'Confirm password')}
+                    placeholder={t(
+                      'settings.password.confirmPasswordPlaceholder',
+                      'Confirm password',
+                    )}
                   />
 
                   <InputError message={errors.password_confirmation} />
@@ -127,7 +149,9 @@ export default function Password() {
                     leave="transition ease-in-out"
                     leaveTo="opacity-0"
                   >
-                    <p className="text-sm text-neutral-600">{t('common.status.saved', 'Saved')}</p>
+                    <p className="text-sm text-neutral-600">
+                      {t('common.status.saved', 'Saved')}
+                    </p>
                   </Transition>
                 </div>
               </>

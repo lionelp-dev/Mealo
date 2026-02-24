@@ -13,14 +13,14 @@ import { useTranslation } from 'react-i18next';
 
 export default function Appearance() {
   const { t } = useTranslation();
-  
+
   const breadcrumbs: BreadcrumbItem[] = [
     {
       title: t('settings.appearance.pageTitle', 'Appearance settings'),
       href: editAppearance().url,
     },
   ];
-  
+
   return (
     <AppLayout breadcrumbs={breadcrumbs}>
       <Head title={t('settings.appearance.pageTitle', 'Appearance settings')} />
@@ -29,7 +29,10 @@ export default function Appearance() {
         <div className="space-y-6">
           <HeadingSmall
             title={t('settings.appearance.sectionTitle', 'Appearance settings')}
-            description={t('settings.appearance.sectionDescription', 'Update your account\'s appearance settings')}
+            description={t(
+              'settings.appearance.sectionDescription',
+              "Update your account's appearance settings",
+            )}
           />
           <AppearanceTabs />
         </div>

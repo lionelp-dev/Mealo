@@ -1,8 +1,0 @@
-export { Banane } from './Banane'
-export { Brocoli } from './Brocoli'
-export { Carotte } from './Carotte'
-export { Fraise } from './Fraise'
-export { Orange } from './Orange'
-export { Poire } from './Poire'
-export { Pomme } from './Pomme'
-export { Tomate } from './Tomate'

@@ -25,7 +25,10 @@ const applyTheme = (appearance: Appearance) => {
 
   document.documentElement.classList.toggle('dark', isDark);
   document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', isDark ? 'business' : 'corporate');
+  document.documentElement.setAttribute(
+    'data-theme',
+    isDark ? 'business' : 'corporate',
+  );
 };
 
 const mediaQuery = () => {

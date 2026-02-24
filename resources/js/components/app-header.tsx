@@ -70,16 +70,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
   const { auth } = page.props;
   const getInitials = useInitials();
   const { t } = useTranslation();
-  
-  // Function to get translated nav item titles
-  const getTranslatedNavTitle = (title: string) => {
-    const titleMap: { [key: string]: string } = {
-      'Dashboard': t('navigation.dashboard', 'Dashboard'),
-      'Repository': 'Repository', // Keep as is
-      'Documentation': 'Documentation', // Keep as is
-    };
-    return titleMap[title] || title;
-  };
+
   return (
     <>
       <div className="border-b border-sidebar-border/80">
@@ -88,9 +79,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <div className="lg:hidden">
             <Sheet>
               <SheetTrigger asChild>
-                <button
-                  className="btn btn-ghost btn-square mr-2 h-[34px] w-[34px]"
-                >
+                <button className="btn mr-2 btn-square h-[34px] w-[34px] btn-ghost">
                   <Menu className="h-5 w-5" />
                 </button>
               </SheetTrigger>
@@ -114,7 +103,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                           {item.icon && (
                             <Icon iconNode={item.icon} className="h-5 w-5" />
                           )}
-                          <span>{getTranslatedNavTitle(item.title)}</span>
+                          <span>{t('navigation.dashboard', 'Dashboard')}</span>
                         </Link>
                       ))}
                     </div>
@@ -135,7 +124,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                           {item.icon && (
                             <Icon iconNode={item.icon} className="h-5 w-5" />
                           )}
-                          <span>{getTranslatedNavTitle(item.title)}</span>
+                          <span>{item.title}</span>
                         </a>
                       ))}
                     </div>
@@ -176,7 +165,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                       {item.icon && (
                         <Icon iconNode={item.icon} className="mr-2 h-4 w-4" />
                       )}
-                      {getTranslatedNavTitle(item.title)}
+                      {t('navigation.dashboard', 'Dashboard')}
                     </Link>
                     {page.url === item.href && (
                       <div className="absolute bottom-0 left-0 h-0.5 w-full translate-y-px bg-black dark:bg-white"></div>
@@ -190,9 +179,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
           <div className="ml-auto flex items-center space-x-2">
             <div className="relative flex items-center space-x-1">
               <LanguageSwitcher />
-              <button
-                className="btn btn-ghost btn-square group h-9 w-9 cursor-pointer"
-              >
+              <button className="group btn btn-square h-9 w-9 cursor-pointer btn-ghost">
                 <Search className="!size-5 opacity-80 group-hover:opacity-100" />
               </button>
               <div className="hidden lg:flex">
@@ -229,7 +216,7 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="btn btn-ghost size-10 rounded-full p-1">
+                <button className="btn size-10 rounded-full p-1 btn-ghost">
                   <Avatar className="size-8 overflow-hidden rounded-full">
                     <AvatarImage src={auth.user.avatar} alt={auth.user.name} />
                     <AvatarFallback className="rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white">

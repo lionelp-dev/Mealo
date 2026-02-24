@@ -11,7 +11,6 @@ type MealPlanEmptySlotProps = React.ComponentProps<'div'> & {
 };
 
 export default function MealPlanEmptySlot({
-  containerRef,
   date,
   ...rest
 }: MealPlanEmptySlotProps) {

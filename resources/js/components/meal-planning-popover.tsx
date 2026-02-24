@@ -123,6 +123,7 @@ export default function MealPlanningPopover({
 
               <form.AppField
                 name="servings"
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 children={(field: any) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
                     <span className="w-full px-2.5 text-sm font-medium whitespace-nowrap text-secondary">
@@ -180,6 +181,7 @@ export default function MealPlanningPopover({
                 <form.AppField
                   name="meal_times"
                   mode="array"
+                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
                   children={(field: any) => (
                     <div className="flex flex-col gap-2">
                       {mealTimes.map((mealTime) => {
@@ -222,6 +224,7 @@ export default function MealPlanningPopover({
               </div>
 
               <form.Subscribe>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(state: any) => (
                   <button
                     className="btn gap-2 pl-6 btn-secondary"

@@ -45,7 +45,10 @@
       "Bash(xargs sed:*)",
       "WebFetch(domain:inertiajs.com)",
       "Bash(vendor/bin/pint:*)",
-      "WebFetch(domain:www.answeroverflow.com)"
+      "WebFetch(domain:www.answeroverflow.com)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "Bash(pnpm lint:*)"
     ],
     "deny": [],
     "ask": []

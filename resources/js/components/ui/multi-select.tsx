@@ -21,7 +21,6 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   options,
   value,
   onValueChange,
-  placeholder = 'Sélectionnez des options...',
   className = '',
 }) => {
   const [open, setOpen] = useState(false);

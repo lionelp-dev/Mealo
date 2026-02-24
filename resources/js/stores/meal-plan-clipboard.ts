@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { DayPlannedMeals } from '@/types';
+import { create } from 'zustand';
 
 export interface MealPlanClipboardState {
   copiedDayPlannedMeals: DayPlannedMeals | null;

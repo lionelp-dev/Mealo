@@ -167,7 +167,7 @@ export function ImageUpload({
               <p className="mt-1 text-sm text-base-content/60">
                 {t(
                   'recipes.form.imageUpload.formats',
-                  "PNG, JPG, WebP up to 5MB",
+                  'PNG, JPG, WebP up to 5MB',
                 )}
               </p>
             </div>

@@ -15,7 +15,6 @@ export default function AIRecipeGenerationModal({
 }: AIRecipeGenerationModalProps) {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const form = useForm({
     defaultValues: {
@@ -23,14 +22,13 @@ export default function AIRecipeGenerationModal({
     },
     onSubmit: async ({ value }) => {
       setIsLoading(true);
-      setError(null);
 
       router.post(
         '/recipes/create',
         { prompt: value.prompt },
         {
           only: ['generated_recipe', 'flash'],
-          onSuccess: (page) => {
+          onSuccess: () => {
             onClose();
             form.reset();
           },

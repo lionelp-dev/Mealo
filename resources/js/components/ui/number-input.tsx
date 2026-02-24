@@ -18,7 +18,7 @@ export default function NumberField({
       {label && (
         <label
           htmlFor={field.name}
-          className="text-base truncate text-left text-base-content"
+          className="truncate text-left text-base text-base-content"
         >
           {label}
         </label>

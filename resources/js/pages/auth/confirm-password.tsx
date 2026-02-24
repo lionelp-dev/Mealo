@@ -9,11 +9,14 @@ import { useTranslation } from 'react-i18next';
 
 export default function ConfirmPassword() {
   const { t } = useTranslation();
-  
+
   return (
     <AuthLayout
       title={t('auth.confirmPassword.title', 'Confirm your password')}
-      description={t('auth.confirmPassword.description', 'This is a secure area of the application. Please confirm your password before continuing.')}
+      description={t(
+        'auth.confirmPassword.description',
+        'This is a secure area of the application. Please confirm your password before continuing.',
+      )}
     >
       <Head title={t('auth.confirmPassword.pageTitle', 'Confirm password')} />
 
@@ -21,7 +24,9 @@ export default function ConfirmPassword() {
         {({ processing, errors }) => (
           <div className="space-y-6">
             <div className="grid gap-2">
-              <Label htmlFor="password">{t('auth.login.passwordLabel', 'Password')}</Label>
+              <Label htmlFor="password">
+                {t('auth.login.passwordLabel', 'Password')}
+              </Label>
               <Input
                 id="password"
                 type="password"
@@ -36,7 +41,7 @@ export default function ConfirmPassword() {
 
             <div className="flex items-center">
               <button
-                className="btn btn-primary w-full"
+                className="btn w-full btn-primary"
                 disabled={processing}
                 data-test="confirm-password-button"
               >

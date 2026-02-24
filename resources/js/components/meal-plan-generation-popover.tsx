@@ -90,9 +90,10 @@ export function MealPlanGenerationPopover() {
 
               <form.AppField
                 name="serving_size"
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 children={(field: any) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
-                    <span className="text-base w-full font-medium whitespace-nowrap text-secondary">
+                    <span className="w-full text-base font-medium whitespace-nowrap text-secondary">
                       {t(
                         'mealPlanning.dialog.persons',
                         'Pour combien de personnes ?',

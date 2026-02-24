@@ -6,12 +6,12 @@ import {
   DialogFooter,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { useTranslation } from 'react-i18next';
 import { useDeleteRecipesDialog } from '@/hooks/use-delete-recipes-dialog';
+import { useTranslation } from 'react-i18next';
 
 export default function DeleteRecipesDialog() {
   const { t } = useTranslation();
-  
+
   const {
     recipesToDelete,
     isDeleteDialogOpen,
@@ -23,9 +23,15 @@ export default function DeleteRecipesDialog() {
 
   const getTitle = () => {
     if (isMultiple) {
-      return t('recipes.delete.confirmTitleMultiple', 'Are you sure you want to delete these recipes?');
+      return t(
+        'recipes.delete.confirmTitleMultiple',
+        'Are you sure you want to delete these recipes?',
+      );
     }
-    return t('recipes.delete.confirmTitle', 'Are you sure you want to delete this recipe?');
+    return t(
+      'recipes.delete.confirmTitle',
+      'Are you sure you want to delete this recipe?',
+    );
   };
 
   const getDescription = () => {
@@ -51,15 +57,21 @@ export default function DeleteRecipesDialog() {
         <DialogDescription>{getDescription()}</DialogDescription>
 
         <DialogFooter className="w-full !justify-between">
-          <button 
-            className="btn btn-error" 
+          <button
+            className="btn btn-error"
             onClick={handleDelete}
             disabled={isDeleting}
           >
-            {isDeleting ? t('common.status.loading', 'Loading...') : t('recipes.delete.confirmButton', 'Delete')}
+            {isDeleting
+              ? t('common.status.loading', 'Loading...')
+              : t('recipes.delete.confirmButton', 'Delete')}
           </button>
           <DialogClose asChild>
-            <button className="btn" onClick={closeDeleteDialog} disabled={isDeleting}>
+            <button
+              className="btn"
+              onClick={closeDeleteDialog}
+              disabled={isDeleting}
+            >
               {t('recipes.delete.cancelButton', 'Cancel')}
             </button>
           </DialogClose>

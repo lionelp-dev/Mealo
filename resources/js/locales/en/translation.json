@@ -1,495 +1,495 @@
 {
-  "auth": {
-    "login": {
-      "title": "Log in to your account",
-      "description": "Enter your email and password below to log in",
-      "pageTitle": "Log in",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "email@example.com",
-      "passwordLabel": "Password",
-      "passwordPlaceholder": "Password",
-      "rememberMe": "Remember me",
-      "forgotPassword": "Forgot password?",
-      "loginButton": "Log in",
-      "noAccount": "Don't have an account?",
-      "signUp": "Sign up"
+    "auth": {
+        "login": {
+            "title": "Log in to your account",
+            "description": "Enter your email and password below to log in",
+            "pageTitle": "Log in",
+            "emailLabel": "Email address",
+            "emailPlaceholder": "email@example.com",
+            "passwordLabel": "Password",
+            "passwordPlaceholder": "Password",
+            "rememberMe": "Remember me",
+            "forgotPassword": "Forgot password?",
+            "loginButton": "Log in",
+            "noAccount": "Don't have an account?",
+            "signUp": "Sign up"
+        },
+        "register": {
+            "title": "Create an account",
+            "description": "Enter your information below to create your account",
+            "pageTitle": "Sign up",
+            "nameLabel": "Name",
+            "namePlaceholder": "Your name",
+            "emailLabel": "Email address",
+            "emailPlaceholder": "email@example.com",
+            "passwordLabel": "Password",
+            "passwordPlaceholder": "Password",
+            "confirmPasswordLabel": "Confirm password",
+            "confirmPasswordPlaceholder": "Confirm password",
+            "registerButton": "Sign up",
+            "alreadyHaveAccount": "Already have an account?",
+            "logIn": "Log in"
+        },
+        "forgotPassword": {
+            "title": "Forgot password",
+            "description": "Enter your email to receive a reset link",
+            "pageTitle": "Forgot password",
+            "emailLabel": "Email address",
+            "emailPlaceholder": "email@example.com",
+            "sendLinkButton": "Send reset link",
+            "backToLogin": "Back to login"
+        },
+        "resetPassword": {
+            "title": "Reset password",
+            "description": "Enter your new password",
+            "pageTitle": "Reset password",
+            "emailLabel": "Email address",
+            "passwordLabel": "New password",
+            "confirmPasswordLabel": "Confirm new password",
+            "resetButton": "Reset password"
+        },
+        "verifyEmail": {
+            "title": "Verify your email",
+            "description": "A verification link has been sent to your email address",
+            "pageTitle": "Email verification",
+            "resendButton": "Resend verification email",
+            "logoutButton": "Log out"
+        },
+        "twoFactor": {
+            "title": "Two-Factor Authentication",
+            "description": "Please confirm access to your account by entering the authentication code provided by your authenticator application",
+            "pageTitle": "Two-Factor Authentication",
+            "codeLabel": "Code",
+            "codePlaceholder": "Authentication code",
+            "confirmButton": "Confirm",
+            "useRecoveryCode": "Use a recovery code"
+        }
     },
-    "register": {
-      "title": "Create an account",
-      "description": "Enter your information below to create your account",
-      "pageTitle": "Sign up",
-      "nameLabel": "Name",
-      "namePlaceholder": "Your name",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "email@example.com",
-      "passwordLabel": "Password",
-      "passwordPlaceholder": "Password",
-      "confirmPasswordLabel": "Confirm password",
-      "confirmPasswordPlaceholder": "Confirm password",
-      "registerButton": "Sign up",
-      "alreadyHaveAccount": "Already have an account?",
-      "logIn": "Log in"
+    "navigation": {
+        "platform": "Platform",
+        "dashboard": "Dashboard",
+        "recipes": "Recipes",
+        "mealPlanning": "Meal Planning",
+        "shoppingLists": "Shopping Lists",
+        "settings": "Settings"
     },
-    "forgotPassword": {
-      "title": "Forgot password",
-      "description": "Enter your email to receive a reset link",
-      "pageTitle": "Forgot password",
-      "emailLabel": "Email address",
-      "emailPlaceholder": "email@example.com",
-      "sendLinkButton": "Send reset link",
-      "backToLogin": "Back to login"
+    "dashboard": {
+        "title": "Dashboard",
+        "pageTitle": "Dashboard"
     },
-    "resetPassword": {
-      "title": "Reset password",
-      "description": "Enter your new password",
-      "pageTitle": "Reset password",
-      "emailLabel": "Email address",
-      "passwordLabel": "New password",
-      "confirmPasswordLabel": "Confirm new password",
-      "resetButton": "Reset password"
+    "recipes": {
+        "title": "Recipes",
+        "pageTitle": "My recipes",
+        "create": {
+            "title": "Create a new recipe",
+            "pageTitle": "Create recipe",
+            "button": "Create recipe"
+        },
+        "generate": {
+            "button": "Generate recipe",
+            "modalTitle": "Generate Recipe with AI",
+            "generating": "Generating...",
+            "prompt": {
+                "label": "Recipe Description",
+                "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
+            }
+        },
+        "edit": {
+            "title": "Edit recipe",
+            "pageTitle": "Edit recipe"
+        },
+        "show": {
+            "pageTitle": "View recipe"
+        },
+        "index": {
+            "createButton": "Create recipe",
+            "viewButton": "View my recipes"
+        },
+        "table": {
+            "name": "Name",
+            "description": "Description",
+            "preparationTime": "Preparation time",
+            "cookingTime": "Cooking time",
+            "actions": "Actions"
+        },
+        "form": {
+            "detailsTitle": "Recipe details",
+            "nameLabel": "Recipe name",
+            "namePlaceholder": "Enter recipe name",
+            "descriptionLabel": "Description",
+            "descriptionPlaceholder": "Describe your recipe",
+            "preparationTimeLabel": "Preparation time",
+            "cookingTimeLabel": "Cooking time",
+            "ingredientsTitle": "Ingredients",
+            "stepsTitle": "Steps",
+            "tagsTitle": "Tags",
+            "mealTimesTitle": "Meal times",
+            "mealTimesPlaceholder": "Select meal times...",
+            "saveButton": "Save recipe",
+            "cancelButton": "Cancel"
+        },
+        "ingredients": {
+            "addButton": "Add ingredient",
+            "nameLabel": "Name",
+            "namePlaceholder": "Ingredient name",
+            "quantityLabel": "Quantity",
+            "quantityPlaceholder": "Quantity",
+            "unitLabel": "Unit",
+            "unitPlaceholder": "Unit (g, ml, cups...)",
+            "removeButton": "Remove"
+        },
+        "steps": {
+            "addButton": "Add step",
+            "instructionLabel": "Instruction",
+            "instructionPlaceholder": "Describe this step",
+            "orderLabel": "Order",
+            "removeButton": "Remove"
+        },
+        "tags": {
+            "addButton": "Add tag",
+            "nameLabel": "Tag name",
+            "namePlaceholder": "Tag name",
+            "removeButton": "Remove",
+            "noTagsAvailable": "No tags available"
+        },
+        "delete": {
+            "confirmTitle": "Are you sure you want to delete the recipe?",
+            "confirmButton": "Delete",
+            "cancelButton": "Cancel"
+        }
     },
-    "verifyEmail": {
-      "title": "Verify your email",
-      "description": "A verification link has been sent to your email address",
-      "pageTitle": "Email verification",
-      "resendButton": "Resend verification email",
-      "logoutButton": "Log out"
+    "mealPlanning": {
+        "title": "Meal Planning",
+        "pageTitle": "Meal Planning",
+        "mealTimeSelection": "Meal time",
+        "actions": {
+            "copy": "Copy",
+            "paste": "Paste",
+            "deleteAll": "Delete all",
+            "planMeal": "Plan meal"
+        },
+        "searchRecipes": "Search recipes...",
+        "weekSelector": {
+            "today": "Today",
+            "week": "Week"
+        },
+        "planDish": "Plan dish",
+        "planDishes": "Plan dishes",
+        "dialog": {
+            "title": "Plan dishes",
+            "filterRecipes": "Filter recipes",
+            "addFilters": "Add filters",
+            "whenToEat": "When would you like to eat this?",
+            "multiSelect": {
+                "abandon": "Cancel",
+                "clearSelection": "Clear selection",
+                "plan": "Plan"
+            },
+            "filters": {
+                "mealTime": "Meal Time",
+                "preparationTime": "Preparation Time",
+                "cookingTime": "Cooking Time",
+                "tags": "Tags",
+                "breakfast": "Breakfast",
+                "lunch": "Lunch",
+                "diner": "Dinner",
+                "snack": "Snack",
+                "clearAllFilters": "Clear all filters",
+                "prep": "Prep: ",
+                "cook": "Cook: ",
+                "filter": "filter",
+                "filters": "filters"
+            }
+        },
+        "generatePlan": "Generate Plan",
+        "generatePlanTitle": "Generate your meal plan",
+        "generatePlanDescription": "Automatically create a balanced meal plan with your existing recipes.",
+        "planningPeriod": "Planning period",
+        "startDate": "Start date",
+        "numberOfDays": "Number of days",
+        "days": "days",
+        "generateNow": "Generate my meal plan"
     },
-    "twoFactor": {
-      "title": "Two-Factor Authentication",
-      "description": "Please confirm access to your account by entering the authentication code provided by your authenticator application",
-      "pageTitle": "Two-Factor Authentication",
-      "codeLabel": "Code",
-      "codePlaceholder": "Authentication code",
-      "confirmButton": "Confirm",
-      "useRecoveryCode": "Use a recovery code"
-    }
-  },
-  "navigation": {
-    "platform": "Platform",
-    "dashboard": "Dashboard",
-    "recipes": "Recipes",
-    "mealPlanning": "Meal Planning",
-    "shoppingLists": "Shopping Lists",
-    "settings": "Settings"
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "pageTitle": "Dashboard"
-  },
-  "recipes": {
-    "title": "Recipes",
-    "pageTitle": "My recipes",
-    "create": {
-      "title": "Create a new recipe",
-      "pageTitle": "Create recipe",
-      "button": "Create recipe"
+    "shoppingLists": {
+        "title": "Shopping Lists",
+        "pageTitle": "Shopping Lists"
     },
-    "generate": {
-      "button": "Generate recipe",
-      "modalTitle": "Generate Recipe with AI",
-      "generating": "Generating...",
-      "prompt": {
-        "label": "Recipe Description",
-        "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
-      }
+    "settings": {
+        "title": "Settings",
+        "description": "Manage your profile and account settings",
+        "pageTitle": "Settings",
+        "profile": {
+            "title": "Profile",
+            "pageTitle": "Profile settings",
+            "sectionTitle": "Profile information",
+            "sectionDescription": "Update your name and email address",
+            "nameLabel": "Name",
+            "namePlaceholder": "Your name",
+            "emailLabel": "Email",
+            "emailPlaceholder": "your@email.com",
+            "saveButton": "Save"
+        },
+        "password": {
+            "title": "Password",
+            "pageTitle": "Password settings",
+            "sectionTitle": "Update password",
+            "sectionDescription": "Ensure your account is using a long, random password to stay secure",
+            "currentPasswordLabel": "Current password",
+            "currentPasswordPlaceholder": "Current password",
+            "newPasswordLabel": "New password",
+            "newPasswordPlaceholder": "New password",
+            "confirmPasswordLabel": "Confirm password",
+            "confirmPasswordPlaceholder": "Confirm password",
+            "saveButton": "Save"
+        },
+        "twoFactor": {
+            "title": "Two-Factor Auth",
+            "pageTitle": "Two-Factor Authentication",
+            "sectionTitle": "Two-Factor Authentication",
+            "sectionDescription": "Manage your two-factor authentication settings",
+            "enabled": "Enabled",
+            "disabled": "Disabled",
+            "enableButton": "Enable 2FA",
+            "disableButton": "Disable 2FA",
+            "continueSetup": "Continue Setup",
+            "enabledDescription": "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.",
+            "disabledDescription": "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.",
+            "recoveryCodesTitle": "2FA Recovery Codes",
+            "recoveryCodesDescription": "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.",
+            "viewCodes": "View",
+            "hideCodes": "Hide",
+            "recoveryCodesLabel": "Recovery codes",
+            "regenerateCodes": "Regenerate Codes",
+            "regenerateCodesInstruction": "Click Regenerate Codes above.",
+            "setupModal": {
+                "title": "Set up Two-Factor Authentication",
+                "scanQrTitle": "Scan the QR Code",
+                "scanQrDescription": "Use your authenticator app to scan the QR code below.",
+                "manualSetupTitle": "Manual Setup",
+                "manualSetupDescription": "If you can't scan the QR code, enter this setup key in your authenticator app:",
+                "verifyTitle": "Verify Authentication Code",
+                "verifyDescription": "Enter the 6-digit code from your authenticator app.",
+                "codeInputLabel": "Authentication code",
+                "continueButton": "Continue",
+                "closeButton": "Close",
+                "copyKey": "Copy key",
+                "keyCopied": "Key copied!",
+                "loadingQr": "Loading QR code...",
+                "loadingKey": "Loading key..."
+            }
+        },
+        "appearance": {
+            "title": "Appearance",
+            "pageTitle": "Appearance settings",
+            "sectionTitle": "Appearance settings",
+            "sectionDescription": "Update your account's appearance settings",
+            "themes": {
+                "light": "Light",
+                "dark": "Dark",
+                "system": "System"
+            }
+        },
+        "language": {
+            "title": "Language",
+            "pageTitle": "Language settings",
+            "sectionTitle": "Language settings",
+            "sectionDescription": "Update your language setting"
+        }
     },
-    "edit": {
-      "title": "Edit recipe",
-      "pageTitle": "Edit recipe"
+    "deleteAccount": {
+        "title": "Delete account",
+        "description": "Delete your account and all of its resources",
+        "warning": "Warning",
+        "warningText": "Please proceed with caution, this cannot be undone.",
+        "confirmPassword": "Password",
+        "deleteButton": "Delete account",
+        "cancelButton": "Cancel",
+        "confirmTitle": "Are you sure you want to delete your account?",
+        "confirmDescription": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
     },
-    "show": {
-      "pageTitle": "View recipe"
+    "common": {
+        "buttons": {
+            "save": "Save",
+            "cancel": "Cancel",
+            "delete": "Delete",
+            "edit": "Edit",
+            "view": "View",
+            "create": "Create",
+            "add": "Add",
+            "remove": "Remove",
+            "confirm": "Confirm",
+            "back": "Back",
+            "next": "Next",
+            "previous": "Previous",
+            "close": "Close",
+            "submit": "Submit",
+            "reset": "Reset",
+            "update": "Update",
+            "abandon": "Cancel",
+            "clearSelection": "Clear selection",
+            "continue": "Continue",
+            "selected": {
+                "singular": "selected",
+                "plural": "selected"
+            }
+        },
+        "status": {
+            "loading": "Loading...",
+            "success": "Success",
+            "error": "Error",
+            "saved": "Saved",
+            "updated": "Updated",
+            "deleted": "Deleted",
+            "created": "Created",
+            "saving": "Saving..."
+        },
+        "validation": {
+            "required": "This field is required",
+            "email": "Please enter a valid email address",
+            "minLength": "Must be at least {{count}} characters",
+            "maxLength": "Cannot be more than {{count}} characters",
+            "passwordConfirmation": "Passwords do not match"
+        },
+        "actions": {
+            "view": "View",
+            "edit": "Edit",
+            "delete": "Delete",
+            "duplicate": "Duplicate",
+            "archive": "Archive"
+        },
+        "clear": "Clear"
     },
-    "index": {
-      "createButton": "Create recipe",
-      "viewButton": "View my recipes"
+    "welcome": {
+        "title": "Welcome",
+        "description": "Welcome to your meal planning application"
     },
-    "table": {
-      "name": "Name",
-      "description": "Description",
-      "preparationTime": "Preparation time",
-      "cookingTime": "Cooking time",
-      "actions": "Actions"
-    },
-    "form": {
-      "detailsTitle": "Recipe details",
-      "nameLabel": "Recipe name",
-      "namePlaceholder": "Enter recipe name",
-      "descriptionLabel": "Description",
-      "descriptionPlaceholder": "Describe your recipe",
-      "preparationTimeLabel": "Preparation time",
-      "cookingTimeLabel": "Cooking time",
-      "ingredientsTitle": "Ingredients",
-      "stepsTitle": "Steps",
-      "tagsTitle": "Tags",
-      "mealTimesTitle": "Meal times",
-      "mealTimesPlaceholder": "Select meal times...",
-      "saveButton": "Save recipe",
-      "cancelButton": "Cancel"
-    },
-    "ingredients": {
-      "addButton": "Add ingredient",
-      "nameLabel": "Name",
-      "namePlaceholder": "Ingredient name",
-      "quantityLabel": "Quantity",
-      "quantityPlaceholder": "Quantity",
-      "unitLabel": "Unit",
-      "unitPlaceholder": "Unit (g, ml, cups...)",
-      "removeButton": "Remove"
-    },
-    "steps": {
-      "addButton": "Add step",
-      "instructionLabel": "Instruction",
-      "instructionPlaceholder": "Describe this step",
-      "orderLabel": "Order",
-      "removeButton": "Remove"
-    },
-    "tags": {
-      "addButton": "Add tag",
-      "nameLabel": "Tag name",
-      "namePlaceholder": "Tag name",
-      "removeButton": "Remove",
-      "noTagsAvailable": "No tags available"
-    },
-    "delete": {
-      "confirmTitle": "Are you sure you want to delete the recipe?",
-      "confirmButton": "Delete",
-      "cancelButton": "Cancel"
-    }
-  },
-  "mealPlanning": {
-    "title": "Meal Planning",
-    "pageTitle": "Meal Planning",
-    "mealTimeSelection": "Meal time",
-    "actions": {
-      "copy": "Copy",
-      "paste": "Paste",
-      "deleteAll": "Delete all",
-      "planMeal": "Plan meal"
-    },
-    "searchRecipes": "Search recipes...",
-    "weekSelector": {
-      "today": "Today",
-      "week": "Week"
-    },
-    "planDish": "Plan dish",
-    "planDishes": "Plan dishes",
-    "dialog": {
-      "title": "Plan dishes",
-      "filterRecipes": "Filter recipes",
-      "addFilters": "Add filters",
-      "whenToEat": "When would you like to eat this?",
-      "multiSelect": {
-        "abandon": "Cancel",
-        "clearSelection": "Clear selection",
-        "plan": "Plan"
-      },
-      "filters": {
-        "mealTime": "Meal Time",
-        "preparationTime": "Preparation Time",
-        "cookingTime": "Cooking Time",
-        "tags": "Tags",
-        "breakfast": "Breakfast",
-        "lunch": "Lunch",
-        "diner": "Dinner",
-        "snack": "Snack",
-        "clearAllFilters": "Clear all filters",
-        "prep": "Prep: ",
-        "cook": "Cook: ",
-        "filter": "filter",
-        "filters": "filters"
-      }
-    },
-    "generatePlan": "Generate Plan",
-    "generatePlanTitle": "Generate your meal plan",
-    "generatePlanDescription": "Automatically create a balanced meal plan with your existing recipes.",
-    "planningPeriod": "Planning period",
-    "startDate": "Start date",
-    "numberOfDays": "Number of days",
-    "days": "days",
-    "generateNow": "Generate my meal plan"
-  },
-  "shoppingLists": {
-    "title": "Shopping Lists",
-    "pageTitle": "Shopping Lists"
-  },
-  "settings": {
-    "title": "Settings",
-    "description": "Manage your profile and account settings",
-    "pageTitle": "Settings",
-    "profile": {
-      "title": "Profile",
-      "pageTitle": "Profile settings",
-      "sectionTitle": "Profile information",
-      "sectionDescription": "Update your name and email address",
-      "nameLabel": "Name",
-      "namePlaceholder": "Your name",
-      "emailLabel": "Email",
-      "emailPlaceholder": "your@email.com",
-      "saveButton": "Save"
-    },
-    "password": {
-      "title": "Password",
-      "pageTitle": "Password settings",
-      "sectionTitle": "Update password",
-      "sectionDescription": "Ensure your account is using a long, random password to stay secure",
-      "currentPasswordLabel": "Current password",
-      "currentPasswordPlaceholder": "Current password",
-      "newPasswordLabel": "New password",
-      "newPasswordPlaceholder": "New password",
-      "confirmPasswordLabel": "Confirm password",
-      "confirmPasswordPlaceholder": "Confirm password",
-      "saveButton": "Save"
-    },
-    "twoFactor": {
-      "title": "Two-Factor Auth",
-      "pageTitle": "Two-Factor Authentication",
-      "sectionTitle": "Two-Factor Authentication",
-      "sectionDescription": "Manage your two-factor authentication settings",
-      "enabled": "Enabled",
-      "disabled": "Disabled",
-      "enableButton": "Enable 2FA",
-      "disableButton": "Disable 2FA",
-      "continueSetup": "Continue Setup",
-      "enabledDescription": "With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.",
-      "disabledDescription": "When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.",
-      "recoveryCodesTitle": "2FA Recovery Codes",
-      "recoveryCodesDescription": "Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.",
-      "viewCodes": "View",
-      "hideCodes": "Hide",
-      "recoveryCodesLabel": "Recovery codes",
-      "regenerateCodes": "Regenerate Codes",
-      "regenerateCodesInstruction": "Click Regenerate Codes above.",
-      "setupModal": {
-        "title": "Set up Two-Factor Authentication",
-        "scanQrTitle": "Scan the QR Code",
-        "scanQrDescription": "Use your authenticator app to scan the QR code below.",
-        "manualSetupTitle": "Manual Setup",
-        "manualSetupDescription": "If you can't scan the QR code, enter this setup key in your authenticator app:",
-        "verifyTitle": "Verify Authentication Code",
-        "verifyDescription": "Enter the 6-digit code from your authenticator app.",
-        "codeInputLabel": "Authentication code",
-        "continueButton": "Continue",
-        "closeButton": "Close",
-        "copyKey": "Copy key",
-        "keyCopied": "Key copied!",
-        "loadingQr": "Loading QR code...",
-        "loadingKey": "Loading key..."
-      }
-    },
-    "appearance": {
-      "title": "Appearance",
-      "pageTitle": "Appearance settings",
-      "sectionTitle": "Appearance settings",
-      "sectionDescription": "Update your account's appearance settings",
-      "themes": {
-        "light": "Light",
-        "dark": "Dark",
-        "system": "System"
-      }
-    },
-    "language": {
-      "title": "Language",
-      "pageTitle": "Language settings",
-      "sectionTitle": "Language settings",
-      "sectionDescription": "Update your language setting"
-    }
-  },
-  "deleteAccount": {
-    "title": "Delete account",
-    "description": "Delete your account and all of its resources",
-    "warning": "Warning",
-    "warningText": "Please proceed with caution, this cannot be undone.",
-    "confirmPassword": "Password",
-    "deleteButton": "Delete account",
-    "cancelButton": "Cancel",
-    "confirmTitle": "Are you sure you want to delete your account?",
-    "confirmDescription": "Once your account is deleted, all of its resources and data will also be permanently deleted. Please enter your password to confirm you would like to permanently delete your account."
-  },
-  "common": {
-    "buttons": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "delete": "Delete",
-      "edit": "Edit",
-      "view": "View",
-      "create": "Create",
-      "add": "Add",
-      "remove": "Remove",
-      "confirm": "Confirm",
-      "back": "Back",
-      "next": "Next",
-      "previous": "Previous",
-      "close": "Close",
-      "submit": "Submit",
-      "reset": "Reset",
-      "update": "Update",
-      "abandon": "Cancel",
-      "clearSelection": "Clear selection",
-      "continue": "Continue",
-      "selected": {
-        "singular": "selected",
-        "plural": "selected"
-      }
-    },
-    "status": {
-      "loading": "Loading...",
-      "success": "Success",
-      "error": "Error",
-      "saved": "Saved",
-      "updated": "Updated",
-      "deleted": "Deleted",
-      "created": "Created",
-      "saving": "Saving..."
-    },
-    "validation": {
-      "required": "This field is required",
-      "email": "Please enter a valid email address",
-      "minLength": "Must be at least {{count}} characters",
-      "maxLength": "Cannot be more than {{count}} characters",
-      "passwordConfirmation": "Passwords do not match"
-    },
-    "actions": {
-      "view": "View",
-      "edit": "Edit",
-      "delete": "Delete",
-      "duplicate": "Duplicate",
-      "archive": "Archive"
-    },
-    "clear": "Clear"
-  },
-  "welcome": {
-    "title": "Welcome",
-    "description": "Welcome to your meal planning application"
-  },
-  "workspace": {
-    "createNew": "Create a workspace",
-    "name": "Name",
-    "description": "Description",
-    "create": {
-      "button": "Create a group",
-      "title": "Create a workspace",
-      "newSpace": "New workspace"
-    },
-    "edit": {
-      "title": "Edit workspace",
-      "makePersonalWarning": {
-        "title": "Switch to personal mode?",
-        "currentlyHas": "This workspace currently has",
-        "intro": "By switching to personal mode:",
-        "item1": "All members will be removed from the workspace",
-        "item2": "Their planned meals will be deleted",
-        "item3": "Only you will have access",
-        "irreversible": "This action is irreversible."
-      }
-    },
-    "type": {
-      "personal": "Personal",
-      "shared": "Shared",
-      "personalHint": "Your daily meals",
-      "sharedHint": "Family, roommates, friends..."
-    },
-    "fields": {
-      "name": "Workspace name",
-      "namePlaceholder": "E.g.: Family, Roommates..."
-    },
-    "hints": {
-      "personal": "Manage your personal meals and schedules.",
-      "shared": "Collaborate with your family, roommates or friends."
-    },
-    "pageTitle": "My groups",
-    "title": "My groups",
-    "subtitle": "Shared planning spaces",
-    "indexSubtitle": "Manage your personal and collaborative workspaces",
-    "manageMembers": "Manage members",
-    "manageMembersFor": "Manage members of",
-    "inviteByEmail": "Invite by email",
-    "inviteEmail": {
-      "placeholder": "Email address"
-    },
-    "invite": {
-      "button": "Invite"
-    },
-    "membersLabel": "members",
-    "member": "member",
-    "pending_invitations": "Pending invitations",
-    "invitedBy": "Invited by",
-    "makeEditor": "Change to editor",
-    "makeViewer": "Change to viewer",
-    "removeMember": "Remove",
-    "current_workspace": "Current workspace",
-    "myGroups": "My groups",
-    "mySpaces": "My spaces",
-    "invitations": "Invitations",
-    "manageInvitations": "Manage invitations",
-    "delete": {
-      "title": "Delete group",
-      "message": "Are you sure you want to permanently delete the group \"{{name}}\"? This action is irreversible.",
-      "button": "Delete"
-    },
-    "leave": {
-      "message": "Are you sure you want to leave the group \"{{name}}\"?",
-      "button": "Leave group",
-      "confirmButton": "Leave"
-    },
-    "empty": {
-      "title": "No shared groups",
-      "description": "Create your first group or request an invitation to collaborate with others on your meal plans."
-    },
-    "role": {
-      "owner": "Owner",
-      "editor": "Editor",
-      "viewer": "Viewer"
-    },
-    "roles": {
-      "owner": "Owner",
-      "editor": "Editor",
-      "viewer": "Viewer",
-      "ownerLabel": "· Owner"
-    },
-    "owner": {
-      "label": "Workspace owner"
-    },
-    "permissions": {
-      "title": "Permissions",
-      "viewPlanning": "View",
-      "editMeals": "Edit",
-      "manageMembers": "Manage",
-      "editorDescription": "View and edit meals",
-      "editorNote": "Member management not included",
-      "viewerDescription": "View planned meals"
-    },
-    "members": {
-      "title": "Members"
+    "workspace": {
+        "createNew": "Create a workspace",
+        "name": "Name",
+        "description": "Description",
+        "create": {
+            "button": "Create a group",
+            "title": "Create a workspace",
+            "newSpace": "New workspace"
+        },
+        "edit": {
+            "title": "Edit workspace",
+            "makePersonalWarning": {
+                "title": "Switch to personal mode?",
+                "currentlyHas": "This workspace currently has",
+                "intro": "By switching to personal mode:",
+                "item1": "All members will be removed from the workspace",
+                "item2": "Their planned meals will be deleted",
+                "item3": "Only you will have access",
+                "irreversible": "This action is irreversible."
+            }
+        },
+        "type": {
+            "personal": "Personal",
+            "shared": "Shared",
+            "personalHint": "Your daily meals",
+            "sharedHint": "Family, roommates, friends..."
+        },
+        "fields": {
+            "name": "Workspace name",
+            "namePlaceholder": "E.g.: Family, Roommates..."
+        },
+        "hints": {
+            "personal": "Manage your personal meals and schedules.",
+            "shared": "Collaborate with your family, roommates or friends."
+        },
+        "pageTitle": "My groups",
+        "title": "My groups",
+        "subtitle": "Shared planning spaces",
+        "indexSubtitle": "Manage your personal and collaborative workspaces",
+        "manageMembers": "Manage members",
+        "manageMembersFor": "Manage members of",
+        "inviteByEmail": "Invite by email",
+        "inviteEmail": {
+            "placeholder": "Email address"
+        },
+        "invite": {
+            "button": "Invite"
+        },
+        "membersLabel": "members",
+        "member": "member",
+        "pending_invitations": "Pending invitations",
+        "invitedBy": "Invited by",
+        "makeEditor": "Change to editor",
+        "makeViewer": "Change to viewer",
+        "removeMember": "Remove",
+        "current_workspace": "Current workspace",
+        "myGroups": "My groups",
+        "mySpaces": "My spaces",
+        "invitations": "Invitations",
+        "manageInvitations": "Manage invitations",
+        "delete": {
+            "title": "Delete group",
+            "message": "Are you sure you want to permanently delete the group \"{{name}}\"? This action is irreversible.",
+            "button": "Delete"
+        },
+        "leave": {
+            "message": "Are you sure you want to leave the group \"{{name}}\"?",
+            "button": "Leave group",
+            "confirmButton": "Leave"
+        },
+        "empty": {
+            "title": "No shared groups",
+            "description": "Create your first group or request an invitation to collaborate with others on your meal plans."
+        },
+        "role": {
+            "owner": "Owner",
+            "editor": "Editor",
+            "viewer": "Viewer"
+        },
+        "roles": {
+            "owner": "Owner",
+            "editor": "Editor",
+            "viewer": "Viewer",
+            "ownerLabel": "· Owner"
+        },
+        "owner": {
+            "label": "Workspace owner"
+        },
+        "permissions": {
+            "title": "Permissions",
+            "viewPlanning": "View",
+            "editMeals": "Edit",
+            "manageMembers": "Manage",
+            "editorDescription": "View and edit meals",
+            "editorNote": "Member management not included",
+            "viewerDescription": "View planned meals"
+        },
+        "members": {
+            "title": "Members"
+        },
+        "invitation": {
+            "accept": "Accept",
+            "decline": "Decline"
+        },
+        "planning": "Planning",
+        "sharedSpaces": "Shared spaces",
+        "sharedSpace": "Shared space",
+        "label": "Workspace",
+        "actions": "Actions",
+        "modified": "Modified"
     },
     "invitation": {
-      "accept": "Accept",
-      "decline": "Decline"
-    },
-    "planning": "Planning",
-    "sharedSpaces": "Shared spaces",
-    "sharedSpace": "Shared space",
-    "label": "Workspace",
-    "actions": "Actions",
-    "modified": "Modified"
-  },
-  "invitation": {
-    "pageTitle": "Invitations",
-    "title": "Group invitations",
-    "subtitle": "Manage your invitations to shared planning spaces",
-    "yourRole": "Your role",
-    "status": {
-      "pending": "Pending"
-    },
-    "expires": {
-      "today": "Expires today",
-      "inDays": "Expires in {{days}} day",
-      "inDays_plural": "Expires in {{days}} days"
-    },
-    "empty": {
-      "title": "No pending invitations",
-      "description": "You currently have no invitations. When someone invites you to join a group, you'll see it here."
+        "pageTitle": "Invitations",
+        "title": "Group invitations",
+        "subtitle": "Manage your invitations to shared planning spaces",
+        "yourRole": "Your role",
+        "status": {
+            "pending": "Pending"
+        },
+        "expires": {
+            "today": "Expires today",
+            "inDays": "Expires in {{days}} day",
+            "inDays_plural": "Expires in {{days}} days"
+        },
+        "empty": {
+            "title": "No pending invitations",
+            "description": "You currently have no invitations. When someone invites you to join a group, you'll see it here."
+        }
     }
-  }
 }

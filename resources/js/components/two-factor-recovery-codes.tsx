@@ -61,19 +61,25 @@ export default function TwoFactorRecoveryCodes({
           {t('settings.twoFactor.recoveryCodesTitle', '2FA Recovery Codes')}
         </CardTitle>
         <CardDescription>
-          {t('settings.twoFactor.recoveryCodesDescription', 'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.')}
+          {t(
+            'settings.twoFactor.recoveryCodesDescription',
+            'Recovery codes let you regain access if you lose your 2FA device. Store them in a secure password manager.',
+          )}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col gap-3 select-none sm:flex-row sm:items-center sm:justify-between">
           <button
-            className="btn btn-primary w-fit"
+            className="btn w-fit btn-primary"
             onClick={toggleCodesVisibility}
             aria-expanded={codesAreVisible}
             aria-controls="recovery-codes-section"
           >
             <RecoveryCodeIconComponent className="size-4" aria-hidden="true" />
-            {codesAreVisible ? t('settings.twoFactor.hideCodes', 'Hide') : t('settings.twoFactor.viewCodes', 'View')} {t('settings.twoFactor.recoveryCodesLabel', 'Recovery codes')}
+            {codesAreVisible
+              ? t('settings.twoFactor.hideCodes', 'Hide')
+              : t('settings.twoFactor.viewCodes', 'View')}{' '}
+            {t('settings.twoFactor.recoveryCodesLabel', 'Recovery codes')}
           </button>
 
           {canRegenerateCodes && (
@@ -89,7 +95,8 @@ export default function TwoFactorRecoveryCodes({
                   disabled={processing}
                   aria-describedby="regenerate-warning"
                 >
-                  <RefreshCw /> {t('settings.twoFactor.regenerateCodes', 'Regenerate Codes')}
+                  <RefreshCw />{' '}
+                  {t('settings.twoFactor.regenerateCodes', 'Regenerate Codes')}
                 </button>
               )}
             </Form>

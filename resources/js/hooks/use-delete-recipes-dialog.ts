@@ -58,4 +58,3 @@ export function useDeleteRecipesDialog() {
     isSingle: store.recipesToDelete.length === 1,
   };
 }
-

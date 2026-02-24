@@ -22,11 +22,11 @@ export const useRecipeMultiSelectStore = create<
 >((set) => ({
   ...initialState,
 
-  setIsMultiSelectMode: (value) => 
-    set((state) => ({ 
+  setIsMultiSelectMode: (value) =>
+    set((state) => ({
       isMultiSelectMode: value,
       // Clear selections when disabling multi-select mode
-      selectedRecipesId: value ? state.selectedRecipesId : []
+      selectedRecipesId: value ? state.selectedRecipesId : [],
     })),
 
   toggleRecipeSelection: (recipeId) =>
@@ -35,7 +35,9 @@ export const useRecipeMultiSelectStore = create<
 
       if (isSelected) {
         return {
-          selectedRecipesId: state.selectedRecipesId.filter((r) => r !== recipeId),
+          selectedRecipesId: state.selectedRecipesId.filter(
+            (r) => r !== recipeId,
+          ),
         };
       } else {
         return {

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useGenericContext } from '@/hooks/use-generic-context';
 
 import { PaginatedCollection, Recipe, Tag } from '@/types';
@@ -7,6 +8,7 @@ export interface RecipeFiltersContextProps {
   tags: Tag[];
 }
 
+ 
 const {
   Provider: RecipeFiltersDataProvider,
   useContextValue: useRecipeFiltersContext,

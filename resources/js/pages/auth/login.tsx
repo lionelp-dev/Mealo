@@ -22,7 +22,10 @@ export default function Login({ status, canResetPassword }: LoginProps) {
   return (
     <AuthLayout
       title={t('auth.login.title', 'Log in to your account')}
-      description={t('auth.login.description', 'Enter your email and password below to log in')}
+      description={t(
+        'auth.login.description',
+        'Enter your email and password below to log in',
+      )}
     >
       <Head title={t('auth.login.pageTitle', 'Log in')} />
 
@@ -35,7 +38,9 @@ export default function Login({ status, canResetPassword }: LoginProps) {
           <>
             <div className="grid gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="email">{t('auth.login.emailLabel', 'Email address')}</Label>
+                <Label htmlFor="email">
+                  {t('auth.login.emailLabel', 'Email address')}
+                </Label>
                 <Input
                   id="email"
                   type="email"
@@ -44,14 +49,19 @@ export default function Login({ status, canResetPassword }: LoginProps) {
                   autoFocus
                   tabIndex={1}
                   autoComplete="email"
-                  placeholder={t('auth.login.emailPlaceholder', 'email@example.com')}
+                  placeholder={t(
+                    'auth.login.emailPlaceholder',
+                    'email@example.com',
+                  )}
                 />
                 <InputError message={errors.email} />
               </div>
 
               <div className="grid gap-2">
                 <div className="flex items-center">
-                  <Label htmlFor="password">{t('auth.login.passwordLabel', 'Password')}</Label>
+                  <Label htmlFor="password">
+                    {t('auth.login.passwordLabel', 'Password')}
+                  </Label>
                   {canResetPassword && (
                     <TextLink
                       href={request()}
@@ -76,12 +86,14 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
               <div className="flex items-center space-x-3">
                 <Checkbox id="remember" name="remember" tabIndex={3} />
-                <Label htmlFor="remember">{t('auth.login.rememberMe', 'Remember me')}</Label>
+                <Label htmlFor="remember">
+                  {t('auth.login.rememberMe', 'Remember me')}
+                </Label>
               </div>
 
               <button
                 type="submit"
-                className="btn btn-primary mt-4 w-full"
+                className="btn mt-4 w-full btn-primary"
                 tabIndex={4}
                 disabled={processing}
                 data-test="login-button"

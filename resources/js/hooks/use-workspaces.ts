@@ -13,7 +13,7 @@ export function useWorkspaces() {
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
-      onError?: (error: any) => void;
+      onError?: (error: unknown) => void;
     },
   ) => {
     router.post(
@@ -36,7 +36,7 @@ export function useWorkspaces() {
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
-      onError?: (error: any) => void;
+      onError?: (error: unknown) => void;
     },
   ) => {
     router.put(

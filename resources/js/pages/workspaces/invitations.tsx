@@ -114,7 +114,9 @@ export default function InvitationsPage() {
 
                         <div className="flex flex-col gap-1 rounded-xl bg-secondary/5 p-4 font-normal text-muted-foreground">
                           <div className="flex items-center justify-between">
-                            <span>{t('invitation.yourRole', 'Votre rôle')}</span>
+                            <span>
+                              {t('invitation.yourRole', 'Votre rôle')}
+                            </span>
                             <span className="badge rounded-full badge-soft badge-sm badge-secondary">
                               {capitalize(invitation.role)}
                             </span>
@@ -159,7 +161,10 @@ export default function InvitationsPage() {
                               {invitation.invited_by.name}
                             </span>
                             <span>
-                              {t('workspace.roles.ownerLabel', '· Propriétaire')}
+                              {t(
+                                'workspace.roles.ownerLabel',
+                                '· Propriétaire',
+                              )}
                             </span>
                           </span>
                         </span>

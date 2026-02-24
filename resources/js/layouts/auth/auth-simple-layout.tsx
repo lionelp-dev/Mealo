@@ -21,7 +21,7 @@ export default function AuthSimpleLayout({
       <div className="absolute top-4 right-4">
         <LanguageSwitcher />
       </div>
-      
+
       <div className="w-full max-w-sm">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col items-center gap-4">

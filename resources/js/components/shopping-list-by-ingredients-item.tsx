@@ -75,7 +75,7 @@ export default function ShoppingListByIngredientsItem({
         <span className="-mb-1 flex h-fit items-center gap-1 self-end px-1">
           <span
             className={cn(
-              'text-base flex items-center gap-2 font-medium text-base-content transition-all duration-200',
+              'flex items-center gap-2 text-base font-medium text-base-content transition-all duration-200',
               ingredient.is_checked && 'line-through',
             )}
           >

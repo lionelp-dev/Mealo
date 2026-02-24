@@ -21,8 +21,7 @@ export const workspaceCreationStore = create<
 >((set) => ({
   ...initialState,
   setWorkspaceCreating: (isWorkspaceCreating) => set({ isWorkspaceCreating }),
-  openWorkspaceCreationModal: () =>
-    set({ isWorkspaceCreationModalOpen: true }),
+  openWorkspaceCreationModal: () => set({ isWorkspaceCreationModalOpen: true }),
   closeWorkspaceCreationModal: () =>
     set({ isWorkspaceCreationModalOpen: false }),
 }));

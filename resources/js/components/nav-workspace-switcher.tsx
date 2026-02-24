@@ -22,16 +22,14 @@ import { WorkspaceInvitationModal } from './workspace-invitation-modal';
 
 export function NavWorkspaceSwitcher() {
   const { t, i18n } = useTranslation();
+  const [isWorkspaceSwitcherPopoverOpen, setWorkspaceSwitcherPopoverOpen] =
+    useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const context = useOptionalWorkspaceContext();
   if (!context) return null;
   const { workspace_data } = context;
   const { current_workspace, workspaces } = workspace_data;
-
-  const [isWorkspaceSwitcherPopoverOpen, setWorkspaceSwitcherPopoverOpen] =
-    useState(false);
-
-  const [isLoading, setIsLoading] = useState(false);
 
   const { openWorkspaceCreationModal } = workspaceCreationStore();
   const { openWorkspaceInvitationModal } = workspaceInvitationModalStore();
@@ -138,7 +136,8 @@ export function NavWorkspaceSwitcher() {
                             </span>
                             <span className="flex items-center gap-1 text-muted-foreground/80">
                               <span className="text-left text-xs font-normal">
-                                {t('workspace.modified', 'Modifié')} {last_update}
+                                {t('workspace.modified', 'Modifié')}{' '}
+                                {last_update}
                               </span>
                               <span>.</span>
                               <span className="flex gap-1 text-left text-xs font-normal">

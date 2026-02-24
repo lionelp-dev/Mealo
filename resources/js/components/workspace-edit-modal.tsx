@@ -195,8 +195,7 @@ function WorkspaceEditForm({ workspace }: { workspace: Workspace }) {
                   'Cet espace compte actuellement',
                 )}{' '}
                 <span className="font-semibold">
-                  {nonOwnerMembersCount}{' '}
-                  {t('workspace.member', 'membre')}
+                  {nonOwnerMembersCount} {t('workspace.member', 'membre')}
                   {nonOwnerMembersCount > 1 ? 's' : ''}.
                 </span>{' '}
                 {t(

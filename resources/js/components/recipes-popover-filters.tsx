@@ -25,7 +25,6 @@ type Props = {
 };
 
 export function RecipeFiltersPopover({
-  className,
   side = 'bottom',
   align = 'end',
   sideOffset = 6,

@@ -63,7 +63,7 @@ export const useRecipeDeleteStore = create<
           set({ isDeleting: false });
         },
       });
-    } catch (error) {
+    } catch {
       set({ isDeleting: false });
     }
   },

@@ -61,7 +61,7 @@ export default function ShoppingListByRecipesIngredientItem({
       <span className="flex min-w-0 flex-1 items-center justify-start gap-1 px-1 pb-[1px]">
         <span
           className={cn(
-            'text-base min-w-0 truncate font-medium text-base-content transition-all duration-200',
+            'min-w-0 truncate text-base font-medium text-base-content transition-all duration-200',
             ingredient.is_checked && 'line-through opacity-60',
           )}
         >
