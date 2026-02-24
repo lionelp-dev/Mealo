@@ -6,6 +6,7 @@ use App\Http\Requests\GenerateRecipeRequest;
 use App\Http\Requests\StoreRecipeRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
+use Tests\Helpers\OpenAITestHelper;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -27,10 +28,30 @@ test('recipe generation screen can be rendered', function () {
 });
 
 test('user can generate a recipe successfully with simple prompt', function () {
-    $promptData = ['prompt' => 'une recette simple avec du saumon grillé'];
+    // Mock the OpenAI response
+    OpenAITestHelper::mockSuccessfulRecipeGeneration([
+        'name' => 'Saumon Grillé au Citron',
+        'description' => 'Un délicieux saumon grillé avec une touche de citron',
+        'preparation_time' => 15,
+        'cooking_time' => 20,
+        'serving_size' => 2,
+        'meal_times' => [['id' => 2, 'name' => 'lunch']],
+        'tags' => [['name' => 'healthy'], ['name' => 'seafood']],
+        'ingredients' => [
+            ['name' => 'Filet de saumon', 'quantity' => 500, 'unit' => 'g'],
+            ['name' => 'Citron', 'quantity' => 1, 'unit' => 'pièce'],
+        ],
+        'steps' => [
+            ['description' => 'Préchauffer le grill', 'order' => 1],
+            ['description' => 'Griller le saumon 10 min de chaque côté', 'order' => 2],
+        ],
+    ]);
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+    $response = $this->actingAs($this->user)->post(route('recipes.generate'), [
+        'prompt' => 'une recette simple avec du saumon grillé',
+    ]);
 
+    // Should return 200 with Inertia component
     $response->assertStatus(200);
     $response->assertInertia(
         fn ($page) => $page
@@ -46,6 +67,7 @@ test('user can generate a recipe successfully with simple prompt', function () {
             ->has('generated_recipe.steps')
     );
 
+    // Verify the generated recipe data is valid
     $data = $response->getOriginalContent()->getData()['page']['props'];
     $generatedRecipe = $data['generated_recipe'];
 
@@ -78,12 +100,7 @@ test('guest user cannot generate recipe', function () {
 });
 
 test('handles openai api failure gracefully', function () {
-    $mockClient = \Mockery::mock();
-    $mockChat = \Mockery::mock();
-    $mockChat->shouldReceive('create')->andThrow(new \Exception('OpenAI API error'));
-    $mockClient->shouldReceive('chat')->andReturn($mockChat);
-
-    app()->instance('openai.client', $mockClient);
+    OpenAITestHelper::mockOpenAIErrorException('OpenAI API error');
 
     $promptData = [
         'prompt' => 'une simple recette végétarienne',
@@ -94,4 +111,32 @@ test('handles openai api failure gracefully', function () {
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
     $response->assertSessionHas('error', 'Failed to generate recipe: OpenAI API error');
+});
+
+test('handles openai rate limit gracefully', function () {
+    OpenAITestHelper::mockOpenAIRateLimit();
+
+    $promptData = [
+        'prompt' => 'une recette végétarienne',
+    ];
+
+    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+
+    $response->assertStatus(302);
+    $response->assertRedirect(route('recipes.create'));
+    $response->assertSessionHas('error');
+});
+
+test('handles openai invalid api key gracefully', function () {
+    OpenAITestHelper::mockOpenAIInvalidApiKey();
+
+    $promptData = [
+        'prompt' => 'une recette avec des herbes',
+    ];
+
+    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+
+    $response->assertStatus(302);
+    $response->assertRedirect(route('recipes.create'));
+    $response->assertSessionHas('error');
 });
