@@ -10,7 +10,7 @@ function FieldInfo() {
     <em className="flex items-center gap-2 text-sm text-error">
       <AlertTriangle size={14} className="flex-shrink-0" />
       <span className="whitespace-nowrap">
-        {meta.errors.map((err) => err.message).join(', ')}
+        {[...new Set(meta.errors.map((err) => err.message))].join(', ')}
       </span>
     </em>
   ) : undefined;
