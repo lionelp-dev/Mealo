@@ -1,5 +1,3 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
-import { DateTime } from 'luxon';
 import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import {
   DayPlannedMeals,
@@ -10,6 +8,8 @@ import {
   Tag,
 } from '../types';
 import MealPlanDayHeader from './meal-plan-day-header';
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { DateTime } from 'luxon';
 
 // Données inline simples
 const mealTimes: MealTime[] = [

@@ -5,20 +5,18 @@ import {
   viewRecipes,
 } from '../infrastructure/repositories/recipes.repository';
 import { RecipeFormIngredientsSection } from './components/recipe-form-ingredients-section';
+import { MealTimeSelectField } from './components/recipe-form-meal-time-select-field';
 import { RecipeFormStepsSection } from './components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from './components/recipe-form-tags-section';
 import RecipeModalAIGeneration from './components/recipe-modal-ai-generation';
 import { AppMainContent } from '@/components/app-main-content';
 import { ImageUpload } from '@/components/image-upload';
-import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm } from '@/hooks/form-hook';
 import AppLayout from '@/layouts/app-layout';
-import { MealTime } from '@/types';
 import { Head } from '@inertiajs/react';
 import { ChefHatIcon } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import Select from 'react-select';
 
 export function RecipesCreatePage() {
   const { t } = useTranslation();
@@ -100,6 +98,7 @@ export function RecipesCreatePage() {
               name="name"
               validators={{
                 onChange: recipeSchema.shape.name,
+                onBlur: recipeSchema.shape.name,
               }}
               children={(field) => (
                 <field.TextField
@@ -115,6 +114,7 @@ export function RecipesCreatePage() {
             <form.AppField
               name="description"
               validators={{
+                onChange: recipeSchema.shape.description,
                 onBlur: recipeSchema.shape.description,
               }}
               children={(field) => (
@@ -134,39 +134,14 @@ export function RecipesCreatePage() {
               mode="array"
               validators={{
                 onChange: recipeSchema.shape.meal_times,
+                onBlur: recipeSchema.shape.meal_times,
               }}
-              children={(field) => {
-                const options = meal_times.data.map((meal_time: MealTime) => ({
-                  value: meal_time.name,
-                  label: meal_time.name,
-                }));
-                return (
-                  <div className="flex flex-col gap-4">
-                    <label className="text-base text-base-content">
-                      {t('recipes.form.mealTimesTitle', 'Meal times')}
-                    </label>
-                    <Select
-                      isMulti
-                      name="colors"
-                      options={options}
-                      className="basic-multi-select"
-                      classNamePrefix="select"
-                      onChange={(values) =>
-                        field.handleChange(
-                          values.flatMap(
-                            (v: { value: string; label: string }) => {
-                              return meal_times.data.filter(
-                                (m: MealTime) => m.name === v.value,
-                              );
-                            },
-                          ),
-                        )
-                      }
-                    />
-                    <FieldInfo />
-                  </div>
-                );
-              }}
+              children={(field) => (
+                <MealTimeSelectField
+                  field={field}
+                  mealTimes={meal_times.data}
+                />
+              )}
             />
 
             <div className="grid grid-cols-3 gap-5">

@@ -1,4 +1,3 @@
-import type { Meta, StoryObj } from '@storybook/react-vite';
 import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import {
   MealTime,
@@ -8,6 +7,7 @@ import {
   Tag,
 } from '../types';
 import MealPlanCalendar from './meal-plan-calendar';
+import type { Meta, StoryObj } from '@storybook/react-vite';
 
 // Données inline simples
 const mealTimes: MealTime[] = [
@@ -29,6 +29,7 @@ const sampleRecipes: Recipe[] = [
     ingredients: [],
     steps: [],
     tags: [],
+    image: null,
   },
   {
     id: 2,
@@ -42,6 +43,7 @@ const sampleRecipes: Recipe[] = [
     ingredients: [],
     steps: [],
     tags: [],
+    image: null,
   },
   {
     id: 3,
@@ -55,6 +57,7 @@ const sampleRecipes: Recipe[] = [
     ingredients: [],
     steps: [],
     tags: [],
+    image: null,
   },
 ];
 

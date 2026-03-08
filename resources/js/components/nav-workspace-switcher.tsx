@@ -1,10 +1,12 @@
-import * as Popover from '@radix-ui/react-popover';
-
+import WorkspaceCreationModal from './workspace-creation-modal';
+import { WorkspaceEditModal } from './workspace-edit-modal';
+import { WorkspaceInvitationModal } from './workspace-invitation-modal';
 import { useOptionalWorkspaceContext } from '@/contexts/workspace-context';
 import { capitalize, cn, pluralize } from '@/lib/utils';
 import { workspaceCreationStore } from '@/stores/workspace-creation-modal-store';
 import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-modal-store';
 import { router } from '@inertiajs/react';
+import * as Popover from '@radix-ui/react-popover';
 import {
   CheckIcon,
   ChevronDown,
@@ -16,9 +18,6 @@ import {
 import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import WorkspaceCreationModal from './workspace-creation-modal';
-import { WorkspaceEditModal } from './workspace-edit-modal';
-import { WorkspaceInvitationModal } from './workspace-invitation-modal';
 
 export function NavWorkspaceSwitcher() {
   const { t, i18n } = useTranslation();
@@ -60,7 +59,7 @@ export function NavWorkspaceSwitcher() {
       >
         <Popover.Trigger asChild>
           <button
-            className="btn items-center gap-2 rounded border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10"
+            className="btn items-center gap-2 border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10"
             disabled={isLoading}
           >
             <ChevronDown className="h-3 w-3 shrink-0" />

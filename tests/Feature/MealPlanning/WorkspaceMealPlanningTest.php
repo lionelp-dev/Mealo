@@ -79,7 +79,7 @@ test('planned meals index shows only workspace meals', function () {
         'user_id' => $this->owner->id,
         'recipe_id' => $this->ownerRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => now()->addDay()->format('Y-m-d'),
+        'planned_date' => now()->startOfWeek()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $personalWorkspace->id,
     ]);
 
@@ -88,7 +88,7 @@ test('planned meals index shows only workspace meals', function () {
         'user_id' => $this->owner->id,
         'recipe_id' => $this->ownerRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => now()->addDays(2)->format('Y-m-d'),
+        'planned_date' => now()->startOfWeek()->addDays(3)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
     ]);
 
@@ -207,16 +207,16 @@ test('workspace editors can delete any meal in shared workspace', function () {
         'user_id' => $this->owner->id,
         'recipe_id' => $this->ownerRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => now()->addDay()->format('Y-m-d'),
+        'planned_date' => now()->startOfWeek()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
     ]);
 
-    // Create meal by editor in a different week to avoid UNIQUE constraint on shopping_lists
+    // Create meal by editor
     $editorMeal = PlannedMeal::create([
         'user_id' => $this->editor->id,
         'recipe_id' => $this->editorRecipe->resource->id,
         'meal_time_id' => $mealTime->id,
-        'planned_date' => now()->addWeek()->format('Y-m-d'),
+        'planned_date' => now()->startOfWeek()->addDays(4)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
     ]);
 

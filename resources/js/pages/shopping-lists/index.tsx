@@ -1,5 +1,3 @@
-import { Head, usePage, usePrefetch } from '@inertiajs/react';
-
 import { NavWorkspaceSwitcher } from '@/components/nav-workspace-switcher';
 import { ShoppingListByIngredients } from '@/components/shopping-list-by-ingredients';
 import ShoppingListByRecipes from '@/components/shopping-list-by-recipes';
@@ -11,6 +9,7 @@ import AppLayout from '@/layouts/app-layout';
 import { cn } from '@/lib/utils';
 import shoppingLists from '@/routes/shopping-lists';
 import { ShoppingList, WorkspaceData } from '@/types';
+import { Head, usePage, usePrefetch } from '@inertiajs/react';
 import { BookCopy, Rows2, ShoppingBasket } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';

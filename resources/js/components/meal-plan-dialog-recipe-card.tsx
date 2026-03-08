@@ -1,10 +1,9 @@
-import { Recipe } from '@/types';
-
+import MealPlanningPopover from './meal-planning-popover';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
+import { Recipe } from '@/types';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import MealPlanningPopover from './meal-planning-popover';
 
 type RecipeCardProps = {
   recipe: Recipe;

@@ -1,10 +1,9 @@
-import { useState } from 'react';
-
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { capitalize, cn } from '@/lib/utils';
 import { PlannedMealIngredient } from '@/types';
 import { router } from '@inertiajs/react';
 import { ChevronDown, DotIcon } from 'lucide-react';
+import { useState } from 'react';
 
 type ShoppingListByIngredientsItemProps = {
   ingredient: PlannedMealIngredient;
@@ -95,6 +94,7 @@ export default function ShoppingListByIngredientsItem({
           <div
             className={cn(
               'col-start-2 row-start-2 flex flex-col pl-0.5',
+              !canEditShoppingList && 'col-start-1',
               showMoreFromRecipes && 'gap-1',
             )}
           >

@@ -1,3 +1,4 @@
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 import { useAppForm } from '@/hooks/form-hook';
 import { useWorkspaces } from '@/hooks/use-workspaces';
 import { cn } from '@/lib/utils';
@@ -7,7 +8,6 @@ import { Workspace } from '@/types';
 import { useStore } from '@tanstack/react-form';
 import { User, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
 
 const workspaceTypes = [
   {

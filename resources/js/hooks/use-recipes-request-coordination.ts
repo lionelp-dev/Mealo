@@ -1,7 +1,7 @@
-import { router, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
 import { useRecipeFiltersStore } from '../stores/recipe-filters';
 import { useRecipeSearchStore } from '../stores/recipe-search';
+import { router, usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 
 export function useRecipesRequestCoordination() {
   const { activeFilters, clearAllFilters } = useRecipeFiltersStore();

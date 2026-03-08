@@ -1,5 +1,5 @@
-import { useShoppingList } from '@/hooks/use-shopping-list';
 import ShoppingListByIngredientsItem from './shopping-list-by-ingredients-item';
+import { useShoppingList } from '@/hooks/use-shopping-list';
 
 export function ShoppingListByIngredients() {
   const { shopping_list_by_ingredients } = useShoppingList();
@@ -11,7 +11,10 @@ export function ShoppingListByIngredients() {
         <div className="flex min-h-0 flex-col overflow-y-scroll">
           <div className="divide-y divide-base-300">
             {shopping_list_by_ingredients.unchecked.map((ingredient) => (
-              <ShoppingListByIngredientsItem ingredient={ingredient} />
+              <ShoppingListByIngredientsItem
+                key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
+                ingredient={ingredient}
+              />
             ))}
           </div>
         </div>
@@ -22,7 +25,10 @@ export function ShoppingListByIngredients() {
         <div className="flex flex-col overflow-scroll">
           <div className="divide-y divide-base-300">
             {shopping_list_by_ingredients.checked.map((ingredient) => (
-              <ShoppingListByIngredientsItem ingredient={ingredient} />
+              <ShoppingListByIngredientsItem
+                key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
+                ingredient={ingredient}
+              />
             ))}
           </div>
         </div>

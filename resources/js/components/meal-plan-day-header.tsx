@@ -1,11 +1,10 @@
-import * as Popover from '@radix-ui/react-popover';
-import { EllipsisVertical } from 'lucide-react';
-
 import { useMealPlanDayActions } from '@/hooks/use-meal-plan-day-actions';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { cn } from '@/lib/utils';
 import { DayPlannedMeals } from '@/types';
 import { Button } from '@headlessui/react';
+import * as Popover from '@radix-ui/react-popover';
+import { EllipsisVertical } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanDayHeaderProps = {

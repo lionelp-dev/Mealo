@@ -8,7 +8,6 @@ import { WorkspaceDataProvider } from '@/contexts/workspace-context';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import AppLayout from '@/layouts/app-layout';
 import plannedMealsRoute from '@/routes/planned-meals';
-
 import {
   MealTime,
   PaginatedCollection,
@@ -18,7 +17,6 @@ import {
   Tag,
   WorkspaceData,
 } from '@/types';
-
 import { Head, usePage, usePoll } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';

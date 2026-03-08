@@ -1,19 +1,17 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-
-import { useRecipeSearchStore } from '@/stores/recipe-search';
-import { ReactNode, useState } from 'react';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
-
+import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
+import MultiSelectMealPlanningPopover from './multi-select-meal-planning-popover';
+import { RecipeFilters } from './recipe-filters';
 import { useMealPlanContext } from '@/contexts/meal-plan-context';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useUrlFilterSync } from '@/hooks/use-url-filter-sync';
 import i18n from '@/lib/i18n';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
-import MealPlanDialogSearchRecipes from './meal-plan-dialog-search-recipes';
-import MultiSelectMealPlanningPopover from './multi-select-meal-planning-popover';
-import { RecipeFilters } from './recipe-filters';
+import { useRecipeSearchStore } from '@/stores/recipe-search';
+import * as Dialog from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
+import { ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type MealPlanDialogProps = {
   children?: ReactNode;

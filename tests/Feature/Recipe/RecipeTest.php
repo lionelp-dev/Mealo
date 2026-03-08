@@ -9,8 +9,7 @@ use Illuminate\Support\Facades\Validator;
 // No require_once needed — helpers are auto-loaded from tests/Pest.php
 
 beforeEach(function () {
-    // Reference data (roles, meal times) is seeded globally in Pest.php.
-    // Only declare what is specific to this test file.
+    /** @var \TestCase $this */
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
     $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
@@ -21,18 +20,21 @@ beforeEach(function () {
 // ---------------------------------------------------------------------------
 
 test('recipes screen can be rendered', function () {
+    /** @var \TestCase $this */
     $this->actingAs($this->user)
         ->get(route('recipes.index'))
         ->assertOk();
 });
 
 test('create recipe screen can be rendered', function () {
+    /** @var \TestCase $this */
     $this->actingAs($this->user)
         ->get(route('recipes.create'))
         ->assertOk();
 });
 
 test('show recipe screen can be rendered', function () {
+    /** @var \TestCase $this */
     $recipe = recipeResourceFor($this->user);
 
     $this->actingAs($this->user)
@@ -41,6 +43,7 @@ test('show recipe screen can be rendered', function () {
 });
 
 test('edit recipe screen can be rendered', function () {
+    /** @var \TestCase $this */
     $recipe = recipeResourceFor($this->user);
 
     $this->actingAs($this->user)
@@ -53,6 +56,7 @@ test('edit recipe screen can be rendered', function () {
 // ---------------------------------------------------------------------------
 
 test('guest cannot access recipe routes', function () {
+    /** @var \TestCase $this */
     $recipe = recipeResourceFor($this->user);
 
     $this->get(route('recipes.index'))->assertRedirect(route('login'));
@@ -69,6 +73,7 @@ test('guest cannot access recipe routes', function () {
 // ---------------------------------------------------------------------------
 
 test('user can create a recipe successfully', function () {
+    /** @var \TestCase $this */
     $payload = recipeResourceFor($this->user)->toArray(request());
 
     // Sanity check: the factory-built payload satisfies the form request rules.
@@ -82,6 +87,7 @@ test('user can create a recipe successfully', function () {
 });
 
 test('user cannot create recipe with invalid data', function () {
+    /** @var \TestCase $this */
     $this->actingAs($this->user)
         ->post(route('recipes.store'), [
             'name' => '',
@@ -99,6 +105,7 @@ test('user cannot create recipe with invalid data', function () {
 // ---------------------------------------------------------------------------
 
 test('user can update a recipe successfully', function () {
+    /** @var \TestCase $this */
     $recipe = recipeResourceFor($this->user);
     $payload = array_merge($recipe->toArray(request()), [
         'name' => 'Updated Recipe Name',
@@ -118,6 +125,7 @@ test('user can update a recipe successfully', function () {
 });
 
 test('user cannot update recipe with invalid data', function () {
+    /** @var \TestCase $this */
     $recipe = recipeResourceFor($this->user);
 
     $this->actingAs($this->user)
@@ -140,6 +148,7 @@ test('user cannot update recipe with invalid data', function () {
 });
 
 test('user cannot update other users recipe', function () {
+    /** @var \TestCase $this */
     $otherRecipe = recipeResourceFor($this->otherUser);
     $payload = array_merge($otherRecipe->toArray(request()), ['name' => 'Any Recipe Name']);
 
@@ -158,6 +167,7 @@ test('user cannot update other users recipe', function () {
 // ---------------------------------------------------------------------------
 
 test('user can delete a recipe successfully', function () {
+    /** @var \TestCase $this */
     $recipe = createRecipeFor($this->user);
 
     $this->actingAs($this->user)
@@ -173,6 +183,7 @@ test('user can delete a recipe successfully', function () {
 // ---------------------------------------------------------------------------
 
 test('user cannot access other users recipes', function () {
+    /** @var \TestCase $this */
     $otherRecipe = createRecipeFor($this->otherUser);
 
     $this->actingAs($this->user)

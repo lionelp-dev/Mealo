@@ -131,8 +131,8 @@ class RecipeController extends Controller
             'recipe/create',
             [
                 'meal_times' => MealTimeResource::collection(MealTime::all()),
-                'ingredients_search_results' => Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))),
-                'tags_search_results' => Inertia::scroll(new TagCollection($tagsQuery->paginate(5))),
+                'ingredients_search_results' => ! empty($validated['ingredients_search']) ? Inertia::scroll(new IngredientCollection($ingredientsQuery->paginate(5))) : [],
+                'tags_search_results' => ! empty($validated['tags_search']) ? Inertia::scroll(new TagCollection($tagsQuery->paginate(5))) : [],
                 'should_open_ai_modal' => $validated['generate'] ?? false,
             ]
         );

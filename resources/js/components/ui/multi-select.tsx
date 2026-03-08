@@ -22,6 +22,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
   value,
   onValueChange,
   className = '',
+  placeholder = '',
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -45,16 +46,20 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           aria-expanded={open}
         >
           <span className="flex gap-2 truncate text-left">
-            {selectedLabels.map((option, index) => (
-              <div
-                key={index}
-                onClick={() => handleCheckboxChange(option.value, false)}
-                className="badge badge-secondary"
-              >
-                {option.label}
-                <X size={14} />
-              </div>
-            ))}
+            {selectedLabels.length > 0 ? (
+              selectedLabels.map((option, index) => (
+                <div
+                  key={index}
+                  onClick={() => handleCheckboxChange(option.value, false)}
+                  className="badge badge-secondary"
+                >
+                  {option.label}
+                  <X size={14} />
+                </div>
+              ))
+            ) : (
+              <span className="text-base-content/50">{placeholder}</span>
+            )}
           </span>
         </button>
       </Popover.Trigger>

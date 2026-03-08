@@ -1,49 +1,38 @@
-import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
-import recipes from '@/routes/recipes';
-import { useRecipeFiltersStore } from '@/stores/recipe-filters';
+import {
+  deleteRecipes,
+  editRecipe,
+  viewRecipe,
+} from '../../infrastructure/repositories/recipes.repository';
+import { useRecipesMultiSelectStore } from '../../infrastructure/stores/use-recipes-multi-select-store';
+import { useRecipesFiltersStore } from '@/shared/stores/recipes-filters-store';
 import { Recipe } from '@/types';
-import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { EllipsisVertical } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type RecipeCardProps = {
+type Props = {
   recipe: Recipe;
-  onDelete: (recipe: Recipe) => void;
 };
 
-export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
+export function RecipeCard({ recipe }: Props) {
   const { t } = useTranslation();
 
   const [openPopover, setOpenPopover] = useState<boolean>(false);
 
-  const { isFilterActive } = useRecipeFiltersStore();
-  const { isMultiSelectMode, selectedRecipesId, toggleRecipeSelection } =
-    useMultiSelectRecipe();
-
-  const handleView = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.reload({ reset: ['flash'] });
-    router.visit(recipes.show.url({ recipe: recipe.id }));
-  };
-
-  const handleEdit = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    router.reload({ reset: ['flash'] });
-    router.visit(recipes.edit.url({ id: recipe.id }));
-  };
-
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setOpenPopover(false);
-    onDelete(recipe);
-  };
+  const { isFilterActive } = useRecipesFiltersStore();
+  const { isMultiSelectMode, selectedRecipeIds, toggleRecipeSelection } =
+    useRecipesMultiSelectStore();
 
   return (
     <div
       onClick={
-        isMultiSelectMode ? () => toggleRecipeSelection(recipe.id) : handleView
+        isMultiSelectMode
+          ? () => toggleRecipeSelection(recipe.id)
+          : (e) => {
+              e.stopPropagation();
+              viewRecipe(recipe.id);
+            }
       }
       className={`card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl ${!isMultiSelectMode && 'hover:[&_.recipe-card-actions-btn]:visible'}`}
     >
@@ -51,12 +40,12 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
         {isMultiSelectMode && (
           <input
             className="radio absolute top-4 right-4 border-base-300 bg-base-100/85 radio-sm checked:border-secondary checked:text-secondary"
-            type="radio"
-            checked={selectedRecipesId.includes(recipe.id)}
+            type="checkbox"
+            checked={selectedRecipeIds.includes(recipe.id)}
             onChange={() => {
               toggleRecipeSelection(recipe.id);
             }}
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
             }}
           />
@@ -81,15 +70,31 @@ export function RecipeCard({ recipe, onDelete }: RecipeCardProps) {
                 alignOffset={-4}
               >
                 <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-center">
-                  <button className="btn btn-ghost btn-sm" onClick={handleView}>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      viewRecipe(recipe.id);
+                    }}
+                  >
                     <li>{t('common.buttons.view', 'View')}</li>
                   </button>
-                  <button className="btn btn-ghost btn-sm" onClick={handleEdit}>
+                  <button
+                    className="btn btn-ghost btn-sm"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      editRecipe(recipe.id);
+                    }}
+                  >
                     <li>{t('common.buttons.edit', 'Edit')}</li>
                   </button>
                   <button
                     className="btn items-end justify-start gap-2 rounded-md text-error btn-ghost btn-sm hover:border-error/10 hover:bg-error/10"
-                    onClick={handleDelete}
+                    onClick={(e: React.MouseEvent) => {
+                      e.stopPropagation();
+                      setOpenPopover(false);
+                      deleteRecipes([recipe]);
+                    }}
                   >
                     <li>{t('common.buttons.delete', 'Delete')}</li>
                   </button>

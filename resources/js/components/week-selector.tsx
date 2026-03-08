@@ -1,8 +1,7 @@
+import { useWeekSelector } from '@/hooks/use-week-selector';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
-
-import { useWeekSelector } from '@/hooks/use-week-selector';
 
 type WeekSelectorProps = {
   currentWeek: DateTime;

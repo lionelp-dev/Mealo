@@ -48,8 +48,8 @@ export const RecipeFormStepsSection = withFieldGroup({
         mode="array"
         name="steps"
         validators={{
-          onBlur: recipeSchema.shape.steps,
           onChange: recipeSchema.shape.steps,
+          onBlur: recipeSchema.shape.steps,
         }}
         children={(steps_field) => (
           <div className="flex flex-col gap-4">
@@ -82,16 +82,18 @@ export const RecipeFormStepsSection = withFieldGroup({
               <form.AppField
                 name="description"
                 children={(field) => (
-                  <field.TextAreaField
-                    rows={10}
-                    placeholder={t(
-                      'recipes.steps.instructionPlaceholder',
-                      'Describe this step',
-                    )}
-                    className={cn(
-                      !steps_field.state.meta.isValid && 'textarea-error',
-                    )}
-                  />
+                  <div onBlur={() => steps_field.handleBlur()}>
+                    <field.TextAreaField
+                      rows={10}
+                      placeholder={t(
+                        'recipes.steps.instructionPlaceholder',
+                        'Describe this step',
+                      )}
+                      className={cn(
+                        !steps_field.state.meta.isValid && 'textarea-error',
+                      )}
+                    />
+                  </div>
                 )}
               />
 
@@ -104,6 +106,7 @@ export const RecipeFormStepsSection = withFieldGroup({
                     disabled={!state.canSubmit || state.isSubmitting}
                     onClick={() => {
                       form.handleSubmit();
+                      steps_field.setErrorMap({ onBlur: undefined });
                     }}
                     className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
                   >

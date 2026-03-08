@@ -1,5 +1,5 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
 import ShoppingListProgress from './shopping-list-progress';
+import { Meta, StoryObj } from '@storybook/react-vite';
 
 const meta: Meta<typeof ShoppingListProgress> = {
   title: 'Shopping List/ShoppingListProgress',

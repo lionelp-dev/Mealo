@@ -6,6 +6,7 @@ import * as Popover from '@radix-ui/react-popover';
 import 'cally';
 import { Bot, CalendarRange, Minus, Plus } from 'lucide-react';
 import { DateTime, Interval } from 'luxon';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanGenerationForm = {
@@ -31,6 +32,9 @@ export function MealPlanGenerationPopover() {
     },
     serving_size: 1,
   };
+
+  const [isCalendarRangeIsOpen, setCalendarRangeIsOpen] =
+    useState<boolean>(false);
 
   const form = useAppForm({
     defaultValues,
@@ -147,7 +151,10 @@ export function MealPlanGenerationPopover() {
                     );
 
                     return (
-                      <Popover.Root>
+                      <Popover.Root
+                        open={isCalendarRangeIsOpen}
+                        onOpenChange={setCalendarRangeIsOpen}
+                      >
                         <Popover.Trigger asChild>
                           <div className="flex items-center gap-2 text-base-content">
                             <button className="input-bordered input w-fit justify-between gap-2 pl-4 text-left">
@@ -166,19 +173,25 @@ export function MealPlanGenerationPopover() {
                         </Popover.Trigger>
                         <Popover.Portal>
                           <Popover.Content
-                            className="z-20 rounded-md border border-base-300 bg-base-100 p-3 shadow-lg"
+                            className="z-20 flex flex-col gap-2 rounded-md border border-base-300 bg-base-100 p-3 shadow-lg"
                             align="end"
                             alignOffset={90}
                             side="bottom"
                             sideOffset={5}
+                            onPointerDownOutside={(e) => e.stopPropagation()}
                           >
                             <calendar-range
                               className="cally [&_::part(button_day_today)]:bg-inherit [&_::part(button_day_today)]:text-base-content [&_::part(day):disabled]:bg-secondary/15 [&_::part(day):hover]:bg-secondary/20 [&_::part(selected)]:bg-secondary [&_::part(selected)]:text-secondary-content [&_::part(selected):hover]:bg-secondary/20"
                               months={1}
-                              min={DateTime.fromISO(weekStart).toISODate() ?? undefined}
-                              max={DateTime.fromISO(weekStart)
-                                .endOf('week')
-                                .toISODate() ?? undefined}
+                              min={
+                                DateTime.fromISO(weekStart).toISODate() ??
+                                undefined
+                              }
+                              max={
+                                DateTime.fromISO(weekStart)
+                                  .endOf('week')
+                                  .toISODate() ?? undefined
+                              }
                               value={[
                                 field.state.value.startDate.toISODate(),
                                 field.state.value.endDate.toISODate(),
@@ -226,6 +239,12 @@ export function MealPlanGenerationPopover() {
                               </svg>
                               <calendar-month></calendar-month>
                             </calendar-range>
+                            <button
+                              className="btn w-full btn-secondary"
+                              onClick={() => setCalendarRangeIsOpen(false)}
+                            >
+                              Valider
+                            </button>
                           </Popover.Content>
                         </Popover.Portal>
                       </Popover.Root>

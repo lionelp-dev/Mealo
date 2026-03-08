@@ -1,6 +1,6 @@
+import FieldInfo from './form-field-info';
 import { useFieldContext } from '@/hooks/form-context';
 import { cn } from '@/lib/utils';
-import FieldInfo from './form-field-info';
 
 interface EmailFieldProps {
   label?: string;

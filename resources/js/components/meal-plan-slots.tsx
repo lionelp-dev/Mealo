@@ -1,10 +1,9 @@
-import { useRef } from 'react';
-
-import { DayPlannedMeals } from '@/types';
-import { ScrollArea } from '@radix-ui/themes';
-import { useTranslation } from 'react-i18next';
 import MealPlanEmptySlot from './meal-plan-empty-slot';
 import MealPlanMealCard from './meal-plan-meal-card';
+import { DayPlannedMeals } from '@/types';
+import { ScrollArea } from '@radix-ui/themes';
+import { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type MealPlanProps = {
   dayPlannedMeals: DayPlannedMeals;
@@ -50,7 +49,7 @@ export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
                 ))}
               </div>
             )}
-            <MealPlanEmptySlot containerRef={scrollContainerRef} date={date} />
+            <MealPlanEmptySlot date={date} />
           </div>
         </ScrollArea>
       </div>

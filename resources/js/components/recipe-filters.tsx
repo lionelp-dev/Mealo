@@ -1,9 +1,10 @@
+import { RecipeFiltersPopover } from './recipes-popover-filters';
 import { capitalize, cn } from '@/lib/utils';
 import { useRecipeFiltersStore } from '@/stores/recipe-filters';
 import { Filter, FilterSection, Option } from '@/types';
 import { TrashIcon, X } from 'lucide-react';
+import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { RecipeFiltersPopover } from './recipes-popover-filters';
 
 enum MealTimeEnum {
   BREAKFAST = '1',
@@ -51,41 +52,44 @@ export function RecipeFilters() {
   return (
     <div className="flex max-w-full flex-1 items-start justify-between gap-3.5 rounded-xl">
       <div className="flex flex-1 flex-wrap gap-2.5">
-        {FILTERS_SECTIONS.map((section) =>
-          section.options.map((option, key) => {
-            const filter: Filter = {
-              type: section.type,
-              value: option.value,
-              label: option.label,
-            };
-            const isActive = isFilterActive(filter);
-            return (
-              <label
-                className={cn(
-                  `group/item btn flex min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-outline btn-sm btn-secondary select-none`,
-                  isActive && 'bg-secondary text-secondary-content',
-                )}
-                htmlFor={key.toString()}
-              >
-                <span className="pb-[2px]">
-                  {capitalize(
-                    t(
-                      `mealPlanning.dialog.filters.${filter.label}`,
-                      filter.label,
-                    ),
+        {FILTERS_SECTIONS.map((section) => (
+          <Fragment key={section.type}>
+            {section.options.map((option, key) => {
+              const filter: Filter = {
+                type: section.type,
+                value: option.value,
+                label: option.label,
+              };
+              const isActive = isFilterActive(filter);
+              return (
+                <label
+                  className={cn(
+                    `group/item btn flex min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-outline btn-sm btn-secondary select-none`,
+                    isActive && 'bg-secondary text-secondary-content',
                   )}
-                </span>
-                <input
-                  id={key.toString()}
-                  type="checkbox"
-                  checked={isActive}
-                  onClick={() => toggleFilter(filter)}
-                  className="radio flex-shrink-0 rounded-full checkbox-xs radio-secondary group-hover/item:border-2 group-hover/item:border-white"
-                />
-              </label>
-            );
-          }),
-        )}
+                  htmlFor={key.toString()}
+                  key={key}
+                >
+                  <span className="pb-[2px]">
+                    {capitalize(
+                      t(
+                        `mealPlanning.dialog.filters.${filter.label}`,
+                        filter.label,
+                      ),
+                    )}
+                  </span>
+                  <input
+                    id={key.toString()}
+                    type="checkbox"
+                    checked={isActive}
+                    onChange={() => toggleFilter(filter)}
+                    className="radio flex-shrink-0 rounded-full checkbox-xs radio-secondary group-hover/item:border-2 group-hover/item:border-white"
+                  />
+                </label>
+              );
+            })}
+          </Fragment>
+        ))}
         {activeFilters.length > 0 &&
           activeFilters.map(
             (filter) =>
@@ -101,7 +105,7 @@ export function RecipeFilters() {
                   <input
                     id={`${filter.type}-${filter.value}`}
                     type="checkbox"
-                    onClick={() => removeFilter(filter)}
+                    onChange={() => removeFilter(filter)}
                     className="h-0 w-0 flex-shrink-0 opacity-0"
                   />
                   <span className="pb-[2px]">

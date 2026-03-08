@@ -1,5 +1,3 @@
-import { Meta, StoryObj } from '@storybook/react-vite';
-import { DateTime } from 'luxon';
 import { MealPlanDataProvider } from '../contexts/meal-plan-context';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import {
@@ -13,6 +11,8 @@ import {
 } from '../types';
 import MealPlanDialog from './meal-plan-dialog';
 import MealPlanDialogRecipes from './meal-plan-dialog-recipes';
+import { Meta, StoryObj } from '@storybook/react-vite';
+import { DateTime } from 'luxon';
 
 // Mock data
 const mealTimes: MealTime[] = [
@@ -55,6 +55,7 @@ const sampleRecipes: Recipe[] = [
     ingredients: ingredients.slice(0, 3),
     steps: steps,
     tags: [tags[1], tags[3]],
+    image: null,
   },
   {
     id: 2,
@@ -74,6 +75,7 @@ const sampleRecipes: Recipe[] = [
       },
     ],
     tags: [tags[0], tags[1]],
+    image: null,
   },
   {
     id: 3,
@@ -95,6 +97,7 @@ const sampleRecipes: Recipe[] = [
       { id: 7, order: 3, description: 'Mélanger avec la crème' },
     ],
     tags: [tags[2]],
+    image: null,
   },
   {
     id: 4,
@@ -115,6 +118,7 @@ const sampleRecipes: Recipe[] = [
       { id: 9, order: 2, description: 'Ajouter le granola' },
     ],
     tags: [tags[0], tags[3]],
+    image: null,
   },
   {
     id: 2,
@@ -134,6 +138,7 @@ const sampleRecipes: Recipe[] = [
       },
     ],
     tags: [tags[0], tags[1]],
+    image: null,
   },
   {
     id: 3,
@@ -155,6 +160,7 @@ const sampleRecipes: Recipe[] = [
       { id: 7, order: 3, description: 'Mélanger avec la crème' },
     ],
     tags: [tags[2]],
+    image: null,
   },
   {
     id: 4,
@@ -175,6 +181,7 @@ const sampleRecipes: Recipe[] = [
       { id: 9, order: 2, description: 'Ajouter le granola' },
     ],
     tags: [tags[0], tags[3]],
+    image: null,
   },
   {
     id: 2,
@@ -194,6 +201,7 @@ const sampleRecipes: Recipe[] = [
       },
     ],
     tags: [tags[0], tags[1]],
+    image: null,
   },
   {
     id: 3,
@@ -215,6 +223,7 @@ const sampleRecipes: Recipe[] = [
       { id: 7, order: 3, description: 'Mélanger avec la crème' },
     ],
     tags: [tags[2]],
+    image: null,
   },
   {
     id: 4,
@@ -235,6 +244,7 @@ const sampleRecipes: Recipe[] = [
       { id: 9, order: 2, description: 'Ajouter le granola' },
     ],
     tags: [tags[0], tags[3]],
+    image: null,
   },
   {
     id: 2,
@@ -254,6 +264,7 @@ const sampleRecipes: Recipe[] = [
       },
     ],
     tags: [tags[0], tags[1]],
+    image: null,
   },
   {
     id: 3,
@@ -275,6 +286,7 @@ const sampleRecipes: Recipe[] = [
       { id: 7, order: 3, description: 'Mélanger avec la crème' },
     ],
     tags: [tags[2]],
+    image: null,
   },
   {
     id: 4,
@@ -295,6 +307,7 @@ const sampleRecipes: Recipe[] = [
       { id: 9, order: 2, description: 'Ajouter le granola' },
     ],
     tags: [tags[0], tags[3]],
+    image: null,
   },
 ];
 

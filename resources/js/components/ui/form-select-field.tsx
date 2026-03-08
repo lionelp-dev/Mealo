@@ -1,5 +1,3 @@
-import { useFieldContext } from '@/hooks/form-context';
-import { cn } from '@/lib/utils';
 import FieldInfo from './form-field-info';
 import {
   Select,
@@ -8,6 +6,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
+import { useFieldContext } from '@/hooks/form-context';
+import { cn } from '@/lib/utils';
 
 interface SelectOption {
   value: string;

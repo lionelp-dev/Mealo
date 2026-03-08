@@ -1,3 +1,5 @@
+import AppLogo from './app-logo';
+import { NavWorkspace } from './nav-workspace';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import {
@@ -17,8 +19,6 @@ import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
-import AppLogo from './app-logo';
-import { NavWorkspace } from './nav-workspace';
 
 export function AppSidebar() {
   const { t } = useTranslation();

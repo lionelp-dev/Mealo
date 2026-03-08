@@ -1,6 +1,6 @@
+import { useRecipesRequestCoordination } from './use-recipes-request-coordination';
 import { useRecipeSearchStore } from '@/stores/recipe-search';
 import { useCallback, useEffect, useRef } from 'react';
-import { useRecipesRequestCoordination } from './use-recipes-request-coordination';
 
 export function useRecipeSearch() {
   const { triggerRecipesRequest } = useRecipesRequestCoordination();

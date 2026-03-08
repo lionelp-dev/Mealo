@@ -1,11 +1,9 @@
-import { useSearch } from '../../application/hooks/use-ingredients-search';
 import { ingredientSchema, recipeSchema } from '../../domain/recipe.schema';
 import { useRecipesContextValue } from '../../infrastructure/inertia.adapter';
 import { searchIngredients } from '../../infrastructure/repositories/recipes.repository';
 import FieldInfo from '@/components/ui/form-field-info';
 import { useAppForm, withFieldGroup } from '@/hooks/form-hook';
 import { cn } from '@/lib/utils';
-import recipes from '@/routes/recipes';
 import { Recipe } from '@/types';
 import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
@@ -60,6 +58,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
         mode="array"
         validators={{
           onChange: recipeSchema.shape.ingredients,
+          onBlur: recipeSchema.shape.ingredients,
         }}
         children={(ingredients_field) => (
           <div className="flex flex-col gap-4">
@@ -141,6 +140,9 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                 <field.TextField
                                   data-ingredient-input
                                   value={field.state.value}
+                                  onBlur={() => {
+                                    ingredients_field.handleBlur();
+                                  }}
                                   onChange={(e) => {
                                     field.handleChange(e.target.value);
                                     setSearchTerm(e.target.value);
@@ -227,6 +229,9 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                         name="unit"
                         children={(field) => (
                           <field.TextField
+                            onBlur={() => {
+                              ingredients_field.handleBlur();
+                            }}
                             className={cn(
                               !ingredients_field.state.meta.isValid &&
                                 'input-error',
@@ -248,6 +253,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     disabled={!state.canSubmit}
                     onClick={() => {
                       form.handleSubmit();
+                      ingredients_field.setErrorMap({ onBlur: undefined });
                     }}
                     className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
                   >

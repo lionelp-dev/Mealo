@@ -1,12 +1,11 @@
-import '@radix-ui/themes/styles.css';
 import '../css/app.css';
+import { initializeTheme } from './hooks/use-appearance';
 import './lib/i18n';
-
 import { createInertiaApp } from '@inertiajs/react';
 import { Theme } from '@radix-ui/themes';
+import '@radix-ui/themes/styles.css';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
-import { initializeTheme } from './hooks/use-appearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
 

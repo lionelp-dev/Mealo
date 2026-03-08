@@ -1,11 +1,10 @@
 // Components
 import EmailVerificationNotificationController from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
+import TextLink from '@/components/text-link';
+import AuthLayout from '@/layouts/auth-layout';
 import { logout } from '@/routes';
 import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-
-import TextLink from '@/components/text-link';
-import AuthLayout from '@/layouts/auth-layout';
 import { useTranslation } from 'react-i18next';
 
 export default function VerifyEmail({ status }: { status?: string }) {

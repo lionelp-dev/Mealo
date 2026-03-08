@@ -1,12 +1,10 @@
+import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { ChefHat } from 'lucide-react';
 import { DateTime } from 'luxon';
-import { RefObject } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 
 type MealPlanEmptySlotProps = React.ComponentProps<'div'> & {
-  containerRef: RefObject<HTMLDivElement | null>;
   date: DateTime;
 };
 

@@ -11,8 +11,6 @@ import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';
 
-// Navigation items will be generated inside component with translations
-
 export default function SettingsLayout({ children }: PropsWithChildren) {
   const { t } = useTranslation();
 
@@ -52,7 +50,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
   ];
 
   return (
-    <div className="px-4 py-6">
+    <div className="px-8 py-6">
       <Heading
         title={t('settings.title', 'Settings')}
         description={t(

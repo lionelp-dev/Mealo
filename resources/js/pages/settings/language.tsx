@@ -1,12 +1,10 @@
-import { Head } from '@inertiajs/react';
-
 import HeadingSmall from '@/components/heading-small';
-import { type BreadcrumbItem } from '@/types';
-
 import { LanguageSwitcher } from '@/components/language-switcher';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 import languageRoute from '@/routes/language';
+import { type BreadcrumbItem } from '@/types';
+import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 
 // Breadcrumbs will be translated in the component

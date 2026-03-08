@@ -51,6 +51,7 @@ export const RecipeFormTagsSection = withFieldGroup({
         mode="array"
         validators={{
           onChange: recipeSchema.shape.tags,
+          onBlur: recipeSchema.shape.tags,
         }}
         children={(tags_field) => (
           <div className="flex flex-col gap-4">
@@ -89,6 +90,7 @@ export const RecipeFormTagsSection = withFieldGroup({
                                 field.handleChange(value);
                                 setSearchTerm(value);
                               }}
+                              onBlur={() => tags_field.handleBlur()}
                               placeholder={t(
                                 'recipes.tags.namePlaceholder',
                                 'Tag name',

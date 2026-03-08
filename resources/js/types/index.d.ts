@@ -73,7 +73,7 @@ export type PaginatedCollection<T> = {
     per_page: number;
     to: number;
     total: number;
-    has_more_pages;
+    has_more_pages: boolean;
   };
 };
 
@@ -120,7 +120,7 @@ export type Recipe = {
   steps: Step[];
   tags: Tag[];
   image_url?: string | null;
-  image?: File | null;
+  image: File | null;
 };
 
 export type PlannedMeal = {
@@ -280,3 +280,7 @@ export type ShoppingList = {
     };
   }[];
 };
+
+export type Prettify<T> = {
+  [K in keyof T]: T[K];
+} & {};

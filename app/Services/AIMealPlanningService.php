@@ -231,7 +231,7 @@ class AIMealPlanningService
 
             throw new Exception('No valid meal plan generated from AI response');
         } catch (Exception $e) {
-            throw new Exception('Failed to generate meal plan: '.$e->getMessage());
+            throw new Exception("Ce service n'est pas disponible pour le moment");
         }
     }
 }

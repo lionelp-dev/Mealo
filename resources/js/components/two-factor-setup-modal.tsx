@@ -1,3 +1,4 @@
+import AlertError from './alert-error';
 import InputError from '@/components/input-error';
 import {
   Dialog,
@@ -19,7 +20,6 @@ import { REGEXP_ONLY_DIGITS } from 'input-otp';
 import { Check, Copy, Loader2, ScanLine } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AlertError from './alert-error';
 
 function GridScanIcon() {
   return (

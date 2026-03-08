@@ -24,9 +24,7 @@ export function NavWorkspace() {
   const pendingInvitationsCount =
     workspace_data.pending_invitations?.length || 0;
 
-  const sharedWorkspaces = workspaces?.filter(
-    (w: Workspace) => !w.is_personal,
-  );
+  const sharedWorkspaces = workspaces?.filter((w: Workspace) => !w.is_personal);
 
   return (
     <SidebarGroup>

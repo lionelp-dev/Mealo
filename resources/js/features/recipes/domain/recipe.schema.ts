@@ -58,22 +58,23 @@ const recipeSchema = z.object({
   meal_times: z
     .array(z.object({ ...mealTimeSchema.shape }))
     .min(1, 'Au moins un moment de repas est requis'),
-  image: z
-    .instanceof(File)
-    .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: "L'image ne doit pas dépasser 5MB",
-    })
-    .refine(
-      (file) =>
-        ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
-          file.type,
-        ),
-      {
-        message: "L'image doit être au format JPEG, PNG ou WebP",
-      },
-    )
-    .nullable()
-    .optional(),
+  image: z.union([
+    z
+      .instanceof(File)
+      .refine((file) => file.size <= 5 * 1024 * 1024, {
+        message: "L'image ne doit pas dépasser 5MB",
+      })
+      .refine(
+        (file) =>
+          ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'].includes(
+            file.type,
+          ),
+        {
+          message: "L'image doit être au format JPEG, PNG ou WebP",
+        },
+      ),
+    z.null(),
+  ]),
 });
 
 export {

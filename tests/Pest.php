@@ -20,6 +20,7 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 
 pest()->extend(Tests\TestCase::class)
     ->beforeEach(function () {
+        /** @var \TestCase $this * */
         $this->seed(RolesAndPermissionsSeeder::class);
         $this->seed(MealTimeSeeder::class);
     })
@@ -35,6 +36,7 @@ pest()->extend(Tests\TestCase::class)
 */
 
 expect()->extend('toBeOne', function () {
+    /** @var \TestCase $this * */
     return $this->toBe(1);
 });
 

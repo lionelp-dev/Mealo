@@ -42,9 +42,6 @@ class ShoppingList extends Model
         return $this->belongsTo(Workspace::class);
     }
 
-    /**
-     * @return HasMany<ShoppingListIngredient,ShoppingList>
-     */
     public function plannedMealIngredients(): HasMany
     {
         return $this->hasMany(ShoppingListPlannedMealIngredient::class);

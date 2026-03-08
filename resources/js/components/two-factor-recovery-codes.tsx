@@ -1,3 +1,4 @@
+import AlertError from './alert-error';
 import {
   Card,
   CardContent,
@@ -10,7 +11,6 @@ import { Form } from '@inertiajs/react';
 import { Eye, EyeOff, LockKeyhole, RefreshCw } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import AlertError from './alert-error';
 
 interface TwoFactorRecoveryCodesProps {
   recoveryCodesList: string[];

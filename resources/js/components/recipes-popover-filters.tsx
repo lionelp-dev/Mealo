@@ -1,3 +1,4 @@
+import { MealPlanDialogFilterOption } from './meal-plan-dialog-filter-option';
 import { useRecipeFiltersContext } from '@/contexts/recipe-filters-context';
 import { useMultiSelectRecipe } from '@/hooks/use-multi-select-recipe';
 import { useRecipesRequestCoordination } from '@/hooks/use-recipes-request-coordination';
@@ -8,7 +9,6 @@ import { ClassValue } from 'clsx';
 import { FilterIcon } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { MealPlanDialogFilterOption } from './meal-plan-dialog-filter-option';
 
 export const TIME_OPTIONS: Option[] = [
   { label: '0 - 15 min', value: '[0..15]' },
@@ -123,6 +123,7 @@ export function RecipeFiltersPopover({
                     };
                     return (
                       <MealPlanDialogFilterOption
+                        key={`${filter.type}-${filter.value}`}
                         filter={filter}
                         handleCheckedChange={() => {
                           toggleFilter(filter);

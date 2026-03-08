@@ -1,8 +1,8 @@
+import { useMultiSelectRecipe } from './use-multi-select-recipe';
 import { useRecipeDeleteStore } from '@/stores/recipe-delete';
 import { Recipe } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEffect } from 'react';
-import { useMultiSelectRecipe } from './use-multi-select-recipe';
 
 export function useDeleteRecipesDialog() {
   const store = useRecipeDeleteStore();

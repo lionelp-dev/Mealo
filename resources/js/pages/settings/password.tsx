@@ -1,16 +1,15 @@
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
+import HeadingSmall from '@/components/heading-small';
 import InputError from '@/components/input-error';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app-layout';
 import SettingsLayout from '@/layouts/settings/layout';
+import { edit } from '@/routes/password';
 import { type BreadcrumbItem } from '@/types';
 import { Transition } from '@headlessui/react';
 import { Form, Head } from '@inertiajs/react';
 import { useRef } from 'react';
-
-import HeadingSmall from '@/components/heading-small';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { edit } from '@/routes/password';
 import { useTranslation } from 'react-i18next';
 
 // Breadcrumbs will be translated in the component

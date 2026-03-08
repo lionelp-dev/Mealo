@@ -21,9 +21,10 @@ class ShoppingListService
         $workspace = $plannedMeal->workspace()->first();
 
         $shoppingList = ShoppingList::query()->firstOrCreate([
-            'user_id' => $plannedMeal->user_id,
             'workspace_id' => $workspace->id,
             'week_start' => $weekStart,
+        ], [
+            'user_id' => $plannedMeal->user_id,
         ]);
 
         // Save existing checked statuses before deletion
@@ -31,7 +32,7 @@ class ShoppingListService
             ->get()
             ->mapWithKeys(function ($item) {
                 // Key: planned_meal_id:ingredient_id:unit
-                $key = $item->planned_meal_id.':'.$item->ingredient_id.':'.$item->unit;
+                $key = $item->planned_meal_id . ':' . $item->ingredient_id . ':' . $item->unit;
 
                 return [$key => $item->is_checked];
             });
@@ -53,7 +54,7 @@ class ShoppingListService
                 $unit = $ingredient->pivot->unit;
 
                 // Restore checked status if it existed
-                $key = $plannedMeal->id.':'.$ingredient->id.':'.$unit;
+                $key = $plannedMeal->id . ':' . $ingredient->id . ':' . $unit;
                 $isChecked = $existingCheckedStatuses->get($key, false);
 
                 return [
@@ -94,7 +95,7 @@ class ShoppingListService
                     ->first();
                 $ingredient_quantity = round(($pivotData->quantity / $recipe->serving_size) * $plannedMeal->serving_size, 2);
 
-                $key = $ingredient->id.':'.$pivotData->unit;
+                $key = $ingredient->id . ':' . $pivotData->unit;
 
                 $statusKey = $plannedMealIngredient->is_checked ? 'checked' : 'unchecked';
 
@@ -174,9 +175,9 @@ class ShoppingListService
 
                 $ingredient_quantity = round(($pivotData->quantity / $recipe->serving_size) * $plannedMeal->serving_size, 2);
 
-                $shoppingListRecipeKey = $shoppingList->id.':'.$recipe->id;
+                $shoppingListRecipeKey = $shoppingList->id . ':' . $recipe->id;
 
-                $plannedMealIngredientKey = $plannedMeal->id.':'.$ingredient->id.':'.$pivotData->unit;
+                $plannedMealIngredientKey = $plannedMeal->id . ':' . $ingredient->id . ':' . $pivotData->unit;
 
                 $ingredientKey = $ingredient->id;
 
