@@ -23,7 +23,7 @@ export default function WeekSelector({ currentWeek, url }: WeekSelectorProps) {
     <div className="flex gap-5 divide-x divide-base-300">
       <div className="flex items-center gap-9">
         <button
-          className="btn border border-secondary/40 btn-outline btn-soft btn-secondary"
+          className="btn border border-secondary/40 px-5 btn-outline btn-soft btn-secondary"
           onClick={goToCurrentWeek}
         >
           {t('mealPlanning.weekSelector.today', 'Today')}

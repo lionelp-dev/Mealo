@@ -54,11 +54,11 @@ export function RecipeCard({ recipe }: Props) {
           <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
             <Popover.Trigger asChild>
               <button
-                className="recipe-card-actions-btn btn invisible btn-circle bg-secondary/15 btn-soft btn-sm btn-secondary hover:bg-secondary hover:text-secondary-content"
+                className="recipe-card-actions-btn btn invisible btn-circle bg-white/60 text-black backdrop-blur-sm btn-soft btn-sm btn-secondary hover:bg-secondary hover:text-secondary-content"
                 disabled={isMultiSelectMode}
                 onClick={(e) => e.stopPropagation()}
               >
-                <EllipsisVertical size={14} className="rotate-90" />
+                <EllipsisVertical size={16} className="rotate-90" />
               </button>
             </Popover.Trigger>
             <Popover.Portal>

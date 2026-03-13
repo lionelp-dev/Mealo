@@ -1,6 +1,6 @@
 import { createContext, ReactNode, useContext } from 'react';
 
-export function useGenericContext<T>() {
+export function createGenericContext<T>() {
   const Context = createContext<T | null>(null);
 
   interface DataProviderProps {

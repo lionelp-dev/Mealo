@@ -77,11 +77,11 @@ export function MealPlanGenerationPopover() {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content
-            className="z-10 flex w-85 rounded-md border border-base-300 bg-base-100 p-4 text-secondary"
+            className="z-10 flex w-90 rounded-md border border-base-300 bg-base-100 p-4 text-secondary"
             align="end"
             sideOffset={7}
           >
-            <div className="flex flex-col gap-4">
+            <div className="flex w-full flex-col gap-4">
               <h4 className="text-lg leading-none font-medium">
                 {t('mealPlanning.generatePlanTitle', 'Generate your meal plan')}
               </h4>

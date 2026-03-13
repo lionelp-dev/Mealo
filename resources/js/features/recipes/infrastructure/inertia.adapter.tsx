@@ -1,4 +1,4 @@
-import { useGenericContext } from '@/shared/hooks/use-generic-context';
+import { createGenericContext } from '@/hooks/use-generic-context';
 import {
   Ingredient,
   MealTime,
@@ -28,16 +28,14 @@ type PageProps = {
   generated_recipe?: Omit<Recipe, 'user_id'> | null;
 };
 
-/* eslint-disable react-hooks/rules-of-hooks */
 export const {
   Provider: RecipesProvider,
   useContextValue: useRecipesContextValue,
-} = useGenericContext<PageProps & { url: string }>();
-/* eslint-enable react-hooks/rules-of-hooks */
+} = createGenericContext<PageProps & { url: string }>();
 
 export function RecipesInertiaAdapter({ children }: PropsWithChildren) {
   const url = usePage().url;
   const pageProps = usePage<PageProps>().props;
   const data = useMemo(() => ({ ...pageProps, url }), [pageProps]);
-  return <RecipesProvider value={data}>{children}</RecipesProvider>;
+  return <RecipesProvider data={data}>{children}</RecipesProvider>;
 }

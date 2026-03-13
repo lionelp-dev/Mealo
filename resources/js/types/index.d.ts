@@ -39,13 +39,18 @@ export type SharedData = {
   [key: string]: unknown;
 };
 
+export type PageProps = SharedData;
+
 export type User = {
   id: number;
   name: string;
   email: string;
-  avatar?: string;
   email_verified_at: string | null;
+  avatar?: string;
+  local?: string;
   two_factor_enabled?: boolean;
+  is_beta_user?: boolean;
+  beta_expires_at?: string | null;
   created_at: string;
   updated_at: string;
   [key: string]: unknown;
@@ -279,6 +284,17 @@ export type ShoppingList = {
       unchecked: PlannedMealRecipeIngredient[];
     };
   }[];
+};
+
+export type BetaRequest = {
+  id: number;
+  email: string;
+  status: 'pending' | 'approved' | 'rejected' | 'converted' | 'expired';
+  created_at: string;
+  approved_at: string | null;
+  token_expires_at: string | null;
+  rejection_reason: string | null;
+  approved_by: { id: number; name: string } | null;
 };
 
 export type Prettify<T> = {

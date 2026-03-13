@@ -11,7 +11,7 @@ export default function ShoppingListByRecipes() {
         className={`flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-base-300`}
       >
         <div className="flex min-h-0 overflow-y-scroll">
-          <div className="divide-y divide-base-300">
+          <div className="w-full divide-y divide-base-300">
             {shopping_list_by_recipes.map((recipe) => (
               <React.Fragment key={recipe.recipe_id}>
                 {recipe.ingredients.unchecked.length > 0 && (
@@ -46,7 +46,7 @@ export default function ShoppingListByRecipes() {
         className={`flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-base-300`}
       >
         <div className="flex min-h-0 flex-col overflow-y-scroll">
-          <div className="divide-y divide-base-300">
+          <div className="w-full divide-y divide-base-300">
             {shopping_list_by_recipes.map((recipe) => (
               <React.Fragment key={recipe.recipe_id}>
                 {recipe.ingredients.checked.length > 0 && (

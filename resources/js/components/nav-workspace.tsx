@@ -1,10 +1,10 @@
 import {
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  SidebarSeparator,
 } from '@/components/ui/sidebar';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspacesRoute from '@/routes/workspaces';
@@ -28,48 +28,55 @@ export function NavWorkspace() {
 
   return (
     <SidebarGroup>
+      <SidebarSeparator className="mx-0 group-data-[state=expanded]:hidden" />
       <SidebarGroupLabel className="text-secondary uppercase">
         {t('workspace.sharedSpace', 'Espace partagé')}
       </SidebarGroupLabel>
-      <SidebarGroupContent>
-        <SidebarMenu>
+      <SidebarMenu className="group-data-[state=collapsed]:py-1.5">
+        <SidebarMenuItem>
+          <SidebarMenuButton
+            asChild
+            tooltip={{ children: t('workspace.mySpaces', 'Mes espaces') }}
+          >
+            <Link
+              href={workspacesRoute.index.url()}
+              className="flex items-center justify-between"
+            >
+              <span className="flex items-center gap-3">
+                <Users className="h-5 w-5" />
+                <span>{t('workspace.mySpaces', 'Mes espaces')}</span>
+              </span>
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-xs text-secondary-content">
+                {sharedWorkspaces.length}
+              </span>
+            </Link>
+          </SidebarMenuButton>
+        </SidebarMenuItem>
+
+        {pendingInvitationsCount > 0 && (
           <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+            <SidebarMenuButton
+              asChild
+              tooltip={{ children: t('workspace.invitations', 'Invitations') }}
+            >
               <Link
-                href={workspacesRoute.index.url()}
+                href={workspaceInvitationsRoute.index.url()}
                 className="flex items-center justify-between"
               >
-                <span className="mb-[3px] flex items-center gap-3">
-                  <Users className="h-4 w-4" />
-                  <span>{t('workspace.mySpaces', 'Mes espaces')}</span>
+                <span className="flex items-center gap-3">
+                  <Bell />
+                  <span>{t('workspace.invitations', 'Invitations')}</span>
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-xs text-secondary-content">
-                  {sharedWorkspaces.length}
+                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning text-center text-xs text-secondary-content">
+                  {pendingInvitationsCount}
                 </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+        )}
+      </SidebarMenu>
 
-          {pendingInvitationsCount > 0 && (
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link
-                  href={workspaceInvitationsRoute.index.url()}
-                  className="flex items-center justify-between"
-                >
-                  <span className="mb-[3px] flex items-center gap-3">
-                    <Bell className="h-4 w-4" />
-                    <span>{t('workspace.invitations', 'Invitations')}</span>
-                  </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning text-center text-xs text-secondary-content">
-                    {pendingInvitationsCount}
-                  </span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          )}
-        </SidebarMenu>
-      </SidebarGroupContent>
+      <SidebarSeparator className="mx-0 group-data-[state=expanded]:hidden" />
     </SidebarGroup>
   );
 }

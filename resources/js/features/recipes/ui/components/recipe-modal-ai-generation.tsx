@@ -103,7 +103,10 @@ export default function RecipeModalAIGeneration() {
           </div>
         </form>
       </div>
-      <div className="modal-backdrop" onClick={() => setIsOpen(false)}></div>
+      <div
+        className="modal-backdrop bg-black/5 backdrop-blur-xs"
+        onClick={() => setIsOpen(false)}
+      ></div>
     </div>
   );
 }

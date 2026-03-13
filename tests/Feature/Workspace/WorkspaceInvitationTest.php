@@ -298,3 +298,105 @@ test('can send invitation after previous one expired', function () {
     $invitations = WorkspaceInvitation::where('email', 'test@example.com')->get();
     expect($invitations)->toHaveCount(2);
 });
+
+test('clicking invitation link auto-accepts for authenticated user', function () {
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $this->workspace->id,
+        'email' => $this->invitee->email,
+        'role' => 'editor',
+        'invited_by' => $this->owner->id,
+    ]);
+
+    $response = $this->actingAs($this->invitee)
+        ->get(route('workspace-invitations.show-accept', $invitation->token));
+
+    $response->assertRedirect(route('dashboard'));
+    $response->assertSessionHas('success');
+
+    // Verify invitation was accepted
+    expect($this->workspace->fresh()->hasUser($this->invitee))->toBeTrue();
+
+    // Verify invitation was deleted
+    expect(WorkspaceInvitation::find($invitation->id))->toBeNull();
+});
+
+test('clicking invitation link redirects guest to login', function () {
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $this->workspace->id,
+        'email' => 'guest@example.com',
+        'role' => 'editor',
+        'invited_by' => $this->owner->id,
+    ]);
+
+    $response = $this->get(route('workspace-invitations.show-accept', $invitation->token));
+
+    $response->assertRedirect(route('login'));
+    $response->assertSessionHas('info', 'Veuillez vous connecter pour accepter cette invitation.');
+});
+
+test('cannot auto-accept invitation when logged in with wrong email', function () {
+    $wrongUser = User::factory()->create(['email' => 'wrong@example.com']);
+
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $this->workspace->id,
+        'email' => 'correct@example.com',
+        'role' => 'editor',
+        'invited_by' => $this->owner->id,
+    ]);
+
+    $response = $this->actingAs($wrongUser)
+        ->get(route('workspace-invitations.show-accept', $invitation->token));
+
+    $response->assertRedirect(route('home'));
+    $response->assertSessionHas('error', 'Cette invitation ne vous est pas destinée.');
+
+    // Verify invitation was NOT accepted
+    expect($this->workspace->fresh()->hasUser($wrongUser))->toBeFalse();
+    expect(WorkspaceInvitation::find($invitation->id))->not->toBeNull();
+});
+
+test('handles gracefully when user is already workspace member', function () {
+    // Add user to workspace first
+    $this->workspace->users()->attach($this->invitee->id, ['joined_at' => now()]);
+    $this->workspace->giveEditorPermissions($this->invitee);
+
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $this->workspace->id,
+        'email' => $this->invitee->email,
+        'role' => 'editor',
+        'invited_by' => $this->owner->id,
+    ]);
+
+    $response = $this->actingAs($this->invitee)
+        ->get(route('workspace-invitations.show-accept', $invitation->token));
+
+    $response->assertRedirect(route('dashboard'));
+    $response->assertSessionHas('info', 'Vous êtes déjà membre de cet espace.');
+
+    // Verify invitation was cleaned up
+    expect(WorkspaceInvitation::find($invitation->id))->toBeNull();
+});
+
+test('clicking expired invitation link shows error', function () {
+    $invitation = WorkspaceInvitation::create([
+        'workspace_id' => $this->workspace->id,
+        'email' => $this->invitee->email,
+        'role' => 'editor',
+        'invited_by' => $this->owner->id,
+        'expires_at' => now()->subDay(),
+    ]);
+
+    $response = $this->actingAs($this->invitee)
+        ->get(route('workspace-invitations.show-accept', $invitation->token));
+
+    $response->assertRedirect(route('home'));
+    $response->assertSessionHas('error', 'Cette invitation a expiré ou n\'est plus valide.');
+});
+
+test('clicking invalid invitation link shows error', function () {
+    $response = $this->actingAs($this->invitee)
+        ->get(route('workspace-invitations.show-accept', 'invalid-token'));
+
+    $response->assertRedirect(route('home'));
+    $response->assertSessionHas('error', 'Cette invitation a expiré ou n\'est plus valide.');
+});

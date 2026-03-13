@@ -38,4 +38,15 @@ i18n
     },
   });
 
+// Synchroniser la locale avec les données utilisateur d'Inertia
+document.addEventListener('inertia:success', (event: Event) => {
+  const customEvent = event as CustomEvent<{
+    page: { props?: { auth?: { user?: { locale?: string } } } };
+  }>;
+  const userLocale = customEvent.detail.page.props?.auth?.user?.locale;
+  if (userLocale && i18n.language !== userLocale) {
+    i18n.changeLanguage(userLocale);
+  }
+});
+
 export default i18n;

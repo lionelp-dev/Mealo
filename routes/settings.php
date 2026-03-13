@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Settings\LocaleController;
 use App\Http\Controllers\Settings\PasswordController;
 use App\Http\Controllers\Settings\ProfileController;
 use App\Http\Controllers\Settings\TwoFactorAuthenticationController;
@@ -26,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::get('settings/language', function () {
         return Inertia::render('settings/language');
     })->name('language.edit');
+
+    Route::put('settings/locale', [LocaleController::class, 'update'])
+        ->name('locale.update');
 
     Route::get('settings/two-factor', [TwoFactorAuthenticationController::class, 'show'])
         ->name('two-factor.show');

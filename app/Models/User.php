@@ -3,15 +3,18 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Notifications\ResetPasswordNotification;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory;
@@ -29,6 +32,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'locale',
     ];
 
     /**
@@ -96,6 +100,22 @@ class User extends Authenticatable
         return $this->hasMany(WorkspaceInvitation::class, 'invited_by');
     }
 
+    /**
+     * @return HasOne<BetaRequest>
+     */
+    public function betaRequest(): HasOne
+    {
+        return $this->hasOne(BetaRequest::class);
+    }
+
+    /**
+     * Check if the user is a beta user.
+     */
+    public function getIsBetaUserAttribute(): bool
+    {
+        return $this->betaRequest?->status === 'converted';
+    }
+
     protected static function booted(): void
     {
         static::created(function (User $user) {
@@ -121,5 +141,21 @@ class User extends Authenticatable
             ->orderBy('workspaces.name')
             ->withPivot('joined_at')
             ->get();
+    }
+
+    /**
+     * Get the user's preferred locale.
+     */
+    public function preferredLocale(): string
+    {
+        return $this->locale ?? config('app.locale', 'fr');
+    }
+
+    /**
+     * Send the password reset notification.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new ResetPasswordNotification($token));
     }
 }

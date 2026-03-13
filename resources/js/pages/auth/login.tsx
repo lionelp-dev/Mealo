@@ -5,7 +5,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
-import { register } from '@/routes';
 import { request } from '@/routes/password';
 import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
@@ -93,7 +92,7 @@ export default function Login({ status, canResetPassword }: LoginProps) {
 
               <button
                 type="submit"
-                className="btn mt-4 w-full btn-primary"
+                className="btn mt-4 w-full btn-secondary"
                 tabIndex={4}
                 disabled={processing}
                 data-test="login-button"
@@ -105,12 +104,14 @@ export default function Login({ status, canResetPassword }: LoginProps) {
               </button>
             </div>
 
+            {/*
             <div className="text-center text-sm text-muted-foreground">
               {t('auth.login.noAccount', "Don't have an account?")}{' '}
               <TextLink href={register()} tabIndex={5}>
                 {t('auth.login.signUp', 'Sign up')}
               </TextLink>
             </div>
+                */}
           </>
         )}
       </Form>

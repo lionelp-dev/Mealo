@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\BetaInvitationController;
 use App\Http\Controllers\Auth\EmailVerificationNotificationController;
 use App\Http\Controllers\Auth\EmailVerificationPromptController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -33,6 +34,13 @@ Route::middleware('guest')->group(function () {
 
     Route::post('reset-password', [NewPasswordController::class, 'store'])
         ->name('password.store');
+
+    // Beta invitation routes
+    Route::get('beta/accept/{token}', [BetaInvitationController::class, 'show'])
+        ->name('beta.accept.show');
+
+    Route::post('beta/accept/{token}', [BetaInvitationController::class, 'accept'])
+        ->name('beta.accept');
 });
 
 Route::middleware('auth')->group(function () {

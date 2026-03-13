@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-import { useGenericContext } from '@/hooks/use-generic-context';
+import { createGenericContext } from '@/hooks/use-generic-context';
 import {
   MealTime,
   PaginatedCollection,
@@ -19,6 +18,6 @@ export interface MealPlanContextProps {
 }
 
 const { Provider: MealPlanDataProvider, useContextValue: useMealPlanContext } =
-  useGenericContext<MealPlanContextProps>();
+  createGenericContext<MealPlanContextProps>();
 
 export { MealPlanDataProvider, useMealPlanContext };

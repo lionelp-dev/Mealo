@@ -35,7 +35,7 @@ export default function MealPlanMealCard({
       onMouseLeave={() => setIsOpen(false)}
     >
       {recipe.image_url && (
-        <figure className="h-28">
+        <figure className="h-26">
           <img
             src={recipe.image_url}
             alt={recipe.name}

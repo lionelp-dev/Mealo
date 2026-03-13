@@ -25,7 +25,7 @@ class WorkspaceInvitationMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Workspace Invitation',
+            subject: __('mail.workspace_invitation.subject'),
         );
     }
 
@@ -36,7 +36,7 @@ class WorkspaceInvitationMail extends Mailable
     {
         return new Content(
             view: 'mails.WorkspaceInvitation',
-            with: ['acceptUrl' => route('workspace-invitations.accept', ['token' => $this->invitation->token])]
+            with: ['acceptUrl' => route('workspace-invitations.show-accept', ['token' => $this->invitation->token])]
         );
     }
 

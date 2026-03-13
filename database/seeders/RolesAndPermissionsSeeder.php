@@ -30,10 +30,10 @@ class RolesAndPermissionsSeeder extends Seeder
         ];
 
         foreach ($permissions as $permissionName) {
-            Permission::firstOrCreate(['name' => $permissionName]);
+            Permission::query()->firstOrCreate(['name' => $permissionName]);
         }
 
-        $ownerRole = Role::firstOrCreate(['name' => 'owner']);
+        $ownerRole = Role::query()->firstOrCreate(['name' => 'owner']);
         $ownerRole->givePermissionTo('workspace.view');
         $ownerRole->givePermissionTo('workspace.edit');
         $ownerRole->givePermissionTo('workspace.manage');
@@ -43,7 +43,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $ownerRole->givePermissionTo('workspace.planned-meal.destroy');
         $ownerRole->givePermissionTo('planning.edit');
 
-        $editorRole = Role::firstOrCreate(['name' => 'editor']);
+        $editorRole = Role::query()->firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo('workspace.view');
         $editorRole->givePermissionTo('workspace.planned-meal.create');
         $editorRole->givePermissionTo('workspace.planned-meal.update');
@@ -51,9 +51,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $editorRole->givePermissionTo('workspace.planned-meal.destroy');
         $editorRole->givePermissionTo('planning.edit');
 
-        $viewerRole = Role::firstOrCreate(['name' => 'viewer']);
+        $viewerRole = Role::query()->firstOrCreate(['name' => 'viewer']);
         $viewerRole->givePermissionTo('workspace.view');
-
-        Role::firstOrCreate(['name' => 'user']);
     }
 }

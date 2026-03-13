@@ -62,7 +62,12 @@ export function NavWorkspaceSwitcher() {
             className="btn items-center gap-2 border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10"
             disabled={isLoading}
           >
-            <ChevronDown className="h-3 w-3 shrink-0" />
+            <ChevronDown
+              className={cn(
+                'mr-0.5 h-3 w-3 shrink-0',
+                isWorkspaceSwitcherPopoverOpen && '-scale-y-100',
+              )}
+            />
             <span className="truncate">
               {capitalize(current_workspace.name)}
             </span>
@@ -83,7 +88,7 @@ export function NavWorkspaceSwitcher() {
         </Popover.Trigger>
         <Popover.Portal>
           <Popover.Content
-            className="z-10 flex w-82 flex-col gap-2 divide-y divide-base-300/50 rounded-xl border border-base-300/30 bg-base-100 px-0.5 py-3.5 pb-1 shadow-xl"
+            className="z-10 flex w-82 flex-col gap-2 divide-y divide-base-300/50 rounded-xl border border-base-300/30 bg-base-100 px-2 py-3.5 pb-1 shadow-xl"
             align="end"
             sideOffset={8}
           >
@@ -111,16 +116,16 @@ export function NavWorkspaceSwitcher() {
                           key={workspace.id}
                           onClick={() => handleSwitchWorkspace(workspace.id)}
                           className={cn(
-                            'btn flex h-15 w-full min-w-0 items-center gap-1 rounded-none bg-transparent px-4 text-muted-foreground outline-none hover:bg-secondary/10',
+                            'btn flex h-15 w-full min-w-0 items-center gap-1 rounded-md bg-transparent pr-4 pl-3.5 text-muted-foreground outline-none hover:bg-secondary/10',
                             isCurrent
-                              ? 'border-0 border-l-3 border-warning/80 bg-warning/5'
+                              ? 'border-0 border-l-2 border-secondary/80 bg-secondary/5'
                               : 'border-none',
                           )}
                         >
                           <span
                             className={cn(
                               '-ml-2 flex h-10 w-10 shrink-0 items-center justify-center',
-                              isCurrent && 'text-warning',
+                              isCurrent && 'text-secondary',
                             )}
                           >
                             {workspace.is_personal ? (
@@ -130,15 +135,15 @@ export function NavWorkspaceSwitcher() {
                             )}
                           </span>
                           <span className="flex flex-1 flex-col">
-                            <span className="text-left text-xs font-semibold">
+                            <span className="text-left text-xs leading-5 font-semibold">
                               {capitalize(workspace.name)}
                             </span>
                             <span className="flex items-center gap-1 text-muted-foreground/80">
                               <span className="text-left text-xs font-normal">
                                 {t('workspace.modified', 'Modifié')}{' '}
                                 {last_update}
+                                <span>.</span>
                               </span>
-                              <span>.</span>
                               <span className="flex gap-1 text-left text-xs font-normal">
                                 <span>{workspace.users_count}</span>
                                 <span>
@@ -150,7 +155,9 @@ export function NavWorkspaceSwitcher() {
                               </span>
                             </span>
                           </span>
-                          {isCurrent && <CheckIcon className="text-warning" />}
+                          {isCurrent && (
+                            <CheckIcon className="text-secondary" />
+                          )}
                         </button>
                       );
                     })}

@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolesAndPermissionsSeeder::class,  // First: create roles & permissions
+            AdminRoleSeeder::class,  // Create admin role and access-admin-panel permission
             MealTimeSeeder::class,
             UserSeeder::class,  // Users need roles to be assigned
         ]);

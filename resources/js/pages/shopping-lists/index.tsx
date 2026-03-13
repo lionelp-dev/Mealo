@@ -47,7 +47,7 @@ export default function ShoppingListsIndex() {
         <Head title={t('shoppingLists.pageTitle', 'Shopping Lists')} />
         <div className="flex h-full flex-col overflow-y-hidden">
           {total > 0 && (
-            <div className="mx-auto flex w-[90%] flex-1 flex-col gap-4 overflow-y-auto py-4">
+            <div className="mx-auto flex w-[96.5%] flex-1 flex-col gap-4 overflow-y-auto py-4">
               <div className="tabs-boxed tabs h-8 w-fit shrink-0 rounded-md bg-secondary/15 tabs-xs">
                 <button
                   className={cn(

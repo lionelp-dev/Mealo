@@ -73,7 +73,7 @@ export default function WorkspaceCreationModal() {
     >
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-secondary">
+          <DialogTitle className="tracking-tight text-secondary">
             {t('workspace.create.title', 'Créer un espace')}
           </DialogTitle>
         </DialogHeader>

@@ -1,4 +1,3 @@
-import AppLogoIcon from '@/components/app-logo-icon';
 import { LanguageSwitcher } from '@/components/language-switcher';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/react';
@@ -18,7 +17,7 @@ export default function AuthSimpleLayout({
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
       {/* Language switcher */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute top-8 right-10">
         <LanguageSwitcher />
       </div>
 
@@ -29,8 +28,11 @@ export default function AuthSimpleLayout({
               href={home()}
               className="flex flex-col items-center gap-2 font-medium"
             >
-              <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+              <div className="mb-1 flex items-center justify-center rounded-md">
+                <span className="flex h-fit w-fit origin-top flex-col overflow-hidden text-left font-logo text-[40px] leading-tight font-semibold text-secondary group-data-[state=collapsed]:scale-y-0 group-data-[state=collapsed]:opacity-0 [&_span]:-my-[6px]">
+                  <span className="text-[52px]">Mealo</span>
+                  <span>Planner</span>
+                </span>
               </div>
               <span className="sr-only">{title}</span>
             </Link>

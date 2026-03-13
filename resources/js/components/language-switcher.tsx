@@ -4,6 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { router } from '@inertiajs/react';
 import { ChevronDown, Languages } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -11,7 +12,21 @@ export function LanguageSwitcher() {
   const { i18n } = useTranslation();
 
   const changeLanguage = (lng: 'fr' | 'en') => {
+    // Mettre à jour i18next (frontend)
     i18n.changeLanguage(lng);
+
+    // Synchroniser avec le backend
+    router.put(
+      '/settings/locale',
+      { locale: lng },
+      {
+        preserveState: true,
+        preserveScroll: true,
+        onError: (errors) => {
+          console.error('Failed to update locale:', errors);
+        },
+      },
+    );
   };
 
   const getCurrentLanguageLabel = () => {

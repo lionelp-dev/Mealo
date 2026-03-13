@@ -5,6 +5,7 @@ import { RecipesMultiSelectToolbar } from './components/recipes-multi-select-too
 import AppLayout from '@/layouts/app-layout';
 import recipesRoute from '@/routes/recipes';
 import { RecipesFilters } from '@/shared/components/recipes-filters';
+import { RecipesFiltersPopover } from '@/shared/components/recipes-filters-popover';
 import RecipesSearch from '@/shared/components/recipes-search';
 import { useRecipesRequestCoordination } from '@/shared/hooks/use-recipes-request-coordination';
 import { useRecipesFiltersStore } from '@/shared/stores/recipes-filters-store';
@@ -75,21 +76,24 @@ export function RecipesIndexPage() {
         <div className="flex h-full min-h-0 flex-col overflow-hidden">
           <div
             className={
-              'z-10 mx-auto flex h-fit w-full justify-between gap-4 px-6 py-3 pb-2.5 pl-7.5'
+              'z-10 mx-auto grid h-fit w-full justify-between gap-4 px-6 py-3 pb-2.5 pl-7.5 md:grid-cols-2'
             }
           >
             <RecipesFilters />
-            <button
-              className={`btn col-start-4 row-start-1 gap-2 justify-self-end border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary ${
-                isMultiSelectMode ? 'btn-active' : ''
-              }`}
-              onClick={handleToggleMultiSelect}
-            >
-              <span>
-                {t('recipes.multiSelect.toggle', 'Multiple selection')}
-              </span>
-              <Copy size={14} className="mb-[1px]" />
-            </button>
+            <div className="flex h-fit flex-wrap items-start gap-2.5 md:justify-end">
+              <RecipesFiltersPopover />
+              <button
+                className={`btn col-start-4 row-start-1 gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary ${
+                  isMultiSelectMode ? 'btn-active' : ''
+                }`}
+                onClick={handleToggleMultiSelect}
+              >
+                <span>
+                  {t('recipes.multiSelect.toggle', 'Multiple selection')}
+                </span>
+                <Copy size={14} className="mb-[1px]" />
+              </button>
+            </div>
           </div>
 
           {/* Empty State */}

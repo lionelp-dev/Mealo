@@ -71,9 +71,60 @@ class WorkspaceInvitationController extends Controller
             'invited_by' => $request->user()->id,
         ]);
 
-        Mail::to($validated['email'])->send(new WorkspaceInvitationMail(invitation: $invitation));
+        // Determine the locale for the invitation email
+        // Use invitee's locale if they exist, otherwise use inviter's locale
+        $locale = $existingUser?->locale ?? $request->user()->locale;
+
+        Mail::to($validated['email'])
+            ->locale($locale)
+            ->send(new WorkspaceInvitationMail(invitation: $invitation));
 
         return back()->with('success', 'Invitation sent successfully');
+    }
+
+    /**
+     * Handle invitation link clicks from email (GET request).
+     * Auto-accepts invitation for authenticated users.
+     */
+    public function showAccept(Request $request, string $token)
+    {
+        $invitation = WorkspaceInvitation::where('token', $token)->first();
+
+        // If invitation doesn't exist or is invalid, redirect to home with error
+        if (! $invitation || ! $invitation->isValid()) {
+            return redirect()->route('home')->with('error', 'Cette invitation a expiré ou n\'est plus valide.');
+        }
+
+        $user = $request->user();
+
+        // If user is not authenticated, redirect to login with intended URL
+        if (! $user) {
+            return redirect()->guest(route('login'))
+                ->with('info', 'Veuillez vous connecter pour accepter cette invitation.');
+        }
+
+        // Verify the invitation belongs to the authenticated user
+        if ($user->email !== $invitation->email) {
+            return redirect()->route('home')
+                ->with('error', 'Cette invitation ne vous est pas destinée.');
+        }
+
+        // Check if user is already a member
+        if ($invitation->workspace->hasUser($user)) {
+            $invitation->delete(); // Clean up the invitation
+
+            return redirect()->route('dashboard')
+                ->with('info', 'Vous êtes déjà membre de cet espace.');
+        }
+
+        // Auto-accept the invitation
+        if ($invitation->accept($user)) {
+            return redirect()->route('dashboard')
+                ->with('success', 'Invitation acceptée avec succès. Bienvenue dans l\'espace '.$invitation->workspace->name.' !');
+        }
+
+        return redirect()->route('home')
+            ->with('error', 'Impossible d\'accepter l\'invitation.');
     }
 
     public function accept(Request $request, $token)
