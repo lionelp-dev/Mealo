@@ -4,10 +4,15 @@ import {
   viewRecipe,
 } from '../../infrastructure/repositories/recipes.repository';
 import { useRecipesMultiSelectStore } from '../../infrastructure/stores/use-recipes-multi-select-store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useRecipesFiltersStore } from '@/shared/stores/recipes-filters-store';
 import { Recipe } from '@/types';
-import * as Popover from '@radix-ui/react-popover';
-import { EllipsisVertical } from 'lucide-react';
+import { Edit2Icon, EllipsisVertical, EyeIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -17,8 +22,7 @@ type Props = {
 
 export function RecipeCard({ recipe }: Props) {
   const { t } = useTranslation();
-
-  const [openPopover, setOpenPopover] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { isFilterActive } = useRecipesFiltersStore();
   const { isMultiSelectMode, selectedRecipeIds, toggleRecipeSelection } =
@@ -51,8 +55,8 @@ export function RecipeCard({ recipe }: Props) {
           />
         )}
         <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-4">
-          <Popover.Root open={openPopover} onOpenChange={setOpenPopover}>
-            <Popover.Trigger asChild>
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
               <button
                 className="recipe-card-actions-btn btn invisible btn-circle bg-white/60 text-black backdrop-blur-sm btn-soft btn-sm btn-secondary hover:bg-secondary hover:text-secondary-content"
                 disabled={isMultiSelectMode}
@@ -60,49 +64,43 @@ export function RecipeCard({ recipe }: Props) {
               >
                 <EllipsisVertical size={16} className="rotate-90" />
               </button>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content
-                className="z-[10000] rounded-lg border border-base-300 bg-base-100 px-2 py-[6px] shadow-xl"
-                side="top"
-                align="end"
-                sideOffset={8}
-                alignOffset={-4}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="bottom"
+              align="end"
+              sideOffset={8}
+              onMouseLeave={() => setIsOpen(false)}
+            >
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  viewRecipe(recipe.id);
+                }}
               >
-                <ul className="flex flex-col gap-1 [&>button]:flex [&>button]:items-center [&>button]:justify-center">
-                  <button
-                    className="btn btn-ghost btn-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      viewRecipe(recipe.id);
-                    }}
-                  >
-                    <li>{t('common.buttons.view', 'View')}</li>
-                  </button>
-                  <button
-                    className="btn btn-ghost btn-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      editRecipe(recipe.id);
-                    }}
-                  >
-                    <li>{t('common.buttons.edit', 'Edit')}</li>
-                  </button>
-                  <button
-                    className="btn items-end justify-start gap-2 rounded-md text-error btn-ghost btn-sm hover:border-error/10 hover:bg-error/10"
-                    onClick={(e: React.MouseEvent) => {
-                      e.stopPropagation();
-                      setOpenPopover(false);
-                      deleteRecipes([recipe]);
-                    }}
-                  >
-                    <li>{t('common.buttons.delete', 'Delete')}</li>
-                  </button>
-                </ul>
-                <Popover.Arrow className="fill-base-100 stroke-base-300" />
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
+                <EyeIcon size={14} />
+                {t('common.buttons.view', 'View')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={(e) => {
+                  e.stopPropagation();
+                  editRecipe(recipe.id);
+                }}
+              >
+                <Edit2Icon size={14} />
+                {t('common.buttons.edit', 'Edit')}
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                variant="destructive"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  deleteRecipes([recipe]);
+                }}
+              >
+                <Trash2Icon size={14} />
+                {t('common.buttons.delete', 'Delete')}
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         {recipe.image_url ? (

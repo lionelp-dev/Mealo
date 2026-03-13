@@ -93,7 +93,7 @@ export function RecipeFiltersPopover({
 
       <Popover.Portal>
         <Popover.Content
-          className="z-50 min-w-[225px] rounded-md border border-base-300 bg-base-100 p-2 shadow-lg"
+          className="z-50 min-w-[225px] rounded-md border border-base-300 bg-base-100 px-2 py-2.5 shadow-lg"
           style={{
             overflowY: 'auto',
           }}
@@ -102,13 +102,13 @@ export function RecipeFiltersPopover({
           sideOffset={sideOffset}
           onWheel={(e: React.MouseEvent) => e.stopPropagation()}
         >
-          <div className="flex flex-col gap-1.5">
+          <div className="flex flex-col gap-3.5">
             {FILTERS_SECTIONS.map((section) => (
               <div
                 key={section.type}
                 className="flex max-h-[calc(26_*_1vh)] flex-col"
               >
-                <span className="px-2 pb-1 text-sm font-medium">
+                <span className="px-1 pb-1 text-sm font-medium text-foreground">
                   {t(
                     `mealPlanning.dialog.filters.${section.title}`,
                     section.title,

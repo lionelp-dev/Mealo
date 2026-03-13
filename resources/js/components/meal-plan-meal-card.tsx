@@ -1,10 +1,15 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useMealPlanActions } from '@/hooks/use-meal-plan-actions';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
 import { router } from '@inertiajs/react';
-import * as Popover from '@radix-ui/react-popover';
-import { Ellipsis } from 'lucide-react';
+import { Ellipsis, EyeIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,8 +21,7 @@ export default function MealPlanMealCard({
   const { t } = useTranslation();
 
   const { id, recipe, serving_size } = plannedMeal;
-
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { unplanMeals } = useMealPlanActions();
 
@@ -32,7 +36,6 @@ export default function MealPlanMealCard({
     <div
       key={id}
       className="card w-full overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
-      onMouseLeave={() => setIsOpen(false)}
     >
       {recipe.image_url && (
         <figure className="h-26">
@@ -53,47 +56,33 @@ export default function MealPlanMealCard({
               <span className="shrink-0">(x{serving_size})</span>
             )}
           </span>
-          <Popover.Root open={isOpen} key={recipe.id}>
-            <Popover.Trigger asChild>
-              <button
-                id=""
-                onClick={() => setIsOpen(!isOpen)}
-                className={`meal-card-actions-btn btn invisible flex-shrink-0 ${isOpen && 'visible'} btn-circle btn-ghost btn-sm hover:bg-base-200`}
-              >
+          <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+            <DropdownMenuTrigger asChild>
+              <button className="meal-card-actions-btn btn invisible shrink-0 btn-circle btn-ghost btn-sm hover:bg-base-200">
                 <Ellipsis size={15} className="text-base-content/75" />
               </button>
-            </Popover.Trigger>
-            <Popover.Portal>
-              <Popover.Content
-                className="z-[10000]"
-                side="bottom"
-                align="end"
-                sideOffset={4}
-                onMouseLeave={() => {
-                  setIsOpen(false);
-                }}
-              >
-                <div className="rounded-md border border-base-300 bg-base-100 p-2 text-right shadow-[1px_1px_1px_4px_rgba(0,0,0,0.01)]">
-                  <ul className="flex flex-col gap-1 [&_>_button]:justify-end">
-                    <button
-                      className="btn btn-ghost btn-sm"
-                      onClick={handleView}
-                    >
-                      <li>{t('common.buttons.view', 'View')}</li>
-                    </button>
-                    {canEditMealPlan && (
-                      <button
-                        className="btn text-error btn-ghost btn-sm hover:border-error/5 hover:bg-error/10"
-                        onClick={() => unplanMeals([plannedMeal.id])}
-                      >
-                        <li>{t('common.buttons.delete', 'Delete')}</li>
-                      </button>
-                    )}
-                  </ul>
-                </div>
-              </Popover.Content>
-            </Popover.Portal>
-          </Popover.Root>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent
+              side="bottom"
+              align="end"
+              sideOffset={4}
+              onMouseLeave={() => setIsOpen(false)}
+            >
+              <DropdownMenuItem onClick={handleView}>
+                <EyeIcon size={14} />
+                {t('common.buttons.view', 'View')}
+              </DropdownMenuItem>
+              {canEditMealPlan && (
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => unplanMeals([plannedMeal.id])}
+                >
+                  <Trash2Icon size={14} />
+                  {t('common.buttons.delete', 'Delete')}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </div>

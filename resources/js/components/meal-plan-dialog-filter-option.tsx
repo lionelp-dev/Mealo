@@ -18,7 +18,7 @@ export function MealPlanDialogFilterOption({
   const key = `${filter.type}-${filter.value}`;
   return (
     <label
-      className={`first:border-t-none flex cursor-pointer items-center justify-between gap-4 px-4 py-[4px] text-sm text-base-content transition-colors select-none last:border-b last:border-base-300/40 hover:bg-base-300/30`}
+      className={`first:border-t-none flex cursor-pointer items-center justify-between gap-4 px-4 py-[4px] text-sm text-foreground/70 transition-colors select-none last:border-b last:border-base-300/40 hover:bg-base-300/30 hover:text-foreground`}
       htmlFor={key}
     >
       <span>

@@ -1,10 +1,20 @@
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { useMealPlanDayActions } from '@/hooks/use-meal-plan-day-actions';
 import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { cn } from '@/lib/utils';
 import { DayPlannedMeals } from '@/types';
-import { Button } from '@headlessui/react';
-import * as Popover from '@radix-ui/react-popover';
-import { EllipsisVertical } from 'lucide-react';
+import {
+  ClipboardPasteIcon,
+  CopyIcon,
+  EllipsisVertical,
+  Trash2Icon,
+} from 'lucide-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanDayHeaderProps = {
@@ -21,13 +31,11 @@ export default function MealPlanDayHeader({
     isCurrentDay,
     hasPlannedMeals,
     copiedDayPlannedMeals,
-    isOpen,
-    setIsOpen,
-    toggleMenu,
     handleCopy,
     handlePaste,
     handleDeleteAll,
   } = useMealPlanDayActions(dayPlannedMeals);
+  const [isOpen, setIsOpen] = useState(false);
 
   const { canEditMealPlan } = useWorkspacePermissions();
 
@@ -50,59 +58,41 @@ export default function MealPlanDayHeader({
         <span>{date.day}</span>
       </div>
       {canEditMealPlan && (hasPlannedMeals || copiedDayPlannedMeals) && (
-        <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
-          <Popover.Trigger asChild>
-            <Button
-              onClick={toggleMenu}
-              className="btn btn-circle btn-ghost btn-sm hover:bg-base-200"
-            >
+        <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
+          <DropdownMenuTrigger asChild>
+            <button className="btn btn-circle btn-ghost btn-sm hover:bg-base-200">
               <EllipsisVertical
                 size={15}
                 className="rotate-90 text-base-content/75"
               />
-            </Button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              className="z-[10000]"
-              side="bottom"
-              align="end"
-              sideOffset={4}
-              onMouseLeave={() => {
-                setIsOpen(false);
-              }}
-            >
-              <div className="rounded-md border border-base-300 bg-base-100 p-2 text-right shadow-[1px_1px_1px_4px_rgba(0,0,0,0.01)]">
-                <div className="flex flex-col gap-1">
-                  {hasPlannedMeals && (
-                    <button
-                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
-                      onClick={handleCopy}
-                    >
-                      {t('mealPlanning.actions.copy', 'Copy')}
-                    </button>
-                  )}
-                  {copiedDayPlannedMeals && (
-                    <button
-                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
-                      onClick={handlePaste}
-                    >
-                      {t('mealPlanning.actions.paste', 'Paste')}
-                    </button>
-                  )}
-                  {hasPlannedMeals && (
-                    <button
-                      className="btn w-full justify-end text-base-content btn-ghost btn-sm"
-                      onClick={handleDeleteAll}
-                    >
-                      {t('mealPlanning.actions.deleteAll', 'Delete all')}
-                    </button>
-                  )}
-                </div>
-              </div>
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            side="bottom"
+            align="end"
+            sideOffset={4}
+            onMouseLeave={() => setIsOpen(false)}
+          >
+            {hasPlannedMeals && (
+              <DropdownMenuItem onClick={handleCopy}>
+                <CopyIcon size={14} />
+                {t('mealPlanning.actions.copy', 'Copy')}
+              </DropdownMenuItem>
+            )}
+            {copiedDayPlannedMeals && (
+              <DropdownMenuItem onClick={handlePaste}>
+                <ClipboardPasteIcon size={14} />
+                {t('mealPlanning.actions.paste', 'Paste')}
+              </DropdownMenuItem>
+            )}
+            {hasPlannedMeals && (
+              <DropdownMenuItem variant="destructive" onClick={handleDeleteAll}>
+                <Trash2Icon size={14} />
+                {t('mealPlanning.actions.deleteAll', 'Delete all')}
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       )}
     </div>
   );

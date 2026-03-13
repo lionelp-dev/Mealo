@@ -21,9 +21,14 @@ import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-mod
 import { SharedData, WorkspaceData } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
 import {
+  Edit2Icon,
+  GroupIcon,
   MoreHorizontal,
+  PersonStandingIcon,
   Plus,
   PlusIcon,
+  Trash2,
+  Trash2Icon,
   UserIcon,
   Users,
   UsersIcon,
@@ -132,6 +137,7 @@ export default function WorkspaceIndex() {
                                       openWorkspaceEditModal(workspace.id);
                                     }}
                                   >
+                                    <Edit2Icon size={14} />
                                     {t('common.actions.edit', 'Modifier')}
                                   </button>
                                 </DropdownMenuItem>
@@ -147,6 +153,7 @@ export default function WorkspaceIndex() {
                                           );
                                         }}
                                       >
+                                        <UsersIcon size={14} />
                                         {t(
                                           'workspace.manageMembers',
                                           'Gérer les membres',
@@ -158,7 +165,7 @@ export default function WorkspaceIndex() {
                                       asChild
                                     >
                                       <button
-                                        className="btn btn-wide justify-center px-4 btn-ghost btn-sm hover:!bg-error/20 hover:outline-none"
+                                        className="btn btn-wide justify-center px-4 btn-ghost btn-sm hover:!border-error/20 hover:!bg-error/20 hover:!text-error hover:outline-none"
                                         onClick={(e) => {
                                           e.stopPropagation();
                                           confirm({
@@ -187,6 +194,7 @@ export default function WorkspaceIndex() {
                                           });
                                         }}
                                       >
+                                        <Trash2 size={14} />
                                         {t(
                                           'workspace.delete.button',
                                           'Supprimer',

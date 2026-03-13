@@ -198,7 +198,7 @@ export function WorkspaceInvitationModal() {
                           >
                             {t('workspace.makeEditor', 'Changer en éditeur')}
 
-                            <ArrowRightLeft className="mr-2 h-4 w-4" />
+                            <ArrowRightLeft className="h-4 w-4" />
                           </DropdownMenuItem>
                         )}
                         {member.role !== 'viewer' && (
@@ -213,7 +213,7 @@ export function WorkspaceInvitationModal() {
                           >
                             {t('workspace.makeViewer', 'Changer en lecteur')}
 
-                            <ArrowRightLeft className="mr-2 h-4 w-4" />
+                            <ArrowRightLeft className="h-4 w-4" />
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem
@@ -226,7 +226,7 @@ export function WorkspaceInvitationModal() {
                           className="justify-between text-destructive"
                         >
                           {t('workspace.removeMember', 'Retirer')}
-                          <Trash className="mr-2 h-4 w-4 text-destructive" />
+                          <Trash className="h-4 w-4 text-destructive" />
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>

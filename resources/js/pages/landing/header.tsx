@@ -1,7 +1,11 @@
+import { LanguageSwitcher } from '@/components/language-switcher';
 import { login } from '@/routes';
 import { router } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
 
 export function Header() {
+  const { t } = useTranslation();
+
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-base-300/50 bg-background/80 backdrop-blur-lg">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
@@ -12,7 +16,9 @@ export function Header() {
               M
             </span>
           </div>
-          <span className="font-semibold text-foreground">Mealo Planner</span>
+          <span className="font-semibold text-foreground">
+            {t('landing.header.appName')}
+          </span>
         </div>
 
         {/* Nav Links */}
@@ -21,30 +27,30 @@ export function Header() {
             href="#features"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            Features
-          </a>
-          <a
-            href="#how-it-works"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            How it works
+            {t('landing.header.features')}
           </a>
           <a
             href="#preview"
             className="text-sm text-muted-foreground transition-colors hover:text-foreground"
           >
-            Preview
+            {t('landing.header.preview')}
+          </a>
+          <a
+            href="#join-beta"
+            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+          >
+            {t('landing.header.joinBeta')}
           </a>
         </nav>
 
         {/* CTA */}
         <div className="flex gap-3">
-          <button className="btn rounded-full btn-secondary">Join Beta</button>
+          <LanguageSwitcher className="rounded-full btn-sm btn-secondary" />
           <button
-            className="btn rounded-full btn-outline btn-secondary"
+            className="btn rounded-full px-6 btn-outline btn-sm btn-secondary"
             onClick={() => router.get(login.url())}
           >
-            Sign in
+            {t('landing.header.signIn')}
           </button>
         </div>
       </div>

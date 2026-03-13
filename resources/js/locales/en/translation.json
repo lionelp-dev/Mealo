@@ -491,5 +491,101 @@
             "title": "No pending invitations",
             "description": "You currently have no invitations. When someone invites you to join a group, you'll see it here."
         }
+    },
+    "landing": {
+        "header": {
+            "appName": "Mealo Planner",
+            "features": "Features",
+            "howItWorks": "How it works",
+            "preview": "Preview",
+            "joinBeta": "Join beta",
+            "signIn": "Sign in"
+        },
+        "hero": {
+            "badge": "Currently in closed beta",
+            "title": "Plan your meals",
+            "subtitle": "Simplify your week",
+            "description": "Mealo Planner helps you organize weekly meals, generate smart grocery lists, and keep all your favorite recipes in one place.",
+            "cta": "Join the closed beta",
+            "imageAlt": "Meal Planner App Preview"
+        },
+        "features": {
+            "sectionTitle": "Everything you need to plan meals",
+            "sectionDescription": "Simple tools designed to make meal planning effortless and enjoyable.",
+            "items": {
+                "recipeOrganization": {
+                    "title": "Your Recipe Collection",
+                    "description": "All your recipes in one place. Create, import, and access them anytime."
+                },
+                "aiRecipeGeneration": {
+                    "title": "AI Recipe Generation",
+                    "description": "Generate unique recipes tailored to your taste and dietary preferences."
+                },
+                "weeklyMealPlanning": {
+                    "title": "Weekly Meal Planner",
+                    "description": "Plan every meal of the week in a clear, visual calendar."
+                },
+                "aiMealPlanning": {
+                    "title": "AI Meal Planning",
+                    "description": "Get personalized weekly meal plans generated automatically."
+                },
+                "smartGroceryLists": {
+                    "title": "Smart Grocery Lists",
+                    "description": "Your ingredients list, built instantly from your meal plan."
+                },
+                "shareYourMealPlans": {
+                    "title": "Share Your Meal Plans",
+                    "description": "Invite family or friends to view and contribute to your meal plans."
+                }
+            }
+        },
+        "howItWorks": {
+            "sectionTitle": "How it works",
+            "sectionDescription": "Get started in minutes with a simple, powerful workflow.",
+            "steps": {
+                "buildLibrary": {
+                    "title": "Build your recipe library",
+                    "description": "Add your favorite recipes manually or generate new ones instantly with AI assistance."
+                },
+                "planWeek": {
+                    "title": "Plan your week",
+                    "description": "Organize meals with drag & drop or let AI create your weekly plan automatically."
+                },
+                "shareCollaborate": {
+                    "title": "Share and collaborate",
+                    "description": "Share your meal plans with family and friends to keep everyone aligned."
+                },
+                "shopConfidence": {
+                    "title": "Shop with confidence",
+                    "description": "Generate complete shopping lists automatically from your planned meals."
+                }
+            }
+        },
+        "productPreview": {
+            "sectionTitle": "A peek inside Mealo",
+            "sectionDescription": "Clean, intuitive interfaces designed to make meal planning a joy.",
+            "imageAlt": "Product preview"
+        },
+        "betaCta": {
+            "badge": "Limited spots available",
+            "title": "Join the Closed Beta",
+            "description": "We're currently testing Mealo with a small group of users. Request access to be notified when a spot opens up.",
+            "emailPlaceholder": "your@email.com",
+            "submitButton": "Request access",
+            "submitting": "...",
+            "validation": {
+                "emailRequired": "Email address is required.",
+                "emailInvalid": "Email address must be valid.",
+                "emailMaxLength": "Email address must not exceed 255 characters."
+            }
+        },
+        "footer": {
+            "appName": "Mealo Planner",
+            "description": "A personal side project to make meal planning simple and enjoyable.",
+            "about": "About",
+            "contact": "Contact",
+            "github": "GitHub",
+            "copyright": "Made with care. Not a commercial product."
+        }
     }
 }

@@ -43,7 +43,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
             prefetch
             onClick={cleanup}
           >
-            <Settings className="mr-2" />
+            <Settings />
             {t('navigation.settings', 'Settings')}
           </Link>
         </DropdownMenuItem>
@@ -57,7 +57,7 @@ export function UserMenuContent({ user }: UserMenuContentProps) {
           onClick={handleLogout}
           data-test="logout-button"
         >
-          <LogOut className="mr-2" />
+          <LogOut />
           {t('auth.verifyEmail.logoutButton', 'Log out')}
         </Link>
       </DropdownMenuItem>

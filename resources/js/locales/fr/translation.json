@@ -513,5 +513,101 @@
             "title": "Aucune invitation en attente",
             "description": "Vous n'avez actuellement aucune invitation. Lorsque quelqu'un vous invitera à rejoindre un groupe, vous le verrez ici."
         }
+    },
+    "landing": {
+        "header": {
+            "appName": "Mealo Planner",
+            "features": "Fonctionnalités",
+            "howItWorks": "Comment ça marche",
+            "preview": "Aperçu",
+            "joinBeta": "Rejoindre la beta",
+            "signIn": "Se connecter"
+        },
+        "hero": {
+            "badge": "Actuellement en beta fermée",
+            "title": "Planifiez vos repas",
+            "subtitle": "Simplifiez votre semaine",
+            "description": "Mealo Planner vous aide à organiser vos repas hebdomadaires, générer des listes de courses intelligentes, et conserver toutes vos recettes préférées au même endroit.",
+            "cta": "Rejoindre la beta fermée",
+            "imageAlt": "Aperçu de l'application Meal Planner"
+        },
+        "features": {
+            "sectionTitle": "Tout ce dont vous avez besoin pour planifier vos repas",
+            "sectionDescription": "Des outils simples conçus pour rendre la planification des repas sans effort et agréable.",
+            "items": {
+                "recipeOrganization": {
+                    "title": "Votre collection de recettes",
+                    "description": "Toutes vos recettes au même endroit. Créez-les, importez-les et consultez-les à tout moment."
+                },
+                "aiRecipeGeneration": {
+                    "title": "Génération de recettes par IA",
+                    "description": "Générez des recettes uniques, adaptées à vos goûts et à vos préférences alimentaires."
+                },
+                "weeklyMealPlanning": {
+                    "title": "Planification hebdomadaire des repas",
+                    "description": "Planifiez chaque repas de la semaine dans un calendrier clair et visuel."
+                },
+                "aiMealPlanning": {
+                    "title": "Planification de repas par IA",
+                    "description": "Générez automatiquement des plannings de repas hebdomadaires personnalisés."
+                },
+                "smartGroceryLists": {
+                    "title": "Listes de courses intelligentes",
+                    "description": "Votre liste d’ingrédients, créée instantanément à partir de votre planning de repas."
+                },
+                "shareYourMealPlans": {
+                    "title": "Partagez vos plans de repas",
+                    "description": "Invitez votre famille ou vos amis à consulter et à contribuer à votre planning de repas."
+                }
+            }
+        },
+        "howItWorks": {
+            "sectionTitle": "Comment ça marche",
+            "sectionDescription": "Démarrez en quelques minutes avec un flux de travail simple et puissant.",
+            "steps": {
+                "buildLibrary": {
+                    "title": "Créez votre bibliothèque de recettes",
+                    "description": "Ajoutez vos recettes préférées manuellement ou générez-en de nouvelles instantanément avec l'assistance de l'IA."
+                },
+                "planWeek": {
+                    "title": "Planifiez votre semaine",
+                    "description": "Organisez vos repas par glisser-déposer ou laissez l'IA créer votre plan hebdomadaire automatiquement."
+                },
+                "shareCollaborate": {
+                    "title": "Partagez et collaborez",
+                    "description": "Partagez vos plans de repas avec votre famille et vos amis pour garder tout le monde aligné."
+                },
+                "shopConfidence": {
+                    "title": "Faites vos courses en toute confiance",
+                    "description": "Générez des listes de courses complètes automatiquement à partir de vos repas planifiés."
+                }
+            }
+        },
+        "productPreview": {
+            "sectionTitle": "Un aperçu de Mealo",
+            "sectionDescription": "Des interfaces épurées et intuitives conçues pour rendre la planification des repas agréable.",
+            "imageAlt": "Aperçu du produit"
+        },
+        "betaCta": {
+            "badge": "Places limitées disponibles",
+            "title": "Rejoignez la Beta Fermée",
+            "description": "Nous testons actuellement Mealo avec un petit groupe d'utilisateurs. Demandez l'accès pour être notifié quand une place se libère.",
+            "emailPlaceholder": "votre@email.com",
+            "submitButton": "Demander l'accès",
+            "submitting": "...",
+            "validation": {
+                "emailRequired": "L'adresse email est requise.",
+                "emailInvalid": "L'adresse email doit être valide.",
+                "emailMaxLength": "L'adresse email ne doit pas dépasser 255 caractères."
+            }
+        },
+        "footer": {
+            "appName": "Mealo Planner",
+            "description": "Un projet personnel pour rendre la planification des repas simple et agréable.",
+            "about": "À propos",
+            "contact": "Contact",
+            "github": "GitHub",
+            "copyright": "Fait avec soin. Pas un produit commercial."
+        }
     }
 }
