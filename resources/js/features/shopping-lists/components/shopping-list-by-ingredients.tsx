@@ -1,5 +1,5 @@
+import { useShoppingList } from '../hooks/use-shopping-list';
 import ShoppingListByIngredientsItem from './shopping-list-by-ingredients-item';
-import { useShoppingList } from '@/hooks/use-shopping-list';
 
 export function ShoppingListByIngredients() {
   const { shopping_list_by_ingredients } = useShoppingList();

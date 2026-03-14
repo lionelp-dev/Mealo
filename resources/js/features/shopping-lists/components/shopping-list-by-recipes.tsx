@@ -1,5 +1,5 @@
+import { useShoppingList } from '../hooks/use-shopping-list';
 import ShoppingListByRecipesIngredientItem from './shopping-list-by-recipes-ingredient-item';
-import { useShoppingList } from '@/hooks/use-shopping-list';
 import React from 'react';
 
 export default function ShoppingListByRecipes() {

@@ -1,5 +1,5 @@
-import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
 import { capitalize, cn } from '@/lib/utils';
+import { useWorkspacePermissions } from '@/shared/hooks/use-workspace-permissions';
 import { PlannedMealRecipeIngredient } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';

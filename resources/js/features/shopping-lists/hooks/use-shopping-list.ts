@@ -1,11 +1,9 @@
+import { useShoppingListsContextValue } from '../inertia.adapter';
 import { ShoppingList } from '@/types';
-import { usePage } from '@inertiajs/react';
 import { useState } from 'react';
 
 export function useShoppingList() {
-  const { shopping_list_data } = usePage<{ shopping_list_data: ShoppingList }>()
-    .props;
-
+  const { shopping_list_data } = useShoppingListsContextValue();
   const shoppingList: ShoppingList = shopping_list_data;
   const shopping_list_by_ingredients = shoppingList.by_ingredients ?? {
     checked: [],
