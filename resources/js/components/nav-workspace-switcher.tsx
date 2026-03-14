@@ -1,10 +1,10 @@
-import WorkspaceCreationModal from './workspace-creation-modal';
-import { WorkspaceEditModal } from './workspace-edit-modal';
-import { WorkspaceInvitationModal } from './workspace-invitation-modal';
-import { useOptionalWorkspaceContext } from '@/contexts/workspace-context';
+import WorkspaceCreationModal from '@/features/workspaces/components/workspace-creation-modal';
+import { WorkspaceEditModal } from '@/features/workspaces/components/workspace-edit-modal';
+import { WorkspaceInvitationModal } from '@/features/workspaces/components/workspace-invitation-modal';
+import { workspaceCreationStore } from '@/features/workspaces/stores/workspace-creation-modal-store';
+import { workspaceInvitationModalStore } from '@/features/workspaces/stores/workspace-invitation-modal-store';
 import { capitalize, cn, pluralize } from '@/lib/utils';
-import { workspaceCreationStore } from '@/stores/workspace-creation-modal-store';
-import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-modal-store';
+import { WorkspaceData } from '@/types';
 import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import {
@@ -19,15 +19,18 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export function NavWorkspaceSwitcher() {
+export function NavWorkspaceSwitcher({
+  workspace_data,
+}: {
+  workspace_data: WorkspaceData;
+}) {
   const { t, i18n } = useTranslation();
   const [isWorkspaceSwitcherPopoverOpen, setWorkspaceSwitcherPopoverOpen] =
     useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const context = useOptionalWorkspaceContext();
-  if (!context) return null;
-  const { workspace_data } = context;
+  if (!workspace_data) return null;
+
   const { current_workspace, workspaces } = workspace_data;
 
   const { openWorkspaceCreationModal } = workspaceCreationStore();
@@ -190,9 +193,9 @@ export function NavWorkspaceSwitcher() {
           </Popover.Content>
         </Popover.Portal>
       </Popover.Root>
-      <WorkspaceInvitationModal />
+      <WorkspaceInvitationModal workspace_data={workspace_data} />
       <WorkspaceCreationModal />
-      <WorkspaceEditModal />
+      <WorkspaceEditModal workspace_data={workspace_data} />
     </>
   );
 }

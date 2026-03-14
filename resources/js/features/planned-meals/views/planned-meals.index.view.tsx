@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 export function PlannedMealsIndexView() {
   const { t } = useTranslation();
 
-  const { weekStart } = usePlannedMealsContextValue();
+  const { weekStart, workspace_data } = usePlannedMealsContextValue();
 
   const { canGenerateMealPlan } = useWorkspacePermissions();
 
@@ -35,7 +35,7 @@ export function PlannedMealsIndexView() {
     headerRightContent: (
       <div className="flex items-center gap-4">
         {canGenerateMealPlan && <MealPlanGenerationPopover />}
-        <NavWorkspaceSwitcher />
+        <NavWorkspaceSwitcher workspace_data={workspace_data} />
       </div>
     ),
   });

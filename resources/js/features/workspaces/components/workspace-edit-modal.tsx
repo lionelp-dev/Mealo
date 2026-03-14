@@ -1,10 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
-import { useWorkspaceContext } from '@/contexts/workspace-context';
+import { useWorkspaces } from '../hooks/use-workspaces';
+import { workspaceEditStore } from '../stores/workspace-edit-modal-store';
+import {
+  DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useAppForm } from '@/hooks/form-hook';
-import { useWorkspaces } from '@/hooks/use-workspaces';
 import { cn } from '@/lib/utils';
-import { workspaceEditStore } from '@/stores/workspace-edit-modal-store';
-import { Workspace } from '@/types';
+import { Workspace, WorkspaceData } from '@/types';
 import { useStore } from '@tanstack/react-form';
 import { AlertTriangle, User, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -25,15 +29,17 @@ const workspaceTypes = [
   },
 ] as const;
 
-export function WorkspaceEditModal() {
+type Props = {
+  workspace_data: WorkspaceData;
+};
+
+export function WorkspaceEditModal({ workspace_data }: Props) {
   const { t } = useTranslation();
   const {
     isWorkspaceEditModalOpen,
     selected_workspace_id,
     closeWorkspaceEditModal,
   } = workspaceEditStore();
-
-  const { workspace_data } = useWorkspaceContext();
 
   const selected_workspace = workspace_data.workspaces.find(
     (workspace) => workspace.id === selected_workspace_id,

@@ -18,7 +18,7 @@ export default function ShoppingListsView() {
   const { flush } = usePrefetch();
   flush();
 
-  const { weekStart } = useShoppingListsContextValue();
+  const { weekStart, workspace_data } = useShoppingListsContextValue();
 
   const { total, setViewMode, viewMode, checkedCount } = useShoppingList();
 
@@ -32,7 +32,7 @@ export default function ShoppingListsView() {
       }
       headerRightContent={
         <div className="flex items-center gap-4">
-          <NavWorkspaceSwitcher />
+          <NavWorkspaceSwitcher workspace_data={workspace_data} />
         </div>
       }
     >

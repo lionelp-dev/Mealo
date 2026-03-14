@@ -13,12 +13,16 @@ import { Link, usePage } from '@inertiajs/react';
 import { Bell, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
+type PageProps = {
+  workspace_data: WorkspaceData;
+};
+
 export function NavWorkspace() {
   const { t } = useTranslation();
 
-  const { workspace_data } = usePage<{ workspace_data: WorkspaceData }>().props;
+  const { workspace_data } = usePage<PageProps>().props;
 
-  if (workspace_data === undefined) return null;
+  if (!workspace_data) return null;
 
   const workspaces = workspace_data.workspaces || [];
   const pendingInvitationsCount =

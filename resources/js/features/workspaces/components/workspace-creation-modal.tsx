@@ -1,9 +1,14 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from './ui/dialog';
+import { useWorkspaces } from '../hooks/use-workspaces';
+import { workspaceCreationStore } from '../stores/workspace-creation-modal-store';
+import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
+import {
+  DialogHeader,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { useAppForm } from '@/hooks/form-hook';
-import { useWorkspaces } from '@/hooks/use-workspaces';
 import { cn } from '@/lib/utils';
-import { workspaceCreationStore } from '@/stores/workspace-creation-modal-store';
-import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-modal-store';
 import { Workspace } from '@/types';
 import { useStore } from '@tanstack/react-form';
 import { User, Users } from 'lucide-react';

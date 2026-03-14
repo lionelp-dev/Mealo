@@ -1,3 +1,6 @@
+import { useWorkspacePermissions } from '../hooks/use-workspace-permissions';
+import { useWorkspaces } from '../hooks/use-workspaces';
+import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import {
@@ -6,13 +9,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useWorkspaceContext } from '@/contexts/workspace-context';
 import { useAppForm } from '@/hooks/form-hook';
 import { useInitials } from '@/hooks/use-initials';
-import { useWorkspacePermissions } from '@/hooks/use-workspace-permissions';
-import { useWorkspaces } from '@/hooks/use-workspaces';
 import { cn } from '@/lib/utils';
-import { workspaceInvitationModalStore } from '@/stores/workspace-invitation-modal-store';
+import { WorkspaceData } from '@/types';
 import { Role } from '@/types/roles';
 import {
   ArrowRightLeft,
@@ -23,11 +23,14 @@ import {
 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export function WorkspaceInvitationModal() {
+type Props = {
+  workspace_data: WorkspaceData;
+};
+
+export function WorkspaceInvitationModal({ workspace_data }: Props) {
   const { t } = useTranslation();
   const getInitials = useInitials();
 
-  const { workspace_data } = useWorkspaceContext();
   const {
     isWorkspaceInvitationModalOpen,
     isWorkspaceInviting,
