@@ -22,13 +22,10 @@ import { SharedData, WorkspaceData } from '@/types';
 import { Head, router, usePage, usePoll } from '@inertiajs/react';
 import {
   Edit2Icon,
-  GroupIcon,
   MoreHorizontal,
-  PersonStandingIcon,
   Plus,
   PlusIcon,
   Trash2,
-  Trash2Icon,
   UserIcon,
   Users,
   UsersIcon,

@@ -1,10 +1,10 @@
-import { RecipesInertiaAdapter } from '@/features/recipes/infrastructure/inertia.adapter';
-import { RecipesIndexPage } from '@/features/recipes/ui/recipes.index.page';
+import { RecipesInertiaAdapter } from '@/features/recipes/inertia.adapter';
+import { IndexRecipesView } from '@/features/recipes/views/index.recipes.view';
 
 export default function () {
   return (
     <RecipesInertiaAdapter>
-      <RecipesIndexPage />
+      <IndexRecipesView />
     </RecipesInertiaAdapter>
   );
 }

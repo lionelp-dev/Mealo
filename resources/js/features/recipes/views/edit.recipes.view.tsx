@@ -1,0 +1,227 @@
+import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredients-section';
+import { MealTimeSelectField } from '../components/recipe-form-meal-time-select-field';
+import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
+import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
+import { useRecipesContextValue } from '../inertia.adapter';
+import { updateRecipe, viewRecipe } from '../repositories/recipes.repository';
+import { recipeSchema } from '../schemas/recipe.schema';
+import { AppMainContent } from '@/components/app-main-content';
+import { ImageUpload } from '@/components/image-upload';
+import { LanguageSwitcher } from '@/components/language-switcher';
+import AppLayout from '@/layouts/app-layout';
+import { useAppForm } from '@/shared/hooks/form-hook';
+import { Head } from '@inertiajs/react';
+import { useTranslation } from 'react-i18next';
+import z from 'zod';
+
+export function EditRecipesView() {
+  const { t } = useTranslation();
+
+  const { recipe, meal_times } = useRecipesContextValue();
+
+  const defaultValues: z.infer<typeof recipeSchema> = {
+    name: recipe.data.name ?? '',
+    description: recipe.data.description ?? '',
+    serving_size: recipe.data.serving_size ?? 1,
+    preparation_time: recipe.data.preparation_time ?? 0,
+    cooking_time: recipe.data.cooking_time ?? 0,
+    ingredients: recipe.data.ingredients ?? [],
+    steps: recipe.data.steps ?? [],
+    tags: recipe.data.tags ?? [],
+    meal_times: recipe.data.meal_times ?? [],
+    image: recipe.data.image ?? null,
+  };
+
+  const form = useAppForm({
+    defaultValues,
+    validators: {
+      onChange: recipeSchema,
+    },
+    onSubmit: async ({ value }) => {
+      return await updateRecipe(value, recipe.data.id);
+    },
+  });
+
+  return (
+    <AppLayout
+      headerRightContent={
+        <div className="flex items-center gap-8">
+          <div className="flex justify-end gap-4">
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
+            >
+              {([canSubmit, isSubmitting]) => (
+                <button
+                  type="submit"
+                  disabled={!canSubmit}
+                  className={`btn btn-secondary`}
+                  onClick={() => form.handleSubmit()}
+                >
+                  {isSubmitting ? '...' : t('common.buttons.update', 'Update')}
+                </button>
+              )}
+            </form.Subscribe>
+            <button
+              type="reset"
+              className="btn"
+              onClick={() => viewRecipe(recipe.data.id)}
+            >
+              {t('common.buttons.cancel', 'Cancel')}
+            </button>
+          </div>
+
+          <LanguageSwitcher />
+        </div>
+      }
+    >
+      <Head title={t('recipes.edit.pageTitle', 'Edit recipe')}></Head>
+      <AppMainContent>
+        <h1 className="mb-6 text-2xl font-bold">
+          {t('recipes.edit.title', 'Edit recipe')}
+        </h1>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            form.handleSubmit();
+          }}
+          className="flex flex-col gap-7"
+        >
+          <div className="grid gap-x-12 gap-y-8 min-2xl:grid-cols-[9fr_10fr]">
+            <form.AppField
+              name="name"
+              children={(field) => (
+                <field.TextField
+                  label={t('recipes.form.nameLabel', 'Recipe name')}
+                  placeholder={t(
+                    'recipes.form.namePlaceholder',
+                    'Enter recipe name',
+                  )}
+                />
+              )}
+            />
+
+            <form.AppField
+              name="description"
+              children={(field) => (
+                <field.TextAreaField
+                  label={t('recipes.form.descriptionLabel', 'Description')}
+                  placeholder={t(
+                    'recipes.form.descriptionPlaceholder',
+                    'Describe your recipe',
+                  )}
+                  rows={10}
+                />
+              )}
+            />
+
+            <form.AppField
+              name="meal_times"
+              mode="array"
+              validators={{
+                onChange: recipeSchema.shape.meal_times,
+                onBlur: recipeSchema.shape.meal_times,
+              }}
+              children={(field) => (
+                <MealTimeSelectField
+                  field={field}
+                  mealTimes={meal_times.data}
+                />
+              )}
+            />
+
+            <div className="grid grid-flow-col gap-5">
+              <form.AppField
+                name="serving_size"
+                children={(field) => (
+                  <field.NumberField
+                    value={field.state.value}
+                    label={t(
+                      'recipes.form.servingSizeLabel',
+                      'Nombre de portions',
+                    )}
+                    placeholder="4"
+                    min="1"
+                    max="50"
+                  />
+                )}
+              />
+
+              <form.AppField
+                name="preparation_time"
+                children={(field) => (
+                  <field.NumberField
+                    value={field.state.value}
+                    label={t(
+                      'recipes.form.preparationTimeLabel',
+                      'Preparation time (minutes)',
+                    )}
+                    placeholder="0"
+                    min="0"
+                  />
+                )}
+              />
+
+              <form.AppField
+                name="cooking_time"
+                children={(field) => (
+                  <field.NumberField
+                    value={field.state.value}
+                    label={t(
+                      'recipes.form.cookingTimeLabel',
+                      'Cooking time (minutes)',
+                    )}
+                    placeholder="0"
+                    min="0"
+                  />
+                )}
+              />
+            </div>
+
+            <form.AppField
+              name="image"
+              children={(field) => (
+                <ImageUpload
+                  value={field.state.value}
+                  onChange={field.handleChange}
+                  currentImageUrl={recipe.data.image_url}
+                  className="min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4"
+                />
+              )}
+            />
+
+            <div className="min-2xl:col-start-2 min-2xl:row-start-4 min-2xl:row-end-6">
+              <RecipeFormTagsSection form={form} fields={{ tags: 'tags' }} />
+            </div>
+
+            <div className="min-2xl:row-start-5 min-2xl:row-end-8">
+              <RecipeFormStepsSection
+                form={form}
+                fields={{ steps: 'steps' }}
+                title={t('recipes.form.stepsTitle', 'Steps')}
+              />
+            </div>
+
+            <RecipeFormIngredientsSection
+              form={form}
+              fields={{ ingredients: 'ingredients' }}
+              title={t('recipes.form.ingredientsTitle', 'Ingredients')}
+            />
+          </div>
+
+          <div className="flex justify-end gap-4">
+            <button
+              type="reset"
+              className="btn"
+              onClick={() => viewRecipe(recipe.data.id)}
+            >
+              {t('common.buttons.cancel', 'Cancel')}
+            </button>
+            <form.AppForm>
+              <form.SubmitButton label={t('common.buttons.update', 'Update')} />
+            </form.AppForm>
+          </div>
+        </form>
+      </AppMainContent>
+    </AppLayout>
+  );
+}

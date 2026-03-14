@@ -1,10 +1,10 @@
-import { RecipesInertiaAdapter } from '@/features/recipes/infrastructure/inertia.adapter';
-import { RecipesEditPage } from '@/features/recipes/ui/recipes.edit.page';
+import { RecipesInertiaAdapter } from '@/features/recipes/inertia.adapter';
+import { EditRecipesView } from '@/features/recipes/views/edit.recipes.view';
 
 export default function () {
   return (
     <RecipesInertiaAdapter>
-      <RecipesEditPage />
+      <EditRecipesView />
     </RecipesInertiaAdapter>
   );
 }
