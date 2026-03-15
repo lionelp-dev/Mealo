@@ -1,6 +1,6 @@
 import '../css/app.css';
-import { initializeTheme } from './hooks/use-appearance';
-import './lib/i18n';
+import { initializeTheme } from './app/hooks/use-appearance';
+import './app/lib/i18n';
 import { createInertiaApp } from '@inertiajs/react';
 import { Theme } from '@radix-ui/themes';
 import '@radix-ui/themes/styles.css';

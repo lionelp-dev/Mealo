@@ -1,4 +1,4 @@
-import { LanguageSwitcher } from '@/components/language-switcher';
+import { LanguageSwitcher } from '@/app/components/language-switcher';
 import { login } from '@/routes';
 import { router } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';

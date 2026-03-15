@@ -1,4 +1,4 @@
-import { useAppForm } from '@/hooks/form-hook';
+import { useAppForm } from '@/app/hooks/form-hook';
 import beta from '@/routes/beta';
 import { router } from '@inertiajs/react';
 import { ArrowRight } from 'lucide-react';

@@ -1,9 +1,9 @@
-import HeadingSmall from '@/components/heading-small';
-import { LanguageSwitcher } from '@/components/language-switcher';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
+import HeadingSmall from '@/app/components/heading-small';
+import { LanguageSwitcher } from '@/app/components/language-switcher';
+import { type BreadcrumbItem } from '@/app/entities/';
+import AppLayout from '@/app/layouts/app-layout';
+import SettingsLayout from '@/app/layouts/settings/layout';
 import languageRoute from '@/routes/language';
-import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
 

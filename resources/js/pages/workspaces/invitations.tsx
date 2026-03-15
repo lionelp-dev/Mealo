@@ -1,5 +1,5 @@
-import { WorkspaceInertiaAdapter } from '@/features/workspaces/inertia.adapter';
-import { WorkspacesInvitationsView } from '@/features/workspaces/views/index.workspace-invitations.view';
+import { WorkspaceInertiaAdapter } from '@/app/features/workspaces/inertia.adapter';
+import { WorkspacesInvitationsView } from '@/app/features/workspaces/views/index.workspace-invitations.view';
 
 export default function WorkspaceInvitations() {
   return (

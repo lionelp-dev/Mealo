@@ -1,12 +1,12 @@
-import InputError from '@/components/input-error';
-import { Input } from '@/components/ui/input';
+import InputError from '@/app/components/input-error';
+import { Input } from '@/app/components/ui/input';
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from '@/components/ui/input-otp';
-import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
-import AuthLayout from '@/layouts/auth-layout';
+} from '@/app/components/ui/input-otp';
+import { OTP_MAX_LENGTH } from '@/app/hooks/use-two-factor-auth';
+import AuthLayout from '@/app/layouts/auth-layout';
 import { store } from '@/routes/two-factor/login';
 import { Form, Head } from '@inertiajs/react';
 import { REGEXP_ONLY_DIGITS } from 'input-otp';

@@ -1,7 +1,7 @@
 // Components
 import EmailVerificationNotificationController from '@/actions/App/Http/Controllers/Auth/EmailVerificationNotificationController';
-import TextLink from '@/components/text-link';
-import AuthLayout from '@/layouts/auth-layout';
+import TextLink from '@/app/components/text-link';
+import AuthLayout from '@/app/layouts/auth-layout';
 import { logout } from '@/routes';
 import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';

@@ -1,5 +1,5 @@
-import { WorkspaceInertiaAdapter } from '@/features/workspaces/inertia.adapter';
-import { WorkspaceIndexView } from '@/features/workspaces/views/index.workspace.view';
+import { WorkspaceInertiaAdapter } from '@/app/features/workspaces/inertia.adapter';
+import { WorkspaceIndexView } from '@/app/features/workspaces/views/index.workspace.view';
 
 export default function WorkspaceIndex() {
   return (

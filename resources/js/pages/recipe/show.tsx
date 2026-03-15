@@ -1,5 +1,5 @@
-import { RecipesInertiaAdapter } from '@/features/recipes/inertia.adapter';
-import { ShowRecipesView } from '@/features/recipes/views/show.recipes.view';
+import { RecipesInertiaAdapter } from '@/app/features/recipes/inertia.adapter';
+import { ShowRecipesView } from '@/app/features/recipes/views/show.recipes.view';
 
 export default function () {
   return (
