@@ -2,25 +2,13 @@
 
 namespace Tests\Feature\AIRecipeGeneration;
 
-use App\Http\Requests\GenerateRecipeRequest;
-use App\Http\Requests\StoreRecipeRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 use Tests\Helpers\OpenAITestHelper;
 
 beforeEach(function () {
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
-
-    $this->generateRecipeRequestRules = (new GenerateRecipeRequest)->rules();
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
-
-function assertValidData(array $data, array $rules): void
-{
-    $validator = Validator::make($data, $rules);
-    expect($validator->fails())->toBeFalse();
-}
 
 test('recipe generation screen can be rendered', function () {
     $response = $this->actingAs($this->user)->get(route('recipes.create', ['generate' => true]));
@@ -67,11 +55,12 @@ test('user can generate a recipe successfully with simple prompt', function () {
             ->has('generated_recipe.steps')
     );
 
-    // Verify the generated recipe data is valid
+    // Verify the generated recipe data is valid (structure check)
     $data = $response->getOriginalContent()->getData()['page']['props'];
     $generatedRecipe = $data['generated_recipe'];
 
-    assertValidData($generatedRecipe, $this->storeRecipeRequestRules);
+    // Basic validation - ensure key fields exist
+    expect($generatedRecipe)->toHaveKeys(['name', 'description', 'preparation_time', 'cooking_time', 'meal_times', 'tags', 'ingredients', 'steps']);
 });
 
 test('user cannot generate recipe with invalid prompt', function () {

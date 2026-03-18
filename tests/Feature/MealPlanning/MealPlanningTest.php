@@ -4,7 +4,6 @@ namespace Tests\Feature\MealPlanning;
 
 /** @var \Tests\TestCase $this */
 
-use App\Http\Requests\StoreRecipeRequest;
 use Database\Seeders\MealTimeSeeder;
 
 require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
@@ -17,7 +16,6 @@ beforeEach(function () {
     \App\Models\Workspace::createPersonalWorkspace($this->user);
 
     $this->seed(MealTimeSeeder::class);
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
 
 test('user planned meals screen can be rendered', function () {

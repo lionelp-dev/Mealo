@@ -319,7 +319,7 @@ test('workspace members can view planned recipes from other members', function (
         fn ($page) => $page
             ->component('recipe/show')
             ->has('recipe')
-            ->where('recipe.data.id', $this->ownerRecipe->resource->id)
+            ->where('recipe.id', $this->ownerRecipe->resource->id)
     );
 
     // Viewer should also be able to view the planned recipe details
@@ -331,7 +331,7 @@ test('workspace members can view planned recipes from other members', function (
         fn ($page) => $page
             ->component('recipe/show')
             ->has('recipe')
-            ->where('recipe.data.id', $this->ownerRecipe->resource->id)
+            ->where('recipe.id', $this->ownerRecipe->resource->id)
     );
 });
 

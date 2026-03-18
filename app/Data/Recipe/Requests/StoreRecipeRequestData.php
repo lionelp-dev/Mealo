@@ -1,38 +1,43 @@
 <?php
 
-namespace App\Data\Recipe;
+namespace App\Data\Recipe\Requests;
 
+use App\Data\Recipe\Entities\IngredientData;
+use App\Data\Recipe\Entities\MealTimeData;
+use App\Data\Recipe\Entities\StepData;
+use App\Data\Recipe\Entities\TagData;
+use Illuminate\Http\UploadedFile;
+use Spatie\LaravelData\Attributes\Validation\Image;
 use Spatie\LaravelData\Attributes\Validation\Max;
+use Spatie\LaravelData\Attributes\Validation\Mimes;
 use Spatie\LaravelData\Attributes\Validation\Min;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
-class RecipeRequest extends Data
+class StoreRecipeRequestData extends Data
 {
     public function __construct(
-        #[Required, Max(255)]
+        #[Min(0), Max(255)]
         public string $name,
-        #[Required]
+        #[Min(0), Max(5000)]
         public ?string $description,
-        #[Required, Min(1), Max(50)]
+        #[Min(1), Max(50)]
         public int $serving_size,
-        #[Required, Min(0)]
+        #[Min(0), Max(20160)]
         public int $preparation_time,
-        #[Required, Min(0)]
+        #[Min(0), Max(20160)]
         public int $cooking_time,
         /** @var MealTimeData[] */
-        #[Required]
         public array $meal_times,
         /** @var IngredientData[] */
-        #[Required]
         public array $ingredients,
         /** @var StepData[] */
-        #[Required]
         public array $steps,
         /** @var TagData[] */
         public array $tags,
-        public ?string $image = null,
+        #[Image, Mimes(['jpeg', 'jpg', 'png']), Max(5120)]
+        public ?UploadedFile $image = null
     ) {}
+
 }

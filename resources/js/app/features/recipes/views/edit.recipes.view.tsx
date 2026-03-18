@@ -124,7 +124,7 @@ export function EditRecipesView() {
               children={(field) => (
                 <MealTimeSelectField
                   field={field}
-                  mealTimes={meal_times.data}
+                  mealTimes={meal_times}
                 />
               )}
             />

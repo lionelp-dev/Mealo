@@ -5,11 +5,11 @@ import { Wand2, X } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export default function RecipeModalAIGeneration() {
+export default function GenerateRecipeWithAIModal() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  const { should_open_ai_modal } = useRecipesContextValue();
-  const [isOpen, setIsOpen] = useState(should_open_ai_modal);
+  const { show_generate_recipe_with_ai_modal } = useRecipesContextValue();
+  const [isOpen, setIsOpen] = useState(show_generate_recipe_with_ai_modal);
 
   const form = useForm({
     defaultValues: {

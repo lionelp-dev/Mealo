@@ -13,8 +13,8 @@ class Tag extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
         'user_id',
+        'name',
     ];
 
     /**
@@ -26,7 +26,7 @@ class Tag extends Model
     }
 
     /**
-     * @return BelongsToMany<Recipe>
+     * @return BelongsToMany<Recipe, $this, RecipeTag, 'pivot'>
      */
     public function recipes(): BelongsToMany
     {

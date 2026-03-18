@@ -76,3 +76,18 @@ function makeRecipeResource()
         ->withTags(5)
         ->make());
 }
+
+function buildRecipeUpdateData(Recipe $recipe, array $overrides = []): array
+{
+    return array_merge([
+        'name' => $recipe->name,
+        'description' => $recipe->description,
+        'serving_size' => $recipe->serving_size ?? 4,
+        'preparation_time' => $recipe->preparation_time ?? 30,
+        'cooking_time' => $recipe->cooking_time ?? 45,
+        'meal_times' => [['name' => 'diner']],
+        'ingredients' => [['name' => 'Tomato', 'quantity' => 2, 'unit' => 'pieces']],
+        'steps' => [['order' => 1, 'description' => 'Wash tomatoes']],
+        'tags' => [['name' => 'healthy']],
+    ], $overrides);
+}

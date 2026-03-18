@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class RecipeMealTime extends Pivot
 {
-    use HasFactory;
-
     protected $fillable = [
         'recipe_id',
         'meal_time_id',
     ];
 
     /**
-     * @return BelongsTo<Recipe, $this, Pivot>
+     * @return BelongsTo<Recipe, $this>
      */
     public function recipes(): BelongsTo
     {
@@ -24,7 +21,7 @@ class RecipeMealTime extends Pivot
     }
 
     /**
-     * @return BelongsTo<MealTime, $this, Pivot>
+     * @return BelongsTo<MealTime, $this>
      */
     public function meal_times(): BelongsTo
     {

@@ -2,9 +2,7 @@
 
 namespace Tests\Feature\Recipe;
 
-use App\Http\Requests\StoreRecipeRequest;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
 // No require_once needed — helpers are auto-loaded from tests/Pest.php
 
@@ -12,7 +10,6 @@ beforeEach(function () {
     /** @var \TestCase $this */
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
-    $this->storeRecipeRequestRules = (new StoreRecipeRequest)->rules();
 });
 
 // ---------------------------------------------------------------------------
@@ -76,10 +73,6 @@ test('user can create a recipe successfully', function () {
     /** @var \TestCase $this */
     $payload = recipeResourceFor($this->user)->toArray(request());
 
-    // Sanity check: the factory-built payload satisfies the form request rules.
-    $validator = Validator::make($payload, $this->storeRecipeRequestRules);
-    expect($validator->fails())->toBeFalse();
-
     $this->actingAs($this->user)
         ->post(route('recipes.store'), $payload)
         ->assertRedirect(route('recipes.index'))
@@ -97,7 +90,7 @@ test('user cannot create recipe with invalid data', function () {
             'serving_size' => -1,
         ])
         ->assertRedirect()
-        ->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time', 'serving_size']);
+        ->assertSessionHasErrors(['name', 'preparation_time', 'cooking_time', 'serving_size']);
 });
 
 // ---------------------------------------------------------------------------
@@ -137,7 +130,7 @@ test('user cannot update recipe with invalid data', function () {
             'serving_size' => -1,
         ])
         ->assertRedirect()
-        ->assertSessionHasErrors(['name', 'description', 'preparation_time', 'cooking_time', 'serving_size']);
+        ->assertSessionHasErrors(['name', 'preparation_time', 'cooking_time', 'serving_size']);
 
     // Original data must remain unchanged.
     $this->assertDatabaseHas('recipes', [

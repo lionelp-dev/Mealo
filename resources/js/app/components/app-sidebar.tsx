@@ -47,7 +47,9 @@ export function AppSidebar() {
     },
     {
       title: t('recipes.generate.button', 'Generate recipe'),
-      href: recipes.create({ query: { generate: true } }),
+      href: recipes.create({
+        query: { show_generate_recipe_with_ai_modal: true },
+      }),
       icon: Wand,
     },
   ];

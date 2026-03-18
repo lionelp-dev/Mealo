@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Data\Recipe;
+namespace App\Data\Recipe\Entities;
 
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Min;
-use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
@@ -13,11 +12,12 @@ class IngredientData extends Data
 {
     public function __construct(
         public ?int $id,
-        #[Required, Max(255)]
+        #[Min(1), Max(255)]
         public string $name,
-        #[Required, Min(0)]
+        #[Min(0), Max(10000)]
         public float $quantity,
-        #[Required, Max(255)]
+        #[Min(1), Max(50)]
         public string $unit,
     ) {}
+
 }

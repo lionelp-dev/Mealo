@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class RecipeIngredient extends Pivot
 {
+    /** @use HasFactory<\Database\Factories\RecipeIngredientFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -18,7 +19,7 @@ class RecipeIngredient extends Pivot
     ];
 
     /**
-     * @return BelongsTo<Recipe, $this, Pivot>
+     * @return BelongsTo<Recipe, $this>
      */
     public function Recipe(): BelongsTo
     {
@@ -26,7 +27,7 @@ class RecipeIngredient extends Pivot
     }
 
     /**
-     * @return BelongsTo<Ingredient, $this, Pivot>
+     * @return BelongsTo<Ingredient, $this>
      */
     public function Ingredient(): BelongsTo
     {

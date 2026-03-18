@@ -2,17 +2,15 @@
 
 namespace App\Jobs;
 
-use App\Http\Requests\StoreRecipeRequest;
-use App\Models\Recipe;
+use App\Actions\Recipes\GenerateRecipeWithAIAction;
+use App\Actions\Recipes\StoreRecipeAction;
+use App\Data\Recipe\Requests\GenerateRecipeRequestData;
 use App\Models\User;
-use App\Services\AIRecipeGenerationService;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Validator as ValidationValidator;
 
 class GenerateRecipeJob implements ShouldQueue
 {
@@ -34,30 +32,24 @@ class GenerateRecipeJob implements ShouldQueue
         $this->onQueue('recipes');
     }
 
-    public function handle(AIRecipeGenerationService $aiService): void
-    {
-        $user = User::find($this->userId);
-
+    public function handle(
+        GenerateRecipeWithAIAction $generateRecipeWithAIAction,
+        StoreRecipeAction $storeRecipeAction
+    ): void {
         try {
             echo "🔄 Generating recipe #{$this->recipeNumber}: {$this->prompt}\n";
 
-            $recipeData = $aiService->generateRecipe($this->prompt);
+            // Generate recipe data from AI
+            $generateRecipeData = GenerateRecipeRequestData::validateAndCreate(['prompt' => $this->prompt]);
+            $storeRecipeData = $generateRecipeWithAIAction->execute($generateRecipeData);
 
-            $validated = $this->validateRecipeData($recipeData)->validated();
+            $user = User::query()->find($this->userId);
 
-            $recipe = Recipe::create([
-                'user_id' => $user->id,
-                'name' => $validated['name'],
-                'description' => $validated['description'],
-                'serving_size' => $validated['serving_size'],
-                'preparation_time' => $validated['preparation_time'],
-                'cooking_time' => $validated['cooking_time'],
-            ]);
-
-            $recipe->syncIngredients($recipeData['ingredients']);
-            $recipe->syncSteps($recipeData['steps']);
-            $recipe->syncTags($recipeData['tags']);
-            $recipe->syncMealTimes($recipeData['meal_times']);
+            if (! $user) {
+                throw new \Exception('User not found');
+            }
+            // Store recipe with all relations
+            $recipe = $storeRecipeAction->execute($user, $storeRecipeData);
 
             echo "✅ Recipe #{$this->recipeNumber} created: {$recipe->name}\n";
             Log::info("Recipe generated via queue: {$recipe->name}");
@@ -67,23 +59,5 @@ class GenerateRecipeJob implements ShouldQueue
             Log::error("Recipe generation failed: {$this->prompt} - {$e->getMessage()}");
             throw $e;
         }
-    }
-
-    private function validateRecipeData(array $recipeData): ValidationValidator
-    {
-        $validator = Validator::make($recipeData, (new StoreRecipeRequest)->rules());
-
-        if ($validator->fails()) {
-            $errors = $validator->errors()->all();
-            echo "⚠️ Validation failed:\n";
-            foreach ($errors as $error) {
-                echo "  - {$error}\n";
-            }
-            throw new \Exception('Recipe validation failed: '.implode(', ', $errors));
-        }
-
-        echo "✅ Recipe data validation passed\n";
-
-        return $validator;
     }
 }

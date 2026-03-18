@@ -2,7 +2,7 @@ import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredie
 import { MealTimeSelectField } from '../components/recipe-form-meal-time-select-field';
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
-import RecipeModalAIGeneration from '../components/recipe-modal-ai-generation';
+import GenerateRecipeWithAIModal from '../components/recipe-modal-ai-generation';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { createRecipe, viewRecipes } from '../repositories/recipes.repository';
 import { recipeSchema } from '../schemas/recipe.schema';
@@ -134,10 +134,7 @@ export function CreateRecipesView() {
                 onBlur: recipeSchema.shape.meal_times,
               }}
               children={(field) => (
-                <MealTimeSelectField
-                  field={field}
-                  mealTimes={meal_times.data}
-                />
+                <MealTimeSelectField field={field} mealTimes={meal_times} />
               )}
             />
 
@@ -244,7 +241,7 @@ export function CreateRecipesView() {
           </div>
         </form>
 
-        <RecipeModalAIGeneration />
+        <GenerateRecipeWithAIModal />
       </AppMainContent>
     </AppLayout>
   );

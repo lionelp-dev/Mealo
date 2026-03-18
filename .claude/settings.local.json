@@ -79,7 +79,13 @@
       "WebFetch(domain:medium.com)",
       "WebFetch(domain:app.studyraid.com)",
       "Bash(git log:*)",
-      "Bash(vendor/bin/phpstan:*)"
+      "Bash(vendor/bin/phpstan:*)",
+      "Bash(phpstan analyse:*)",
+      "WebFetch(domain:packagist.org)",
+      "WebFetch(domain:martinjoo.dev)",
+      "WebFetch(domain:serversideup.net)",
+      "WebFetch(domain:www.codegenes.net)",
+      "mcp__laravel-boost__application-info"
     ],
     "deny": [],
     "ask": []

@@ -12,16 +12,14 @@ type PageProps = SharedData & {
   };
   recipes: PaginatedCollection<Recipe>;
   tags: Tag[];
-  meal_times: {
-    data: MealTime[];
-  };
+  meal_times: MealTime[];
   tags_search_results?: {
     data: Tag[];
   };
   ingredients_search_results?: {
     data: Ingredient[];
   };
-  should_open_ai_modal: boolean;
+  show_generate_recipe_with_ai_modal: boolean;
   generated_recipe?: Omit<Recipe, 'user_id'> | null;
 };
 

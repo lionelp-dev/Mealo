@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Http\Resources\RecipeResource;
+use App\Data\Recipe\Resources\RecipeAIPromptResourceData;
 use App\Models\MealTime;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
@@ -57,7 +57,7 @@ class AIMealPlanningService
 
         // Get available meal times from database
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         // Filter recipes by meal_time to prevent inappropriate assignments
@@ -70,7 +70,7 @@ class AIMealPlanningService
         });
 
         $dinnerRecipes = $recipes->filter(function ($recipe) {
-            return $recipe->mealTimes->contains('name', 'dinner');
+            return $recipe->mealTimes->contains('name', 'diner');
         });
 
         $snackRecipes = $recipes->filter(function ($recipe) {
@@ -78,10 +78,10 @@ class AIMealPlanningService
         });
 
         // Formater les recettes par meal_time
-        $breakfastData = RecipeResource::collection($breakfastRecipes)->resolve();
-        $lunchData = RecipeResource::collection($lunchRecipes)->resolve();
-        $dinnerData = RecipeResource::collection($dinnerRecipes)->resolve();
-        $snackData = RecipeResource::collection($snackRecipes)->resolve();
+        $breakfastData = RecipeAIPromptResourceData::collect($breakfastRecipes, \Spatie\LaravelData\DataCollection::class);
+        $lunchData = RecipeAIPromptResourceData::collect($lunchRecipes, \Spatie\LaravelData\DataCollection::class);
+        $dinnerData = RecipeAIPromptResourceData::collect($dinnerRecipes, \Spatie\LaravelData\DataCollection::class);
+        $snackData = RecipeAIPromptResourceData::collect($snackRecipes, \Spatie\LaravelData\DataCollection::class);
 
         $filteredRecipesData = [
             'breakfast' => $breakfastData,
@@ -146,7 +146,7 @@ class AIMealPlanningService
         ────────────────────────────────────────
 
         Recettes filtrées par meal_time :
-        '.json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."
+        ' . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
 
         Meal times autorisés :
         {$mealTimeListForPrompt}
@@ -197,7 +197,7 @@ class AIMealPlanningService
         - Dates au format YYYY-MM-DD
         - Utiliser UNIQUEMENT les recipe_id fournis
         - Respect STRICT des meal_time_id
-        - TOTAL ATTENDU : {$days} jours × 4 repas = ".($days * 4).' repas
+        - TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . ' repas
         ',
                     ],
                     [
