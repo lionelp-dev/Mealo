@@ -1,116 +1,113 @@
+export type DeleteRecipesRequestData = {
+  ids: Array<string>;
+};
+export type FilterRecipesRequestData = {
+  search?: string;
+  tags?: Array<number> | null;
+  meal_times?: Array<number> | null;
+  preparation_time?: string;
+  cooking_time?: string;
+};
 export type GenerateRecipeRequestData = {
   prompt: string;
 };
-export type IngredientData = {
-  id: number | null;
+export type IngredientRequestData = {
   name: string;
   quantity: number;
   unit: string;
+  id?: string;
 };
 export type IngredientResourceData = {
-  id: number | null;
+  id: string;
   name: string;
 };
-export type MealTimeData = {
-  id: number | null;
+export type MealTimeEnum = {
+  name: string;
+  value: string;
+};
+export type MealTimeRequestData = {
   name: string;
 };
-export type MealTimeEnum = 'breakfast' | 'lunch' | 'diner' | 'snack';
-export type RecipeAIPromptResourceData = {
+export type MealTimeResourceData = {
   id: number;
+  name: string;
+};
+export type RecipeAIPromptResourceData = {
+  id: string;
   name: string;
   serving_size: number;
-  meal_times: Array<MealTimeData>;
-  tags: Array<TagData>;
+  meal_times: Array<MealTimeResourceData>;
+  tags: Array<TagResourceData>;
+};
+export type RecipeFormRequestData = {
+  ingredients_search?: string;
+  tags_search?: string;
+  show_generate_recipe_with_ai_modal?: boolean;
 };
 export type RecipeIngredientResourceData = {
-  id: number;
+  id: string;
   name: string;
   quantity: number;
   unit: string;
 };
 export type RecipeResourceData = {
-  id: number;
+  id: string;
   user_id: number;
   name: string;
-  description: string | null;
+  description: string;
   serving_size: number;
   preparation_time: number;
   cooking_time: number;
-  meal_times?: Array<MealTimeData>;
-  ingredients?: Array<RecipeIngredientResourceData>;
-  steps?: Array<StepData>;
-  tags?: Array<TagData>;
+  meal_times: Array<MealTimeResourceData>;
+  ingredients: Array<RecipeIngredientResourceData> | undefined;
+  steps: Array<StepResourceData>;
+  tags: Array<TagResourceData>;
   image_url: string | null;
   created_at: string | null;
   updated_at: string | null;
 };
-export type StepData = {
-  id: number | null;
+export type StepRequestData = {
+  order: number;
+  description: string;
+};
+export type StepResourceData = {
+  id: string;
   order: number;
   description: string;
 };
 export type StoreRecipeRequestData = {
   name: string;
-  description: string | null;
+  description: string;
   serving_size: number;
   preparation_time: number;
   cooking_time: number;
-  meal_times: Array<MealTimeData>;
-  ingredients: Array<IngredientData>;
-  steps: Array<StepData>;
-  tags: Array<TagData>;
-  image: any | null;
+  meal_times: Array<MealTimeRequestData>;
+  ingredients: Array<IngredientRequestData>;
+  steps: Array<StepRequestData>;
+  tags: Array<TagRequestData>;
+  image: File | null;
 };
-export type TagData = {
-  id: number | null;
+export type TagRequestData = {
   name: string;
 };
 export type TagResourceData = {
-  id: number | null;
+  id: string;
   name: string;
 };
-export type Unit =
-  | 'ml'
-  | 'cl'
-  | 'dl'
-  | 'l'
-  | 'tsp'
-  | 'tbsp'
-  | 'fl oz'
-  | 'cup'
-  | 'pint'
-  | 'quart'
-  | 'gallon'
-  | 'mg'
-  | 'g'
-  | 'kg'
-  | 'oz'
-  | 'lb'
-  | 'piece'
-  | 'pinch'
-  | 'dash'
-  | 'handful'
-  | 'slice'
-  | 'clove'
-  | 'bunch'
-  | 'package'
-  | 'can'
-  | 'jar'
-  | 'bottle'
-  | 'box'
-  | 'bag'
-  | 'to taste'
-  | 'as needed';
-export type UpdateRecipeRequestData = {
+export type Unit = {
   name: string;
-  description: string | null;
+  value: string;
+};
+export type UpdateRecipeRequestData = {
+  id: string;
+  name: string;
+  description: string;
   serving_size: number;
   preparation_time: number;
   cooking_time: number;
-  meal_times: Array<MealTimeData>;
-  ingredients: Array<IngredientData>;
-  steps: Array<StepData>;
-  tags: Array<TagData>;
-  image: any | null;
+  meal_times: Array<MealTimeRequestData>;
+  ingredients: Array<IngredientRequestData>;
+  steps: Array<StepRequestData>;
+  tags: Array<TagRequestData>;
+  image: File | null;
 };

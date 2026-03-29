@@ -1,12 +1,8 @@
+import { TagResource } from '../data/resources/recipe/types';
 import { RecipesFilterOption } from './recipes-filter-option';
-import {
-  Filter,
-  FilterSection,
-  Option,
-  Tag,
-} from '@/app/entities/recipe/types';
 import { useRecipesMultiSelectStore } from '@/app/features/recipes/stores/use-recipes-multi-select-store';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
+import { Filter, FilterSection, Option } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
 import { ClassValue } from 'clsx';
 import { FilterIcon } from 'lucide-react';
@@ -21,7 +17,7 @@ export const TIME_OPTIONS: Option[] = [
 ];
 
 type Props = {
-  tags: Tag[];
+  tags: TagResource[];
   className?: ClassValue;
   side?: Popover.PopoverContentProps['side'];
   align?: Popover.PopoverContentProps['align'];
@@ -41,13 +37,14 @@ export function RecipesFiltersPopover({
   const { setIsMultiSelectMode, clearSelectedRecipes } =
     useRecipesMultiSelectStore();
 
-  const createTagsSection = (tags: Tag[]): FilterSection => ({
+  const createTagsSection = (tags: TagResource[]): FilterSection => ({
     title: 'tags',
     type: 'tag',
-    options: tags.map((tag) => ({
-      label: tag.name,
-      value: tag.id?.toString() ?? '',
-    })),
+    options:
+      tags?.map((tag) => ({
+        label: tag.name,
+        value: tag.id?.toString() ?? '',
+      })) ?? [],
   });
 
   const FILTERS_SECTIONS: FilterSection[] = [

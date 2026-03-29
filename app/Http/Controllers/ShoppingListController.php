@@ -57,7 +57,7 @@ class ShoppingListController extends Controller
             'shopping_list_planned_meal_ingredients' => ['required', 'array'],
             'shopping_list_planned_meal_ingredients.*.shopping_list_id' => ['required', 'integer'],
             'shopping_list_planned_meal_ingredients.*.planned_meal_id' => ['required', 'integer'],
-            'shopping_list_planned_meal_ingredients.*.ingredient_id' => ['required', 'integer'],
+            'shopping_list_planned_meal_ingredients.*.ingredient_id' => ['required', 'string'],
             'shopping_list_planned_meal_ingredients.*.is_checked' => ['required', 'boolean:strict'],
         ]);
 

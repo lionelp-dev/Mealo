@@ -1,12 +1,12 @@
-import { recipeSchema, stepSchema } from '../schemas/recipe.schema';
 import FieldInfo from '@/app/components/ui/form-field-info';
-import { Recipe } from '@/app/entities/recipe/types';
+import { stepRequestSchema } from '@/app/data/requests/recipe/schemas/entities/step.request.schema';
+import { StepRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { PlusIcon, Trash2 } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-const defaultValues: Pick<Recipe, 'steps'> = {
+const defaultValues: { steps: StepRequest[] } = {
   steps: [],
 };
 
@@ -21,10 +21,10 @@ export const RecipeFormStepsSection = withFieldGroup({
     const form = useAppForm({
       defaultValues: { description: '', order: 0 },
       validators: {
-        onSubmit: stepSchema,
+        onSubmit: stepRequestSchema,
       },
       onSubmit: ({ value }) => {
-        const currentSteps = group.getFieldValue('steps');
+        const currentSteps = group.getFieldValue('steps') ?? [];
         group.pushFieldValue('steps', {
           ...value,
           order: currentSteps.length + 1,
@@ -35,7 +35,7 @@ export const RecipeFormStepsSection = withFieldGroup({
 
     const handleDeleteStep = (index: number): void => {
       const currentSteps = group.getFieldValue('steps');
-      const newSteps = currentSteps.filter((_, i) => i !== index);
+      const newSteps = currentSteps?.filter((_, i) => i !== index) ?? [];
       const reorderedSteps = newSteps.map((s, i) => ({
         ...s,
         order: i + 1,
@@ -47,37 +47,34 @@ export const RecipeFormStepsSection = withFieldGroup({
       <group.AppField
         mode="array"
         name="steps"
-        validators={{
-          onChange: recipeSchema.shape.steps,
-          onBlur: recipeSchema.shape.steps,
-        }}
         children={(steps_field) => (
           <div className="flex flex-col gap-4">
             <span className="text-base-content">{title}</span>
 
             <div className="flex flex-col gap-5">
-              {steps_field.state.value.length > 0 && (
-                <div className="flex flex-col gap-2">
-                  {steps_field.state.value.map((_, index) => (
-                    <group.AppField
-                      key={index}
-                      name={`steps[${index}].description`}
-                      children={(field) => (
-                        <div className="flex items-start gap-2 rounded-md bg-base-100 p-3">
-                          <field.TextAreaField rows={undefined} />
-                          <button
-                            type="button"
-                            onClick={() => handleDeleteStep(index)}
-                            className="rounded-md p-2 text-red-600 hover:bg-red-50"
-                          >
-                            <Trash2 size={18} className="text-red-700" />
-                          </button>
-                        </div>
-                      )}
-                    />
-                  ))}
-                </div>
-              )}
+              {steps_field.state.value &&
+                steps_field.state.value.length > 0 && (
+                  <div className="flex flex-col gap-2">
+                    {steps_field.state.value.map((_, index: number) => (
+                      <group.AppField
+                        key={index}
+                        name={`steps[${index}].description`}
+                        children={(field) => (
+                          <div className="flex items-start gap-2 rounded-md bg-base-100 p-3">
+                            <field.TextAreaField rows={undefined} />
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteStep(index)}
+                              className="rounded-md p-2 text-red-600 hover:bg-red-50"
+                            >
+                              <Trash2 size={18} className="text-red-700" />
+                            </button>
+                          </div>
+                        )}
+                      />
+                    ))}
+                  </div>
+                )}
 
               <form.AppField
                 name="description"

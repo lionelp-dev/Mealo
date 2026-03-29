@@ -1,4 +1,4 @@
-import { PaginatedCollection } from '@/app/entities/';
+import { PaginatedCollection } from '@/types';
 import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';
 

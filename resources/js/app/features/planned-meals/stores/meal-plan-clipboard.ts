@@ -1,4 +1,4 @@
-import { DayPlannedMeals } from '@/app/entities/planned-meal/types';
+import { DayPlannedMeals } from '@/types';
 import { create } from 'zustand';
 
 export interface MealPlanClipboardState {

@@ -1,6 +1,6 @@
 import { useMealPlanClipboardStore } from '../stores/meal-plan-clipboard';
 import { useMealPlanActions } from './use-meal-plan-actions';
-import { DayPlannedMeals } from '@/app/entities/planned-meal/types';
+import { DayPlannedMeals } from '@/types';
 import { DateTime } from 'luxon';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';

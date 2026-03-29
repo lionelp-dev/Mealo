@@ -9,17 +9,18 @@ use App\Actions\Recipes\SearchIngredientsAction;
 use App\Actions\Recipes\SearchTagsAction;
 use App\Actions\Recipes\StoreRecipeAction;
 use App\Actions\Recipes\UpdateRecipeAction;
-use App\Data\Recipe\Entities\MealTimeData;
-use App\Data\Recipe\Entities\TagData;
-use App\Data\Recipe\Requests\DeleteRecipesRequestData;
-use App\Data\Recipe\Requests\FilterRecipesRequestData;
-use App\Data\Recipe\Requests\GenerateRecipeRequestData;
-use App\Data\Recipe\Requests\RecipeFormRequestData;
-use App\Data\Recipe\Requests\StoreRecipeRequestData;
-use App\Data\Recipe\Requests\UpdateRecipeRequestData;
-use App\Data\Recipe\Resources\IngredientResourceData;
-use App\Data\Recipe\Resources\RecipeResourceData;
-use App\Data\Recipe\Resources\TagResourceData;
+use App\Data\Requests\Recipe\DeleteRecipesRequestData;
+use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
+use App\Data\Requests\Recipe\Entities\TagRequestData;
+use App\Data\Requests\Recipe\FilterRecipesRequestData;
+use App\Data\Requests\Recipe\GenerateRecipeRequestData;
+use App\Data\Requests\Recipe\RecipeFormRequestData;
+use App\Data\Requests\Recipe\StoreRecipeRequestData;
+use App\Data\Requests\Recipe\UpdateRecipeRequestData;
+use App\Data\Resources\Recipe\Entities\IngredientResourceData;
+use App\Data\Resources\Recipe\Entities\MealTimeResourceData;
+use App\Data\Resources\Recipe\Entities\RecipeResourceData;
+use App\Data\Resources\Recipe\Entities\TagResourceData;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
@@ -53,7 +54,7 @@ class RecipeController extends Controller
 
         return Inertia::render('recipe/index', [
             'recipes' => Inertia::scroll(RecipeResourceData::collect($filteredRecipes->paginate(15))),
-            'tags' => TagData::collect($tags),
+            'tags' => TagRequestData::collect($tags),
         ]);
     }
 
@@ -77,12 +78,30 @@ class RecipeController extends Controller
         return Inertia::render(
             'recipe/create',
             [
-                'meal_times' => MealTimeData::collect(MealTime::all()),
+                'meal_times' => MealTimeResourceData::collect(MealTime::all()),
                 'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
                 'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
                 'show_generate_recipe_with_ai_modal' => $formQuery->show_generate_recipe_with_ai_modal ?? false,
             ]
         );
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(
+        Request $request,
+        StoreRecipeRequestData $recipeData,
+        StoreRecipeAction $storeRecipeAction
+    ): RedirectResponse {
+        Gate::authorize('create', Recipe::class);
+
+        /** @var User $user */
+        $user = $request->user();
+
+        $recipe = $storeRecipeAction->execute($user, $recipeData);
+
+        return to_route('recipes.show', ['recipe' => $recipe->id])->with('success', 'Recipe successfully created');
     }
 
     /**
@@ -113,7 +132,7 @@ class RecipeController extends Controller
             return Inertia::render(
                 'recipe/create',
                 [
-                    'meal_times' => MealTimeData::collect(MealTime::all()),
+                    'meal_times' => MealTimeRequestData::collect(MealTime::all()),
                     'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
                     'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
                     'should_open_ai_modal' => false,
@@ -126,24 +145,6 @@ class RecipeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(
-        Request $request,
-        StoreRecipeRequestData $recipeData,
-        StoreRecipeAction $storeRecipeAction
-    ): RedirectResponse {
-        Gate::authorize('create', Recipe::class);
-
-        /** @var User $user */
-        $user = $request->user();
-
-        $storeRecipeAction->execute($user, $recipeData);
-
-        return to_route('recipes.index')->with('success', 'Recipe successfully created');
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Recipe $recipe): Response
@@ -153,7 +154,7 @@ class RecipeController extends Controller
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         return Inertia::render('recipe/show', [
-            'recipe' => RecipeResourceData::from($recipe),
+            'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
         ]);
     }
 
@@ -178,8 +179,8 @@ class RecipeController extends Controller
         $tags = $searchTags($user, $formQuery->tags_search);
 
         return Inertia::render('recipe/edit', [
-            'meal_times' => MealTimeData::collect(MealTime::all()),
-            'recipe' => RecipeResourceData::from($recipe),
+            'meal_times' => MealTimeRequestData::collect(MealTime::all()),
+            'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
             'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
             'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
         ]);
@@ -233,7 +234,7 @@ class RecipeController extends Controller
         /* @var User $user */
         $user = $request->user();
 
-        if ($user && $user->id !== $recipe->user_id) {
+        if ($user && ($recipe->user_id !== $user->id)) {
             abort(403, 'Unauthorized access to this recipe image');
         }
 
@@ -248,6 +249,7 @@ class RecipeController extends Controller
         $file = Storage::disk('recipe_images')->get($recipe->image_path);
 
         $fullPath = Storage::disk('recipe_images')->path($recipe->image_path);
+
         $mimeType = mime_content_type($fullPath);
 
         return response($file, 200, [

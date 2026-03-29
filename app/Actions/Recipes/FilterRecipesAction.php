@@ -2,7 +2,7 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Requests\FilterRecipesRequestData;
+use App\Data\Requests\Recipe\FilterRecipesRequestData;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;

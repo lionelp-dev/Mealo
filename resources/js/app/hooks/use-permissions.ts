@@ -1,5 +1,5 @@
-import { SharedData } from '@/app/entities/';
-import { Workspace } from '@/app/entities/workspace/types';
+import { SharedData } from '@/types';
+import { Workspace } from '@/types';
 import { usePage } from '@inertiajs/react';
 
 export const usePermissions = () => {

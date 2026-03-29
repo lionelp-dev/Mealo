@@ -85,7 +85,7 @@ class User extends Authenticatable implements HasLocalePreference
     }
 
     /**
-     * @return BelongsToMany<Workspace>
+     * @return BelongsToMany<Workspace, $this>
      */
     public function workspaces(): BelongsToMany
     {

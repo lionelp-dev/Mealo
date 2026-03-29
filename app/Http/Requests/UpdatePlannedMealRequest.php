@@ -22,7 +22,7 @@ class UpdatePlannedMealRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'recipe_id' => ['required', 'integer', 'exists:recipes,id'],
+            'recipe_id' => ['required', 'string', 'exists:recipes,id'],
             'meal_time_id' => ['required', 'integer', 'exists:meal_times,id'],
             'planned_date' => ['required', 'date'],
             'serving_size' => ['sometimes', 'integer:strict', 'min:1', 'max:255'],

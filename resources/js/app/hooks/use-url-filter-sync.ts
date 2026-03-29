@@ -1,10 +1,11 @@
-import { Filter, Tag } from '@/app/entities/recipe/types';
+import { RecipeResource } from '../data/resources/recipe/types';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
+import { Filter } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { useEffect, useRef } from 'react';
 
 export function useUrlFilterSync() {
-  const { tags } = usePage<{ tags: Tag[] }>().props;
+  const { tags } = usePage<{ tags: RecipeResource['tags'] }>().props;
   const { addFilter, clearAllFilters } = useRecipesFiltersStore();
   const isInitialized = useRef(false);
 
@@ -52,7 +53,7 @@ export function useUrlFilterSync() {
     }
 
     tagIds.forEach((tagId: string) => {
-      const tag = tags.find((t) => t.id?.toString() === tagId);
+      const tag = tags?.find((t) => t.id?.toString() === tagId);
       if (tag) {
         filters.push({
           type: 'tag',

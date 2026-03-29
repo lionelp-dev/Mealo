@@ -4,7 +4,7 @@ namespace App\Jobs;
 
 use App\Actions\Recipes\GenerateRecipeWithAIAction;
 use App\Actions\Recipes\StoreRecipeAction;
-use App\Data\Recipe\Requests\GenerateRecipeRequestData;
+use App\Data\Requests\Recipe\GenerateRecipeRequestData;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;

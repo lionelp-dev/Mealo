@@ -1,5 +1,5 @@
 import { usePlannedMealsContextValue } from '../inertia.adapter';
-import { DayPlannedMeals } from '@/app/entities/planned-meal/types';
+import { DayPlannedMeals } from '@/types';
 import { DateTime } from 'luxon';
 import { useMemo } from 'react';
 
@@ -21,7 +21,8 @@ export function useWeekPlannedMeals() {
                 DateTime.fromISO(plannedMeal.planned_date).hasSame(date, 'day'),
               )
               .filter(
-                (plannedMeal) => plannedMeal.meal_time_id === mealTime.id,
+                (plannedMeal) =>
+                  plannedMeal.meal_time_id === Number(mealTime.id),
               ),
           }))
           .filter((slot) => slot.plannedMeals.length !== 0)

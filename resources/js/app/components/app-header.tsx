@@ -37,7 +37,7 @@ import {
   type BreadcrumbItem,
   type NavItem,
   type SharedData,
-} from '@/app/entities/';
+} from '@/types';
 import { useInitials } from '@/app/hooks/use-initials';
 import { cn } from '@/app/lib/';
 import { dashboard } from '@/routes';

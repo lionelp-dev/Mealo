@@ -1,5 +1,5 @@
-import { PageProps, PaginatedCollection } from '@/app/entities/';
-import { BetaRequest } from '@/app/entities/beta-request/types';
+import { PageProps, PaginatedCollection } from '@/types';
+import { BetaRequest } from '@/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';

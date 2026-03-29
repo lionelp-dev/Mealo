@@ -1,18 +1,19 @@
 import { useRecipesContextValue } from '../inertia.adapter';
 import { searchTags } from '../repositories/recipes.repository';
-import { tagSchema, recipeSchema } from '../schemas/recipe.schema';
 import FieldInfo from '@/app/components/ui/form-field-info';
-import { Recipe, Tag } from '@/app/entities/recipe/types';
+import { tagRequestSchema } from '@/app/data/requests/recipe/schemas/entities/tag.request.schema';
+import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
+import { TagRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { InfiniteScroll } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import { PlusIcon, X } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDebounceValue } from 'usehooks-ts';
 
-const defaultValues: Pick<Recipe, 'tags'> = {
+const defaultValues: { tags: TagRequest[] } = {
   tags: [],
 };
 
@@ -20,13 +21,12 @@ export const RecipeFormTagsSection = withFieldGroup({
   defaultValues,
   render: function Render({ group }) {
     const { t } = useTranslation();
-
     const { url, tags_search_results } = useRecipesContextValue();
 
     const form = useAppForm({
       defaultValues: { name: '' },
       validators: {
-        onSubmit: tagSchema,
+        onSubmit: tagRequestSchema,
       },
       onSubmit: ({ value }) => {
         group.pushFieldValue('tags', value);
@@ -40,18 +40,22 @@ export const RecipeFormTagsSection = withFieldGroup({
       if (debouncedValue) {
         searchTags({
           url,
-          term: debouncedValue,
+          data: {
+            tags_search: debouncedValue,
+          },
         });
       }
     }, [debouncedValue]);
+
+    const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
 
     return (
       <group.AppField
         name="tags"
         mode="array"
         validators={{
-          onChange: recipeSchema.shape.tags,
-          onBlur: recipeSchema.shape.tags,
+          onChange: storeRecipeRequestSchema.shape.tags,
+          onBlur: storeRecipeRequestSchema.shape.tags,
         }}
         children={(tags_field) => (
           <div className="flex flex-col gap-4">
@@ -60,7 +64,7 @@ export const RecipeFormTagsSection = withFieldGroup({
             </span>
 
             <div className="flex flex-col gap-6">
-              <Popover.Root>
+              <Popover.Root open={isPopoverOpen} onOpenChange={setPopoverOpen}>
                 <Popover.Anchor className="flex flex-1">
                   <form.AppField
                     name="name"
@@ -68,17 +72,18 @@ export const RecipeFormTagsSection = withFieldGroup({
                       <Popover.Trigger className="flex-1">
                         <label
                           className={cn(
-                            `${tags_field.state.value.length > 0 && 'input pt-2 pr-4 pb-4 pl-3'}`,
+                            `${tags_field.state.value && tags_field.state.value.length > 0 && 'input pt-2 pr-4 pb-4 pl-3'}`,
                             'flex h-fit w-full flex-col items-start gap-4 text-left [&>div:first-of-type]:w-full',
                           )}
                         >
                           <div
-                            className={`${tags_field.state.value.length > 0 && 'py-2'}`}
+                            className={`${tags_field.state.value && tags_field.state.value.length > 0 && 'py-2'}`}
                           >
                             <field.TextField
                               className={cn(
                                 '-mb-1 w-full py-2',
-                                tags_field.state.value.length > 0 &&
+                                tags_field.state.value &&
+                                  tags_field.state.value.length > 0 &&
                                   'outline outline-base-300',
                                 !tags_field.state.meta.isValid && 'input-error',
                                 !field.state.meta.isValid && 'input-error',
@@ -90,7 +95,9 @@ export const RecipeFormTagsSection = withFieldGroup({
                                 field.handleChange(value);
                                 setSearchTerm(value);
                               }}
-                              onBlur={() => tags_field.handleBlur()}
+                              onBlur={() => {
+                                tags_field.handleBlur();
+                              }}
                               placeholder={t(
                                 'recipes.tags.namePlaceholder',
                                 'Tag name',
@@ -98,26 +105,27 @@ export const RecipeFormTagsSection = withFieldGroup({
                               autoComplete="off"
                             />
                           </div>
-                          {tags_field.state.value.length > 0 && (
-                            <div className="max-h-40 overflow-y-scroll">
-                              <div className="flex flex-wrap gap-3">
-                                {tags_field.state.value.map((tag, index) => (
-                                  <span
-                                    key={index}
-                                    className="badge flex cursor-pointer content-center badge-secondary"
-                                    onClick={() =>
-                                      tags_field.removeValue(index)
-                                    }
-                                  >
-                                    <span className="text-secondary-content">
-                                      {tag.name}
+                          {tags_field.state.value &&
+                            tags_field.state.value.length > 0 && (
+                              <div className="max-h-40 overflow-y-scroll">
+                                <div className="flex flex-wrap gap-3">
+                                  {tags_field.state.value?.map((tag, index) => (
+                                    <span
+                                      key={index}
+                                      className="badge flex cursor-pointer content-center badge-secondary"
+                                      onClick={() =>
+                                        tags_field.removeValue(index)
+                                      }
+                                    >
+                                      <span className="text-secondary-content">
+                                        {tag.name}
+                                      </span>
+                                      <X size={14} />
                                     </span>
-                                    <X size={14} />
-                                  </span>
-                                ))}
+                                  ))}
+                                </div>
                               </div>
-                            </div>
-                          )}
+                            )}
                         </label>
                       </Popover.Trigger>
                     )}
@@ -125,27 +133,33 @@ export const RecipeFormTagsSection = withFieldGroup({
                 </Popover.Anchor>
                 <Popover.Portal>
                   <Popover.Content
-                    className=""
                     side="top"
                     sideOffset={8}
                     align="start"
                     onOpenAutoFocus={(e) => e.preventDefault()}
+                    onCloseAutoFocus={(e) => e.preventDefault()}
+                    onMouseDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                    }}
                   >
                     {tags_search_results?.data &&
                       tags_search_results.data.length > 0 && (
                         <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-1">
-                          <div className="h-[10lh] overflow-y-auto">
+                          <div className="h-fit max-h-[10lh] overflow-y-auto">
                             <InfiniteScroll
                               data="tags_search_results"
                               preserveUrl
                             >
-                              {tags_search_results.data.map((tag: Tag) => (
+                              {tags_search_results.data.map((tag) => (
                                 <div
                                   key={tag.id}
                                   className="flex cursor-pointer items-center justify-between rounded px-4 py-2 hover:bg-base-300"
-                                  onClick={() =>
-                                    form.setFieldValue('name', tag.name)
-                                  }
+                                  onMouseDown={(e) => e.preventDefault()}
+                                  onClick={() => {
+                                    form.setFieldValue('name', tag.name);
+                                    setPopoverOpen(false);
+                                  }}
                                 >
                                   <span className="font-medium">
                                     {tag.name}
@@ -171,6 +185,7 @@ export const RecipeFormTagsSection = withFieldGroup({
                       e.preventDefault();
                       form.handleSubmit();
                     }}
+                    onMouseDown={(e) => e.preventDefault()}
                   >
                     {t('recipes.tags.addButton', 'Add tag')}
                     <PlusIcon className="h-5 shrink-0 pt-[2px]" />

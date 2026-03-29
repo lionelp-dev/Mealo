@@ -6,7 +6,7 @@ import {
   SidebarMenuItem,
   SidebarSeparator,
 } from '@/app/components/ui/sidebar';
-import { Workspace, WorkspaceData } from '@/app/entities/workspace/types';
+import { Workspace, WorkspaceData } from '@/types';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspacesRoute from '@/routes/workspaces';
 import { Link, usePage } from '@inertiajs/react';

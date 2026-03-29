@@ -2,7 +2,7 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Entities\TagData;
+use App\Data\Requests\Recipe\Entities\TagRequestData;
 use App\Models\Recipe;
 use App\Models\Tag;
 
@@ -11,7 +11,7 @@ class SyncRecipeTagsAction
     /**
      * Sync tags for a recipe.
      *
-     * @param  TagData[]  $tagsData
+     * @param  array<TagRequestData>  $tagsData
      */
     public function __invoke(Recipe $recipe, array $tagsData): void
     {
@@ -20,7 +20,7 @@ class SyncRecipeTagsAction
         }
 
         $tagIds = collect($tagsData)
-            ->map(function (TagData $tagData) use ($recipe) {
+            ->map(function (TagRequestData $tagData) use ($recipe): int {
                 $tag = Tag::query()->firstOrCreate([
                     'user_id' => $recipe->user->id,
                     'name' => $tagData->name,

@@ -12,7 +12,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/app/components/ui/sidebar';
-import { type NavItem } from '@/app/entities/';
+import { type NavItem } from '@/types';
 import { dashboard } from '@/routes';
 import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';

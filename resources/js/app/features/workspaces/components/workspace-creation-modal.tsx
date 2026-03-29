@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/app/components/ui/dialog';
-import { Workspace } from '@/app/entities/workspace/types';
+import { Workspace } from '@/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { useStore } from '@tanstack/react-form';

@@ -1,6 +1,6 @@
 import MealPlanEmptySlot from './meal-plan-empty-slot';
 import MealPlanMealCard from './meal-plan-meal-card';
-import { DayPlannedMeals } from '@/app/entities/planned-meal/types';
+import { DayPlannedMeals } from '@/types';
 import { ScrollArea } from '@radix-ui/themes';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';

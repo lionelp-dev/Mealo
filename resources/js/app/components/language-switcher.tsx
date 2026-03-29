@@ -4,7 +4,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { type SharedData } from '@/app/entities/';
+import { type SharedData } from '@/types';
 import { cn } from '@/app/lib/';
 import { router, usePage } from '@inertiajs/react';
 import { ChevronDown, Languages } from 'lucide-react';

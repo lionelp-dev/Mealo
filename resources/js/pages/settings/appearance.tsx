@@ -1,6 +1,6 @@
 import AppearanceTabs from '@/app/components/appearance-tabs';
 import HeadingSmall from '@/app/components/heading-small';
-import { type BreadcrumbItem } from '@/app/entities/';
+import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';
 import { edit as editAppearance } from '@/routes/appearance';

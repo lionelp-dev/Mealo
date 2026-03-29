@@ -1,6 +1,6 @@
 import Heading from '@/app/components/heading';
 import { Separator } from '@/app/components/ui/separator';
-import { type NavItem } from '@/app/entities/';
+import { type NavItem } from '@/types';
 import { cn } from '@/app/lib/';
 import { edit as editAppearance } from '@/routes/appearance';
 import language from '@/routes/language';

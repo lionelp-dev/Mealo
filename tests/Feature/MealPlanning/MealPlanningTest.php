@@ -51,7 +51,7 @@ test('user can plan a meal successfully', function () {
     $plannedDate = now()->addDay()->format('Y-m-d');
 
     $plannedMeal = [
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'serving_size' => 1,
@@ -65,7 +65,7 @@ test('user can plan a meal successfully', function () {
 
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
     ]);
 });
@@ -110,7 +110,7 @@ test('user can create planned meal with other users recipe in their workspace', 
     $mealTime = \App\Models\MealTime::first();
 
     $plannedMeal = [
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'serving_size' => 1,
@@ -123,7 +123,7 @@ test('user can create planned meal with other users recipe in their workspace', 
     $response->assertSessionHas('success');
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
     ]);
 });
 
@@ -137,13 +137,13 @@ test('user can update a planned meal successfully', function () {
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $originalRecipe->resource->id,
+        'recipe_id' => $originalRecipe->id,
         'meal_time_id' => $originalMealTime->id,
         'planned_date' => $originalDate,
     ]);
 
     $updateData = [
-        'recipe_id' => $newRecipe->resource->id,
+        'recipe_id' => $newRecipe->id,
         'meal_time_id' => $newMealTime->id,
         'planned_date' => $newDate,
         'serving_size' => 1,
@@ -158,7 +158,7 @@ test('user can update a planned meal successfully', function () {
     // Verify all fields were updated correctly
     $plannedMeal->refresh();
     expect($plannedMeal->user_id)->toBe($this->user->id);
-    expect($plannedMeal->recipe_id)->toBe($newRecipe->resource->id);
+    expect($plannedMeal->recipe_id)->toBe($newRecipe->id);
     expect($plannedMeal->meal_time_id)->toBe($newMealTime->id);
     expect($plannedMeal->planned_date->format('Y-m-d'))->toBe($newDate);
 });
@@ -171,13 +171,13 @@ test('user cannot update planned meal with other users recipe', function () {
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $ownRecipe->resource->id,
+        'recipe_id' => $ownRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
     ]);
 
     $updateData = [
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -191,13 +191,13 @@ test('user cannot update planned meal with other users recipe', function () {
     // Original recipe should remain unchanged
     $this->assertDatabaseHas('planned_meals', [
         'id' => $plannedMeal->id,
-        'recipe_id' => $ownRecipe->resource->id,
+        'recipe_id' => $ownRecipe->id,
     ]);
 
     // New recipe should not be assigned
     $this->assertDatabaseMissing('planned_meals', [
         'id' => $plannedMeal->id,
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
     ]);
 });
 
@@ -209,7 +209,7 @@ test('user can delete a planned meal successfully', function () {
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $workspace->id,
@@ -239,13 +239,13 @@ test('user can store multiple planned meals successfully', function () {
     $plannedMealsData = [
         'planned_meals' => [
             [
-                'recipe_id' => $recipe1->resource->id,
+                'recipe_id' => $recipe1->id,
                 'meal_time_id' => $mealTime1->id,
                 'planned_date' => now()->addDay()->format('Y-m-d'),
                 'serving_size' => 1,
             ],
             [
-                'recipe_id' => $recipe2->resource->id,
+                'recipe_id' => $recipe2->id,
                 'meal_time_id' => $mealTime2->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
                 'serving_size' => 1,
@@ -262,13 +262,13 @@ test('user can store multiple planned meals successfully', function () {
     // Both planned meals should be created
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime1->id,
     ]);
 
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime2->id,
     ]);
 });
@@ -321,13 +321,13 @@ test('user can store multiple planned meals including other users recipes', func
     $plannedMealsData = [
         'planned_meals' => [
             [
-                'recipe_id' => $ownRecipe->resource->id,
+                'recipe_id' => $ownRecipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->addDay()->format('Y-m-d'),
                 'serving_size' => 1,
             ],
             [
-                'recipe_id' => $otherRecipe->resource->id, // Not owned by user but should work
+                'recipe_id' => $otherRecipe->id, // Not owned by user but should work
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->addDays(2)->format('Y-m-d'),
                 'serving_size' => 1,
@@ -342,11 +342,11 @@ test('user can store multiple planned meals including other users recipes', func
     $response->assertSessionHas('success');
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $ownRecipe->resource->id,
+        'recipe_id' => $ownRecipe->id,
     ]);
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->user->id,
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
     ]);
 });
 
@@ -358,7 +358,7 @@ test('user can delete multiple planned meals successfully', function () {
 
     $plannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'workspace_id' => $workspace->id,
@@ -366,7 +366,7 @@ test('user can delete multiple planned meals successfully', function () {
 
     $plannedMeal2 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $workspace->id,
@@ -398,7 +398,7 @@ test('user cannot access other users planned meals', function () {
 
     $otherUserPlannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
     ]);
@@ -409,7 +409,7 @@ test('user cannot access other users planned meals', function () {
 
     // Should not be able to update other user's planned meal
     $response = $this->actingAs($this->user)->put(route('planned-meals.update', $otherUserPlannedMeal), [
-        'recipe_id' => $otherRecipe->resource->id,
+        'recipe_id' => $otherRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -442,7 +442,7 @@ test('user cannot delete other users planned meals in bulk operation', function 
     // Create planned meals for other user (in their workspace)
     $otherUserPlannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $otherRecipe1->resource->id,
+        'recipe_id' => $otherRecipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'workspace_id' => $otherWorkspace->id,
@@ -450,7 +450,7 @@ test('user cannot delete other users planned meals in bulk operation', function 
 
     $otherUserPlannedMeal2 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $otherRecipe2->resource->id,
+        'recipe_id' => $otherRecipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $otherWorkspace->id,
@@ -459,7 +459,7 @@ test('user cannot delete other users planned meals in bulk operation', function 
     // Create own planned meal (in user's workspace)
     $ownPlannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $ownRecipe->resource->id,
+        'recipe_id' => $ownRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDays(3)->format('Y-m-d'),
         'workspace_id' => $userWorkspace->id,

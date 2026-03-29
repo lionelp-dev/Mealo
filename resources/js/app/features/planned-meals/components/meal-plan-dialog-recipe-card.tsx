@@ -1,12 +1,12 @@
 import MealPlanningPopover from './meal-planning-popover';
-import { Recipe } from '@/app/entities/recipe/types';
+import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { useMultiSelectRecipe } from '@/app/hooks/use-multi-select-recipe';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type RecipeCardProps = {
-  recipe: Recipe;
+  recipe: RecipeResource;
 };
 
 export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
@@ -67,7 +67,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
 
         <div className="absolute right-0 bottom-2 left-0 flex max-h-[1.3lh] flex-wrap justify-start gap-2 overflow-hidden p-2">
           <div className="flex max-h-[1lh] flex-wrap gap-3">
-            {recipe.meal_times.map((meal_time) => (
+            {recipe.meal_times?.map((meal_time) => (
               <span
                 key={meal_time.id}
                 className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
@@ -78,7 +78,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                 )}
               </span>
             ))}
-            {recipe.tags.map((tag) => (
+            {recipe.tags?.map((tag) => (
               <span
                 key={tag.id}
                 className={`badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content ${tag.id && isFilterActive({ type: 'tag', value: tag.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}

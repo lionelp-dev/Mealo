@@ -1,4 +1,4 @@
-import { BetaRequest } from '@/app/entities/beta-request/types';
+import { BetaRequest } from '@/types';
 import { Clock, Mail, CheckCircle, XCircle, AlertCircle } from 'lucide-react';
 
 export function StatusBadge({ status }: { status: BetaRequest['status'] }) {

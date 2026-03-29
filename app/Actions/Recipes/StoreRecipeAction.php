@@ -2,7 +2,7 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Requests\StoreRecipeRequestData;
+use App\Data\Requests\Recipe\StoreRecipeRequestData;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +22,11 @@ class StoreRecipeAction
      */
     public function execute(User $user, StoreRecipeRequestData $recipeData): Recipe
     {
-        $recipe = DB::transaction(function () use ($user, $recipeData): Recipe {
+        return DB::transaction(function () use ($user, $recipeData): Recipe {
 
             $recipe = Recipe::query()->create([
                 'user_id' => $user->id,
-                ...$recipeData->transform(),
+                ...$recipeData->except('image')->transform(),
             ]);
 
             ($this->syncIngredients)($recipe, $recipeData->ingredients);
@@ -39,11 +39,11 @@ class StoreRecipeAction
 
             if ($recipeData->image) {
                 ($this->uploadImage)($recipe, $recipeData->image);
+                $recipe->refresh();
             }
 
             return $recipe;
         });
 
-        return $recipe;
     }
 }

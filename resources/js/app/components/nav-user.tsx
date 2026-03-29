@@ -11,7 +11,7 @@ import {
 } from '@/app/components/ui/sidebar';
 import { UserInfo } from '@/app/components/user-info';
 import { UserMenuContent } from '@/app/components/user-menu-content';
-import { type SharedData } from '@/app/entities/';
+import { type SharedData } from '@/types';
 import { useIsMobile } from '@/app/hooks/use-mobile';
 import { usePage } from '@inertiajs/react';
 import { ChevronsUpDown } from 'lucide-react';

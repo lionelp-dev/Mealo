@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { DayPlannedMeals } from '@/app/entities/planned-meal/types';
+import { DayPlannedMeals } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import {

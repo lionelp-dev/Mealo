@@ -5,7 +5,6 @@ import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-s
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
-import { Recipe } from '@/app/entities/recipe/types';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -115,10 +114,10 @@ export function IndexRecipesView() {
           )}
 
           {recipes.data.length > 0 && (
-            <div className="mx-auto min-h-0 flex-1 overflow-y-auto pr-6 pl-7.5">
+            <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto pr-6 pl-7.5">
               <InfiniteScroll data="recipes">
                 <div className="grid grid-cols-[repeat(auto-fill,minmax(min(22rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
-                  {recipes.data.map((recipe: Recipe) => (
+                  {recipes.data.map((recipe) => (
                     <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}
                 </div>

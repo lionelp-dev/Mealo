@@ -1,4 +1,4 @@
-import { BetaRequest } from '@/app/entities/beta-request/types';
+import { BetaRequest } from '@/types';
 import { approve, cleanupAll, reject, resend } from '@/routes/admin/beta';
 import { router } from '@inertiajs/react';
 

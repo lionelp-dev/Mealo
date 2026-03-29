@@ -38,10 +38,10 @@ test('user can generate meal plan successfully', function () {
     $dinnerMealTime = \App\Models\MealTime::where('name', 'diner')->first();
     $snackMealTime = \App\Models\MealTime::where('name', 'snack')->first();
 
-    $breakfastRecipe->resource->mealTimes()->attach($breakfastMealTime->id);
-    $lunchRecipe->resource->mealTimes()->attach($lunchMealTime->id);
-    $dinnerRecipe->resource->mealTimes()->attach($dinnerMealTime->id);
-    $snackRecipe->resource->mealTimes()->attach($snackMealTime->id);
+    $breakfastRecipe->mealTimes()->attach($breakfastMealTime->id);
+    $lunchRecipe->mealTimes()->attach($lunchMealTime->id);
+    $dinnerRecipe->mealTimes()->attach($dinnerMealTime->id);
+    $snackRecipe->mealTimes()->attach($snackMealTime->id);
 
     $startDate = now()->format('Y-m-d');
     $days = 2;
@@ -49,14 +49,14 @@ test('user can generate meal plan successfully', function () {
 
     // Mock OpenAI response with 8 meals (2 days × 4 meal times)
     OpenAITestHelper::mockSuccessfulMealPlanGeneration([
-        ['recipe_id' => $breakfastRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $breakfastMealTime->id],
-        ['recipe_id' => $lunchRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $lunchMealTime->id],
-        ['recipe_id' => $dinnerRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $dinnerMealTime->id],
-        ['recipe_id' => $snackRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $snackMealTime->id],
-        ['recipe_id' => $breakfastRecipe->resource->id, 'planned_date' => $endDate, 'meal_time_id' => $breakfastMealTime->id],
-        ['recipe_id' => $lunchRecipe->resource->id, 'planned_date' => $endDate, 'meal_time_id' => $lunchMealTime->id],
-        ['recipe_id' => $dinnerRecipe->resource->id, 'planned_date' => $endDate, 'meal_time_id' => $dinnerMealTime->id],
-        ['recipe_id' => $snackRecipe->resource->id, 'planned_date' => $endDate, 'meal_time_id' => $snackMealTime->id],
+        ['recipe_id' => $breakfastRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $breakfastMealTime->id],
+        ['recipe_id' => $lunchRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $lunchMealTime->id],
+        ['recipe_id' => $dinnerRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $dinnerMealTime->id],
+        ['recipe_id' => $snackRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $snackMealTime->id],
+        ['recipe_id' => $breakfastRecipe->id, 'planned_date' => $endDate, 'meal_time_id' => $breakfastMealTime->id],
+        ['recipe_id' => $lunchRecipe->id, 'planned_date' => $endDate, 'meal_time_id' => $lunchMealTime->id],
+        ['recipe_id' => $dinnerRecipe->id, 'planned_date' => $endDate, 'meal_time_id' => $dinnerMealTime->id],
+        ['recipe_id' => $snackRecipe->id, 'planned_date' => $endDate, 'meal_time_id' => $snackMealTime->id],
     ]);
 
     $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
@@ -148,7 +148,7 @@ test('clears existing planned meals in date range before generating', function (
     // Create existing planned meals in the range we'll generate (15th and 16th)
     $existingMeal1 = PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $generationStartDate->format('Y-m-d'), // 15th
         'workspace_id' => $personalWorkspace->id,
@@ -156,7 +156,7 @@ test('clears existing planned meals in date range before generating', function (
 
     $existingMeal2 = PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $generationStartDate->copy()->addDay()->format('Y-m-d'), // 16th
         'workspace_id' => $personalWorkspace->id,
@@ -165,7 +165,7 @@ test('clears existing planned meals in date range before generating', function (
     // Create meal outside the range (should not be deleted) - 20th
     $mealOutsideRange = PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $generationStartDate->copy()->addDays(5)->format('Y-m-d'), // 20th
         'workspace_id' => $personalWorkspace->id,
@@ -176,8 +176,8 @@ test('clears existing planned meals in date range before generating', function (
 
     // Mock OpenAI response for the date range
     OpenAITestHelper::mockSuccessfulMealPlanGeneration([
-        ['recipe_id' => $recipe->resource->id, 'planned_date' => $generationStartDate->format('Y-m-d'), 'meal_time_id' => $mealTime->id],
-        ['recipe_id' => $recipe->resource->id, 'planned_date' => $generationStartDate->copy()->addDay()->format('Y-m-d'), 'meal_time_id' => $mealTime->id],
+        ['recipe_id' => $recipe->id, 'planned_date' => $generationStartDate->format('Y-m-d'), 'meal_time_id' => $mealTime->id],
+        ['recipe_id' => $recipe->id, 'planned_date' => $generationStartDate->copy()->addDay()->format('Y-m-d'), 'meal_time_id' => $mealTime->id],
     ]);
 
     // Generate meal plan
@@ -207,14 +207,14 @@ test('generates shopping list after creating planned meals', function () {
     $recipe = createRecipeResource($this->user->id);
 
     // Ensure recipe has ingredients
-    expect($recipe->resource->ingredients->count())->toBeGreaterThan(0);
+    expect($recipe->ingredients->count())->toBeGreaterThan(0);
 
     $mealTime = \App\Models\MealTime::first();
     $startDate = now()->startOfWeek()->format('Y-m-d');
 
     // Mock OpenAI response
     OpenAITestHelper::mockSuccessfulMealPlanGeneration([
-        ['recipe_id' => $recipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
+        ['recipe_id' => $recipe->id, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
     ]);
 
     // Generate meal plan
@@ -253,7 +253,7 @@ test('user can only generate meals with their own recipes', function () {
 
     // Mock OpenAI response using only the user's recipe
     OpenAITestHelper::mockSuccessfulMealPlanGeneration([
-        ['recipe_id' => $userRecipe->resource->id, 'planned_date' => $mealDate, 'meal_time_id' => 1],
+        ['recipe_id' => $userRecipe->id, 'planned_date' => $mealDate, 'meal_time_id' => 1],
     ]);
 
     // Generate meal plan
@@ -289,19 +289,19 @@ test('generation works with minimum number of recipes', function () {
     $dinnerMealTime = \App\Models\MealTime::where('name', 'diner')->first();
     $snackMealTime = \App\Models\MealTime::where('name', 'snack')->first();
 
-    $breakfastRecipe->resource->mealTimes()->attach($breakfastMealTime->id);
-    $lunchRecipe->resource->mealTimes()->attach($lunchMealTime->id);
-    $dinnerRecipe->resource->mealTimes()->attach($dinnerMealTime->id);
-    $snackRecipe->resource->mealTimes()->attach($snackMealTime->id);
+    $breakfastRecipe->mealTimes()->attach($breakfastMealTime->id);
+    $lunchRecipe->mealTimes()->attach($lunchMealTime->id);
+    $dinnerRecipe->mealTimes()->attach($dinnerMealTime->id);
+    $snackRecipe->mealTimes()->attach($snackMealTime->id);
 
     $startDate = now()->format('Y-m-d');
 
     // Mock OpenAI response for 1 day with 4 meal times
     OpenAITestHelper::mockSuccessfulMealPlanGeneration([
-        ['recipe_id' => $breakfastRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $breakfastMealTime->id],
-        ['recipe_id' => $lunchRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $lunchMealTime->id],
-        ['recipe_id' => $dinnerRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $dinnerMealTime->id],
-        ['recipe_id' => $snackRecipe->resource->id, 'planned_date' => $startDate, 'meal_time_id' => $snackMealTime->id],
+        ['recipe_id' => $breakfastRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $breakfastMealTime->id],
+        ['recipe_id' => $lunchRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $lunchMealTime->id],
+        ['recipe_id' => $dinnerRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $dinnerMealTime->id],
+        ['recipe_id' => $snackRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $snackMealTime->id],
     ]);
 
     // Generate meal plan

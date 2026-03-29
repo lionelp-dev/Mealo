@@ -1,44 +1,44 @@
 import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredients-section';
-import { MealTimeSelectField } from '../components/recipe-form-meal-time-select-field';
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { updateRecipe, viewRecipe } from '../repositories/recipes.repository';
-import { recipeSchema } from '../schemas/recipe.schema';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
+import { updateRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/update-recipe.request.schema';
+import { UpdateRecipeRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { Head } from '@inertiajs/react';
 import { useTranslation } from 'react-i18next';
-import z from 'zod';
 
 export function EditRecipesView() {
   const { t } = useTranslation();
 
   const { recipe, meal_times } = useRecipesContextValue();
 
-  const defaultValues: z.infer<typeof recipeSchema> = {
-    name: recipe.data.name ?? '',
-    description: recipe.data.description ?? '',
-    serving_size: recipe.data.serving_size ?? 1,
-    preparation_time: recipe.data.preparation_time ?? 0,
-    cooking_time: recipe.data.cooking_time ?? 0,
-    ingredients: recipe.data.ingredients ?? [],
-    steps: recipe.data.steps ?? [],
-    tags: recipe.data.tags ?? [],
-    meal_times: recipe.data.meal_times ?? [],
-    image: recipe.data.image ?? null,
+  const defaultValues: UpdateRecipeRequest = {
+    id: recipe.id,
+    name: recipe.name ?? '',
+    description: recipe.description ?? '',
+    serving_size: recipe.serving_size ?? 1,
+    preparation_time: recipe.preparation_time ?? 0,
+    cooking_time: recipe.cooking_time ?? 0,
+    ingredients: recipe.ingredients ?? [],
+    steps: recipe.steps ?? [],
+    tags: recipe.tags ?? [],
+    meal_times: recipe.meal_times ?? [],
+    image: null,
   };
 
   const form = useAppForm({
     defaultValues,
     validators: {
-      onChange: recipeSchema,
+      onChange: updateRecipeRequestSchema,
     },
     onSubmit: async ({ value }) => {
-      return await updateRecipe(value, recipe.data.id);
+      return await updateRecipe(value, recipe.id);
     },
   });
 
@@ -64,7 +64,7 @@ export function EditRecipesView() {
             <button
               type="reset"
               className="btn"
-              onClick={() => viewRecipe(recipe.data.id)}
+              onClick={() => viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>
@@ -118,15 +118,22 @@ export function EditRecipesView() {
               name="meal_times"
               mode="array"
               validators={{
-                onChange: recipeSchema.shape.meal_times,
-                onBlur: recipeSchema.shape.meal_times,
+                onChange: updateRecipeRequestSchema.shape.meal_times,
+                onBlur: updateRecipeRequestSchema.shape.meal_times,
               }}
-              children={(field) => (
-                <MealTimeSelectField
-                  field={field}
-                  mealTimes={meal_times}
-                />
-              )}
+              children={(field) => {
+                const options = meal_times.map((mt) => ({
+                  value: mt.id,
+                  label: mt.name,
+                }));
+
+                return (
+                  <field.MultiSelectField
+                    options={options}
+                    label={t('recipes.form.mealTimesTitle', 'Meal times')}
+                  />
+                );
+              }}
             />
 
             <div className="grid grid-flow-col gap-5">
@@ -183,7 +190,7 @@ export function EditRecipesView() {
                 <ImageUpload
                   value={field.state.value}
                   onChange={field.handleChange}
-                  currentImageUrl={recipe.data.image_url}
+                  currentImageUrl={recipe.image_url}
                   className="min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4"
                 />
               )}
@@ -212,7 +219,7 @@ export function EditRecipesView() {
             <button
               type="reset"
               className="btn"
-              onClick={() => viewRecipe(recipe.data.id)}
+              onClick={() => viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>

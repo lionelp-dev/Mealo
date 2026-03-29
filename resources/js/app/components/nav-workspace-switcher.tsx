@@ -1,4 +1,4 @@
-import { WorkspaceData } from '@/app/entities/workspace/types';
+import { WorkspaceData } from '@/types';
 import WorkspaceCreationModal from '@/app/features/workspaces/components/workspace-creation-modal';
 import { WorkspaceEditModal } from '@/app/features/workspaces/components/workspace-edit-modal';
 import { WorkspaceInvitationModal } from '@/app/features/workspaces/components/workspace-invitation-modal';

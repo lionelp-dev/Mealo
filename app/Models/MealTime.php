@@ -23,7 +23,7 @@ class MealTime extends Model
     ];
 
     /**
-     * @return BelongsToMany<Recipe>
+     * @return BelongsToMany<Recipe, $this, RecipeMealTime>
      */
     public function recipes(): BelongsToMany
     {

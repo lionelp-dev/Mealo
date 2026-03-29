@@ -1,4 +1,4 @@
-import { PlannedMealRecipeIngredient } from '@/app/entities/shopping-list/types';
+import { PlannedMealRecipeIngredient } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import { capitalize } from '@/app/utils/';

@@ -1,4 +1,4 @@
-import { Filter, FilterSection, Option } from '@/app/entities/recipe/types';
+import { Filter, FilterSection, Option } from '@/types';
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';

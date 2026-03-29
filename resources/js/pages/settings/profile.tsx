@@ -4,7 +4,7 @@ import HeadingSmall from '@/app/components/heading-small';
 import InputError from '@/app/components/input-error';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
-import { type SharedData } from '@/app/entities/';
+import { type SharedData } from '@/types';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';
 import { send } from '@/routes/verification';

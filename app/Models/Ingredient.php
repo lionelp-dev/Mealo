@@ -2,18 +2,22 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
+ * @property string $id
  * @property RecipeIngredient $pivot
  */
 class Ingredient extends Model
 {
     /** @use HasFactory<\Database\Factories\IngredientFactory> */
     use HasFactory;
+
+    use HasUuids;
 
     protected $fillable = [
         'name',
@@ -29,7 +33,7 @@ class Ingredient extends Model
     }
 
     /**
-     * @return BelongsToMany<Recipe, $this>
+     * @return BelongsToMany<Recipe, $this, RecipeIngredient, 'pivot'>
      */
     public function recipes(): BelongsToMany
     {

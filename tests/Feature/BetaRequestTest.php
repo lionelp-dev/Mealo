@@ -13,7 +13,7 @@ describe('Beta Request Submission', function () {
     });
 
     it('requires an email address', function () {
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', []);
 
         $response->assertUnprocessable()
@@ -21,7 +21,7 @@ describe('Beta Request Submission', function () {
     });
 
     it('requires a valid email format', function () {
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'invalid-email',
         ]);
@@ -31,7 +31,7 @@ describe('Beta Request Submission', function () {
     });
 
     it('rejects email longer than 255 characters', function () {
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => str_repeat('a', 250).'@test.com',
         ]);
@@ -46,7 +46,7 @@ describe('Beta Request Submission', function () {
             'status' => 'pending',
         ]);
 
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'test@example.com',
         ]);
@@ -60,7 +60,7 @@ describe('Beta Request Submission', function () {
             'email' => 'test@example.com',
         ]);
 
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'test@example.com',
         ]);
@@ -74,7 +74,7 @@ describe('Beta Request Submission', function () {
             'email' => 'test@example.com',
         ]);
 
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'test@example.com',
         ]);
@@ -88,7 +88,7 @@ describe('Beta Request Submission', function () {
             'email' => 'existing@example.com',
         ]);
 
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'existing@example.com',
         ]);
@@ -99,7 +99,7 @@ describe('Beta Request Submission', function () {
 
     it('stores beta request with correct data', function () {
 
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'new@example.com',
         ]);
@@ -115,7 +115,7 @@ describe('Beta Request Submission', function () {
     });
 
     it('sends confirmation email after successful submission', function () {
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'new@example.com',
         ]);
@@ -128,7 +128,7 @@ describe('Beta Request Submission', function () {
     });
 
     it('returns success message after submission', function () {
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         $response = $this->postJson('/beta/request', [
             'email' => 'new@example.com',
         ]);
@@ -139,7 +139,7 @@ describe('Beta Request Submission', function () {
 
     it('rate limits beta request submissions', function () {
         // Make 5 successful requests (the limit)
-        /** @var \TestCase $this */
+        /** @var \Tests\TestCase $this */
         for ($i = 0; $i < 5; $i++) {
             $this->postJson('/beta/request', [
                 'email' => "test{$i}@example.com",

@@ -5,7 +5,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { PlannedMeal } from '@/app/entities/planned-meal/types';
+import { PlannedMeal } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';

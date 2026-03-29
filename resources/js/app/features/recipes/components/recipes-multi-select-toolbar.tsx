@@ -5,7 +5,6 @@ import {
   useConfirmDialog,
   ConfirmDialog,
 } from '@/app/components/confirm-dialog';
-import { Recipe } from '@/app/entities/recipe/types';
 import { useTranslation } from 'react-i18next';
 
 export function RecipesMultiSelectToolbar() {
@@ -34,7 +33,7 @@ export function RecipesMultiSelectToolbar() {
   };
 
   const handleDeleteRecipes = () => {
-    const selectedRecipes = recipes.data.filter((recipe: Recipe) =>
+    const selectedRecipes = recipes.data.filter((recipe) =>
       selectedRecipeIds.includes(recipe.id),
     );
     confirm({
@@ -58,7 +57,7 @@ export function RecipesMultiSelectToolbar() {
           }),
       submitBtnLabel: t('recipes.delete.confirmButton', 'Delete'),
       onConfirm: async () => {
-        await deleteRecipes(selectedRecipes);
+        await deleteRecipes({ ids: selectedRecipes.map((r) => r.id) });
         clearSelectedRecipes();
         setIsMultiSelectMode(false);
       },

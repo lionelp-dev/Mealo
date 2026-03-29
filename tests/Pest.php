@@ -1,13 +1,14 @@
 <?php
 
+namespace Tests;
+
 use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Workspace;
-use Database\Seeders\MealTimeSeeder;
-use Database\Seeders\RolesAndPermissionsSeeder;
 
 /*
+
 |--------------------------------------------------------------------------
 | Test Case
 |--------------------------------------------------------------------------
@@ -18,27 +19,14 @@ use Database\Seeders\RolesAndPermissionsSeeder;
 |
 */
 
-pest()->extend(Tests\TestCase::class)
-    ->beforeEach(function () {
-        /** @var \TestCase $this * */
-        $this->seed(RolesAndPermissionsSeeder::class);
-        $this->seed(MealTimeSeeder::class);
-    })
-    ->in('Feature');
-
-pest()->extend(Tests\TestCase::class)
+pest()->extend(TestCase::class)
     ->in('Unit');
 
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-*/
+pest()->extend(TestCase::class)
+    ->in('Integration');
 
-expect()->extend('toBeOne', function () {
-    /** @var \TestCase $this * */
-    return $this->toBe(1);
-});
+pest()->extend(TestCase::class)
+    ->in('Feature');
 
 /*
 |--------------------------------------------------------------------------

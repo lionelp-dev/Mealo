@@ -17,7 +17,7 @@ export default function GenerateRecipeWithAIModal() {
     },
     onSubmit: async ({ value }) => {
       setIsLoading(true);
-      await generateRecipe(value.prompt, {
+      await generateRecipe(value, {
         onSuccess: () => {
           setIsOpen(false);
           form.reset();

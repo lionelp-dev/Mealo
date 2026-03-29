@@ -1,6 +1,6 @@
-import { SharedData } from '@/app/entities/';
-import { ShoppingList } from '@/app/entities/shopping-list/types';
-import { WorkspaceData } from '@/app/entities/workspace/types';
+import { SharedData } from '@/types';
+import { ShoppingList } from '@/types';
+import { WorkspaceData } from '@/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren, useMemo } from 'react';

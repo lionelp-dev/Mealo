@@ -1,4 +1,4 @@
-import { PageProps } from '@/app/entities/';
+import { PageProps } from '@/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';

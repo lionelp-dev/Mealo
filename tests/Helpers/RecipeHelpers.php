@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Resources\RecipeResource;
 use App\Models\Recipe;
 
 function createRecipeResource($userId = null, $withRelations = true, $attributes = [], $tagIds = [], $mealTimeIds = [])
@@ -47,7 +46,7 @@ function createRecipeResource($userId = null, $withRelations = true, $attributes
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
     }
 
-    return new RecipeResource($recipe);
+    return $recipe;
 }
 
 function createRecipeWithCustomData($userId, $attributes = [], $tagIds = [], $mealTimeIds = [])
@@ -64,17 +63,17 @@ function createRecipeWithCustomData($userId, $attributes = [], $tagIds = [], $me
 
     $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
-    return new RecipeResource($recipe);
+    return $recipe;
 }
 
 function makeRecipeResource()
 {
-    return new RecipeResource(Recipe::factory()
+    return Recipe::factory()
         ->withMealTime(2)
         ->withIngredients(10)
         ->withSteps(10)
         ->withTags(5)
-        ->make());
+        ->make();
 }
 
 function buildRecipeUpdateData(Recipe $recipe, array $overrides = []): array

@@ -3,27 +3,25 @@
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
 use Carbon\Carbon;
-use Database\Seeders\MealTimeSeeder;
+use Inertia\Testing\AssertableInertia;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
-    // Seed roles and permissions first
+    /** @var \Tests\TestCase $this */
     $this->seed(\Database\Seeders\RolesAndPermissionsSeeder::class);
-
     $this->user = \App\Models\User::factory()->create();
-    $this->seed(MealTimeSeeder::class);
-
     // Create personal workspace for the user
     $this->workspace = \App\Models\Workspace::createPersonalWorkspace($this->user);
 });
 
 test('user shopping list screen can be rendered', function () {
+    /** @var \Tests\TestCase $this */
     $response = $this->actingAs($this->user)->get(route('shopping-lists.index'));
     $response->assertStatus(200);
 
     $response->assertInertia(
-        fn($page) => $page
+        fn (AssertableInertia $page) => $page
             ->component('shopping-lists/index')
             ->has('shopping_list_data')
             ->has('weekStart')
@@ -32,15 +30,16 @@ test('user shopping list screen can be rendered', function () {
 });
 
 test('shopping list is automatically generated when planned meal is created', function () {
+    /** @var \Tests\TestCase $this */
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
     $plannedDate = now()->startOfWeek()->addDays(1)->format('Y-m-d');
 
     // Verify recipe has ingredients
-    expect($recipe->resource->ingredients->count())->toBeGreaterThan(0);
+    expect($recipe->ingredients->count())->toBeGreaterThan(0);
 
     $plannedMeal = [
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'serving_size' => 1,
@@ -67,7 +66,7 @@ test('shopping list is automatically generated when planned meal is created', fu
 
     // Shopping list should contain ingredients from the recipe
     $totalIngredients = count($grouped['checked']) + count($grouped['unchecked']);
-    expect($totalIngredients)->toBe($recipe->resource->ingredients->count());
+    expect($totalIngredients)->toBe($recipe->ingredients->count());
 });
 
 test('shopping list ingredients are aggregated by ingredient and unit', function () {
@@ -76,8 +75,8 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
     $recipe2 = createRecipeResource($this->user->id);
 
     // Clear existing ingredients from recipes to have controlled test data
-    $recipe1->resource->ingredients()->detach();
-    $recipe2->resource->ingredients()->detach();
+    $recipe1->ingredients()->detach();
+    $recipe2->ingredients()->detach();
 
     // Manually create ingredients for consistent testing
     $ingredient1 = \App\Models\Ingredient::factory()->create([
@@ -91,22 +90,22 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
 
     // Attach same ingredient to both recipes with different quantities
     // Set serving_size = 1 for predictable calculation
-    $recipe1->resource->update(['serving_size' => 1]);
-    $recipe1->resource->ingredients()->attach($ingredient1->id, [
+    $recipe1->update(['serving_size' => 1]);
+    $recipe1->ingredients()->attach($ingredient1->id, [
         'quantity' => '2',
         'unit' => 'pieces',
     ]);
-    $recipe1->resource->ingredients()->attach($ingredient2->id, [
+    $recipe1->ingredients()->attach($ingredient2->id, [
         'quantity' => '1',
         'unit' => 'pieces',
     ]);
 
-    $recipe2->resource->update(['serving_size' => 1]);
-    $recipe2->resource->ingredients()->attach($ingredient1->id, [
+    $recipe2->update(['serving_size' => 1]);
+    $recipe2->ingredients()->attach($ingredient1->id, [
         'quantity' => '3',
         'unit' => 'pieces',
     ]);
-    $recipe2->resource->ingredients()->attach($ingredient2->id, [
+    $recipe2->ingredients()->attach($ingredient2->id, [
         'quantity' => '2',
         'unit' => 'kg',
     ]); // Different unit should not aggregate
@@ -117,7 +116,7 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
     // Create planned meals - observer will sync automatically
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -126,7 +125,7 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
 
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -163,19 +162,19 @@ test('shopping list ingredients are aggregated by ingredient and unit', function
 
     // Find tomatoes entry (aggregated)
     $tomatoesEntry = collect($uncheckedIngredients)->first(
-        fn($item) => $item['ingredient_id'] === $ingredient1->id && $item['unit'] === 'pieces'
+        fn ($item) => $item['ingredient_id'] === $ingredient1->id && $item['unit'] === 'pieces'
     );
     expect($tomatoesEntry['total_quantity'])->toBe(5.0);
 
     // Find onions in pieces (not aggregated with kg)
     $onionsPiecesEntry = collect($uncheckedIngredients)->first(
-        fn($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'pieces'
+        fn ($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'pieces'
     );
     expect($onionsPiecesEntry['total_quantity'])->toBe(1.0);
 
     // Find onions in kg (separate entry due to different unit)
     $onionsKgEntry = collect($uncheckedIngredients)->first(
-        fn($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'kg'
+        fn ($item) => $item['ingredient_id'] === $ingredient2->id && $item['unit'] === 'kg'
     );
     expect($onionsKgEntry['total_quantity'])->toBe(2.0);
 });
@@ -189,7 +188,7 @@ test('shopping list regenerates when planned meal is updated', function () {
     // Create planned meal - observer will sync shopping list automatically
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -204,7 +203,7 @@ test('shopping list regenerates when planned meal is updated', function () {
 
     // Update planned meal to use different recipe
     $updateData = [
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
     ];
@@ -218,7 +217,7 @@ test('shopping list regenerates when planned meal is updated', function () {
         ->whereDate('week_start', $weekStart->toDateString())
         ->first();
 
-    expect($updatedShoppingList->plannedMealIngredients)->toHaveCount($recipe2->resource->ingredients->count());
+    expect($updatedShoppingList->plannedMealIngredients)->toHaveCount($recipe2->ingredients->count());
 });
 
 test('shopping list regenerates when planned meal is deleted', function () {
@@ -229,7 +228,7 @@ test('shopping list regenerates when planned meal is deleted', function () {
     // Create planned meal
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -242,7 +241,7 @@ test('shopping list regenerates when planned meal is deleted', function () {
         ->whereDate('week_start', $weekStart->toDateString())
         ->first();
     expect($shoppingList)->not->toBeNull();
-    expect($shoppingList->plannedMealIngredients)->toHaveCount($recipe->resource->ingredients->count());
+    expect($shoppingList->plannedMealIngredients)->toHaveCount($recipe->ingredients->count());
 
     // Delete planned meal
     $response = $this->actingAs($this->user)
@@ -269,7 +268,7 @@ test('user can toggle ingredient checked status', function () {
     $plannedMeal = \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
         'workspace_id' => $this->workspace->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'serving_size' => 1,
@@ -334,11 +333,11 @@ test('checked status is preserved during shopping list regeneration', function (
         'name' => 'Salt',
     ]);
 
-    $recipe1->resource->ingredients()->attach($commonIngredient->id, [
+    $recipe1->ingredients()->attach($commonIngredient->id, [
         'quantity' => '1',
         'unit' => 'tsp',
     ]);
-    $recipe2->resource->ingredients()->attach($commonIngredient->id, [
+    $recipe2->ingredients()->attach($commonIngredient->id, [
         'quantity' => '2',
         'unit' => 'tsp',
     ]);
@@ -346,7 +345,7 @@ test('checked status is preserved during shopping list regeneration', function (
     // Create first planned meal
     $plannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -379,7 +378,7 @@ test('checked status is preserved during shopping list regeneration', function (
     // Add second planned meal with same ingredient
     $plannedMeal2 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -407,7 +406,7 @@ test('user cannot access other users shopping lists', function () {
     // Create planned meal for other user
     $otherUserPlannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $otherUser->getPersonalWorkspace()->id,
@@ -456,7 +455,7 @@ test('shopping list only shows current week by default', function () {
         ->withSession(['current_workspace_id' => $this->workspace->id])
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $recipe->resource->id,
+                'recipe_id' => $recipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $thisWeekDate,
                 'serving_size' => 1,
@@ -467,7 +466,7 @@ test('shopping list only shows current week by default', function () {
         ->withSession(['current_workspace_id' => $this->workspace->id])
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $recipe->resource->id,
+                'recipe_id' => $recipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $nextWeekDate,
                 'serving_size' => 1,
@@ -480,12 +479,12 @@ test('shopping list only shows current week by default', function () {
 
     $this->assertDatabaseHas('shopping_lists', [
         'user_id' => $this->user->id,
-        'week_start' => $thisWeekStart->format('Y-m-d') . ' 00:00:00',
+        'week_start' => $thisWeekStart->format('Y-m-d').' 00:00:00',
     ]);
 
     $this->assertDatabaseHas('shopping_lists', [
         'user_id' => $this->user->id,
-        'week_start' => $nextWeekStart->format('Y-m-d') . ' 00:00:00',
+        'week_start' => $nextWeekStart->format('Y-m-d').' 00:00:00',
     ]);
 
     // Default API call should return current week
@@ -509,7 +508,7 @@ test('shopping list can be filtered by week', function () {
         ->withSession(['current_workspace_id' => $this->workspace->id])
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $recipe->resource->id,
+                'recipe_id' => $recipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $nextWeekDate,
                 'serving_size' => 1,
@@ -554,7 +553,7 @@ test('user cannot toggle ingredient with invalid data', function () {
         ->withSession(['current_workspace_id' => $this->workspace->id])
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $recipe->resource->id,
+                'recipe_id' => $recipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $plannedDate,
                 'serving_size' => 1,
@@ -610,13 +609,13 @@ test('multiple planned meal operations properly regenerate shopping lists', func
     $plannedMealsData = [
         'planned_meals' => [
             [
-                'recipe_id' => $recipe1->resource->id,
+                'recipe_id' => $recipe1->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $plannedDate,
                 'serving_size' => 1,
             ],
             [
-                'recipe_id' => $recipe2->resource->id,
+                'recipe_id' => $recipe2->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $plannedDate,
                 'serving_size' => 1,
@@ -638,9 +637,9 @@ test('multiple planned meal operations properly regenerate shopping lists', func
 
     // Create planned meals for bulk delete
     $plannedMeal1 = \App\Models\PlannedMeal::where('workspace_id', $this->workspace->id)
-        ->where('recipe_id', $recipe1->resource->id)->first();
+        ->where('recipe_id', $recipe1->id)->first();
     $plannedMeal2 = \App\Models\PlannedMeal::where('workspace_id', $this->workspace->id)
-        ->where('recipe_id', $recipe2->resource->id)->first();
+        ->where('recipe_id', $recipe2->id)->first();
 
     // Test multiple delete
     $this->actingAs($this->user)
@@ -681,7 +680,7 @@ test('shopping lists are isolated by workspace', function () {
     // Create planned meal in user's personal workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -690,7 +689,7 @@ test('shopping lists are isolated by workspace', function () {
     // Create planned meal in shared workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $sharedWorkspace->id,
@@ -699,7 +698,7 @@ test('shopping lists are isolated by workspace', function () {
     // Create planned meal for other user in their personal workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $otherWorkspace->id,
@@ -728,15 +727,15 @@ test('shopping lists are isolated by workspace', function () {
 
     $personalAggregated = $shoppingListService->getAggregatedIngredients($personalShoppingList);
     $personalTotal = count($personalAggregated['checked']) + count($personalAggregated['unchecked']);
-    expect($personalTotal)->toBe($recipe1->resource->ingredients->count());
+    expect($personalTotal)->toBe($recipe1->ingredients->count());
 
     $sharedAggregated = $shoppingListService->getAggregatedIngredients($sharedShoppingList);
     $sharedTotal = count($sharedAggregated['checked']) + count($sharedAggregated['unchecked']);
-    expect($sharedTotal)->toBe($recipe1->resource->ingredients->count());
+    expect($sharedTotal)->toBe($recipe1->ingredients->count());
 
     $otherAggregated = $shoppingListService->getAggregatedIngredients($otherPersonalShoppingList);
     $otherTotal = count($otherAggregated['checked']) + count($otherAggregated['unchecked']);
-    expect($otherTotal)->toBe($recipe2->resource->ingredients->count());
+    expect($otherTotal)->toBe($recipe2->ingredients->count());
 
     // Verify we have different shopping lists per workspace
     expect($personalShoppingList->id)->not->toBe($sharedShoppingList->id);
@@ -761,7 +760,7 @@ test('user can only access shopping lists for workspaces they belong to', functi
     // Create planned meal in other user's workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $otherWorkspace->id,
@@ -818,8 +817,8 @@ test('shopping list includes only ingredients from current workspace planned mea
     $plannedDate = now()->startOfWeek()->addDays(1)->format('Y-m-d');
 
     // Clear ingredients to have controlled test data
-    $recipe1->resource->ingredients()->detach();
-    $recipe2->resource->ingredients()->detach();
+    $recipe1->ingredients()->detach();
+    $recipe2->ingredients()->detach();
 
     // Create distinct ingredients
     $ingredient1 = \App\Models\Ingredient::factory()->create([
@@ -831,11 +830,11 @@ test('shopping list includes only ingredients from current workspace planned mea
         'name' => 'Shared Ingredient',
     ]);
 
-    $recipe1->resource->ingredients()->attach($ingredient1->id, [
+    $recipe1->ingredients()->attach($ingredient1->id, [
         'quantity' => '1',
         'unit' => 'piece',
     ]);
-    $recipe2->resource->ingredients()->attach($ingredient2->id, [
+    $recipe2->ingredients()->attach($ingredient2->id, [
         'quantity' => '2',
         'unit' => 'pieces',
     ]);
@@ -843,7 +842,7 @@ test('shopping list includes only ingredients from current workspace planned mea
     // Create planned meal in user's personal workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe1->resource->id,
+        'recipe_id' => $recipe1->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -852,7 +851,7 @@ test('shopping list includes only ingredients from current workspace planned mea
     // Create planned meal in shared workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $otherUser->id,
-        'recipe_id' => $recipe2->resource->id,
+        'recipe_id' => $recipe2->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $sharedWorkspace->id,
@@ -885,7 +884,7 @@ test('shopping list controller uses current workspace context', function () {
     // Create planned meal in user's personal workspace
     \App\Models\PlannedMeal::create([
         'user_id' => $this->user->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $this->workspace->id,
@@ -920,7 +919,7 @@ test('planned meal operations update shopping lists for correct workspace', func
         ->withSession(['current_workspace_id' => $this->workspace->id])
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $recipe->resource->id,
+                'recipe_id' => $recipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => $plannedDate,
                 'serving_size' => 1,
@@ -938,7 +937,7 @@ test('planned meal operations update shopping lists for correct workspace', func
 
     expect($shoppingList)->not->toBeNull();
     expect($shoppingList->workspace_id)->toBe($this->workspace->id);
-    expect($shoppingList->plannedMealIngredients)->toHaveCount($recipe->resource->ingredients->count());
+    expect($shoppingList->plannedMealIngredients)->toHaveCount($recipe->ingredients->count());
 });
 
 test('workspace editors can toggle ingredients in shared workspace', function () {
@@ -966,7 +965,7 @@ test('workspace editors can toggle ingredients in shared workspace', function ()
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $owner->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $sharedWorkspace->id,
@@ -1025,7 +1024,7 @@ test('workspace viewers cannot toggle ingredients in shared workspace', function
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $owner->id,
-        'recipe_id' => $recipe->resource->id,
+        'recipe_id' => $recipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => $plannedDate,
         'workspace_id' => $sharedWorkspace->id,

@@ -2,15 +2,14 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Entities\IngredientData;
+use App\Data\Requests\Recipe\Entities\IngredientRequestData;
 use App\Models\Ingredient;
 use App\Models\Recipe;
-use App\Models\RecipeIngredient;
 
 class SyncRecipeIngredientsAction
 {
     /**
-     * @param  IngredientData[]  $ingredientsData
+     * @param  array<IngredientRequestData>  $ingredientsData
      */
     public function __invoke(Recipe $recipe, array $ingredientsData): void
     {
@@ -18,23 +17,24 @@ class SyncRecipeIngredientsAction
             throw new \RuntimeException('Recipe must have a user to sync ingredients');
         }
 
-        collect($ingredientsData)->each(function ($ingredientData) use ($recipe) {
+        $recipeIngredient = collect($ingredientsData)->flatMap(function (IngredientRequestData $ingredientData) use ($recipe) {
 
             $ingredient = Ingredient::query()->updateOrCreate([
+                'id' => $ingredientData->id,
                 'user_id' => $recipe->user->id,
+            ], [
                 'name' => $ingredientData->name,
-            ], []);
+            ]);
 
-            RecipeIngredient::query()->updateOrCreate(
-                [
-                    'recipe_id' => $recipe->id,
-                    'ingredient_id' => $ingredient->id,
-                ],
-                [
+            return [
+                $ingredient->id => [
                     'quantity' => $ingredientData->quantity,
                     'unit' => $ingredientData->unit,
-                ]
-            );
+                ],
+            ];
+
         });
+
+        $recipe->ingredients()->sync($recipeIngredient);
     }
 }

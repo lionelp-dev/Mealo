@@ -18,15 +18,10 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type MultiSelectMealPlanningPopoverProps = {
-  selectedRecipesId: number[];
+  selectedRecipesId: string[];
   isMultiSelectMealPlanningPopoverOpen: boolean;
   setIsMultiSelectMealPlanningPopoverOpen: (value: boolean) => void;
 } & React.ComponentProps<'button'>;
-
-type MealPlanningPopoverForm = {
-  meal_times: number[];
-  servings: number;
-};
 
 export default function MultiSelectMealPlanningPopover({
   selectedRecipesId,
@@ -43,7 +38,10 @@ export default function MultiSelectMealPlanningPopover({
   const { selectedDate, setIsOpen } = useMealPlanDialogStore();
   const { clearSelectedRecipes } = useRecipeMultiSelectStore();
 
-  const defaultValues: MealPlanningPopoverForm = {
+  const defaultValues: {
+    meal_times: number[];
+    servings: number;
+  } = {
     meal_times: [],
     servings: 1,
   };
@@ -53,14 +51,11 @@ export default function MultiSelectMealPlanningPopover({
     onSubmit: async ({ value }) => {
       if (!selectedDate) return;
 
-      const { meal_times, servings } = value as {
-        meal_times: number[];
-        servings: number;
-      };
+      const { meal_times, servings } = value;
 
       const meals = selectedRecipesId.map((recipeId) => ({
         recipe_id: recipeId,
-        meal_time_id: meal_times[0],
+        meal_time_id: Number(meal_times[0]),
         planned_date: selectedDate.toString(),
         serving_size: servings,
       }));
@@ -164,8 +159,7 @@ export default function MultiSelectMealPlanningPopover({
                 <form.AppField
                   name="meal_times"
                   mode="array"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unused-vars
-                  children={(_field: any) => (
+                  children={() => (
                     <div className="flex flex-col gap-2">
                       {mealTimes.map((mealTime) => {
                         return (

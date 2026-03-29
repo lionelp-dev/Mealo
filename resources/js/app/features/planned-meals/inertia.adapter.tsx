@@ -1,19 +1,22 @@
-import { PaginatedCollection, SharedData } from '@/app/entities/';
-import { MealTime } from '@/app/entities/meal-time/types';
-import { PlannedMeal } from '@/app/entities/planned-meal/types';
-import { Recipe, Tag } from '@/app/entities/recipe/types';
-import { WorkspaceData } from '@/app/entities/workspace/types';
+import {
+  MealTimeResource,
+  RecipeResource,
+  TagResource,
+} from '@/app/data/resources/recipe/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
+import { PaginatedCollection, SharedData } from '@/types';
+import { PlannedMeal } from '@/types';
+import { WorkspaceData } from '@/types';
 import { usePage, usePoll } from '@inertiajs/react';
 import { PropsWithChildren, useMemo } from 'react';
 
 type PageProps = SharedData & {
   weekStart: string;
-  mealTimes: Array<MealTime>;
+  mealTimes: MealTimeResource[];
   plannedMeals: Array<PlannedMeal>;
-  recipes: PaginatedCollection<Recipe>;
+  recipes: PaginatedCollection<RecipeResource>;
   workspace_data: WorkspaceData;
-  tags: Tag[];
+  tags: TagResource[];
 };
 
 export const {

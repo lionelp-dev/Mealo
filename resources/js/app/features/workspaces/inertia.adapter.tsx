@@ -1,8 +1,8 @@
-import { SharedData } from '@/app/entities/';
+import { SharedData } from '@/types';
 import {
   WorkspaceData,
   WorkspaceInvitation,
-} from '@/app/entities/workspace/types';
+} from '@/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage, usePoll } from '@inertiajs/react';
 import { PropsWithChildren, useMemo } from 'react';

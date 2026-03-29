@@ -23,7 +23,7 @@ class StorePlannedMealRequest extends FormRequest
     {
         return [
             'planned_meals' => ['required', 'array'],
-            'planned_meals.*.recipe_id' => ['required', 'integer', 'exists:recipes,id'],
+            'planned_meals.*.recipe_id' => ['required', 'string', 'exists:recipes,id'],
             'planned_meals.*.meal_time_id' => ['required', 'integer', 'exists:meal_times,id'],
             'planned_meals.*.planned_date' => ['required', 'date'],
             'planned_meals.*.serving_size' => ['required', 'integer:strict', 'min:1', 'max:255'],

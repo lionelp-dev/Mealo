@@ -2,13 +2,13 @@ import { create } from 'zustand';
 
 export interface RecipeMultiSelectActions {
   setIsMultiSelectMode: (value: boolean) => void;
-  toggleRecipeSelection: (recipeId: number) => void;
+  toggleRecipeSelection: (recipeId: string) => void;
   clearSelectedRecipes: () => void;
   resetStore: () => void;
 }
 
 export interface RecipeMultiSelectState {
-  selectedRecipesId: number[];
+  selectedRecipesId: string[];
   isMultiSelectMode: boolean;
 }
 

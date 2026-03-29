@@ -2,7 +2,7 @@ import HeadingSmall from '@/app/components/heading-small';
 import TwoFactorRecoveryCodes from '@/app/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/app/components/two-factor-setup-modal';
 import { Badge } from '@/app/components/ui/badge';
-import { type BreadcrumbItem } from '@/app/entities/';
+import { type BreadcrumbItem } from '@/types';
 import { useTwoFactorAuth } from '@/app/hooks/use-two-factor-auth';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';

@@ -77,7 +77,7 @@ test('planned meals index shows only workspace meals', function () {
     // Create meal in personal workspace
     $personalMeal = PlannedMeal::create([
         'user_id' => $this->owner->id,
-        'recipe_id' => $this->ownerRecipe->resource->id,
+        'recipe_id' => $this->ownerRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->startOfWeek()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $personalWorkspace->id,
@@ -86,7 +86,7 @@ test('planned meals index shows only workspace meals', function () {
     // Create meal in shared workspace
     $sharedMeal = PlannedMeal::create([
         'user_id' => $this->owner->id,
-        'recipe_id' => $this->ownerRecipe->resource->id,
+        'recipe_id' => $this->ownerRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->startOfWeek()->addDays(3)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
@@ -122,7 +122,7 @@ test('workspace members can plan meals in shared workspace', function () {
     $mealTime = \App\Models\MealTime::first();
 
     $plannedMeal = [
-        'recipe_id' => $this->editorRecipe->resource->id,
+        'recipe_id' => $this->editorRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'serving_size' => 1,
@@ -136,7 +136,7 @@ test('workspace members can plan meals in shared workspace', function () {
 
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->editor->id,
-        'recipe_id' => $this->editorRecipe->resource->id,
+        'recipe_id' => $this->editorRecipe->id,
         'workspace_id' => $this->workspace->id,
     ]);
 });
@@ -146,7 +146,7 @@ test('viewers cannot plan meals in shared workspace', function () {
     $mealTime = \App\Models\MealTime::first();
 
     $plannedMeal = [
-        'recipe_id' => $this->viewerRecipe->resource->id,
+        'recipe_id' => $this->viewerRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'serving_size' => 1,
@@ -168,7 +168,7 @@ test('outsiders cannot plan meals in workspace', function () {
     $mealTime = \App\Models\MealTime::first();
 
     $plannedMeal = [
-        'recipe_id' => $this->outsiderRecipe->resource->id,
+        'recipe_id' => $this->outsiderRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'serving_size' => 1,
@@ -193,7 +193,7 @@ test('outsiders cannot plan meals in workspace', function () {
     $outsiderPersonalWorkspace = $this->outsider->getPersonalWorkspace();
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->outsider->id,
-        'recipe_id' => $this->outsiderRecipe->resource->id,
+        'recipe_id' => $this->outsiderRecipe->id,
         'workspace_id' => $outsiderPersonalWorkspace->id,
     ]);
 });
@@ -205,7 +205,7 @@ test('workspace editors can delete any meal in shared workspace', function () {
     // Create meal by owner
     $ownerMeal = PlannedMeal::create([
         'user_id' => $this->owner->id,
-        'recipe_id' => $this->ownerRecipe->resource->id,
+        'recipe_id' => $this->ownerRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->startOfWeek()->addDays(2)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
@@ -214,7 +214,7 @@ test('workspace editors can delete any meal in shared workspace', function () {
     // Create meal by editor
     $editorMeal = PlannedMeal::create([
         'user_id' => $this->editor->id,
-        'recipe_id' => $this->editorRecipe->resource->id,
+        'recipe_id' => $this->editorRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->startOfWeek()->addDays(4)->format('Y-m-d'),
         'workspace_id' => $this->workspace->id,
@@ -276,7 +276,7 @@ test('planned meals are created with current workspace id', function () {
     $mealTime = \App\Models\MealTime::first();
 
     $plannedMeal = [
-        'recipe_id' => $this->ownerRecipe->resource->id,
+        'recipe_id' => $this->ownerRecipe->id,
         'meal_time_id' => $mealTime->id,
         'planned_date' => now()->addDay()->format('Y-m-d'),
         'serving_size' => 1,
@@ -289,7 +289,7 @@ test('planned meals are created with current workspace id', function () {
 
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->owner->id,
-        'recipe_id' => $this->ownerRecipe->resource->id,
+        'recipe_id' => $this->ownerRecipe->id,
         'workspace_id' => $this->workspace->id,
     ]);
 });
@@ -303,7 +303,7 @@ test('workspace members can view planned recipes from other members', function (
     $this->actingAs($this->owner)
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $this->ownerRecipe->resource->id,
+                'recipe_id' => $this->ownerRecipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->format('Y-m-d'),
                 'serving_size' => 1,
@@ -312,26 +312,26 @@ test('workspace members can view planned recipes from other members', function (
 
     // Editor should be able to view the planned recipe details
     $response = $this->actingAs($this->editor)
-        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->resource->id]));
+        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->id]));
 
     $response->assertStatus(200);
     $response->assertInertia(
         fn ($page) => $page
             ->component('recipe/show')
             ->has('recipe')
-            ->where('recipe.id', $this->ownerRecipe->resource->id)
+            ->where('recipe.id', $this->ownerRecipe->id)
     );
 
     // Viewer should also be able to view the planned recipe details
     $response = $this->actingAs($this->viewer)
-        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->resource->id]));
+        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->id]));
 
     $response->assertStatus(200);
     $response->assertInertia(
         fn ($page) => $page
             ->component('recipe/show')
             ->has('recipe')
-            ->where('recipe.id', $this->ownerRecipe->resource->id)
+            ->where('recipe.id', $this->ownerRecipe->id)
     );
 });
 
@@ -344,7 +344,7 @@ test('outsiders cannot view workspace planned recipes', function () {
     $this->actingAs($this->owner)
         ->post(route('planned-meals.store'), [
             'planned_meals' => [[
-                'recipe_id' => $this->ownerRecipe->resource->id,
+                'recipe_id' => $this->ownerRecipe->id,
                 'meal_time_id' => $mealTime->id,
                 'planned_date' => now()->format('Y-m-d'),
                 'serving_size' => 1,
@@ -353,7 +353,7 @@ test('outsiders cannot view workspace planned recipes', function () {
 
     // Outsider should NOT be able to view the planned recipe
     $response = $this->actingAs($this->outsider)
-        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->resource->id]));
+        ->get(route('recipes.show', ['recipe' => $this->ownerRecipe->id]));
 
     $response->assertStatus(403);
 });

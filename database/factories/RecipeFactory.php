@@ -5,10 +5,10 @@ namespace Database\Factories;
 use App\Actions\Recipes\SyncRecipeIngredientsAction;
 use App\Actions\Recipes\SyncRecipeMealTimesAction;
 use App\Actions\Recipes\SyncRecipeTagsAction;
-use App\Data\Recipe\Entities\IngredientData;
-use App\Data\Recipe\Entities\MealTimeData;
-use App\Data\Recipe\Entities\StepData;
-use App\Data\Recipe\Entities\TagData;
+use App\Data\Requests\Recipe\Entities\IngredientRequestData;
+use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
+use App\Data\Requests\Recipe\Entities\StepRequestData;
+use App\Data\Requests\Recipe\Entities\TagRequestData;
 use App\Models\Ingredient;
 use App\Models\MealTime;
 use App\Models\Recipe;
@@ -52,7 +52,7 @@ class RecipeFactory extends Factory
         })->afterCreating(function (Recipe $recipe) use ($count) {
             $mealTimes = MealTime::query()->inRandomOrder()->limit($count)->get();
             $mealTimesData = collect($mealTimes)->map(function ($mealTime) {
-                return MealTimeData::from([
+                return MealTimeRequestData::from([
                     'id' => $mealTime->id,
                     'name' => $mealTime->name,
                 ]);
@@ -71,9 +71,13 @@ class RecipeFactory extends Factory
     {
         return $this->afterMaking(function (Recipe $recipe) use ($count) {
             $ingredients = Ingredient::factory()->count($count)->make()->map(function ($ingredient) {
-                $ingredient->pivot = RecipeIngredient::factory()->make();
+                $pivot = RecipeIngredient::factory()->make();
 
-                return $ingredient;
+                return [
+                    'name' => $ingredient->name,
+                    'quantity' => $pivot->quantity,
+                    'unit' => $pivot->unit,
+                ];
             });
             $recipe->setRelation('ingredients', $ingredients);
         })->afterCreating(function (Recipe $recipe) use ($count) {
@@ -87,7 +91,7 @@ class RecipeFactory extends Factory
                 ];
             });
 
-            $ingredientsData = collect($ingredients)->map(fn($ingredient) => IngredientData::from($ingredient))->all();
+            $ingredientsData = collect($ingredients)->map(fn ($ingredient) => IngredientRequestData::from($ingredient))->all();
 
             app(SyncRecipeIngredientsAction::class)($recipe, $ingredientsData);
         });
@@ -104,7 +108,7 @@ class RecipeFactory extends Factory
             $recipe->setRelation('steps', Step::factory()->count($count)->make());
         })->afterCreating(function (Recipe $recipe) use ($count) {
             $steps = Step::factory()->count($count)->make();
-            $stepsData = collect($steps)->map(fn($step) => StepData::from($step)->transform())->all();
+            $stepsData = collect($steps)->map(fn ($step) => StepRequestData::from($step)->transform())->all();
             $recipe->steps()->createMany($stepsData);
         });
     }
@@ -119,14 +123,22 @@ class RecipeFactory extends Factory
         return $this->afterMaking(function (Recipe $recipe) use ($count) {
             $recipe->setRelation('tags', Tag::factory()->count($count)->make());
         })->afterCreating(function (Recipe $recipe) use ($count) {
-            $tags = Tag::factory()->count($count)->make()->map(fn($tag) => new TagData(
-                id: null,
+            $tags = Tag::factory()->count($count)->make()->map(fn ($tag) => new TagRequestData(
                 name: $tag->name,
             ));
 
-            $tagsData = collect($tags)->map(fn($tag) => TagData::from($tag))->all();
+            $tagsData = collect($tags)->map(fn ($tag) => TagRequestData::from($tag))->all();
 
             app(SyncRecipeTagsAction::class)($recipe, $tagsData);
         });
+    }
+
+    public function complete(): static
+    {
+        return $this
+            ->withMealTime(2)
+            ->withIngredients(10)
+            ->withSteps(10)
+            ->withTags(10);
     }
 }

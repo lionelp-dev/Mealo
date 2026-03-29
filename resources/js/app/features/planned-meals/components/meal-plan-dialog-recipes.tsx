@@ -64,7 +64,7 @@ function MealPlanDialogRecipes() {
                     {recipe.cooking_time}min
                   </span>
                 </span>
-                {recipe.meal_times.map((meal_time) => (
+                {recipe.meal_times?.map((meal_time) => (
                   <span
                     key={meal_time.id}
                     className="badge bg-base-300 badge-sm"
@@ -72,7 +72,7 @@ function MealPlanDialogRecipes() {
                     {meal_time.name}
                   </span>
                 ))}
-                {recipe.tags.map((tag) => (
+                {recipe.tags?.map((tag) => (
                   <span key={tag.id} className="badge badge-sm">
                     {tag.name}
                   </span>

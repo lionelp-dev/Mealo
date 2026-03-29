@@ -1,5 +1,5 @@
 import { useShoppingListsContextValue } from '../inertia.adapter';
-import { ShoppingList } from '@/app/entities/shopping-list/types';
+import { ShoppingList } from '@/types';
 import { useState } from 'react';
 
 export function useShoppingList() {

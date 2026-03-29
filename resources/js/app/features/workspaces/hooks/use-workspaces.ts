@@ -1,5 +1,5 @@
-import { SharedData } from '@/app/entities/';
-import { Workspace } from '@/app/entities/workspace/types';
+import { SharedData } from '@/types';
+import { Workspace } from '@/types';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspaces from '@/routes/workspaces';
 import { router } from '@inertiajs/react';

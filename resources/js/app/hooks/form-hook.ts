@@ -7,6 +7,7 @@ import SubmitButton from '@/app/components/ui/form-submit-button';
 import TextAreaField from '@/app/components/ui/form-textarea-field';
 import NumberField from '@/app/components/ui/number-input';
 import TextField from '@/app/components/ui/text-input';
+import { MultiSelectField } from '@/app/components/ui/multi-select-field';
 import { createFormHook } from '@tanstack/react-form';
 
 export const { useAppForm, withForm, withFieldGroup } = createFormHook({
@@ -18,6 +19,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
     SelectField,
     CheckboxField,
     RadioField,
+    MultiSelectField,
   },
   formComponents: {
     SubmitButton,

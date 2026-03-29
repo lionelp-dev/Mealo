@@ -1,4 +1,4 @@
-import { PageProps } from '@/app/entities/';
+import { PageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { AlertCircle, X } from 'lucide-react';
 import { useEffect, useState } from 'react';

@@ -10,14 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { Recipe } from '@/app/entities/recipe/types';
+import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { Edit2Icon, EllipsisVertical, EyeIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
-  recipe: Recipe;
+  recipe: RecipeResource;
 };
 
 export function RecipeCard({ recipe }: Props) {
@@ -93,7 +93,7 @@ export function RecipeCard({ recipe }: Props) {
                 variant="destructive"
                 onClick={(e) => {
                   e.stopPropagation();
-                  deleteRecipes([recipe]);
+                  deleteRecipes({ ids: [recipe.id] });
                 }}
               >
                 <Trash2Icon size={14} />
@@ -116,7 +116,7 @@ export function RecipeCard({ recipe }: Props) {
         )}
 
         <div className="absolute right-0 bottom-0 left-0 flex max-h-[1.5lh] flex-wrap justify-start gap-2 overflow-hidden px-2 py-2">
-          {recipe.meal_times.map((meal_time) => (
+          {recipe.meal_times?.map((meal_time) => (
             <span
               key={meal_time.id}
               className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
@@ -127,7 +127,7 @@ export function RecipeCard({ recipe }: Props) {
               )}
             </span>
           ))}
-          {recipe.tags.map((tag) => (
+          {recipe.tags?.map((tag) => (
             <span
               key={tag.id}
               className={`badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content ${tag.id && isFilterActive({ type: 'tag', value: tag.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}

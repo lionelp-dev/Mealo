@@ -2,8 +2,8 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Requests\GenerateRecipeRequestData;
-use App\Data\Recipe\Requests\StoreRecipeRequestData;
+use App\Data\Requests\Recipe\GenerateRecipeRequestData;
+use App\Data\Requests\Recipe\StoreRecipeRequestData;
 use App\Enums\Unit;
 use App\Models\MealTime;
 use Exception;

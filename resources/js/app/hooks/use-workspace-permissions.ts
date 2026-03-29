@@ -1,6 +1,6 @@
-import { ROLES } from '@/app/entities/';
-import { SharedData } from '@/app/entities/';
-import { WorkspaceData } from '@/app/entities/workspace/types';
+import { SharedData } from '@/types';
+import { WorkspaceData } from '@/types';
+import { ROLES } from '@/types/enum';
 import { usePage } from '@inertiajs/react';
 
 type PageProps = {

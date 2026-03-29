@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 export interface RecipesMultiSelectState {
-  selectedRecipeIds: number[];
+  selectedRecipeIds: string[];
   isMultiSelectMode: boolean;
 }
 
@@ -11,7 +11,7 @@ const initialState: RecipesMultiSelectState = {
 };
 export interface RecipesMultiSelectActions {
   setIsMultiSelectMode: (value: boolean) => void;
-  toggleRecipeSelection: (recipeId: number) => void;
+  toggleRecipeSelection: (recipeId: string) => void;
   clearSelectedRecipes: () => void;
   resetStore: () => void;
 }

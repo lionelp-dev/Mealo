@@ -1,4 +1,4 @@
-import { Filter } from '@/app/entities/recipe/types';
+import { Filter } from '@/types';
 import { create } from 'zustand';
 
 interface RecipesFiltersState {

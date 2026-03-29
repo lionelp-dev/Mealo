@@ -85,7 +85,18 @@
       "WebFetch(domain:martinjoo.dev)",
       "WebFetch(domain:serversideup.net)",
       "WebFetch(domain:www.codegenes.net)",
-      "mcp__laravel-boost__application-info"
+      "mcp__laravel-boost__application-info",
+      "Bash(pnpm types:*)",
+      "Bash(systemctl status:*)",
+      "Bash(sudo rfkill:*)",
+      "WebFetch(domain:spatie.be)",
+      "Bash(git checkout:*)",
+      "Bash(test:*)",
+      "WebFetch(domain:phpactor.readthedocs.io)",
+      "WebFetch(domain:phpstan.org)",
+      "WebFetch(domain:pestphp.com)",
+      "WebFetch(domain:blog.jetbrains.com)",
+      "Bash(php -l:*)"
     ],
     "deny": [],
     "ask": []

@@ -28,9 +28,8 @@ return [
 
     'transformers' => [
         Spatie\LaravelTypeScriptTransformer\Transformers\SpatieStateTransformer::class,
-        Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
-        Spatie\LaravelData\Support\TypeScriptTransformer\DataTypeScriptTransformer::class,
         Spatie\LaravelTypeScriptTransformer\Transformers\DtoTransformer::class,
+        Spatie\TypeScriptTransformer\Transformers\EnumTransformer::class,
     ],
 
     /*
@@ -45,6 +44,7 @@ return [
         Carbon\CarbonInterface::class => 'string',
         Carbon\CarbonImmutable::class => 'string',
         Carbon\Carbon::class => 'string',
+        Illuminate\Http\UploadedFile::class => 'File',
     ],
 
     /*

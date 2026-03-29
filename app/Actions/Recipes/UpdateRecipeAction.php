@@ -2,7 +2,7 @@
 
 namespace App\Actions\Recipes;
 
-use App\Data\Recipe\Requests\UpdateRecipeRequestData;
+use App\Data\Requests\Recipe\UpdateRecipeRequestData;
 use App\Models\Recipe;
 use Illuminate\Support\Facades\DB;
 

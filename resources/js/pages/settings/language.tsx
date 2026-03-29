@@ -1,6 +1,6 @@
 import HeadingSmall from '@/app/components/heading-small';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
-import { type BreadcrumbItem } from '@/app/entities/';
+import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';
 import languageRoute from '@/routes/language';

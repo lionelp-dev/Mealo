@@ -1,7 +1,7 @@
 import { useMealPlanActions } from '../hooks/use-meal-plan-actions';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
-import { Recipe } from '@/app/entities/recipe/types';
+import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -20,15 +20,10 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanningPopoverProps = {
-  recipe: Recipe;
+  recipe: RecipeResource;
   isMultiSelectMode: boolean;
   isMealPlanningPopoverOpen: boolean;
   setIsMealPlanningPopoverOpen: (value: boolean) => void;
-};
-
-type MealPlanningPopoverForm = {
-  meal_times: number[];
-  servings: number;
 };
 
 export default function MealPlanningPopover({
@@ -47,7 +42,10 @@ export default function MealPlanningPopover({
 
   const { clearAllFilters } = useRecipesFiltersStore();
 
-  const defaultValues: MealPlanningPopoverForm = {
+  const defaultValues: {
+    meal_times: number[];
+    servings: number;
+  } = {
     meal_times: [],
     servings: 1,
   };
@@ -57,17 +55,12 @@ export default function MealPlanningPopover({
     onSubmit: async ({ value }) => {
       if (!selectedDate) return;
 
-      const data = value as {
-        meal_times: number[];
-        servings: number;
-      };
-
       await planMeals({
-        meals: data.meal_times.map((meal_time) => ({
+        meals: value.meal_times.map((meal_time) => ({
           recipe_id: recipe.id,
           planned_date: selectedDate.toString(),
-          meal_time_id: meal_time,
-          serving_size: data.servings,
+          meal_time_id: Number(meal_time),
+          serving_size: value.servings,
         })),
         onSuccess() {
           setIsOpen(false);
@@ -123,8 +116,7 @@ export default function MealPlanningPopover({
 
               <form.AppField
                 name="servings"
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                children={(field: any) => (
+                children={(field) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
                     <span className="w-full px-2.5 text-sm font-medium whitespace-nowrap text-secondary">
                       {t(
@@ -181,12 +173,10 @@ export default function MealPlanningPopover({
                 <form.AppField
                   name="meal_times"
                   mode="array"
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  children={(field: any) => (
+                  children={(field) => (
                     <div className="flex flex-col gap-2">
                       {mealTimes.map((mealTime) => {
-                        const currentValue =
-                          (field.state.value as number[]) || [];
+                        const currentValue = field.state.value || [];
                         const index = currentValue.findIndex(
                           (mt_id) => mt_id === mealTime.id,
                         );

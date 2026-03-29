@@ -1,5 +1,5 @@
 import { Checkbox } from '@/app/components/ui/checkbox';
-import { Filter } from '@/app/entities/recipe/types';
+import { Filter } from '@/types';
 import { capitalize } from '@/app/utils/';
 import { useTranslation } from 'react-i18next';
 

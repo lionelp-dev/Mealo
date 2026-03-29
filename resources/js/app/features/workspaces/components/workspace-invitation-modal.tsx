@@ -1,4 +1,3 @@
-import { useWorkspacePermissions } from '../hooks/use-workspace-permissions';
 import { useWorkspaces } from '../hooks/use-workspaces';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
 import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
@@ -9,11 +8,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { Role } from '@/app/entities/';
-import { WorkspaceData } from '@/app/entities/workspace/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { useInitials } from '@/app/hooks/use-initials';
+import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
+import { WorkspaceData } from '@/types';
+import { Role } from '@/types/enum';
 import {
   ArrowRightLeft,
   FolderOpen,

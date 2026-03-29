@@ -1,4 +1,4 @@
-import { FlashMessage } from '@/app/entities/';
+import { FlashMessage } from '@/types';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 

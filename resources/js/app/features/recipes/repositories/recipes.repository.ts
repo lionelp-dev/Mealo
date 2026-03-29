@@ -1,12 +1,18 @@
-import { Recipe } from '@/app/entities/recipe/types';
+import {
+  DeleteRecipesRequest,
+  GenerateRecipeRequest,
+  RecipeFormRequest,
+  StoreRecipeRequest,
+  UpdateRecipeRequest,
+} from '@/app/data/requests/recipe/types';
 import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';
 
-export const deleteRecipes = (selectedRecipes: Recipe[]): Promise<void> =>
+export const deleteRecipes = ({ ids }: DeleteRecipesRequest): Promise<void> =>
   new Promise((resolve, reject) => {
-    if (selectedRecipes.length === 0) resolve();
+    if (ids.length === 0) resolve();
     router.delete(recipes.destroy.url(), {
-      data: { recipe_ids: selectedRecipes.map((r) => r.id) },
+      data: { ids },
       onSuccess: () => resolve(),
       onError: (errors) => {
         reject(errors);
@@ -15,7 +21,7 @@ export const deleteRecipes = (selectedRecipes: Recipe[]): Promise<void> =>
   });
 
 export const createRecipe = (
-  data: Omit<Recipe, 'id' | 'user_id'>,
+  data: StoreRecipeRequest,
   options?: {
     onSuccess?: () => void;
     onError?: (error: unknown) => void;
@@ -35,8 +41,8 @@ export const createRecipe = (
   });
 
 export const updateRecipe = (
-  data: Omit<Recipe, 'id' | 'user_id'>,
-  recipeId: number,
+  data: UpdateRecipeRequest,
+  recipeId: string,
   options?: {
     onSuccess?: () => void;
     onError?: (error: unknown) => void;
@@ -60,20 +66,23 @@ export const viewRecipes = () => {
   router.visit(recipes.index.url());
 };
 
-export const viewRecipe = (id: number) => {
+export const viewRecipe = (id: string) => {
   router.reload({ reset: ['flash'] });
   router.visit(recipes.show.url({ id }));
 };
 
-export const editRecipe = (id: number) => {
+export const editRecipe = (id: string) => {
   router.reload({ reset: ['flash'] });
   router.get(recipes.edit.url({ id }));
 };
 
-export const searchTags = (params: { url: string; term: string }) => {
-  const { url, term } = params;
+export const searchTags = (params: {
+  url: string;
+  data: RecipeFormRequest;
+}) => {
+  const { url, data } = params;
   router.visit(url, {
-    data: { tags_search: term },
+    data,
     preserveUrl: false,
     preserveState: true,
     only: ['tags_search_results'],
@@ -82,10 +91,13 @@ export const searchTags = (params: { url: string; term: string }) => {
   });
 };
 
-export const searchIngredients = (params: { url: string; term: string }) => {
-  const { url, term } = params;
+export const searchIngredients = (params: {
+  url: string;
+  data: RecipeFormRequest;
+}) => {
+  const { url, data } = params;
   router.visit(url, {
-    data: { ingredients_search: term },
+    data,
     preserveUrl: false,
     preserveState: true,
     only: ['ingredients_search_results'],
@@ -95,7 +107,7 @@ export const searchIngredients = (params: { url: string; term: string }) => {
 };
 
 export const generateRecipe = (
-  prompt: string,
+  data: GenerateRecipeRequest,
   options?: {
     onSuccess?: () => void;
     onFinish?: () => void;
@@ -103,22 +115,18 @@ export const generateRecipe = (
   },
 ): Promise<void> =>
   new Promise((resolve, reject) => {
-    router.post(
-      '/recipes/create',
-      { prompt: prompt },
-      {
-        only: ['generated_recipe', 'flash'],
-        onSuccess: () => {
-          options?.onSuccess?.();
-        },
-        onFinish: () => {
-          options?.onFinish?.();
-          resolve();
-        },
-        onError: (error) => {
-          options?.onError?.(error);
-          reject(error);
-        },
+    router.post('/recipes/create', data, {
+      only: ['generated_recipe', 'flash'],
+      onSuccess: () => {
+        options?.onSuccess?.();
       },
-    );
+      onFinish: () => {
+        options?.onFinish?.();
+        resolve();
+      },
+      onError: (error) => {
+        options?.onError?.(error);
+        reject(error);
+      },
+    });
   });

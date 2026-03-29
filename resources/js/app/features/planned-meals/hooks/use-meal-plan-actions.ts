@@ -6,7 +6,7 @@ export function useMealPlanActions() {
     onSuccess,
   }: {
     meals: {
-      recipe_id: number;
+      recipe_id: string;
       meal_time_id: number;
       planned_date: string;
       serving_size: number;
