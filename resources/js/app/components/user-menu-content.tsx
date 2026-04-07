@@ -5,10 +5,10 @@ import {
   DropdownMenuSeparator,
 } from '@/app/components/ui/dropdown-menu';
 import { UserInfo } from '@/app/components/user-info';
-import { type User } from '@/types';
 import { useMobileNavigation } from '@/app/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
+import { type User } from '@/types';
 import { Link, router } from '@inertiajs/react';
 import { LogOut, Settings } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

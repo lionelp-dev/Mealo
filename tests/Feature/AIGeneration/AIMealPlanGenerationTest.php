@@ -139,7 +139,7 @@ test('handles openai api failure gracefully', function () {
 test('clears existing planned meals in date range before generating', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
-    $personalWorkspace = $this->user->getPersonalWorkspace();
+    $personalWorkspace = $this->user->defaultWorkspace();
 
     // Use specific dates for clarity
     $baseDate = Carbon::parse('2026-01-15'); // A Wednesday

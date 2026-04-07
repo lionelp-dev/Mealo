@@ -4,7 +4,6 @@ namespace Tests\Feature\Recipe;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
-    $this->createUserContext();
     $this->createRecipeContext();
 });
 

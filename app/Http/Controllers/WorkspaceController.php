@@ -2,157 +2,168 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreWorkspace;
-use App\Http\Requests\UpdateWorkspace;
+use App\Actions\Workspace\DeleteWorkspaceAction;
+use App\Actions\Workspace\DeleteWorkspaceMemberAction;
+use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Actions\Workspace\StoreWorkspaceAction;
+use App\Actions\Workspace\UpdateWorkspaceAction;
+use App\Actions\Workspace\UpdateWorkspaceMemberRoleAction;
+use App\Data\Requests\Workspace\DeleteWorkspaceMemberRequestData;
+use App\Data\Requests\Workspace\StoreWorkspaceRequestData;
+use App\Data\Requests\Workspace\UpdateWorkspaceMemberRoleRequestData;
+use App\Data\Requests\Workspace\UpdateWorkspaceRequestData;
+use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
+use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
+use App\Messages\Workspace\MemberRemovedMessage;
+use App\Messages\Workspace\MemberRoleUpdatedMessage;
+use App\Messages\Workspace\WorkspaceCreatedMessage;
+use App\Messages\Workspace\WorkspaceDeletedMessage;
+use App\Messages\Workspace\WorkspaceLeftMessage;
+use App\Messages\Workspace\WorkspaceSwitchedMessage;
+use App\Messages\Workspace\WorkspaceUpdatedMessage;
 use App\Models\User;
 use App\Models\Workspace;
-use App\Services\WorkspaceDataService;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class WorkspaceController extends Controller
 {
-    public function __construct(
-        private WorkspaceDataService $workspaceDataService
-    ) {}
+    public function __construct() {}
 
-    public function index(Request $request)
-    {
+    public function index(
+        Request $request,
+        GetCurrentWorkspaceAction $getCurrentWorkspaceAction
+    ): Response|RedirectResponse {
+        /** @var User $user */
         $user = $request->user();
-        $workspaceData = $this->workspaceDataService->getWorkspaceDataForUser($user);
+
+        $currentWorkspace = $getCurrentWorkspaceAction($user);
 
         return Inertia::render('workspaces/index', [
-            'workspace_data' => $workspaceData,
+            'workspace_data' => [
+                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations),
+                'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
+                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
+            ],
         ]);
     }
 
-    public function store(StoreWorkspace $request)
-    {
-        return DB::transaction(function () use ($request) {
-            $workspace = Workspace::create([
-                'name' => $request->validated('name'),
-                'owner_id' => $request->user()->id,
-                'is_personal' => $request->validated('is_personal'),
-            ]);
-
-            return back()->with(['success' => 'Workspace created successfully', 'new_workspace_id' => $workspace->id]);
-        });
-    }
-
-    public function update(UpdateWorkspace $request, Workspace $workspace)
-    {
-        Gate::authorize('update', $workspace);
-
-        $convertingToPersonal = $request->validated('is_personal') === true && ! $workspace->is_default;
-
-        DB::transaction(function () use ($workspace, $request, $convertingToPersonal) {
-            $workspace->update($request->validated());
-
-            if ($convertingToPersonal) {
-                $workspace->removeAllNonOwnerMembers();
-                $workspace->invitations()->delete();
-            }
-        });
-
-        return back()->with('success', 'Workspace updated successfully');
-    }
-
-    public function destroy(Workspace $workspace)
-    {
-        Gate::authorize('delete', $workspace);
-
-        $workspace->delete();
-
-        return back()->with('success', 'Workspace deleted successfully');
-    }
-
-    public function switch(Request $request, Workspace $workspace)
-    {
-        Gate::authorize('view', $workspace);
-
-        // Store current workspace in session
-        session(['current_workspace_id' => $workspace->id]);
-
-        return back()->with('success', 'Workspace switched successfully');
-    }
-
-    public function removeMember(Request $request, Workspace $workspace)
-    {
-        Gate::authorize('manageMember', $workspace);
-
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-        ]);
-
-        // Cannot remove owner
-        if ($validated['user_id'] === $workspace->owner_id) {
-            return response()->json(['message' => 'Cannot remove workspace owner'], 403);
-        }
-
-        $user = User::find($validated['user_id']);
-
-        // Remove Spatie permissions
-        $workspace->removeUserPermissions($user);
-
-        // Remove from pivot table (membership tracking only)
-        $workspace->users()->detach($validated['user_id']);
-
-        return back()->with(['message' => 'Member removed successfully']);
-    }
-
-    public function updateMemberRole(Request $request, Workspace $workspace)
-    {
-        Gate::authorize('manageMember', $workspace);
-
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'role' => 'required|in:editor,viewer',
-        ]);
-
-        // Cannot change owner role
-        if ($validated['user_id'] === $workspace->owner_id) {
-            return response()->json(['message' => 'Cannot change owner role'], 403);
-        }
-
-        $user = User::find($validated['user_id']);
-
-        // Remove old permissions
-        $workspace->removeUserPermissions($user);
-
-        // Give new permissions based on role
-        match ($validated['role']) {
-            'editor' => $workspace->giveEditorPermissions($user),
-            'viewer' => $workspace->giveViewerPermissions($user),
-        };
-
-        return back()->with(['message' => 'Member role updated successfully']);
-    }
-
-    /**
-     * Leave a workspace (for non-owner members).
-     */
-    public function leave(Request $request, Workspace $workspace)
-    {
+    public function store(
+        Request $request,
+        StoreWorkspaceRequestData $storeWorkspaceRequestData,
+        StoreWorkspaceAction $storeWorkspaceAction
+    ): RedirectResponse {
+        /** @var User $user */
         $user = $request->user();
 
-        // Owner cannot leave their own workspace
-        if ($workspace->owner_id === $user->id) {
-            return back()->with('error', 'Le propriétaire ne peut pas quitter son propre groupe.');
+        $workspace = $storeWorkspaceAction->execute($user, $storeWorkspaceRequestData);
+
+        return back()->with([
+            'success' => (new WorkspaceCreatedMessage)->getMessage(),
+            'new_workspace_id' => $workspace->id,
+        ]);
+    }
+
+    public function update(
+        Request $request,
+        Workspace $workspace,
+        UpdateWorkspaceRequestData $updateWorkspaceRequestData,
+        UpdateWorkspaceAction $updateWorkspaceAction
+    ): RedirectResponse {
+        try {
+            Gate::authorize('update', $workspace);
+
+            $updateWorkspaceAction->execute($workspace, $updateWorkspaceRequestData);
+
+            return back()->with('success', (new WorkspaceUpdatedMessage)->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
+    }
 
-        // Check if user is a member
-        if (! $workspace->hasUser($user)) {
-            return back()->with('error', 'Vous n\'êtes pas membre de ce groupe.');
+    public function updateMemberRole(
+        Workspace $workspace,
+        UpdateWorkspaceMemberRoleRequestData $roleData,
+        UpdateWorkspaceMemberRoleAction $updateWorkspaceMemberRoleAction
+    ): RedirectResponse {
+        try {
+            Gate::authorize('manageMember', $workspace);
+
+            $updateWorkspaceMemberRoleAction->execute($workspace, $roleData);
+
+            return back()->with(['success' => (new MemberRoleUpdatedMessage)->getMessage()]);
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
+    }
 
-        // Remove permissions
-        $workspace->removeUserPermissions($user);
+    public function switch(Request $request, Workspace $workspace): RedirectResponse
+    {
+        try {
+            Gate::authorize('view', $workspace);
 
-        // Remove from pivot table
-        $workspace->users()->detach($user->id);
+            session(['current_workspace_id' => $workspace->id]);
 
-        return back()->with('success', 'Vous avez quitté le groupe.');
+            return back()->with('success', (new WorkspaceSwitchedMessage)->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function removeMember(
+        Workspace $workspace,
+        DeleteWorkspaceMemberRequestData $deleteWorkspaceMemberData,
+        DeleteWorkspaceMemberAction $deleteWorkspaceMemberAction
+    ): RedirectResponse {
+        try {
+            Gate::authorize('manageMember', $workspace);
+
+            $deleteWorkspaceMemberAction->execute($workspace, $deleteWorkspaceMemberData);
+
+            return back()->with(['success' => (new MemberRemovedMessage)->getMessage()]);
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function leave(
+        Request $request,
+        Workspace $workspace,
+        DeleteWorkspaceMemberAction $deleteWorkspaceMemberAction
+    ): RedirectResponse {
+        /** @var User $user */
+        $user = $request->user();
+
+        try {
+            $deleteWorkspaceMemberAction->execute(
+                $workspace,
+                DeleteWorkspaceMemberRequestData::from(
+                    [
+                        'user_id' => $user->id,
+                    ]
+                )
+            );
+
+            return back()->with('success', (new WorkspaceLeftMessage)->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function destroy(Workspace $workspace, DeleteWorkspaceAction $deleteWorkspaceAction): RedirectResponse
+    {
+        try {
+            Gate::authorize('delete', $workspace);
+
+            $deleteWorkspaceAction->execute($workspace);
+
+            return back()->with('success', (new WorkspaceDeletedMessage)->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

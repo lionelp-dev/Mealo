@@ -1,5 +1,5 @@
 import { SharedData } from '@/types';
-import { Workspace } from '@/types';
+import { WorkspaceResourceData } from '@/types/generated';
 import { usePage } from '@inertiajs/react';
 
 export const usePermissions = () => {
@@ -7,7 +7,7 @@ export const usePermissions = () => {
 
   return {
     canEditRecipe: (recipeUserId: number) => recipeUserId === auth.user.id,
-    canEditWorkspace: (workspace: Workspace) =>
+    canEditWorkspace: (workspace: WorkspaceResourceData) =>
       workspace.owner_id === auth.user.id,
   };
 };

@@ -1,7 +1,15 @@
-import { SharedData } from '@/types';
-import { Workspace } from '@/types';
+import type {
+  AcceptWorkspaceInvitationRequest,
+  DeclineWorkspaceInvitationRequest,
+  DeleteWorkspaceMemberRequest,
+  StoreWorkspaceInvitationRequest,
+  StoreWorkspaceRequest,
+  UpdateWorkspaceMemberRoleRequest,
+  UpdateWorkspaceRequest,
+} from '@/app/data/requests/workspace/types';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspaces from '@/routes/workspaces';
+import { SharedData } from '@/types';
 import { router } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +18,7 @@ export function useWorkspaces() {
   const { t } = useTranslation();
 
   const handleCreateWorkspace = (
-    data: Pick<Workspace, 'name' | 'is_personal'>,
+    data: StoreWorkspaceRequest,
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
@@ -33,7 +41,8 @@ export function useWorkspaces() {
   };
 
   const handleUpdateWorkspace = (
-    data: Pick<Workspace, 'id' | 'name' | 'is_personal'>,
+    workspaceId: number,
+    data: UpdateWorkspaceRequest,
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
@@ -41,9 +50,9 @@ export function useWorkspaces() {
     },
   ) => {
     router.put(
-      workspaces.update.url({ workspace: { id: data.id } }),
+      workspaces.update.url({ workspace: { id: workspaceId } }),
       {
-        name: data.name.trim(),
+        name: data.name,
         is_personal: data.is_personal,
       },
       {
@@ -56,19 +65,15 @@ export function useWorkspaces() {
   };
 
   const handleInvite = (
-    workspaceId: number,
-    values: {
-      email: string;
-      role: 'editor' | 'viewer';
-    },
+    data: StoreWorkspaceInvitationRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
     },
   ) => {
     router.post(
-      workspaceInvitationsRoute.store.url({ workspace: workspaceId }),
-      values,
+      workspaceInvitationsRoute.store.url({ workspace_id: data.workspace_id }),
+      { email: data.email, role: data.role },
       {
         onBefore: callbacks?.onBefore,
         onFinish: callbacks?.onFinish,
@@ -78,14 +83,14 @@ export function useWorkspaces() {
 
   const handleRemoveMember = (
     workspaceId: number,
-    userId: number,
+    data: DeleteWorkspaceMemberRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
     },
   ) => {
-    router.delete(`/workspaces/${workspaceId}/members`, {
-      data: { user_id: userId },
+    router.delete(workspaces.removeMember.url(workspaceId), {
+      data: { user_id: data.user_id },
       onBefore: callbacks?.onBefore,
       onFinish: callbacks?.onFinish,
     });
@@ -93,18 +98,17 @@ export function useWorkspaces() {
 
   const handleChangeRole = (
     workspaceId: number,
-    userId: number,
-    newRole: 'editor' | 'viewer',
+    data: UpdateWorkspaceMemberRoleRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
     },
   ) => {
     router.put(
-      `/workspaces/${workspaceId}/members/role`,
+      workspaces.updateMemberRole.url(workspaceId),
       {
-        user_id: userId,
-        role: newRole,
+        user_id: data.user_id,
+        role: data.role,
       },
       {
         onBefore: callbacks?.onBefore,
@@ -120,15 +124,18 @@ export function useWorkspaces() {
       onFinish?: () => void;
     },
   ) => {
-    router.delete(`/workspace-invitations/${invitationId}`, {
-      onBefore: callbacks?.onBefore,
-      onFinish: callbacks?.onFinish,
-    });
+    router.delete(
+      workspaceInvitationsRoute.destroy.url({ invitation: invitationId }),
+      {
+        onBefore: callbacks?.onBefore,
+        onFinish: callbacks?.onFinish,
+      },
+    );
   };
 
-  const handleAccept = (invitationId: number) => {
+  const handleAccept = (data: AcceptWorkspaceInvitationRequest) => {
     router.post(
-      workspaceInvitationsRoute.acceptAuthenticated.url(invitationId),
+      workspaceInvitationsRoute.accept.url(data.token),
       {},
       {
         preserveScroll: true,
@@ -136,9 +143,9 @@ export function useWorkspaces() {
     );
   };
 
-  const handleDecline = (invitationId: number) => {
+  const handleDecline = (data: DeclineWorkspaceInvitationRequest) => {
     router.post(
-      workspaceInvitationsRoute.declineAuthenticated.url(invitationId),
+      workspaceInvitationsRoute.decline.url(data.token),
       {},
       {
         preserveScroll: true,
@@ -177,7 +184,7 @@ export function useWorkspaces() {
     };
   };
 
-  const getRoleBadgeVariant = (memberRole: string) => {
+  const getRoleBadgeVariant = (memberRole: string | null) => {
     switch (memberRole) {
       case 'owner':
         return 'badge-warning';
@@ -190,7 +197,7 @@ export function useWorkspaces() {
     }
   };
 
-  const getRoleLabel = (memberRole: string) => {
+  const getRoleLabel = (memberRole: string | null) => {
     switch (memberRole) {
       case 'owner':
         return t('workspace.role.owner', 'Propriétaire');
@@ -199,7 +206,7 @@ export function useWorkspaces() {
       case 'viewer':
         return t('workspace.role.viewer', 'Lecteur');
       default:
-        return memberRole;
+        return memberRole || t('workspace.role.unknown', 'Inconnu');
     }
   };
 

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
+use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Resources\ShoppingListResource;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
-use App\Services\WorkspaceDataService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
@@ -16,13 +18,12 @@ use Inertia\Response;
 class ShoppingListController extends Controller
 {
     public function __construct(
-        private WorkspaceDataService $workspaceDataService
     ) {}
 
     /**
      * Display the shopping list for a specific week
      */
-    public function index(Request $request): Response
+    public function index(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): Response
     {
         $validated = $request->validate([
             'week' => ['nullable', 'date'],
@@ -32,8 +33,7 @@ class ShoppingListController extends Controller
 
         $user = $request->user();
 
-        $workspaceData = $this->workspaceDataService->getWorkspaceDataForUser($user);
-        $currentWorkspace = $workspaceData['current_workspace'];
+        $currentWorkspace = $getCurrentWorkspaceAction($user);
 
         $shoppingList = ShoppingList::query()
             ->where('workspace_id', $currentWorkspace->id)
@@ -45,7 +45,14 @@ class ShoppingListController extends Controller
 
         return Inertia::render('shopping-lists/index', [
             'weekStart' => $weekStart->toDateString(),
-            'workspace_data' => $workspaceData,
+            'workspace_data' => [
+                'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
+                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
+                'pending_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations()
+                    ->where('expires_at', '>', now())
+                    ->with(['workspace', 'invitedBy'])
+                    ->get()),
+            ],
             'shopping_list_data' => $shoppingListData,
         ]);
     }

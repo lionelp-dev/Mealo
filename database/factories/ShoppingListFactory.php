@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -16,8 +17,7 @@ class ShoppingListFactory extends Factory
      */
     public function definition(): array
     {
-        $user = \App\Models\User::factory()->create();
-        $workspace = \App\Models\Workspace::createPersonalWorkspace($user);
+        $user = User::factory()->create();
 
         return [
             'user_id' => $user->id,

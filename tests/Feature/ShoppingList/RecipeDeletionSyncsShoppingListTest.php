@@ -13,7 +13,7 @@ uses(RefreshDatabase::class);
 it('synchronizes shopping list when a recipe with planned meals is deleted', function () {
     // Create a user
     $user = User::factory()->create();
-    $workspace = $user->getPersonalWorkspace();
+    $workspace = $user->defaultWorkspace();
 
     // Create a recipe with ingredients
     $recipe = Recipe::factory()
@@ -67,7 +67,7 @@ it('synchronizes shopping list when a recipe with planned meals is deleted', fun
 it('synchronizes shopping list for multiple weeks when recipe with multiple planned meals is deleted', function () {
     // Create a user
     $user = User::factory()->create();
-    $workspace = $user->getPersonalWorkspace();
+    $workspace = $user->defaultWorkspace();
 
     // Create a recipe with ingredients
     $recipe = Recipe::factory()
@@ -150,7 +150,7 @@ it('synchronizes shopping list for multiple weeks when recipe with multiple plan
 it('does not affect shopping list when deleting a recipe without planned meals', function () {
     // Create a user
     $user = User::factory()->create();
-    $workspace = $user->getPersonalWorkspace();
+    $workspace = $user->defaultWorkspace();
 
     // Create two recipes
     $recipe1 = Recipe::factory()

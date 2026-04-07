@@ -1,6 +1,6 @@
+import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { PageProps, PaginatedCollection } from '@/types';
 import { BetaRequest } from '@/types';
-import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren } from 'react';
 

@@ -6,9 +6,10 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/app/components/ui/dialog';
-import { Workspace, WorkspaceData } from '@/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
+import { WorkspaceData } from '@/types';
+import type { WorkspaceResourceData } from '@/types/generated';
 import { useStore } from '@tanstack/react-form';
 import { AlertTriangle, User, Users } from 'lucide-react';
 import { useState } from 'react';
@@ -68,7 +69,11 @@ export function WorkspaceEditModal({ workspace_data }: Props) {
   );
 }
 
-function WorkspaceEditForm({ workspace }: { workspace: Workspace }) {
+function WorkspaceEditForm({
+  workspace,
+}: {
+  workspace: WorkspaceResourceData;
+}) {
   const { t } = useTranslation();
   const { isWorkspaceUpdating, setWorkspaceUpdating, closeWorkspaceEditModal } =
     workspaceEditStore();
@@ -87,19 +92,16 @@ function WorkspaceEditForm({ workspace }: { workspace: Workspace }) {
       is_personal: workspace.is_personal,
     },
     onSubmit: ({ value }) => {
-      handleUpdateWorkspace(
-        { id: workspace.id, ...value },
-        {
-          onStart: () => setWorkspaceUpdating(true),
-          onSuccess: () => {
-            closeWorkspaceEditModal();
-            setWorkspaceUpdating(false);
-          },
-          onError: () => {
-            setWorkspaceUpdating(false);
-          },
+      handleUpdateWorkspace(workspace.id, value, {
+        onStart: () => setWorkspaceUpdating(true),
+        onSuccess: () => {
+          closeWorkspaceEditModal();
+          setWorkspaceUpdating(false);
         },
-      );
+        onError: () => {
+          setWorkspaceUpdating(false);
+        },
+      });
     },
   });
 

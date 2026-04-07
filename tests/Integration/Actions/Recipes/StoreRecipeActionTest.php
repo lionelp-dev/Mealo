@@ -11,7 +11,6 @@ use function Pest\Laravel\assertDatabaseHas;
 describe('StoreRecipeAction', function () {
     beforeEach(function () {
         /** @var \Tests\TestCase $this */
-        $this->createUserContext();
         $this->createRecipeContext();
         $this->recipe = app(StoreRecipeAction::class)->execute(
             $this->user,

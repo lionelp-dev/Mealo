@@ -13,7 +13,6 @@ use function Pest\Laravel\assertDatabaseMissing;
 describe('DeleteRecipeActionTest', function () {
     beforeEach(function () {
         /** @var \Tests\TestCase $this */
-        $this->createUserContext();
         $this->createRecipeContext();
         $this->recipe = $this->user->recipes()->create($this->storeRecipeRequestData->transform());
     });

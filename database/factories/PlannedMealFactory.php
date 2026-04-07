@@ -24,7 +24,7 @@ class PlannedMealFactory extends Factory
             'recipe_id' => $recipe->id,
             'planned_date' => $this->faker->date(),
             'meal_time_id' => \App\Models\MealTime::query()->inRandomOrder()->first()->id,
-            'workspace_id' => $user->getPersonalWorkspace()->id,
+            'workspace_id' => $user->workspaces()->where('is_personal', true)->first()->id,
         ];
     }
 }

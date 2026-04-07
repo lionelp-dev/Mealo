@@ -16,9 +16,12 @@ abstract class TestCase extends BaseTestCase
     use HasWorkspaceContext;
     use RefreshDatabase;
 
+    protected bool $seed = true;
+
+    protected string $seeder = TestDatabaseSeeder::class;
+
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(TestDatabaseSeeder::class);
     }
 }

@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use App\Policies\WorkspacePolicy;
+use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property bool $is_default_
+ * @property bool $is_personal
+ * @property CarbonImmutable $created_at
+ * @property CarbonImmutable $expired_at
+ */
 #[UsePolicy(WorkspacePolicy::class)]
 class Workspace extends Model
 {
@@ -22,25 +29,40 @@ class Workspace extends Model
     protected $casts = [
         'is_personal' => 'boolean',
         'is_default' => 'boolean',
+        'created_at' => 'immutable_datetime',
+        'updated_at' => 'immutable_datetime',
     ];
 
+    /**
+     * @return BelongsTo<User,$this>
+     */
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
 
+    /**
+     * @return BelongsToMany<User, $this, WorkspaceUser>
+     */
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'workspace_users')
-            ->withPivot(['joined_at'])
-            ->withTimestamps();
+            ->using(WorkspaceUser::class)
+            ->withTimestamps()
+            ->withPivot(['joined_at']);
     }
 
+    /**
+     * @return HasMany<PlannedMeal,$this>
+     */
     public function plannedMeals(): HasMany
     {
         return $this->hasMany(PlannedMeal::class);
     }
 
+    /**
+     * @return HasMany<WorkspaceInvitation,$this>
+     */
     public function invitations(): HasMany
     {
         return $this->hasMany(WorkspaceInvitation::class);
@@ -65,7 +87,10 @@ class Workspace extends Model
             ]);
 
             // Then assign owner permissions
-            $workspace->giveOwnerPermissions($workspace->owner);
+            $owner = $workspace->owner;
+            if ($owner instanceof User) {
+                $workspace->giveOwnerPermissions($owner);
+            }
         });
     }
 
@@ -114,6 +139,7 @@ class Workspace extends Model
     {
         $nonOwners = $this->users()->where('user_id', '!=', $this->owner_id)->get();
 
+        /** @var User $user */
         foreach ($nonOwners as $user) {
             setPermissionsTeamId($this->id);
             $this->removeUserPermissions($user);

@@ -1,7 +1,7 @@
-import { PlannedMealIngredient } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import { capitalize } from '@/app/utils/';
+import { PlannedMealIngredient } from '@/types';
 import { router } from '@inertiajs/react';
 import { ChevronDown, DotIcon } from 'lucide-react';
 import { useState } from 'react';

@@ -1,4 +1,3 @@
-import { WorkspaceData } from '@/types';
 import WorkspaceCreationModal from '@/app/features/workspaces/components/workspace-creation-modal';
 import { WorkspaceEditModal } from '@/app/features/workspaces/components/workspace-edit-modal';
 import { WorkspaceInvitationModal } from '@/app/features/workspaces/components/workspace-invitation-modal';
@@ -6,6 +5,7 @@ import { workspaceCreationStore } from '@/app/features/workspaces/stores/workspa
 import { workspaceInvitationModalStore } from '@/app/features/workspaces/stores/workspace-invitation-modal-store';
 import { cn } from '@/app/lib/';
 import { capitalize, pluralize } from '@/app/utils/';
+import { WorkspaceData } from '@/types';
 import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import {

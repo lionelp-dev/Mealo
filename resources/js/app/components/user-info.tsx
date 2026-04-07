@@ -3,8 +3,8 @@ import {
   AvatarFallback,
   AvatarImage,
 } from '@/app/components/ui/avatar';
-import { type User } from '@/types';
 import { useInitials } from '@/app/hooks/use-initials';
+import { type User } from '@/types';
 
 export function UserInfo({
   user,

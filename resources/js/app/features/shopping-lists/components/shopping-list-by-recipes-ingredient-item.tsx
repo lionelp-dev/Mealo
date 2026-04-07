@@ -1,7 +1,7 @@
-import { PlannedMealRecipeIngredient } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import { capitalize } from '@/app/utils/';
+import { PlannedMealRecipeIngredient } from '@/types';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 

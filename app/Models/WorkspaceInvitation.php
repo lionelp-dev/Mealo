@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Policies\WorkspaceInvitationPolicy;
+use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * @property CarbonImmutable $expires_at
+ */
+#[UsePolicy(WorkspaceInvitationPolicy::class)]
 class WorkspaceInvitation extends Model
 {
+    /** @use HasFactory<\Database\Factories\WorkspaceInvitationFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -21,29 +29,40 @@ class WorkspaceInvitation extends Model
     ];
 
     protected $casts = [
-        'expires_at' => 'datetime',
+        'expires_at' => 'immutable_datetime',
     ];
 
     protected static function booted(): void
     {
         static::creating(function (WorkspaceInvitation $invitation) {
             if (empty($invitation->token)) {
-                $invitation->token = Str::random(32);
+                $invitation->token = (string) Str::uuid();
             }
             if (empty($invitation->expires_at)) {
-                $invitation->expires_at = now()->addDays(7);
+                $invitation->expires_at = CarbonImmutable::now()->addDays(7);
             }
         });
     }
 
+    /**
+     * @return BelongsTo<Workspace, $this>
+     */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return BelongsTo<User, $this>
+     */
     public function invitedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'invited_by');
+    }
+
+    public function getRouteKeyName(): string
+    {
+        return 'token';
     }
 
     public function isExpired(): bool
@@ -66,16 +85,21 @@ class WorkspaceInvitation extends Model
             return false;
         }
 
-        // Add user to workspace without role (only tracking membership)
-        $this->workspace->users()->attach($user->id, [
+        // Load workspace if not already loaded and ensure it exists
+        $workspace = $this->workspace;
+        if ($workspace === null) {
+            return false;
+        }
+
+        // Add user to workspace with role
+        $workspace->users()->attach($user->id, [
             'joined_at' => now(),
         ]);
 
         // Give appropriate Spatie permissions based on invitation role
         match ($this->role) {
-            'owner' => $this->workspace->giveOwnerPermissions($user),
-            'editor' => $this->workspace->giveEditorPermissions($user),
-            'viewer' => $this->workspace->giveViewerPermissions($user),
+            'editor' => $workspace->giveEditorPermissions($user),
+            'viewer' => $workspace->giveViewerPermissions($user),
         };
 
         // Delete the invitation

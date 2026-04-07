@@ -2,8 +2,15 @@
 
 namespace App\Policies;
 
+use App\Exceptions\Workspace\CannotDeleteWorkspaceException;
+use App\Exceptions\Workspace\CannotEditPlanningWorkspaceException;
+use App\Exceptions\Workspace\CannotInviteToWorkspaceException;
+use App\Exceptions\Workspace\CannotManageWorkspaceMembersException;
+use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
+use App\Exceptions\Workspace\CannotViewWorkspaceException;
 use App\Models\User;
 use App\Models\Workspace;
+use Illuminate\Auth\Access\Response;
 
 class WorkspacePolicy
 {
@@ -12,12 +19,13 @@ class WorkspacePolicy
         return true;
     }
 
-    public function view(User $user, Workspace $workspace): bool
+    public function view(User $user, Workspace $workspace): Response
     {
-        // Check if user is member of workspace and has view permissions
         setPermissionsTeamId($workspace->id);
 
-        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.view');
+        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.view')
+            ? Response::allow()
+            : Response::deny((new CannotViewWorkspaceException)->getMessage());
     }
 
     public function create(User $user): bool
@@ -25,50 +33,60 @@ class WorkspacePolicy
         return true;
     }
 
-    public function update(User $user, Workspace $workspace): bool
-    {
-        // Check if user is member and has edit permissions (owner or editor roles)
-        setPermissionsTeamId($workspace->id);
-
-        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.edit');
-    }
-
-    public function delete(User $user, Workspace $workspace): bool
+    public function update(User $user, Workspace $workspace): Response
     {
         if ($workspace->is_default) {
-            return false;
+            return Response::deny((new CannotUpdateWorkspaceException)->getMessage());
         }
 
-        // Only owners can delete workspaces
         setPermissionsTeamId($workspace->id);
 
-        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
+        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.edit')
+            ? Response::allow()
+            : Response::deny((new CannotUpdateWorkspaceException)->getMessage());
     }
 
-    public function manageMember(User $user, Workspace $workspace): bool
-    {
-        // Only owners can manage members
-        setPermissionsTeamId($workspace->id);
-
-        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
-    }
-
-    public function invite(User $user, Workspace $workspace): bool
+    public function delete(User $user, Workspace $workspace): Response
     {
         if ($workspace->is_default) {
-            return false;
+            return Response::deny((new CannotDeleteWorkspaceException)->getMessage());
         }
-        // Only owners can send invitations
+
         setPermissionsTeamId($workspace->id);
 
-        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage');
+        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
+            ? Response::allow()
+            : Response::deny((new CannotDeleteWorkspaceException)->getMessage());
     }
 
-    public function editPlanning(User $user, Workspace $workspace): bool
+    public function invite(User $user, Workspace $workspace): Response
     {
-        // Check if user is member and can edit planning (owners and editors)
+        if ($workspace->is_default) {
+            return Response::deny((new CannotInviteToWorkspaceException)->getMessage());
+        }
+
         setPermissionsTeamId($workspace->id);
 
-        return $workspace->hasUser($user) && $user->hasPermissionTo('planning.edit');
+        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
+            ? Response::allow()
+            : Response::deny((new CannotInviteToWorkspaceException)->getMessage());
+    }
+
+    public function manageMember(User $user, Workspace $workspace): Response
+    {
+        setPermissionsTeamId($workspace->id);
+
+        return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
+             ? Response::allow()
+             : Response::deny((new CannotManageWorkspaceMembersException)->getMessage());
+    }
+
+    public function editPlanning(User $user, Workspace $workspace): Response
+    {
+        setPermissionsTeamId($workspace->id);
+
+        return $workspace->hasUser($user) && $user->hasPermissionTo('planning.edit')
+            ? Response::allow()
+            : Response::deny((new CannotEditPlanningWorkspaceException)->getMessage());
     }
 }

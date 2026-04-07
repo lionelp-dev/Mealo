@@ -13,7 +13,6 @@ import { useInitials } from '@/app/hooks/use-initials';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import { WorkspaceData } from '@/types';
-import { Role } from '@/types/enum';
 import {
   ArrowRightLeft,
   FolderOpen,
@@ -54,7 +53,7 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
 
   const { canEditCurrentWorkspace } = useWorkspacePermissions();
 
-  const defaultValues: { email: string; role: Omit<Role, 'owner'> } = {
+  const defaultValues: { email: string; role: 'editor' | 'viewer' } = {
     email: '',
     role: 'editor',
   };
@@ -64,8 +63,11 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
     onSubmit: ({ value }) => {
       if (!workspace) return;
       handleInvite(
-        workspace.id,
-        value as { email: string; role: 'editor' | 'viewer' },
+        {
+          workspace_id: workspace.id,
+          email: value.email,
+          role: value.role,
+        },
         {
           onBefore: () => setWorkspaceInviting(true),
           onFinish: () => setWorkspaceInviting(false),
@@ -192,11 +194,10 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                         {member.role !== 'editor' && (
                           <DropdownMenuItem
                             onClick={() =>
-                              handleChangeRole(
-                                workspace.id,
-                                member.id,
-                                'editor',
-                              )
+                              handleChangeRole(workspace.id, {
+                                user_id: member.id,
+                                role: 'editor',
+                              })
                             }
                           >
                             {t('workspace.makeEditor', 'Changer en éditeur')}
@@ -207,11 +208,10 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                         {member.role !== 'viewer' && (
                           <DropdownMenuItem
                             onClick={() =>
-                              handleChangeRole(
-                                workspace.id,
-                                member.id,
-                                'viewer',
-                              )
+                              handleChangeRole(workspace.id, {
+                                user_id: member.id,
+                                role: 'viewer',
+                              })
                             }
                           >
                             {t('workspace.makeViewer', 'Changer en lecteur')}
@@ -221,10 +221,14 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                         )}
                         <DropdownMenuItem
                           onClick={() =>
-                            handleRemoveMember(workspace.id, member.id, {
-                              onBefore: () => setWorkspaceInviting(true),
-                              onFinish: () => setWorkspaceInviting(false),
-                            })
+                            handleRemoveMember(
+                              workspace.id,
+                              { user_id: member.id },
+                              {
+                                onBefore: () => setWorkspaceInviting(true),
+                                onFinish: () => setWorkspaceInviting(false),
+                              },
+                            )
                           }
                           className="justify-between text-destructive"
                         >

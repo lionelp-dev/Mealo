@@ -1,7 +1,7 @@
+import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { SharedData } from '@/types';
 import { ShoppingList } from '@/types';
 import { WorkspaceData } from '@/types';
-import { createGenericContext } from '@/app/hooks/use-generic-context';
 import { usePage } from '@inertiajs/react';
 import { PropsWithChildren, useMemo } from 'react';
 

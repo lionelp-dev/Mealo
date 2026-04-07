@@ -1,6 +1,6 @@
 import Toast from '@/app/components/ui/toast';
-import { FlashMessage, type BreadcrumbItem } from '@/types';
 import AppLayoutTemplate from '@/app/layouts/app/app-sidebar-layout';
+import { FlashMessage, type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { type ReactNode } from 'react';
 

@@ -6,7 +6,7 @@ export function capitalize(text: string | undefined) {
   if (firstChar) return firstChar.toUpperCase() + text.slice(1);
 }
 
-export function pluralize(word: string, count?: number) {
+export function pluralize(word: string, count?: number | null) {
   if (count) return count === 1 ? word : `${word}s`;
   return word;
 }

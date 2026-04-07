@@ -13,7 +13,8 @@ export function WorkspacesInvitationsView() {
 
   const getInitials = useInitials();
 
-  const { pending_invitations } = useWorkspaceContextValue();
+  const { workspace_data } = useWorkspaceContextValue();
+  const { workspaces_invitations } = workspace_data;
 
   const {
     formatExpirationDate,
@@ -42,9 +43,9 @@ export function WorkspacesInvitationsView() {
           </span>
 
           {/* Invitations List */}
-          {pending_invitations.length > 0 ? (
+          {workspaces_invitations.length > 0 ? (
             <div className="grid grid-cols-[repeat(auto-fit,36rem)] gap-8">
-              {pending_invitations.map((invitation) => {
+              {workspaces_invitations.map((invitation) => {
                 const progress = getRemainingDaysProgress(
                   invitation.expires_at,
                 );
@@ -78,23 +79,24 @@ export function WorkspacesInvitationsView() {
                           <Users className="h-6 w-6" />
                         </span>
                         <div className="flex flex-col gap-1">
-                          <span className="card-title pl-1 text-secondary">
-                            {capitalize(invitation.workspace.name)}
+                          <span className="text-lg font-semibold text-muted-foreground">
+                            {invitation.workspace_name}
                           </span>
+                          <span className="card-title pl-1 text-secondary"></span>
                           <span className="flex gap-2">
                             <span className="badge rounded-full badge-soft badge-sm badge-secondary">
                               {t('workspace.type.shared', 'Espace partagé')}
                             </span>
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <span>{invitation.workspace.users_count}</span>
+                              <span>{invitation.workspace_users_count}</span>
                               <span>
                                 {pluralize(
                                   t('workspace.member', 'membre'),
-                                  invitation.workspace.users_count,
+                                  invitation.workspace_users_count,
                                 )}
                               </span>
                               <span>
-                                {invitation.workspace.users_count === 1 ? (
+                                {invitation.workspace_users_count === 1 ? (
                                   <User className="h-4 w-4" />
                                 ) : (
                                   <Users className="h-4 w-4" />
@@ -159,14 +161,18 @@ export function WorkspacesInvitationsView() {
                       <div className="flex gap-4 border-t border-base-300/30 bg-muted/20 px-3 pt-5">
                         <button
                           className="btn flex-1 border-2 btn-secondary"
-                          onClick={() => handleAccept(invitation.id)}
+                          onClick={() =>
+                            handleAccept({ token: invitation.token })
+                          }
                         >
                           {t('workspace.invitation.accept', 'Accepter')}
                           <Check className="h-4 w-4" />
                         </button>
                         <button
                           className="btn flex-1 border-2"
-                          onClick={() => handleDecline(invitation.id)}
+                          onClick={() =>
+                            handleDecline({ token: invitation.token })
+                          }
                         >
                           {t('workspace.invitation.decline', 'Décliner')}
                           <XCircle className="h-4 w-4" />

@@ -33,14 +33,10 @@ import {
   TooltipTrigger,
 } from '@/app/components/ui/tooltip';
 import { UserMenuContent } from '@/app/components/user-menu-content';
-import {
-  type BreadcrumbItem,
-  type NavItem,
-  type SharedData,
-} from '@/types';
 import { useInitials } from '@/app/hooks/use-initials';
 import { cn } from '@/app/lib/';
 import { dashboard } from '@/routes';
+import { type BreadcrumbItem, type NavItem, type SharedData } from '@/types';
 import { Link, usePage } from '@inertiajs/react';
 import { BookOpen, Folder, LayoutGrid, Menu, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

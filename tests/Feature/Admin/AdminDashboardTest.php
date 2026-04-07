@@ -57,7 +57,7 @@ it('returns correct stats on dashboard', function () {
 
     $response->assertInertia(fn ($page) => $page
         ->component('admin/dashboard')
-        ->where('stats.total_users', 12) // 10 + recipeOwner + admin
+        ->where('stats.total_users', 20) // 10 + recipeOwner + admin + 8 from HasUserContext
         ->where('stats.pending_beta_requests', 3)
         ->where('stats.total_recipes', 5));
 });
@@ -88,7 +88,7 @@ it('counts beta users correctly', function () {
 
     $response->assertInertia(fn ($page) => $page
         ->where('stats.beta_users', 3)
-        ->where('stats.total_users', 10)); // 5 regular + 3 beta + 1 approver + 1 admin
+        ->where('stats.total_users', 18)); // 5 regular + 3 beta + 1 approver + 1 admin + 8 from HasUserContext
 });
 
 it('counts recent signups correctly', function () {
@@ -108,5 +108,5 @@ it('counts recent signups correctly', function () {
     $response = actingAs($admin)->get('/admin');
 
     $response->assertInertia(fn ($page) => $page
-        ->where('stats.recent_signups_week', 3));
+        ->where('stats.recent_signups_week', 11)); // 3 recent + 8 from HasUserContext (all recent by default)
 });

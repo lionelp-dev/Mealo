@@ -5,9 +5,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
-import { PlannedMeal } from '@/types';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import recipes from '@/routes/recipes';
+import { PlannedMeal } from '@/types';
 import { router } from '@inertiajs/react';
 import { Ellipsis, EyeIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';

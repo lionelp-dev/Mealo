@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Storage;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
-    $this->createUserContext();
     $this->createRecipeContext();
 
     Storage::fake('recipe_images');

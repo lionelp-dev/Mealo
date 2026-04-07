@@ -12,11 +12,11 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/app/components/ui/sidebar';
-import { type NavItem } from '@/types';
 import { dashboard } from '@/routes';
 import plannedMeals from '@/routes/planned-meals';
 import recipes from '@/routes/recipes';
 import shoppingLists from '@/routes/shopping-lists';
+import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
 import { useTranslation } from 'react-i18next';

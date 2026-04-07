@@ -39,6 +39,15 @@ class UserSeeder extends Seeder
             ]
         );
 
+        $invitee = User::query()->firstOrCreate(
+            ['email' => 'invitee@mail.com'],
+            [
+                'name' => 'user',
+                'password' => Hash::make('password'),
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
+
         $sharedWorkspace = Workspace::create([
             'name' => 'Test Shared Workspace',
             'owner_id' => $owner->id,

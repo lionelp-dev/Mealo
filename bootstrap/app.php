@@ -31,5 +31,12 @@ return Application::configure(basePath: dirname(__DIR__))
 
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        if (method_exists($exceptions, 'getStatusCode')) {
+            $status = $exceptions->getStatusCode();
+
+            if ($status === 500) {
+                return redirect()->back()->with('error', 'Une erreur est survenue')->withInput();
+            }
+        }
+
     })->create();

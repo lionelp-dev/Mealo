@@ -1,12 +1,12 @@
 import Heading from '@/app/components/heading';
 import { Separator } from '@/app/components/ui/separator';
-import { type NavItem } from '@/types';
 import { cn } from '@/app/lib/';
 import { edit as editAppearance } from '@/routes/appearance';
 import language from '@/routes/language';
 import { edit as editPassword } from '@/routes/password';
 import { edit } from '@/routes/profile';
 import { show } from '@/routes/two-factor';
+import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
 import { type PropsWithChildren } from 'react';
 import { useTranslation } from 'react-i18next';

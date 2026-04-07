@@ -1,6 +1,6 @@
 import { Checkbox } from '@/app/components/ui/checkbox';
-import { Filter } from '@/types';
 import { capitalize } from '@/app/utils/';
+import { Filter } from '@/types';
 import { useTranslation } from 'react-i18next';
 
 type Props = {

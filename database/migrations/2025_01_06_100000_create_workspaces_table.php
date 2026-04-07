@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('workspaces', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
             $table->foreignId('owner_id')->constrained('users')->onDelete('cascade');
+            $table->string('name');
             $table->boolean('is_personal')->default(false);
             $table->boolean('is_default')->default(false);
             $table->timestamps();

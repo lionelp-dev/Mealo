@@ -21,7 +21,7 @@ beforeEach(function () {
 test('user planned meals screen can be rendered', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
-    $workspace = $this->user->getPersonalWorkspace();
+    $workspace = $this->user->defaultWorkspace();
 
     \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
@@ -205,7 +205,7 @@ test('user can delete a planned meal successfully', function () {
     $recipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
     $plannedDate = now()->addDay()->format('Y-m-d');
-    $workspace = $this->user->getPersonalWorkspace();
+    $workspace = $this->user->defaultWorkspace();
 
     $plannedMeal = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
@@ -354,7 +354,7 @@ test('user can delete multiple planned meals successfully', function () {
     $recipe1 = createRecipeResource($this->user->id);
     $recipe2 = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
-    $workspace = $this->user->getPersonalWorkspace();
+    $workspace = $this->user->defaultWorkspace();
 
     $plannedMeal1 = \App\Models\PlannedMeal::factory()->create([
         'user_id' => $this->user->id,
@@ -436,8 +436,8 @@ test('user cannot delete other users planned meals in bulk operation', function 
     $otherRecipe2 = createRecipeResource($otherUser->id);
     $ownRecipe = createRecipeResource($this->user->id);
     $mealTime = \App\Models\MealTime::first();
-    $userWorkspace = $this->user->getPersonalWorkspace();
-    $otherWorkspace = $otherUser->getPersonalWorkspace();
+    $userWorkspace = $this->user->defaultWorkspace();
+    $otherWorkspace = $otherUser->defaultWorkspace();
 
     // Create planned meals for other user (in their workspace)
     $otherUserPlannedMeal1 = \App\Models\PlannedMeal::factory()->create([

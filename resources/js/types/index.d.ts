@@ -1,3 +1,7 @@
+import {
+  WorkspaceInvitationResourceData,
+  WorkspaceResourceData,
+} from './generated';
 import type { InertiaLinkProps } from '@inertiajs/react';
 import type {
   CalendarDateProps,
@@ -119,6 +123,7 @@ export interface Invitation {
   id: number;
   email: string;
   role: 'editor' | 'viewer';
+  token: string;
   expires_at: string;
   invited_by: {
     name: string;
@@ -128,12 +133,10 @@ export interface Invitation {
 export type Workspace = {
   id: number;
   name: string;
-  description?: string;
   owner_id: number;
   is_personal: boolean;
   is_default: boolean;
   users_count?: number;
-  user_role?: 'owner' | 'editor' | 'viewer';
   members: Member[];
   pending_invitations?: Invitation[];
   created_at: string;
@@ -141,9 +144,9 @@ export type Workspace = {
 };
 
 export type WorkspaceData = {
-  current_workspace: Workspace;
-  workspaces: Workspace[];
-  pending_invitations?: PendingInvitation[];
+  current_workspace: WorkspaceResourceData;
+  workspaces: WorkspaceResourceData[];
+  workspaces_invitations: WorkspaceInvitationResourceData[];
 };
 
 export type WorkspaceUser = {
@@ -273,7 +276,6 @@ type MapEvents<T> = {
 };
 
 declare module 'react' {
-   
   namespace JSX {
     interface IntrinsicElements {
       'calendar-month': MapEvents<CalendarMonthProps> &

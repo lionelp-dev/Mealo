@@ -57,7 +57,15 @@ class User extends Authenticatable implements HasLocalePreference
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'locale' => 'string',
         ];
+    }
+
+    protected static function booted(): void
+    {
+        static::created(function (User $user) {
+            Workspace::createPersonalWorkspace($user);
+        });
     }
 
     /**
@@ -85,25 +93,34 @@ class User extends Authenticatable implements HasLocalePreference
     }
 
     /**
-     * @return BelongsToMany<Workspace, $this>
+     * @return BelongsToMany<Workspace, $this, WorkspaceUser>
      */
     public function workspaces(): BelongsToMany
     {
         return $this->belongsToMany(Workspace::class, 'workspace_users')
-            ->withPivot(['joined_at'])
-            ->withTimestamps();
+            ->using(WorkspaceUser::class)
+            ->withTimestamps()
+            ->withPivot(['joined_at']);
+    }
+
+    public function defaultWorkspace(): ?Workspace
+    {
+        return $this->workspaces()
+            ->where('is_personal', true)
+            ->where('is_default', true)
+            ->first();
     }
 
     /**
      * @return HasMany<WorkspaceInvitation, $this>
      */
-    public function workspaceInvitations(): HasMany
+    public function workspacesInvitations(): HasMany
     {
         return $this->hasMany(WorkspaceInvitation::class, 'invited_by');
     }
 
     /**
-     * @return HasOne<BetaRequest>
+     * @return HasOne<BetaRequest, $this>
      */
     public function betaRequest(): HasOne
     {
@@ -118,39 +135,15 @@ class User extends Authenticatable implements HasLocalePreference
         return $this->betaRequest?->status === 'converted';
     }
 
-    protected static function booted(): void
-    {
-        static::created(function (User $user) {
-            Workspace::createPersonalWorkspace($user);
-        });
-    }
-
-    /**
-     * Get user's personal workspace
-     */
-    public function getPersonalWorkspace(): ?Workspace
-    {
-        return $this->ownedWorkspaces()->where('is_personal', true)->first();
-    }
-
-    /**
-     * Get all accessible workspaces for this user
-     */
-    public function getAccessibleWorkspaces()
-    {
-        return $this->workspaces()
-            ->orderBy('workspaces.is_personal', 'desc')
-            ->orderBy('workspaces.name')
-            ->withPivot('joined_at')
-            ->get();
-    }
-
     /**
      * Get the user's preferred locale.
      */
     public function preferredLocale(): string
     {
-        return $this->locale ?? config('app.locale', 'fr');
+        /** @var string $locale */
+        $locale = $this->locale ?? config('app.locale', 'fr');
+
+        return $locale;
     }
 
     /**

@@ -1,15 +1,10 @@
-import { SharedData } from '@/types';
-import {
-  WorkspaceData,
-  WorkspaceInvitation,
-} from '@/types';
 import { createGenericContext } from '@/app/hooks/use-generic-context';
+import { SharedData, WorkspaceData } from '@/types';
 import { usePage, usePoll } from '@inertiajs/react';
 import { PropsWithChildren, useMemo } from 'react';
 
 type PageProps = SharedData & {
   workspace_data: WorkspaceData;
-  pending_invitations: WorkspaceInvitation[];
 };
 
 export const {

@@ -1,7 +1,7 @@
-import { Filter, FilterSection, Option } from '@/types';
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';
+import { Filter, FilterSection, Option } from '@/types';
 import { TrashIcon, X } from 'lucide-react';
 import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,5 @@
-import { BetaRequest } from '@/types';
 import { approve, cleanupAll, reject, resend } from '@/routes/admin/beta';
+import { BetaRequest } from '@/types';
 import { router } from '@inertiajs/react';
 
 export const handleFilter = ({

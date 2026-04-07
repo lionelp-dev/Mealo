@@ -2,207 +2,159 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\WorkspaceInvitationMail;
+use App\Actions\Workspace\AcceptWorkspaceInvitationAction;
+use App\Actions\Workspace\DeclineWorkspaceInvitationAction;
+use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Actions\Workspace\StoreWorkspaceInvitationAction;
+use App\Data\Requests\Workspace\AcceptWorkspaceInvitationRequestData;
+use App\Data\Requests\Workspace\DeclineWorkspaceInvitationRequestData;
+use App\Data\Requests\Workspace\DeleteWorkspaceInvitationRequestData;
+use App\Data\Requests\Workspace\StoreWorkspaceInvitationRequestData;
+use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
+use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
+use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
+use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
+use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
+use App\Exceptions\Workspace\CannotInviteToWorkspaceException;
+use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
+use App\Messages\WorkspaceInvitation\InvitationCancelledMessage;
+use App\Messages\WorkspaceInvitation\InvitationDeclinedMessage;
+use App\Messages\WorkspaceInvitation\InvitationSentMessage;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
-use App\Services\WorkspaceDataService;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rule;
+use Inertia\Response;
 
 class WorkspaceInvitationController extends Controller
 {
-    public function __construct(
-        private WorkspaceDataService $workspaceDataService,
-    ) {}
-
-    public function index(Request $request)
+    public function index(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): Response|RedirectResponse
     {
+        /** @var User $user */
         $user = $request->user();
 
-        $pendingInvitations = WorkspaceInvitation::with([
-            'workspace' => function ($query) {
-                $query->withCount('users');
-            },
-            'invitedBy',
-        ])
-            ->whereHas('workspace')
-            ->where('email', $user->email)
-            ->where('expires_at', '>', now())
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $workspaceData = $this->workspaceDataService->getWorkspaceDataForUser($user);
+        $currentWorkspace = $getCurrentWorkspaceAction($user);
 
         return inertia('workspaces/invitations', [
-            'pending_invitations' => $pendingInvitations,
-            'workspace_data' => $workspaceData,
-        ]);
-    }
-
-    public function store(Request $request, Workspace $workspace)
-    {
-        Gate::authorize('invite', $workspace);
-
-        $validated = $request->validate([
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('workspace_invitations')->where(function ($query) use ($workspace) {
-                    return $query->where('workspace_id', $workspace->id)
-                        ->where('expires_at', '>', now());
-                }),
+            'workspace_data' => [
+                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations),
+                'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
+                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
             ],
-            'role' => 'required|in:editor,viewer',
         ]);
-
-        // Check if user is already a member
-        $existingUser = User::where('email', $validated['email'])->first();
-        if ($existingUser && $workspace->hasUser($existingUser)) {
-            return response()->json(['message' => 'User is already a member of this workspace'], 409);
-        }
-
-        $invitation = WorkspaceInvitation::create([
-            'workspace_id' => $workspace->id,
-            'email' => $validated['email'],
-            'role' => $validated['role'],
-            'invited_by' => $request->user()->id,
-        ]);
-
-        // Determine the locale for the invitation email
-        // Use invitee's locale if they exist, otherwise use inviter's locale
-        $locale = $existingUser?->locale ?? $request->user()->locale;
-
-        Mail::to($validated['email'])
-            ->locale($locale)
-            ->send(new WorkspaceInvitationMail(invitation: $invitation));
-
-        return back()->with('success', 'Invitation sent successfully');
     }
 
-    /**
-     * Handle invitation link clicks from email (GET request).
-     * Auto-accepts invitation for authenticated users.
-     */
-    public function showAccept(Request $request, string $token)
-    {
-        $invitation = WorkspaceInvitation::where('token', $token)->first();
+    public function store(
+        Request $request,
+        StoreWorkspaceInvitationRequestData $storeWorkspaceInvitationRequestData,
+        StoreWorkspaceInvitationAction $storeWorkspaceInvitationAction
+    ): RedirectResponse {
+        try {
+            /** @var User $user */
+            $user = $request->user();
 
-        // If invitation doesn't exist or is invalid, redirect to home with error
-        if (! $invitation || ! $invitation->isValid()) {
-            return redirect()->route('home')->with('error', 'Cette invitation a expiré ou n\'est plus valide.');
-        }
+            $workspace = Workspace::where('id', $storeWorkspaceInvitationRequestData->workspace_id)->firstOrFail();
 
-        $user = $request->user();
+            Gate::authorize('invite', $workspace);
 
-        // If user is not authenticated, redirect to login with intended URL
-        if (! $user) {
-            return redirect()->guest(route('login'))
-                ->with('info', 'Veuillez vous connecter pour accepter cette invitation.');
-        }
+            $storeWorkspaceInvitationAction->execute($user, $workspace, $storeWorkspaceInvitationRequestData);
 
-        // Verify the invitation belongs to the authenticated user
-        if ($user->email !== $invitation->email) {
-            return redirect()->route('home')
-                ->with('error', 'Cette invitation ne vous est pas destinée.');
-        }
-
-        // Check if user is already a member
-        if ($invitation->workspace->hasUser($user)) {
-            $invitation->delete(); // Clean up the invitation
-
-            return redirect()->route('dashboard')
-                ->with('info', 'Vous êtes déjà membre de cet espace.');
-        }
-
-        // Auto-accept the invitation
-        if ($invitation->accept($user)) {
-            return redirect()->route('dashboard')
-                ->with('success', 'Invitation acceptée avec succès. Bienvenue dans l\'espace '.$invitation->workspace->name.' !');
-        }
-
-        return redirect()->route('home')
-            ->with('error', 'Impossible d\'accepter l\'invitation.');
+            return back()->with('success', (new InvitationSentMessage)->getMessage());
+        } catch (
+            MemberAlreadyExistWorkspaceException|
+            AlreadyExistWorkspaceInvitationException|
+            CannotInviteToWorkspaceException $e) {
+                return back()->with('error', $e->getMessage());
+            }
     }
 
-    public function accept(Request $request, $token)
-    {
-        $invitation = WorkspaceInvitation::where('token', $token)->firstOrFail();
-        if (! $invitation->isValid()) {
-            return response()->json(['message' => 'Invitation expired or invalid'], 410);
+    public function accept(
+        Request $request,
+        AcceptWorkspaceInvitationRequestData $acceptWorkspaceInvitationRequestData,
+        AcceptWorkspaceInvitationAction $acceptWorkspaceInvitationAction
+    ): RedirectResponse {
+        try {
+            /** @var User $user */
+            $user = $request->user();
+
+            $acceptWorkspaceInvitationAction->execute($user, $acceptWorkspaceInvitationRequestData);
+
+            return back()->with('success', (new InvitationAcceptedMessage)->getMessage());
+        } catch (
+            ExpiredWorkspaceInvitationException|
+            NotFoundWorkspaceInvitationException $e
+        ) {
+            return back()->with('error', $e->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $user = $request->user();
-
-        if ($invitation->accept($user)) {
-            return response()->json(['message' => 'Invitation accepted successfully']);
-        }
-
-        return back()->with(['message' => 'Failed to accept invitation'], 400);
     }
 
-    public function decline(Request $request, $token)
-    {
-        $invitation = WorkspaceInvitation::where('token', $token)->firstOrFail();
+    public function acceptFromEmail(
+        Request $request,
+        AcceptWorkspaceInvitationRequestData $acceptWorkspaceInvitationRequestData,
+        AcceptWorkspaceInvitationAction $acceptWorkspaceInvitationAction
+    ): RedirectResponse {
+        try {
+            $user = $request->user();
 
-        // Only the invited user can decline
-        if ($request->user()->email !== $invitation->email) {
-            return response()->json(['message' => 'Unauthorized'], 403);
+            if (! $user) {
+                return redirect()->guest(route('login'));
+            }
+
+            $acceptWorkspaceInvitationAction->execute($user, $acceptWorkspaceInvitationRequestData);
+
+            return redirect()->route('workspaces.index')
+                ->with('success', (new InvitationAcceptedMessage)->getMessage());
+        } catch (
+            ExpiredWorkspaceInvitationException|
+            NotFoundWorkspaceInvitationException $e
+        ) {
+            return redirect()->route('workspaces.index')
+                ->with('error', $e->getMessage());
+        } catch (AuthorizationException $e) {
+            return redirect()->route('workspaces.index')
+                ->with('error', $e->getMessage());
         }
-
-        $invitation->delete();
-
-        return back()->with(['message' => 'Invitation declined']);
     }
 
-    /**
-     * Accept invitation for authenticated users (in-app).
-     */
-    public function acceptAuthenticated(Request $request, WorkspaceInvitation $invitation)
-    {
-        $user = $request->user();
+    public function decline(
+        Request $request,
+        DeclineWorkspaceInvitationRequestData $declineWorkspaceInvitationRequestData,
+        DeclineWorkspaceInvitationAction $declineWorkspaceInvitationAction
+    ): RedirectResponse {
+        try {
+            /** @var User $user */
+            $user = $request->user();
 
-        // Verify the invitation belongs to the authenticated user
-        if ($user->email !== $invitation->email) {
-            return back()->with('error', 'Cette invitation ne vous est pas destinée.');
+            $declineWorkspaceInvitationAction->execute($user, $declineWorkspaceInvitationRequestData);
+
+            return back()->with('success', (new InvitationDeclinedMessage)->getMessage());
+        } catch (NotFoundWorkspaceInvitationException $e) {
+            return back()->with('error', $e->getMessage());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        if (! $invitation->isValid()) {
-            return back()->with('error', 'Cette invitation a expiré ou n\'est plus valide.');
-        }
-
-        if ($invitation->accept($user)) {
-            return back()->with('success', 'Invitation acceptée avec succès.');
-        }
-
-        return back()->with('error', 'Impossible d\'accepter l\'invitation.');
     }
 
-    /**
-     * Decline invitation for authenticated users (in-app).
-     */
-    public function declineAuthenticated(Request $request, WorkspaceInvitation $invitation)
-    {
-        $user = $request->user();
+    public function destroy(
+        Request $request,
+        DeleteWorkspaceInvitationRequestData $deleteWorkspaceInvitationRequestData
+    ): RedirectResponse {
+        try {
+            $invitation = WorkspaceInvitation::where('id', $deleteWorkspaceInvitationRequestData->invitation)->firstOrFail();
 
-        // Verify the invitation belongs to the authenticated user
-        if ($user->email !== $invitation->email) {
-            return back()->with('error', 'Cette invitation ne vous est pas destinée.');
+            Gate::authorize('delete', $invitation);
+
+            $invitation->delete();
+
+            return back()->with(['success' => (new InvitationCancelledMessage)->getMessage()]);
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
-
-        $invitation->delete();
-
-        return back()->with('success', 'Invitation déclinée.');
-    }
-
-    public function destroy(WorkspaceInvitation $invitation)
-    {
-        Gate::authorize('invite', $invitation->workspace);
-
-        $invitation->delete();
-
-        return back()->with(['message' => 'Invitation cancelled']);
     }
 }

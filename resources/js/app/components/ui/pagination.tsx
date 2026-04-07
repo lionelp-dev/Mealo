@@ -1,5 +1,5 @@
-import { PaginatedCollection } from '@/types';
 import recipes from '@/routes/recipes';
+import { PaginatedCollection } from '@/types';
 import { router } from '@inertiajs/react';
 
 export function Pagination({

@@ -71,7 +71,7 @@ test('planned meals index includes workspace data', function () {
 
 test('planned meals index shows only workspace meals', function () {
     // Get automatically created personal workspace for owner
-    $personalWorkspace = $this->owner->getPersonalWorkspace();
+    $personalWorkspace = $this->owner->defaultWorkspace();
     $mealTime = \App\Models\MealTime::first();
 
     // Create meal in personal workspace
@@ -190,7 +190,7 @@ test('outsiders cannot plan meals in workspace', function () {
     ]);
 
     // Verify meal was created in outsider's personal workspace instead
-    $outsiderPersonalWorkspace = $this->outsider->getPersonalWorkspace();
+    $outsiderPersonalWorkspace = $this->outsider->defaultWorkspace();
     $this->assertDatabaseHas('planned_meals', [
         'user_id' => $this->outsider->id,
         'recipe_id' => $this->outsiderRecipe->id,

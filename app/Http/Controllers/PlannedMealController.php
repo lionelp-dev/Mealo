@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
+use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Requests\StorePlannedMealRequest;
 use App\Http\Requests\UpdatePlannedMealRequest;
 use App\Http\Resources\PlannedMealResource;
@@ -12,7 +15,6 @@ use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\Tag;
 use App\Services\AIMealPlanningService;
-use App\Services\WorkspaceDataService;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -27,13 +29,12 @@ class PlannedMealController extends Controller
 {
     public function __construct(
         private AIMealPlanningService $aiMealPlanningService,
-        private WorkspaceDataService $workspaceDataService
     ) {}
 
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): Response
+    public function index(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): Response
     {
         $user = $request->user();
 
@@ -54,9 +55,7 @@ class PlannedMealController extends Controller
 
         $weekEnd = $weekStart->copy()->endOf('week');
 
-        // Get workspace data for frontend
-        $workspaceData = $this->workspaceDataService->getWorkspaceDataForUser($user);
-        $currentWorkspace = $workspaceData['current_workspace'];
+        $currentWorkspace = $getCurrentWorkspaceAction($user);
 
         // Get planned meals for current workspace
         $plannedMeals = PlannedMeal::query()
@@ -111,7 +110,14 @@ class PlannedMealController extends Controller
             'plannedMeals' => PlannedMealResource::collection($plannedMeals)->toArray($request),
             'tags' => TagResource::collection(Tag::query()->where('user_id', $user->id)->get())->toArray($request),
             'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipesQuery->paginate(10))),
-            'workspace_data' => $workspaceData,
+            'workspace_data' => [
+                'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
+                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
+                'pending_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations()
+                    ->where('expires_at', '>', now())
+                    ->with(['workspace', 'invitedBy'])
+                    ->get()),
+            ],
         ]);
     }
 
@@ -173,14 +179,14 @@ class PlannedMealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePlannedMealRequest $request): mixed
+    public function store(StorePlannedMealRequest $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): mixed
     {
-        return DB::transaction(function () use ($request) {
+        return DB::transaction(function () use ($request, $getCurrentWorkspaceAction) {
             $validated = $request->validated();
 
             $user = $request->user();
 
-            $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($user);
+            $currentWorkspace = $getCurrentWorkspaceAction($user);
 
             try {
                 Gate::authorize('editPlanning', $currentWorkspace);
@@ -225,9 +231,9 @@ class PlannedMealController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request): mixed
+    public function destroy(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): mixed
     {
-        return DB::transaction(function () use ($request) {
+        return DB::transaction(function () use ($request, $getCurrentWorkspaceAction) {
             $validated = $request->validate([
                 'planned_meals' => ['required', 'array'],
                 'planned_meals.*' => ['integer', 'exists:planned_meals,id'],
@@ -235,8 +241,9 @@ class PlannedMealController extends Controller
 
             $plannedMealIds = $validated['planned_meals'];
 
+            $user = $request->user();
             // Get current workspace and check permission
-            $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($request->user());
+            $currentWorkspace = $getCurrentWorkspaceAction($user);
 
             // Fetch planned meals from current workspace
             $plannedMeals = PlannedMeal::query()->whereIn('id', $plannedMealIds)
@@ -272,7 +279,7 @@ class PlannedMealController extends Controller
     /**
      * Generate a meal plan using AI
      */
-    public function generatePlan(Request $request): RedirectResponse
+    public function generatePlan(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): RedirectResponse
     {
         $user = $request->user();
 
@@ -290,7 +297,7 @@ class PlannedMealController extends Controller
         $endDate = Carbon::parse($validated['endDate']);
 
         // Get current workspace
-        $currentWorkspace = $this->workspaceDataService->getCurrentWorkspace($user);
+        $currentWorkspace = $getCurrentWorkspaceAction($user);
 
         try {
             Gate::authorize('editPlanning', $currentWorkspace);

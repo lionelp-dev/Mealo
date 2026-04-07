@@ -96,7 +96,8 @@
       "WebFetch(domain:phpstan.org)",
       "WebFetch(domain:pestphp.com)",
       "WebFetch(domain:blog.jetbrains.com)",
-      "Bash(php -l:*)"
+      "Bash(php -l:*)",
+      "Bash(head:*)"
     ],
     "deny": [],
     "ask": []
