@@ -498,15 +498,15 @@
             "features": "Features",
             "howItWorks": "How it works",
             "preview": "Preview",
-            "joinBeta": "Join beta",
+            "joinBeta": "Join demo",
             "signIn": "Sign in"
         },
         "hero": {
-            "badge": "Currently in closed beta",
+            "badge": "Currently in closed demo",
             "title": "Plan your meals",
             "subtitle": "Simplify your week",
             "description": "Mealo Planner helps you organize weekly meals, generate smart grocery lists, and keep all your favorite recipes in one place.",
-            "cta": "Join the closed beta",
+            "cta": "Join the closed demo",
             "imageAlt": "Meal Planner App Preview"
         },
         "features": {
@@ -566,7 +566,7 @@
             "sectionDescription": "Clean, intuitive interfaces designed to make meal planning a joy.",
             "imageAlt": "Product preview"
         },
-        "betaCta": {
+        "demoCta": {
             "badge": "Limited spots available",
             "title": "Join the Closed Beta",
             "description": "We're currently testing Mealo with a small group of users. Request access to be notified when a spot opens up.",

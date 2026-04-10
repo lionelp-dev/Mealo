@@ -520,15 +520,15 @@
             "features": "Fonctionnalités",
             "howItWorks": "Comment ça marche",
             "preview": "Aperçu",
-            "joinBeta": "Rejoindre la beta",
+            "joinDemo": "Rejoindre la demo",
             "signIn": "Se connecter"
         },
         "hero": {
-            "badge": "Actuellement en beta fermée",
+            "badge": "Actuellement en demo",
             "title": "Planifiez vos repas",
             "subtitle": "Simplifiez votre semaine",
             "description": "Mealo Planner vous aide à organiser vos repas hebdomadaires, générer des listes de courses intelligentes, et conserver toutes vos recettes préférées au même endroit.",
-            "cta": "Rejoindre la beta fermée",
+            "cta": "Rejoindre la demo",
             "imageAlt": "Aperçu de l'application Meal Planner"
         },
         "features": {
@@ -588,9 +588,9 @@
             "sectionDescription": "Des interfaces épurées et intuitives conçues pour rendre la planification des repas agréable.",
             "imageAlt": "Aperçu du produit"
         },
-        "betaCta": {
+        "demoCta": {
             "badge": "Places limitées disponibles",
-            "title": "Rejoignez la Beta Fermée",
+            "title": "Rejoignez la Demo",
             "description": "Nous testons actuellement Mealo avec un petit groupe d'utilisateurs. Demandez l'accès pour être notifié quand une place se libère.",
             "emailPlaceholder": "votre@email.com",
             "submitButton": "Demander l'accès",

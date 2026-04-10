@@ -5,15 +5,15 @@ import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 
-export function BetaCTA() {
+export function DemoCTA() {
   const { t } = useTranslation();
 
-  const betaRequestSchema = z.object({
+  const demoRequestSchema = z.object({
     email: z
       .string()
-      .min(1, t('landing.betaCta.validation.emailRequired'))
-      .email({ message: t('landing.betaCta.validation.emailInvalid') })
-      .max(255, t('landing.betaCta.validation.emailMaxLength')),
+      .min(1, t('landing.demoCta.validation.emailRequired'))
+      .email({ message: t('landing.demoCta.validation.emailInvalid') })
+      .max(255, t('landing.demoCta.validation.emailMaxLength')),
   });
 
   const form = useAppForm({
@@ -21,16 +21,15 @@ export function BetaCTA() {
       email: '',
     },
     validators: {
-      onSubmit: betaRequestSchema,
+      onSubmit: demoRequestSchema,
     },
     onSubmit: ({ value }) => {
-      console.log('hello');
       router.post(beta.request.url(), value);
     },
   });
 
   return (
-    <section id="join-beta" className="py-26 pb-30">
+    <section id="join-demo" className="py-26 pb-30">
       <div className="mx-auto max-w-6xl px-6">
         <div className="relative overflow-hidden rounded-3xl bg-secondary px-8 py-16 md:px-16 md:py-28">
           {/* Background pattern */}
@@ -58,16 +57,16 @@ export function BetaCTA() {
           <div className="relative mx-auto flex max-w-2xl flex-col items-center gap-8 text-center">
             <div className="inline-flex w-fit items-center gap-2 rounded-full border border-primary-foreground/20 bg-primary-foreground/10 px-4 py-1.5 text-sm text-primary-foreground">
               <span className="h-2 w-2 animate-pulse rounded-full bg-accent" />
-              {t('landing.betaCta.badge')}
+              {t('landing.demoCta.badge')}
             </div>
 
             <div className="flex flex-col gap-4">
               <h2 className="text-3xl font-semibold tracking-tight text-balance text-primary-foreground md:text-4xl lg:text-5xl">
-                {t('landing.betaCta.title')}
+                {t('landing.demoCta.title')}
               </h2>
 
               <p className="text-lg text-pretty text-primary-foreground/70">
-                {t('landing.betaCta.description')}
+                {t('landing.demoCta.description')}
               </p>
             </div>
 
@@ -81,7 +80,7 @@ export function BetaCTA() {
                 <form.AppField name="email">
                   {(field) => (
                     <field.TextField
-                      placeholder={t('landing.betaCta.emailPlaceholder')}
+                      placeholder={t('landing.demoCta.emailPlaceholder')}
                       className="rounded-full border-white bg-transparent pb-0.5 pl-6 text-white !outline-white btn-outline"
                     />
                   )}
@@ -95,10 +94,10 @@ export function BetaCTA() {
                       disabled={!canSubmit}
                     >
                       {isSubmitting ? (
-                        t('landing.betaCta.submitting')
+                        t('landing.demoCta.submitting')
                       ) : (
                         <>
-                          {t('landing.betaCta.submitButton')}
+                          {t('landing.demoCta.submitButton')}
                           <ArrowRight className="h-4 w-4" />
                         </>
                       )}

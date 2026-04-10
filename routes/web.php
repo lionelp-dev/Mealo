@@ -14,7 +14,6 @@ Route::get('/', function () {
 })->name('home');
 
 Route::post('/beta/request', [BetaRequestController::class, 'store'])
-    ->middleware('throttle:5,60')
     ->name('beta.request');
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -55,6 +54,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('workspace-invitations/{token}/accept', [WorkspaceInvitationController::class, 'acceptFromEmail'])
     ->name('workspace-invitations.acceptFromEmail');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

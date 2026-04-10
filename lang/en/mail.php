@@ -2,24 +2,24 @@
 
 return [
     'beta_invitation' => [
-        'subject' => 'Welcome to Mealo Beta 🎉',
+        'subject' => 'Welcome to Mealo 🎉',
         'greeting' => 'Hello,',
-        'good_news' => 'Good news! Your request for access to the <strong>Mealo</strong> closed beta has been approved.',
+        'good_news' => 'Good news! Your request for access to the <strong>Mealo</strong> closed demo has been approved.',
         'warning_title' => '⚠️ IMPORTANT:',
-        'warning_text' => 'Your beta account is temporary. All your data (recipes, plans, etc.) will be deleted at the end of the testing period.',
+        'warning_text' => 'Your demo account is temporary. All your data (recipes, plans, etc.) will be deleted at the end of the testing period.',
         'activate_prompt' => 'To activate your temporary account, click below:',
         'activate_button' => 'Activate my account',
         'link_valid' => 'This link is valid for 7 days (until <strong>:date</strong>).',
         'closing' => 'Thank you for helping us improve Mealo!',
-        'team' => 'The Mealo Team',
+        'team' => 'Mealo',
         'footer' => 'This email was sent by Mealo',
         'footer_ignore' => 'If you did not request this access, you can ignore this email.',
     ],
 
     'beta_request_confirmation' => [
-        'subject' => 'Beta access request received - Mealo',
+        'subject' => 'Demo access request received - Mealo',
         'greeting' => 'Hello,',
-        'confirmation' => 'We have received your beta access request for <strong>Mealo</strong>.',
+        'confirmation' => 'We have received your demo access request for <strong>Mealo</strong>.',
         'review_message' => 'Your request will be reviewed soon. You will receive an email when your access is granted.',
         'closing' => 'Thank you for your interest!',
         'team' => 'The Mealo Team',

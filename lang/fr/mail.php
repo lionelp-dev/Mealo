@@ -1,12 +1,12 @@
 <?php
 
 return [
-    'beta_invitation' => [
-        'subject' => 'Bienvenue dans la beta de Mealo 🎉',
+    'demo_invitation' => [
+        'subject' => 'Bienvenue dans la demo de Mealo 🎉',
         'greeting' => 'Bonjour,',
-        'good_news' => 'Bonne nouvelle ! Votre demande d\'accès à la beta fermée de <strong>Mealo Planner</strong> a été approuvée.',
+        'good_news' => 'Bonne nouvelle ! Votre demande d\'accès à la demo de <strong>Mealo Planner</strong> a été approuvée.',
         'warning_title' => '⚠️ IMPORTANT :',
-        'warning_text' => 'Votre compte beta est temporaire. Toutes vos données (recettes, plannings, etc.) seront supprimées à la fin de la période de test.',
+        'warning_text' => 'Votre compte demo est temporaire. Toutes vos données (recettes, plannings, etc.) seront supprimées à la fin de la période de test.',
         'activate_prompt' => 'Pour activer votre compte temporaire, cliquez ci-dessous :',
         'activate_button' => 'Activer mon compte',
         'link_valid' => 'Ce lien est valable pendant 7 jours (jusqu\'au <strong>:date</strong>).',
@@ -16,10 +16,10 @@ return [
         'footer_ignore' => 'Si vous n\'avez pas demandé cet accès, vous pouvez ignorer cet email.',
     ],
 
-    'beta_request_confirmation' => [
-        'subject' => 'Demande d\'accès beta reçue - Mealo Planner',
+    'demo_request_confirmation' => [
+        'subject' => 'Demande d\'accès demo reçue - Mealo Planner',
         'greeting' => 'Bonjour,',
-        'confirmation' => 'Nous avons bien reçu votre demande d\'accès à la beta de <strong>Mealo Planner</strong>.',
+        'confirmation' => 'Nous avons bien reçu votre demande d\'accès à la demo de <strong>Mealo Planner</strong>.',
         'review_message' => 'Votre demande sera examinée prochainement. Vous recevrez un email lorsque votre accès sera accordé.',
         'closing' => 'Merci pour votre intérêt !',
         'team' => 'L\'équipe Mealo Planner',
