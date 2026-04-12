@@ -34,7 +34,14 @@ class AdminRoleSeeder extends Seeder
             ]
         );
 
-        setPermissionsTeamId(null);
+        // Create personal workspace for admin if it doesn't exist
+        if (! $admin->workspaces()->exists()) {
+            \App\Models\Workspace::createPersonalWorkspace($admin);
+        }
+
+        // Assign admin role within the workspace context
+        $workspace = $admin->workspaces()->first();
+        setPermissionsTeamId($workspace->id);
         $admin->assignRole('admin');
     }
 }

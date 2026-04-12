@@ -109,7 +109,8 @@ class GenerateRecipeWithAIAction
                 ],
                 'description' => [
                     'type' => 'string',
-                    'description' => 'Recipe description',
+                    'description' => 'Recipe description (max 255 characters)',
+                    'maxLength' => 255,
                 ],
                 'preparation_time' => [
                     'type' => 'integer',
@@ -187,7 +188,8 @@ class GenerateRecipeWithAIAction
                         'properties' => [
                             'description' => [
                                 'type' => 'string',
-                                'description' => 'Step description',
+                                'description' => 'Step description (max 255 characters)',
+                                'maxLength' => 255,
                             ],
                             'order' => [
                                 'type' => 'integer',

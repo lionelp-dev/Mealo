@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
-            $table->foreignId('recipe_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('recipe_id')->constrained('recipes')->onDelete('cascade');
             $table->foreignId('meal_time_id')->constrained('meal_times')->onDelete('cascade');
             $table->date('planned_date');
             $table->integer('serving_size')->default(1);

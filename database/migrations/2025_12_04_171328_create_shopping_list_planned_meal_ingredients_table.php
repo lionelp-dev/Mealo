@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('shopping_list_id')->constrained()->onDelete('cascade');
             $table->foreignId('planned_meal_id')->constrained()->onDelete('cascade');
-            $table->foreignId('ingredient_id')->constrained()->onDelete('cascade');
+            $table->foreignUuid('ingredient_id')->constrained('ingredients')->onDelete('cascade');
             $table->string('unit');
             $table->boolean('is_checked')->default(false);
             $table->timestamps();

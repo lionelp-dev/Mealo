@@ -1,18 +1,30 @@
 services:
-  maildev:
-    image: maildev/maildev:latest
-    container_name: maildev
-    restart: unless-stopped
-    ports:
-      - '1080:1080'
-      - '1025:1025'
-    environment:
-      - MAILDEV_WEB_HOST=${MAILDEV_WEB_HOST}
-      - MAILDEV_WEB_PORT=${MAILDEV_WEB_PORT}
-      - MAILDEV_SMTP_HOST=${MAILDEV_SMTP_HOST}
-      - MAILDEV_SMTP_PORT=${MAILDEV_SMTP_PORT}
-    volumes:
-      - maildev_data:/tmp
+    db:
+        image: postgres
+        restart: always
+        shm_size: 128mb
+        ports:
+            - '5432:5432'
+        environment:
+            POSTGRES_DB: ${DB_DATABASE}
+            POSTGRES_USER: ${DB_USERNAME}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - pgsql_data:/var/lib/postgresql
+    maildev:
+        image: maildev/maildev:latest
+        container_name: maildev
+        restart: unless-stopped
+        ports:
+            - '1080:1080'
+            - '1025:1025'
+        environment:
+            - MAILDEV_WEB_HOST=${MAILDEV_WEB_HOST}
+            - MAILDEV_WEB_PORT=${MAILDEV_WEB_PORT}
+            - MAILDEV_SMTP_HOST=${MAILDEV_SMTP_HOST}
+            - MAILDEV_SMTP_PORT=${MAILDEV_SMTP_PORT}
+        volumes:
+            - maildev_data:/tmp
 volumes:
-  maildev_data:
-
+    pgsql_data:
+    maildev_data:
