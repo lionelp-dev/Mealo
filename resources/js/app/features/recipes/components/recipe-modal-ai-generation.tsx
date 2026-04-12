@@ -1,5 +1,5 @@
 import { useRecipesContextValue } from '../inertia.adapter';
-import { generateRecipe } from '../repositories/recipes.repository';
+import { useGenerateRecipe } from '../repositories/use-generate-recipe';
 import { useForm } from '@tanstack/react-form';
 import { Wand2, X } from 'lucide-react';
 import { useState } from 'react';
@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 export default function GenerateRecipeWithAIModal() {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(false);
+  const { generateRecipe, processing } = useGenerateRecipe();
   const { show_generate_recipe_with_ai_modal } = useRecipesContextValue();
   const [isOpen, setIsOpen] = useState(show_generate_recipe_with_ai_modal);
 
@@ -15,17 +15,8 @@ export default function GenerateRecipeWithAIModal() {
     defaultValues: {
       prompt: '',
     },
-    onSubmit: async ({ value }) => {
-      setIsLoading(true);
-      await generateRecipe(value, {
-        onSuccess: () => {
-          setIsOpen(false);
-          form.reset();
-        },
-        onFinish: () => {
-          setIsLoading(false);
-        },
-      });
+    onSubmit: ({ value }) => {
+      generateRecipe(value);
     },
   });
 
@@ -42,7 +33,7 @@ export default function GenerateRecipeWithAIModal() {
           <button
             onClick={() => setIsOpen(false)}
             className="btn btn-circle btn-square btn-ghost btn-sm"
-            disabled={isLoading}
+            disabled={processing}
           >
             <X className="h-6 w-6" />
           </button>
@@ -68,7 +59,7 @@ export default function GenerateRecipeWithAIModal() {
                   )}
                   value={field.state.value}
                   onChange={(e) => field.handleChange(e.target.value)}
-                  disabled={isLoading}
+                  disabled={processing}
                   rows={10}
                 />
               )}
@@ -79,16 +70,16 @@ export default function GenerateRecipeWithAIModal() {
               type="button"
               onClick={() => setIsOpen(false)}
               className="btn"
-              disabled={isLoading}
+              disabled={processing}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>
             <button
               type="submit"
               className="btn gap-2 pl-4.5 btn-secondary"
-              disabled={isLoading}
+              disabled={processing}
             >
-              {isLoading ? (
+              {processing ? (
                 <>
                   <span className="loading loading-sm loading-spinner"></span>
                   {t('recipes.generate.generating', 'Generating...')}

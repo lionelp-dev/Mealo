@@ -1,5 +1,5 @@
 import { useRecipesContextValue } from '../inertia.adapter';
-import { deleteRecipes } from '../repositories/recipes.repository';
+import { useDeleteRecipes } from '../repositories/use-delete-recipes';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import {
   useConfirmDialog,
@@ -11,6 +11,7 @@ export function RecipesMultiSelectToolbar() {
   const { t } = useTranslation();
 
   const { recipes } = useRecipesContextValue();
+  const { deleteRecipes, processing } = useDeleteRecipes();
 
   const { confirm, dialogProps } = useConfirmDialog();
 
@@ -56,8 +57,8 @@ export function RecipesMultiSelectToolbar() {
             defaultValue: `Once this recipe is deleted, it will be permanently removed. Are you sure you want to delete "${selectedRecipes[0]?.name}"?`,
           }),
       submitBtnLabel: t('recipes.delete.confirmButton', 'Delete'),
-      onConfirm: async () => {
-        await deleteRecipes({ ids: selectedRecipes.map((r) => r.id) });
+      onConfirm: () => {
+        deleteRecipes({ ids: selectedRecipes.map((r) => r.id) });
         clearSelectedRecipes();
         setIsMultiSelectMode(false);
       },
@@ -92,7 +93,7 @@ export function RecipesMultiSelectToolbar() {
           <button
             className="btn join-item rounded-r-full border-base-300 text-error hover:bg-base-300"
             onClick={() => handleDeleteRecipes()}
-            disabled={!hasSelectedRecipesId}
+            disabled={!hasSelectedRecipesId || processing}
           >
             {t('common.buttons.remove', 'Remove')}
           </button>

@@ -1,7 +1,8 @@
 import { useRecipesContextValue } from '../inertia.adapter';
-import { searchTags } from '../repositories/recipes.repository';
+import { useSearchTags } from '../repositories/use-search-tags';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { tagRequestSchema } from '@/app/data/requests/recipe/schemas/entities/tag.request.schema';
+import { recipeFormRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-form.request.schema';
 import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
 import { TagRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
@@ -22,11 +23,19 @@ export const RecipeFormTagsSection = withFieldGroup({
   render: function Render({ group }) {
     const { t } = useTranslation();
     const { url, tags_search_results } = useRecipesContextValue();
+    const { searchTags } = useSearchTags();
 
     const form = useAppForm({
       defaultValues: { name: '' },
       validators: {
         onSubmit: tagRequestSchema,
+        onChange: ({ value }) => {
+          const result = recipeFormRequestSchema.shape.tags_search.safeParse(
+            value.name,
+          );
+          if (!result) return;
+          setSearchTerm(value.name);
+        },
       },
       onSubmit: ({ value }) => {
         group.pushFieldValue('tags', value);
@@ -38,14 +47,11 @@ export const RecipeFormTagsSection = withFieldGroup({
 
     useEffect(() => {
       if (debouncedValue) {
-        searchTags({
-          url,
-          data: {
-            tags_search: debouncedValue,
-          },
+        searchTags(url, {
+          tags_search: debouncedValue,
         });
       }
-    }, [debouncedValue]);
+    }, [debouncedValue, url, searchTags]);
 
     const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
 
@@ -91,9 +97,7 @@ export const RecipeFormTagsSection = withFieldGroup({
                               data-tag-input
                               value={field.state.value}
                               onChange={(e) => {
-                                const value = e.target.value;
-                                field.handleChange(value);
-                                setSearchTerm(value);
+                                field.handleChange(e.target.value);
                               }}
                               onBlur={() => {
                                 tags_field.handleBlur();

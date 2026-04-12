@@ -4,14 +4,14 @@ namespace App\Actions\Recipes;
 
 use App\Models\Tag;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class SearchTagsAction
 {
     /**
-     * @return LengthAwarePaginator<int,Tag>
+     * @return Builder<Tag>
      */
-    public function __invoke(User $user, ?string $search): LengthAwarePaginator
+    public function __invoke(User $user, ?string $search): Builder
     {
         $query = Tag::query()->where('user_id', $user->id);
 
@@ -20,6 +20,6 @@ class SearchTagsAction
                 ->orderBy('name');
         }
 
-        return $query->paginate(5, pageName: 'tags_page');
+        return $query;
     }
 }

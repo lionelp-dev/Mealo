@@ -3,7 +3,8 @@ import { RecipeFormStepsSection } from '../components/recipe-form-steps-section'
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
 import GenerateRecipeWithAIModal from '../components/recipe-modal-ai-generation';
 import { useRecipesContextValue } from '../inertia.adapter';
-import { createRecipe, viewRecipes } from '../repositories/recipes.repository';
+import { viewRecipes } from '../repositories/recipes.repository';
+import { useCreateRecipe } from '../repositories/use-create-recipe';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
 import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
@@ -18,6 +19,8 @@ export function CreateRecipesView() {
   const { t } = useTranslation();
 
   const { meal_times, generated_recipe } = useRecipesContextValue();
+
+  const { createRecipe } = useCreateRecipe();
 
   const initialValues = {
     name: generated_recipe?.name ?? '',
@@ -37,8 +40,8 @@ export function CreateRecipesView() {
     validators: {
       onSubmit: storeRecipeRequestSchema,
     },
-    onSubmit: async ({ value }) => {
-      return await createRecipe(value);
+    onSubmit: ({ value }) => {
+      return createRecipe(value);
     },
   });
 

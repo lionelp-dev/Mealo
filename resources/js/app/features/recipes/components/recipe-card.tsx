@@ -1,8 +1,5 @@
-import {
-  viewRecipe,
-  editRecipe,
-  deleteRecipes,
-} from '../repositories/recipes.repository';
+import { viewRecipe, editRecipe } from '../repositories/recipes.repository';
+import { useDeleteRecipes } from '../repositories/use-delete-recipes';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import {
   DropdownMenu,
@@ -24,6 +21,7 @@ export function RecipeCard({ recipe }: Props) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
 
+  const { deleteRecipes, processing } = useDeleteRecipes();
   const { isFilterActive } = useRecipesFiltersStore();
   const { isMultiSelectMode, selectedRecipeIds, toggleRecipeSelection } =
     useRecipesMultiSelectStore();
@@ -91,6 +89,7 @@ export function RecipeCard({ recipe }: Props) {
               </DropdownMenuItem>
               <DropdownMenuItem
                 variant="destructive"
+                disabled={processing}
                 onClick={(e) => {
                   e.stopPropagation();
                   deleteRecipes({ ids: [recipe.id] });

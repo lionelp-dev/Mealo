@@ -97,7 +97,12 @@
       "WebFetch(domain:pestphp.com)",
       "WebFetch(domain:blog.jetbrains.com)",
       "Bash(php -l:*)",
-      "Bash(head:*)"
+      "Bash(head:*)",
+      "Bash(pnpm remove:*)",
+      "Bash(pnpm list:*)",
+      "Bash(pnpm add:*)",
+      "WebFetch(domain:vitest.dev)",
+      "Bash(pnpm exec playwright install:*)"
     ],
     "deny": [],
     "ask": []

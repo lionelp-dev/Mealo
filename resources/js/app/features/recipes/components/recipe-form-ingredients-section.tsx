@@ -1,7 +1,8 @@
 import { useRecipesContextValue } from '../inertia.adapter';
-import { searchIngredients } from '../repositories/recipes.repository';
+import { useSearchIngredients } from '../repositories/use-search-ingredients';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { recipeIngredientRequestSchema } from '@/app/data/requests/recipe/schemas/entities/recipe-ingredient.request.schema';
+import { recipeFormRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-form.request.schema';
 import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
 import { RecipeIngredientRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
@@ -27,6 +28,18 @@ export const RecipeFormIngredientsSection = withFieldGroup({
 
     const { url, ingredients_search_results } = useRecipesContextValue();
 
+    const { searchIngredients } = useSearchIngredients();
+
+    const [debouncedValue, setSearchTerm] = useDebounceValue('', 300);
+
+    useEffect(() => {
+      searchIngredients(url, {
+        ingredients_search: debouncedValue,
+      });
+    }, [debouncedValue]);
+
+    const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
+
     const form = useAppForm({
       defaultValues: {
         name: '',
@@ -35,27 +48,20 @@ export const RecipeFormIngredientsSection = withFieldGroup({
       },
       validators: {
         onSubmit: recipeIngredientRequestSchema,
+        onChange: ({ value }) => {
+          const result =
+            recipeFormRequestSchema.shape.ingredients_search.safeParse(
+              value.name,
+            );
+          if (!result) return;
+          setSearchTerm(value.name);
+        },
       },
       onSubmit: ({ value }) => {
         group.pushFieldValue('ingredients', value);
         form.reset();
       },
     });
-
-    const [debouncedValue, setSearchTerm] = useDebounceValue('', 300);
-
-    useEffect(() => {
-      if (debouncedValue) {
-        searchIngredients({
-          url,
-          data: {
-            ingredients_search: debouncedValue,
-          },
-        });
-      }
-    }, [debouncedValue]);
-
-    const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
 
     return (
       <group.AppField
@@ -160,6 +166,10 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                         <Popover.Anchor className="flex">
                           <form.AppField
                             name="name"
+                            validators={{
+                              onChange:
+                                recipeIngredientRequestSchema.shape.name,
+                            }}
                             children={(field) => (
                               <Popover.Trigger className="flex-1">
                                 <field.TextField
@@ -167,12 +177,12 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                   value={field.state.value}
                                   onChange={(e) => {
                                     field.handleChange(e.target.value);
-                                    setSearchTerm(e.target.value);
                                   }}
                                   autoComplete="off"
                                   className={cn(
                                     !ingredients_field.state.meta.isValid &&
                                       'input-error',
+                                    !field.state.meta.isValid && 'input-error',
                                   )}
                                 />
                               </Popover.Trigger>
@@ -193,7 +203,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                         >
                           {ingredients_search_results?.data &&
                             ingredients_search_results.data.length > 0 && (
-                              <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-4">
+                              <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-1">
                                 <div className="max-h-40 overflow-y-auto">
                                   <InfiniteScroll
                                     data="ingredients_search_results"
@@ -203,7 +213,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                       (ingredient) => (
                                         <div
                                           key={ingredient.id}
-                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 hover:bg-base-200"
+                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 text-base hover:bg-base-200"
                                           onClick={() => {
                                             form.setFieldValue(
                                               'name',
@@ -212,9 +222,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                             setPopoverOpen(false);
                                           }}
                                         >
-                                          <span className="font-medium">
-                                            {ingredient.name}
-                                          </span>
+                                          {ingredient.name}
                                         </div>
                                       ),
                                     )}
@@ -229,6 +237,11 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     <td>
                       <form.AppField
                         name="quantity"
+                        validators={{
+                          onChange:
+                            recipeIngredientRequestSchema.shape.quantity,
+                          onBlur: recipeIngredientRequestSchema.shape.quantity,
+                        }}
                         children={(field) => (
                           <field.NumberField
                             value={field.state.value}
@@ -237,6 +250,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                             className={cn(
                               !ingredients_field.state.meta.isValid &&
                                 'input-error',
+                              !field.state.meta.isValid && 'input-error',
                             )}
                             onBlur={(e) => e.preventDefault()}
                             onChange={(e) =>
@@ -254,12 +268,17 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     <td>
                       <form.AppField
                         name="unit"
+                        validators={{
+                          onChange: recipeIngredientRequestSchema.shape.unit,
+                          onBlur: recipeIngredientRequestSchema.shape.unit,
+                        }}
                         children={(field) => (
                           <field.TextField
                             onBlur={(e) => e.preventDefault()}
                             className={cn(
                               !ingredients_field.state.meta.isValid &&
                                 'input-error',
+                              !field.state.meta.isValid && 'input-error',
                             )}
                           />
                         )}

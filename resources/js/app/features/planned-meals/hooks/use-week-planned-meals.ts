@@ -30,7 +30,6 @@ export function useWeekPlannedMeals() {
       };
     });
   }, [currWeekStart, mealTimes, plannedMeals]);
-
   return {
     weekPlannedMeals,
   };

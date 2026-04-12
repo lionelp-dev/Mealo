@@ -4,14 +4,14 @@ namespace App\Actions\Recipes;
 
 use App\Models\Ingredient;
 use App\Models\User;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 
 class SearchIngredientsAction
 {
     /**
-     * @return LengthAwarePaginator<int, Ingredient>
+     * @return Builder<Ingredient>
      */
-    public function __invoke(User $user, ?string $search): LengthAwarePaginator
+    public function __invoke(User $user, ?string $search): Builder
     {
         $query = Ingredient::query()->where('user_id', $user->id);
 
@@ -20,6 +20,6 @@ class SearchIngredientsAction
                 ->orderBy('name');
         }
 
-        return $query->paginate(5, pageName: 'ingredients_page');
+        return $query;
     }
 }

@@ -79,8 +79,8 @@ class RecipeController extends Controller
             'recipe/create',
             [
                 'meal_times' => MealTimeResourceData::collect(MealTime::all()),
-                'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
-                'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
+                'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
+                'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
                 'show_generate_recipe_with_ai_modal' => $formQuery->show_generate_recipe_with_ai_modal ?? false,
             ]
         );
@@ -133,8 +133,8 @@ class RecipeController extends Controller
                 'recipe/create',
                 [
                     'meal_times' => MealTimeRequestData::collect(MealTime::all()),
-                    'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
-                    'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
+                    'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
+                    'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
                     'should_open_ai_modal' => false,
                     'generated_recipe' => $recipe,
                 ]
@@ -181,8 +181,8 @@ class RecipeController extends Controller
         return Inertia::render('recipe/edit', [
             'meal_times' => MealTimeRequestData::collect(MealTime::all()),
             'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
-            'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients)),
-            'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags)),
+            'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
+            'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
         ]);
     }
 

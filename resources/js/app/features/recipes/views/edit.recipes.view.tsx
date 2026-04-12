@@ -2,7 +2,8 @@ import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredie
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
 import { useRecipesContextValue } from '../inertia.adapter';
-import { updateRecipe, viewRecipe } from '../repositories/recipes.repository';
+import { viewRecipe } from '../repositories/recipes.repository';
+import { useUpdateRecipe } from '../repositories/use-update-recipe';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
@@ -17,6 +18,8 @@ export function EditRecipesView() {
   const { t } = useTranslation();
 
   const { recipe, meal_times } = useRecipesContextValue();
+
+  const { updateRecipe } = useUpdateRecipe();
 
   const defaultValues: UpdateRecipeRequest = {
     id: recipe.id,
@@ -37,8 +40,8 @@ export function EditRecipesView() {
     validators: {
       onChange: updateRecipeRequestSchema,
     },
-    onSubmit: async ({ value }) => {
-      return await updateRecipe(value, recipe.id);
+    onSubmit: ({ value }) => {
+      updateRecipe(value, recipe.id);
     },
   });
 
