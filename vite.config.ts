@@ -24,9 +24,13 @@ export default defineConfig({
     }),
     react(),
     tailwindcss(),
-    wayfinder({
-      formVariants: true,
-    }),
+    ...(process.env.CI || process.env.DO_APP_PLATFORM
+      ? []
+      : [
+          wayfinder({
+            formVariants: true,
+          }),
+        ]),
   ],
   resolve: {
     alias: {
