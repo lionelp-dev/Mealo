@@ -29,7 +29,7 @@ class AdminRoleSeeder extends Seeder
             ['email' => 'admin@mail.com'],
             [
                 'name' => 'admin',
-                'password' => Hash::make('password'),
+                'password' => Hash::make(config('app.users_dev_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );

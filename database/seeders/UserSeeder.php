@@ -16,7 +16,7 @@ class UserSeeder extends Seeder
             ['email' => 'owner@mail.com'],
             [
                 'name' => 'owner',
-                'password' => Hash::make('password'),
+                'password' => Hash::make(config('app.users_dev_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -25,7 +25,7 @@ class UserSeeder extends Seeder
             ['email' => 'editor@mail.com'],
             [
                 'name' => 'editor',
-                'password' => Hash::make('password'),
+                'password' => Hash::make(config('app.users_dev_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -34,7 +34,7 @@ class UserSeeder extends Seeder
             ['email' => 'viewer@mail.com'],
             [
                 'name' => 'viewer',
-                'password' => Hash::make('password'),
+                'password' => Hash::make(config('app.users_dev_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             ['email' => 'invitee@mail.com'],
             [
                 'name' => 'user',
-                'password' => Hash::make('password'),
+                'password' => Hash::make(config('app.users_dev_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -66,12 +66,15 @@ class UserSeeder extends Seeder
 
         // Give appropriate Spatie permissions
         $sharedWorkspace->giveEditorPermissions($editor);
+
         $sharedWorkspace->giveViewerPermissions($viewer);
 
-        new AIRecipeSeeder($owner)->run();
+        if (app()->environment('local')) {
+            new AIRecipeSeeder($owner)->run();
 
-        new AIRecipeSeeder($editor)->run();
+            new AIRecipeSeeder($editor)->run();
 
-        new AIRecipeSeeder($viewer)->run();
+            new AIRecipeSeeder($viewer)->run();
+        }
     }
 }
