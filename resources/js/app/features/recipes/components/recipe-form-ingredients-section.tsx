@@ -33,10 +33,11 @@ export const RecipeFormIngredientsSection = withFieldGroup({
     const [debouncedValue, setSearchTerm] = useDebounceValue('', 300);
 
     useEffect(() => {
-      !processing &&
+      if (!processing) {
         searchIngredients(url, {
           ingredients_search: debouncedValue,
         });
+      }
     }, [debouncedValue]);
 
     const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
