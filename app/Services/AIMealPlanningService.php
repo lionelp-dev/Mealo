@@ -92,7 +92,7 @@ class AIMealPlanningService
 
         try {
             $response = $this->client->chat()->create([
-                'model' => 'openai/gpt-5-mini',
+                'model' => 'gpt-4o-mini',
                 'tools' => [
                     [
                         'type' => 'function',
@@ -109,8 +109,9 @@ class AIMealPlanningService
                                             'type' => 'object',
                                             'properties' => [
                                                 'recipe_id' => [
-                                                    'type' => 'integer',
-                                                    'description' => 'Recipe ID from the available recipes',
+                                                    'type' => 'string',
+                                                    'format' => 'uuid',
+                                                    'description' => 'Recipe UUID from the available recipes',
                                                 ],
                                                 'planned_date' => [
                                                     'type' => 'string',

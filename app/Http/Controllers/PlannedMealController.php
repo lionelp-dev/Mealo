@@ -22,6 +22,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -48,7 +49,6 @@ class PlannedMealController extends Controller
             'preparation_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
             'cooking_time' => ['nullable', 'string', 'in:[0..15],[15..30],[30..60],>60'],
         ]);
-
         $weekStart = ($validated['week'] ?? null)
             ? Carbon::parse($validated['week'])->startOf('week')
             : Carbon::now()->startOf('week');
@@ -334,6 +334,15 @@ class PlannedMealController extends Controller
                 'Planning généré avec succès ! '.count($createdMeals).' repas créés.'
             );
         } catch (\Exception $e) {
+            Log::error('Meal plan generation failed', [
+                'user_id' => $user->id,
+                'workspace_id' => $currentWorkspace->id,
+                'start_date' => $startDate->format('Y-m-d'),
+                'end_date' => $endDate->format('Y-m-d'),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return redirect()->back()->with(
                 'error',
                 'Erreur lors de la génération du planning : '.$e->getMessage()

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\Recipes\DeleteRecipesAction;
 use App\Actions\Recipes\FilterRecipesAction;
-use App\Actions\Recipes\GenerateRecipeImageAction;
 use App\Actions\Recipes\GenerateRecipeWithAIAction;
 use App\Actions\Recipes\SearchIngredientsAction;
 use App\Actions\Recipes\SearchTagsAction;
@@ -12,9 +11,7 @@ use App\Actions\Recipes\StoreRecipeAction;
 use App\Actions\Recipes\UpdateRecipeAction;
 use App\Data\Requests\Recipe\DeleteRecipesRequestData;
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
-use App\Data\Requests\Recipe\Entities\TagRequestData;
 use App\Data\Requests\Recipe\FilterRecipesRequestData;
-use App\Data\Requests\Recipe\GenerateRecipeImageRequestData;
 use App\Data\Requests\Recipe\GenerateRecipeRequestData;
 use App\Data\Requests\Recipe\RecipeFormRequestData;
 use App\Data\Requests\Recipe\StoreRecipeRequestData;

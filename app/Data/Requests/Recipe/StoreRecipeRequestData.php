@@ -39,7 +39,7 @@ class StoreRecipeRequestData extends Data
     {
         return [
             'name' => 'required|string|min:0|max:255',
-            'description' => 'required|string|min:0|max:5000',
+            'description' => 'required|string|min:0|max:1000',
             'serving_size' => 'required|integer|min:1|max:50',
             'preparation_time' => 'required|integer|min:0|max:20160',
             'cooking_time' => 'required|integer|min:0|max:20160',

@@ -145,9 +145,7 @@ export function MealPlanGenerationPopover() {
                     const startDate = form.state.values.range.startDate;
                     const endDate = form.state.values.range.endDate;
                     const interval = Math.ceil(
-                      Interval.fromDateTimes(startDate, endDate).length(
-                        'days',
-                      ) + 1,
+                      Interval.fromDateTimes(startDate, endDate).length('days'),
                     );
 
                     return (

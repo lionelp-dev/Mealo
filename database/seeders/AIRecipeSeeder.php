@@ -22,13 +22,33 @@ class AIRecipeSeeder extends Seeder
         $delayBetweenJobs = config('recipe-queue.rate_limit.delay_between_jobs', 6);
         $totalRecipes = 20;
 
+        $prompts = [
+            'Plat traditionnel pour petit-déjeuner',
+            'Plat moderne pour déjeuner',
+            'Plat épicé pour dîner',
+            'Plat léger pour collation',
+            'Plat crémeux pour petit-déjeuner',
+            'Plat dessert pour collation',
+            'Plat traditionnel pour dîner',
+            'Plat léger pour déjeuner',
+            'Plat épicé pour petit-déjeuner',
+            'Plat moderne pour collation',
+            'Plat crémeux pour dîner',
+            'Plat traditionnel pour déjeuner',
+            'Plat dessert pour petit-déjeuner',
+            'Plat léger pour dîner',
+            'Plat moderne pour petit-déjeuner',
+            'Plat épicé pour collation',
+            'Plat crémeux pour déjeuner',
+            'Plat traditionnel pour collation',
+            'Plat léger pour petit-déjeuner',
+            'Plat dessert pour dîner',
+        ];
+
         echo "🚀 Dispatching {$totalRecipes} recipe generation jobs to queue\n";
 
         for ($i = 0; $i < $totalRecipes; $i++) {
-            $mealTimes = ['petit-déjeuner', 'déjeuner', 'dîner', 'collation'];
-            $styles = ['traditionnel', 'moderne', 'épicé', 'léger', 'crémeux', 'dessert'];
-
-            $prompt = 'Plat '.fake()->randomElement($styles).' pour '.fake()->randomElement($mealTimes);
+            $prompt = $prompts[$i];
 
             $delay = $i * $delayBetweenJobs;
 

@@ -109,8 +109,8 @@ class GenerateRecipeWithAIAction
                 ],
                 'description' => [
                     'type' => 'string',
-                    'description' => 'Recipe description (max 255 characters)',
-                    'maxLength' => 255,
+                    'description' => 'Recipe description (max 500 characters). Be concise but descriptive.',
+                    'maxLength' => 500,
                 ],
                 'preparation_time' => [
                     'type' => 'integer',
@@ -182,21 +182,23 @@ class GenerateRecipeWithAIAction
                 ],
                 'steps' => [
                     'type' => 'array',
-                    'description' => 'Cooking steps',
+                    'description' => 'Cooking steps in sequential order. Each step MUST have both description and order fields.',
                     'items' => [
                         'type' => 'object',
                         'properties' => [
+                            'order' => [
+                                'type' => 'integer',
+                                'description' => 'Step order number (starting from 1, sequential)',
+                                'minimum' => 1,
+                            ],
                             'description' => [
                                 'type' => 'string',
                                 'description' => 'Step description (max 255 characters)',
                                 'maxLength' => 255,
                             ],
-                            'order' => [
-                                'type' => 'integer',
-                                'description' => 'Step order number',
-                            ],
                         ],
-                        'required' => ['description', 'order'],
+                        'required' => ['order', 'description'],
+                        'additionalProperties' => false,
                     ],
                 ]],
             'required' => ['name', 'description', 'preparation_time', 'cooking_time', 'serving_size', 'meal_times', 'tags', 'ingredients', 'steps'],
