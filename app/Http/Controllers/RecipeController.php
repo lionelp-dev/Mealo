@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Recipes\DeleteRecipesAction;
 use App\Actions\Recipes\FilterRecipesAction;
+use App\Actions\Recipes\GenerateRecipeImageAction;
 use App\Actions\Recipes\GenerateRecipeWithAIAction;
 use App\Actions\Recipes\SearchIngredientsAction;
 use App\Actions\Recipes\SearchTagsAction;
@@ -13,6 +14,7 @@ use App\Data\Requests\Recipe\DeleteRecipesRequestData;
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
 use App\Data\Requests\Recipe\Entities\TagRequestData;
 use App\Data\Requests\Recipe\FilterRecipesRequestData;
+use App\Data\Requests\Recipe\GenerateRecipeImageRequestData;
 use App\Data\Requests\Recipe\GenerateRecipeRequestData;
 use App\Data\Requests\Recipe\RecipeFormRequestData;
 use App\Data\Requests\Recipe\StoreRecipeRequestData;
@@ -54,7 +56,7 @@ class RecipeController extends Controller
 
         return Inertia::render('recipe/index', [
             'recipes' => Inertia::scroll(RecipeResourceData::collect($filteredRecipes->paginate(15))),
-            'tags' => TagRequestData::collect($tags),
+            'tags' => TagResourceData::collect($tags),
         ]);
     }
 
@@ -135,7 +137,7 @@ class RecipeController extends Controller
                     'meal_times' => MealTimeRequestData::collect(MealTime::all()),
                     'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
                     'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
-                    'should_open_ai_modal' => false,
+                    'show_generate_recipe_with_ai_modal' => false,
                     'generated_recipe' => $recipe,
                 ]
             );

@@ -28,14 +28,15 @@ export const RecipeFormIngredientsSection = withFieldGroup({
 
     const { url, ingredients_search_results } = useRecipesContextValue();
 
-    const { searchIngredients } = useSearchIngredients();
+    const { searchIngredients, processing } = useSearchIngredients();
 
     const [debouncedValue, setSearchTerm] = useDebounceValue('', 300);
 
     useEffect(() => {
-      searchIngredients(url, {
-        ingredients_search: debouncedValue,
-      });
+      !processing &&
+        searchIngredients(url, {
+          ingredients_search: debouncedValue,
+        });
     }, [debouncedValue]);
 
     const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
@@ -60,6 +61,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
       onSubmit: ({ value }) => {
         group.pushFieldValue('ingredients', value);
         form.reset();
+        group.setFieldMeta('ingredients', (prev) => ({ ...prev, errors: [] }));
       },
     });
 
@@ -166,10 +168,6 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                         <Popover.Anchor className="flex">
                           <form.AppField
                             name="name"
-                            validators={{
-                              onChange:
-                                recipeIngredientRequestSchema.shape.name,
-                            }}
                             children={(field) => (
                               <Popover.Trigger className="flex-1">
                                 <field.TextField
@@ -268,10 +266,6 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     <td>
                       <form.AppField
                         name="unit"
-                        validators={{
-                          onChange: recipeIngredientRequestSchema.shape.unit,
-                          onBlur: recipeIngredientRequestSchema.shape.unit,
-                        }}
                         children={(field) => (
                           <field.TextField
                             onBlur={(e) => e.preventDefault()}
@@ -299,6 +293,10 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     onClick={(e) => {
                       e.preventDefault();
                       form.handleSubmit();
+                      ingredients_field.setErrorMap({
+                        onBlur: undefined,
+                        onSubmit: undefined,
+                      });
                     }}
                     onMouseDown={(e) => e.preventDefault()}
                     className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"

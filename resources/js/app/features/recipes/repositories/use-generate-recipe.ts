@@ -5,16 +5,25 @@ import { useState } from 'react';
 export function useGenerateRecipe() {
   const [processing, setProcessing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [wasSuccessful, setWasSuccessful] = useState(false);
 
   const generateRecipe = (data: GenerateRecipeRequest) => {
     router.post('/recipes/create', data, {
       only: ['generated_recipe', 'flash'],
-      onBefore: () => setProcessing(true),
-      onSuccess: () => setErrors({}),
+      onBefore: () => {
+        setProcessing(true);
+        setWasSuccessful(false);
+      },
+      onSuccess: () => {
+        setErrors({});
+        setWasSuccessful(true);
+      },
       onError: (errs) => setErrors(errs),
       onFinish: () => setProcessing(false),
     });
   };
 
-  return { generateRecipe, processing, errors };
+  const resetSuccess = () => setWasSuccessful(false);
+
+  return { generateRecipe, processing, errors, wasSuccessful, resetSuccess };
 }

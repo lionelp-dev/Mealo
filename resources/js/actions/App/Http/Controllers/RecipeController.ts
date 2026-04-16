@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../wayfinder'
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::index
-* @see app/Http/Controllers/RecipeController.php:41
+* @see app/Http/Controllers/RecipeController.php:43
 * @route '/recipes'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -97,7 +97,7 @@ create.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 create.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -116,7 +116,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -126,7 +126,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -136,7 +136,7 @@ const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -146,7 +146,7 @@ createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::create
-* @see app/Http/Controllers/RecipeController.php:64
+* @see app/Http/Controllers/RecipeController.php:66
 * @route '/recipes/create'
 */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -163,7 +163,7 @@ create.form = createForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::store
-* @see app/Http/Controllers/RecipeController.php:92
+* @see app/Http/Controllers/RecipeController.php:94
 * @route '/recipes'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -178,7 +178,7 @@ store.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::store
-* @see app/Http/Controllers/RecipeController.php:92
+* @see app/Http/Controllers/RecipeController.php:94
 * @route '/recipes'
 */
 store.url = (options?: RouteQueryOptions) => {
@@ -187,7 +187,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::store
-* @see app/Http/Controllers/RecipeController.php:92
+* @see app/Http/Controllers/RecipeController.php:94
 * @route '/recipes'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -197,7 +197,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::store
-* @see app/Http/Controllers/RecipeController.php:92
+* @see app/Http/Controllers/RecipeController.php:94
 * @route '/recipes'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -207,7 +207,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 
 /**
 * @see \App\Http\Controllers\RecipeController::store
-* @see app/Http/Controllers/RecipeController.php:92
+* @see app/Http/Controllers/RecipeController.php:94
 * @route '/recipes'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -219,10 +219,10 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-export const show = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -234,10 +234,10 @@ show.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-show.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+show.url = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -267,50 +267,50 @@ show.url = (args: { recipe: string | number | { id: string | number } } | [recip
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-show.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-show.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-const showForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const showForm = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-showForm.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::show
-* @see app/Http/Controllers/RecipeController.php:150
+* @see app/Http/Controllers/RecipeController.php:152
 * @route '/recipes/{recipe}'
 */
-showForm.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+showForm.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -324,10 +324,10 @@ show.form = showForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-export const edit = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -339,10 +339,10 @@ edit.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-edit.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+edit.url = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -372,50 +372,50 @@ edit.url = (args: { recipe: string | number | { id: string | number } } | [recip
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-edit.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-edit.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-const editForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const editForm = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-editForm.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::edit
-* @see app/Http/Controllers/RecipeController.php:164
+* @see app/Http/Controllers/RecipeController.php:166
 * @route '/recipes/{recipe}/edit'
 */
-editForm.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+editForm.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
@@ -429,10 +429,10 @@ edit.form = editForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-export const update = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -444,10 +444,10 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-update.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+update.url = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -477,30 +477,30 @@ update.url = (args: { recipe: string | number | { id: string | number } } | [rec
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-update.put = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-update.patch = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-const updateForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const updateForm = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -512,10 +512,10 @@ const updateForm = (args: { recipe: string | number | { id: string | number } } 
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-updateForm.put = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.put = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PUT',
@@ -527,10 +527,10 @@ updateForm.put = (args: { recipe: string | number | { id: string | number } } | 
 
 /**
 * @see \App\Http\Controllers\RecipeController::update
-* @see app/Http/Controllers/RecipeController.php:192
+* @see app/Http/Controllers/RecipeController.php:194
 * @route '/recipes/{recipe}'
 */
-updateForm.patch = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+updateForm.patch = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'PATCH',
@@ -544,7 +544,7 @@ update.form = updateForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::destroy
-* @see app/Http/Controllers/RecipeController.php:214
+* @see app/Http/Controllers/RecipeController.php:216
 * @route '/recipes'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -559,7 +559,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::destroy
-* @see app/Http/Controllers/RecipeController.php:214
+* @see app/Http/Controllers/RecipeController.php:216
 * @route '/recipes'
 */
 destroy.url = (options?: RouteQueryOptions) => {
@@ -568,7 +568,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::destroy
-* @see app/Http/Controllers/RecipeController.php:214
+* @see app/Http/Controllers/RecipeController.php:216
 * @route '/recipes'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -578,7 +578,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::destroy
-* @see app/Http/Controllers/RecipeController.php:214
+* @see app/Http/Controllers/RecipeController.php:216
 * @route '/recipes'
 */
 const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -593,7 +593,7 @@ const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 /**
 * @see \App\Http\Controllers\RecipeController::destroy
-* @see app/Http/Controllers/RecipeController.php:214
+* @see app/Http/Controllers/RecipeController.php:216
 * @route '/recipes'
 */
 destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -610,7 +610,7 @@ destroy.form = destroyForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::generateRecipeWithAI
-* @see app/Http/Controllers/RecipeController.php:110
+* @see app/Http/Controllers/RecipeController.php:112
 * @route '/recipes/create'
 */
 export const generateRecipeWithAI = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -625,7 +625,7 @@ generateRecipeWithAI.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::generateRecipeWithAI
-* @see app/Http/Controllers/RecipeController.php:110
+* @see app/Http/Controllers/RecipeController.php:112
 * @route '/recipes/create'
 */
 generateRecipeWithAI.url = (options?: RouteQueryOptions) => {
@@ -634,7 +634,7 @@ generateRecipeWithAI.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::generateRecipeWithAI
-* @see app/Http/Controllers/RecipeController.php:110
+* @see app/Http/Controllers/RecipeController.php:112
 * @route '/recipes/create'
 */
 generateRecipeWithAI.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -644,7 +644,7 @@ generateRecipeWithAI.post = (options?: RouteQueryOptions): RouteDefinition<'post
 
 /**
 * @see \App\Http\Controllers\RecipeController::generateRecipeWithAI
-* @see app/Http/Controllers/RecipeController.php:110
+* @see app/Http/Controllers/RecipeController.php:112
 * @route '/recipes/create'
 */
 const generateRecipeWithAIForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -654,7 +654,7 @@ const generateRecipeWithAIForm = (options?: RouteQueryOptions): RouteFormDefinit
 
 /**
 * @see \App\Http\Controllers\RecipeController::generateRecipeWithAI
-* @see app/Http/Controllers/RecipeController.php:110
+* @see app/Http/Controllers/RecipeController.php:112
 * @route '/recipes/create'
 */
 generateRecipeWithAIForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -666,10 +666,10 @@ generateRecipeWithAI.form = generateRecipeWithAIForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-export const image = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const image = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: image.url(args, options),
     method: 'get',
 })
@@ -681,10 +681,10 @@ image.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-image.url = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+image.url = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { recipe: args }
     }
@@ -714,50 +714,50 @@ image.url = (args: { recipe: string | number | { id: string | number } } | [reci
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-image.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+image.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: image.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-image.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+image.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: image.url(args, options),
     method: 'head',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-const imageForm = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+const imageForm = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: image.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-imageForm.get = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+imageForm.get = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: image.url(args, options),
     method: 'get',
 })
 
 /**
 * @see \App\Http\Controllers\RecipeController::image
-* @see app/Http/Controllers/RecipeController.php:230
+* @see app/Http/Controllers/RecipeController.php:232
 * @route '/recipes/{recipe}/image'
 */
-imageForm.head = (args: { recipe: string | number | { id: string | number } } | [recipe: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+imageForm.head = (args: { recipe: string | { id: string } } | [recipe: string | { id: string } ] | string | { id: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: image.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',

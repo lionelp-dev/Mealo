@@ -51,7 +51,7 @@ export const RecipeFormTagsSection = withFieldGroup({
           tags_search: debouncedValue,
         });
       }
-    }, [debouncedValue, url, searchTags]);
+    }, [debouncedValue]);
 
     const [isPopoverOpen, setPopoverOpen] = useState<boolean>(false);
 
