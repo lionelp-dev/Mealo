@@ -69,12 +69,10 @@ class UserSeeder extends Seeder
 
         $sharedWorkspace->giveViewerPermissions($viewer);
 
-        if (app()->environment('local')) {
-            new AIRecipeSeeder($owner)->run();
+        new AIRecipeSeeder($owner)->run();
 
-            new AIRecipeSeeder($editor)->run();
+        new AIRecipeSeeder($editor)->run();
 
-            new AIRecipeSeeder($viewer)->run();
-        }
+        new AIRecipeSeeder($viewer)->run();
     }
 }
