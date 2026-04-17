@@ -8,6 +8,7 @@ use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class AIMealPlanningService
 {
@@ -49,15 +50,9 @@ class AIMealPlanningService
             throw new Exception('Aucune recette trouvée pour cet utilisateur.');
         }
 
-        // Supprimer les repas planifiés existants pour ce range dans le workspace
-        PlannedMeal::where('user_id', $userId)
-            ->where('workspace_id', $workspaceId)
-            ->whereBetween('planned_date', [$startDate->format('Y-m-d'), $endDate->format('Y-m-d')])
-            ->delete();
-
         // Get available meal times from database
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         // Filter recipes by meal_time to prevent inappropriate assignments
@@ -92,7 +87,7 @@ class AIMealPlanningService
 
         try {
             $response = $this->client->chat()->create([
-                'model' => 'gpt-4o-mini',
+                'model' => 'gemini-3-flash-preview',
                 'tools' => [
                     [
                         'type' => 'function',
@@ -147,7 +142,7 @@ class AIMealPlanningService
         ────────────────────────────────────────
 
         Recettes filtrées par meal_time :
-        '.json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."
+        ' . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
 
         Meal times autorisés :
         {$mealTimeListForPrompt}
@@ -198,7 +193,7 @@ class AIMealPlanningService
         - Dates au format YYYY-MM-DD
         - Utiliser UNIQUEMENT les recipe_id fournis
         - Respect STRICT des meal_time_id
-        - TOTAL ATTENDU : {$days} jours × 4 repas = ".($days * 4).' repas
+        - TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . ' repas
         ',
                     ],
                     [
@@ -213,8 +208,10 @@ class AIMealPlanningService
                 foreach ($response->choices[0]->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_meal_plan') {
                         $args = json_decode($toolCall->function->arguments, true);
+                        $plannedMeals = $args['planned_meals'];
 
-                        return $args['planned_meals'];
+                        // Validate recipe IDs before returning
+                        return $this->validateRecipeIds($plannedMeals, $userId);
                     }
                 }
             }
@@ -225,7 +222,9 @@ class AIMealPlanningService
                 if (is_string($content)) {
                     $data = json_decode($content, true);
                     if ($data) {
-                        return $data['planned_meals'] ?? [];
+                        $plannedMeals = $data['planned_meals'] ?? [];
+
+                        return $this->validateRecipeIds($plannedMeals, $userId);
                     }
                 }
             }
@@ -234,5 +233,43 @@ class AIMealPlanningService
         } catch (Exception $e) {
             throw new Exception("Ce service n'est pas disponible pour le moment");
         }
+    }
+
+    /**
+     * Validate recipe IDs from AI response and filter invalid ones
+     */
+    private function validateRecipeIds(array $plannedMeals, string $userId): array
+    {
+        // Extract all recipe IDs from AI response
+        $recipeIds = array_unique(array_column($plannedMeals, 'recipe_id'));
+
+        // Verify which recipe IDs exist in the database for this user
+        $validRecipeIds = Recipe::where('user_id', $userId)
+            ->whereIn('id', $recipeIds)
+            ->pluck('id')
+            ->toArray();
+
+        // Filter planned meals to only include valid recipe IDs
+        $validPlannedMeals = array_filter($plannedMeals, function ($meal) use ($validRecipeIds) {
+            return in_array($meal['recipe_id'], $validRecipeIds);
+        });
+
+        // Log invalid recipe IDs if any
+        $invalidRecipeIds = array_diff($recipeIds, $validRecipeIds);
+        if (! empty($invalidRecipeIds)) {
+            Log::warning('OpenAI returned invalid recipe IDs during meal plan generation', [
+                'user_id' => $userId,
+                'invalid_recipe_ids' => $invalidRecipeIds,
+                'valid_count' => count($validPlannedMeals),
+                'total_count' => count($plannedMeals),
+            ]);
+        }
+
+        // Throw exception if no valid meals remain
+        if (empty($validPlannedMeals)) {
+            throw new Exception('No valid meal plans could be generated');
+        }
+
+        return array_values($validPlannedMeals);
     }
 }

@@ -317,17 +317,28 @@ class PlannedMealController extends Controller
             // Save the generated meal plans to database
             $createdMeals = [];
             $affectedDates = [];
-            foreach ($plannedMeals as $mealData) {
-                $createdMeals[] = PlannedMeal::create([
-                    'user_id' => $user->id,
-                    'recipe_id' => $mealData['recipe_id'],
-                    'planned_date' => $mealData['planned_date'],
-                    'meal_time_id' => $mealData['meal_time_id'],
-                    'workspace_id' => $currentWorkspace->id,
-                    'serving_size' => $validated['serving_size'],
-                ]);
-                $affectedDates[] = $mealData['planned_date'];
-            }
+
+            DB::transaction(function () use ($plannedMeals, $user, $currentWorkspace, $validated, $startDate, $endDate, &$createdMeals, &$affectedDates) {
+                // Delete existing planned meals in the date range first
+                PlannedMeal::where('user_id', $user->id)
+                    ->where('workspace_id', $currentWorkspace->id)
+                    ->whereDate('planned_date', '>=', $startDate)
+                    ->whereDate('planned_date', '<=', $endDate)
+                    ->delete();
+
+                // Create new planned meals
+                foreach ($plannedMeals as $mealData) {
+                    $createdMeals[] = PlannedMeal::create([
+                        'user_id' => $user->id,
+                        'recipe_id' => $mealData['recipe_id'],
+                        'planned_date' => $mealData['planned_date'],
+                        'meal_time_id' => $mealData['meal_time_id'],
+                        'workspace_id' => $currentWorkspace->id,
+                        'serving_size' => $validated['serving_size'],
+                    ]);
+                    $affectedDates[] = $mealData['planned_date'];
+                }
+            });
 
             return redirect()->back()->with(
                 'success',

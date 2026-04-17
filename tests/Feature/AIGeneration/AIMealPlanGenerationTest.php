@@ -8,7 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Tests\Helpers\OpenAITestHelper;
 
-require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
+require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     $this->user = User::factory()->create();
@@ -79,6 +79,22 @@ test('user can generate meal plan successfully', function () {
         ->whereBetween('planned_date', [$startDate, Carbon::parse($startDate)->addDays($days - 1)->format('Y-m-d')])
         ->count();
     expect($mealsInRange)->toBeGreaterThan(0, 'Expected meals within the requested date range');
+
+    for ($i = 0; $i < 5; $i++) {
+        $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+            'serving_size' => 1,
+        ]);
+    }
+
+    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+        'startDate' => $startDate,
+        'endDate' => $endDate,
+        'serving_size' => 1,
+    ]);
+
+    $response->assertStatus(302);
 });
 
 test('user cannot generate meal plan with invalid data', function () {
@@ -181,11 +197,13 @@ test('clears existing planned meals in date range before generating', function (
     ]);
 
     // Generate meal plan
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
-        'startDate' => $generationStartDate->format('Y-m-d'),
-        'endDate' => $generationStartDate->copy()->addDay()->format('Y-m-d'),
-        'serving_size' => 1,
-    ]);
+    $response = $this->actingAs($this->user)
+        ->withSession(['current_workspace_id' => $personalWorkspace->id])
+        ->post(route('planned-meals.generate'), [
+            'startDate' => $generationStartDate->format('Y-m-d'),
+            'endDate' => $generationStartDate->copy()->addDay()->format('Y-m-d'),
+            'serving_size' => 1,
+        ]);
 
     $response->assertStatus(302);
 
@@ -362,6 +380,62 @@ test('generation fails gracefully when user has no recipes', function () {
     $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->format('Y-m-d'),
+        'serving_size' => 1,
+    ]);
+
+    $response->assertStatus(302);
+    $response->assertSessionHas('error');
+
+    // No planned meals should be created
+    $this->assertDatabaseCount('planned_meals', 0);
+});
+
+test('handles invalid recipe ids from openai gracefully', function () {
+    $validRecipe = createRecipeResource($this->user->id);
+    $mealTime = \App\Models\MealTime::first();
+    $startDate = now()->format('Y-m-d');
+
+    // Mock OpenAI with mix of valid and invalid recipe IDs
+    $invalidRecipeId = '019d96cf-a508-7376-9ba7-000000000000'; // Non-existent UUID
+
+    OpenAITestHelper::mockSuccessfulMealPlanGeneration([
+        ['recipe_id' => $validRecipe->id, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
+        ['recipe_id' => $invalidRecipeId, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
+    ]);
+
+    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+        'startDate' => $startDate,
+        'endDate' => $startDate,
+        'serving_size' => 1,
+    ]);
+
+    $response->assertStatus(302);
+    $response->assertSessionHas('success');
+
+    // Only the valid recipe should create a planned meal
+    $plannedMealsCount = PlannedMeal::where('user_id', $this->user->id)->count();
+    expect($plannedMealsCount)->toBe(1);
+
+    // Verify it's the correct recipe
+    $meal = PlannedMeal::where('user_id', $this->user->id)->first();
+    expect($meal->recipe_id)->toBe($validRecipe->id);
+});
+
+test('fails when openai returns only invalid recipe ids', function () {
+    createRecipeResource($this->user->id);
+    $mealTime = \App\Models\MealTime::first();
+    $startDate = now()->format('Y-m-d');
+
+    // Mock OpenAI with only invalid recipe IDs
+    $invalidRecipeId = '019d96cf-a508-7376-9ba7-000000000000';
+
+    OpenAITestHelper::mockSuccessfulMealPlanGeneration([
+        ['recipe_id' => $invalidRecipeId, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
+    ]);
+
+    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+        'startDate' => $startDate,
+        'endDate' => $startDate,
         'serving_size' => 1,
     ]);
 
