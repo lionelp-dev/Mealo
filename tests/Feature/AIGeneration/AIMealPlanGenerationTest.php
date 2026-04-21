@@ -8,7 +8,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use Tests\Helpers\OpenAITestHelper;
 
-require_once __DIR__ . '/../../Helpers/RecipeHelpers.php';
+require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
     $this->user = User::factory()->create();

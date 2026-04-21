@@ -4,7 +4,6 @@ namespace App\Services;
 
 use App\Data\Resources\Recipe\RecipeAIPromptResourceData;
 use App\Models\MealTime;
-use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use Carbon\Carbon;
 use Exception;
@@ -147,30 +146,26 @@ class AIMealPlanningService
         Meal times autorisés :
         {$mealTimeListForPrompt}
 
-        ────────────────────────────────────────
-        🕒 MODE DE CONSTRUCTION OBLIGATOIRE — STRICT
-        ────────────────────────────────────────
-
-        1. Construire une TIMELINE jour par jour (dates STRICTEMENT croissantes)
-        2. Pour chaque jour, générer EXACTEMENT 4 repas dans l'ordre :
-           - 1 breakfast (utiliser le meal_time_id correspondant à 'breakfast' dans la liste)
-           - 1 lunch (utiliser le meal_time_id correspondant à 'lunch' dans la liste)
-           - 1 dinner (utiliser le meal_time_id correspondant à 'dinner' dans la liste)
-           - 1 snack (utiliser le meal_time_id correspondant à 'snack' dans la liste)
-        3. INTERDICTION de raisonner par type de repas
-        4. INTERDICTION de recomposer après coup
-
-        Meal times disponibles avec leurs IDs exacts :
-        {$mealTimeListForPrompt}
-
-        ────────────────────────────────────────
+   ────────────────────────────────────────
         🍳 CLUSTERING & DLC — STRICT
         ────────────────────────────────────────
 
         - Une recette répétée DOIT être utilisée sur des jours STRICTEMENT consécutifs
         - INTERDICTION ABSOLUE de toute réapparition après interruption
-        - MAXIMUM 3 utilisations consécutives par recette
+        - MAXIMUM 6 utilisations consécutives par recette (optimisation courses)
+        - PRIORISER les recettes avec le PLUS d'ingrédients communs
+        - PRIVILÉGIER les ingrédients polyvalents (œufs, riz, pâtes, poulet, légumes de base)
+        - INTERDICTION de sélectionner une recette nécessitant un ingrédient unique/non réutilisable
         - Toute violation = PLANNING INVALIDE
+
+        ────────────────────────────────────────
+        🛒 OPTIMISATION LISTE DE COURTES — STRICT
+        ────────────────────────────────────────
+
+        - OBJECTIF : MINIMISER le nombre d'ingrédients uniques
+        - REGROUPEMENT : Les mêmes ingrédients doivent être utilisés par le MAXIMUM de recettes
+        - SELECTION : Choisir les recettes qui partagent les ingrédients les plus courants
+        - CONTRAINTE : Chaque ingrédient introduit doit être utilisé dans au moins 3 recettes du planning
 
         ────────────────────────────────────────
         🧮 PROPORTIONS & QUANTITÉS — STRICT

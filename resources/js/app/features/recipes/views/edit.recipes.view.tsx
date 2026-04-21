@@ -3,6 +3,7 @@ import { RecipeFormStepsSection } from '../components/recipe-form-steps-section'
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { viewRecipe } from '../repositories/recipes.repository';
+import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { useUpdateRecipe } from '../repositories/use-update-recipe';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
@@ -11,13 +12,18 @@ import { updateRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/up
 import { UpdateRecipeRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
+import { base64ToFile } from '@/app/utils';
 import { Head } from '@inertiajs/react';
+import { useStore } from '@tanstack/react-form';
+import { Wand2 } from 'lucide-react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function EditRecipesView() {
   const { t } = useTranslation();
 
-  const { recipe, meal_times } = useRecipesContextValue();
+  const { recipe, meal_times, generated_image_data_url } =
+    useRecipesContextValue();
 
   const { updateRecipe } = useUpdateRecipe();
 
@@ -44,6 +50,26 @@ export function EditRecipesView() {
       updateRecipe(value, recipe.id);
     },
   });
+
+  const {
+    generateRecipeImage,
+    processing: imageGenerating,
+    errors: imageErrors,
+  } = useGenerateRecipeImage();
+
+  useEffect(() => {
+    if (generated_image_data_url)
+      form.setFieldValue(
+        'image',
+        base64ToFile(generated_image_data_url, 'image'),
+      );
+  }, [generated_image_data_url]);
+
+  const { name, ingredients } = useStore(form.store, (state) => state.values);
+
+  const handleGenerateImage = () => {
+    generateRecipeImage(name, ingredients);
+  };
 
   return (
     <AppLayout
@@ -187,17 +213,50 @@ export function EditRecipesView() {
               />
             </div>
 
-            <form.AppField
-              name="image"
-              children={(field) => (
-                <ImageUpload
-                  value={field.state.value}
-                  onChange={field.handleChange}
-                  currentImageUrl={recipe.image_url}
-                  className="min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4"
-                />
-              )}
-            />
+            <div className="flex flex-col gap-2 min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4">
+              {/* Composant ImageUpload existant */}
+              <form.AppField
+                name="image"
+                children={(field) => (
+                  <ImageUpload
+                    value={field.state.value}
+                    onChange={field.handleChange}
+                    currentImageUrl={recipe.image_url}
+                  />
+                )}
+              />
+              {/* Message d'erreur si échec */}
+              {imageErrors &&
+                imageErrors.map((error) => (
+                  <div className="alert-sm alert alert-error">
+                    <span className="text-xs">{error}</span>
+                  </div>
+                ))}
+              <button
+                type="button"
+                onClick={handleGenerateImage}
+                disabled={imageGenerating || !form.state.values.name}
+                className="btn gap-2 btn-sm btn-secondary"
+              >
+                {imageGenerating ? (
+                  <>
+                    <span className="loading loading-xs loading-spinner"></span>
+                    {t(
+                      'recipes.form.imageGeneration.generating',
+                      'Génération...',
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <Wand2 className="h-4 w-4" />
+                    {t(
+                      'recipes.form.imageGeneration.button',
+                      'Générer avec IA',
+                    )}
+                  </>
+                )}
+              </button>
+            </div>
 
             <div className="min-2xl:col-start-2 min-2xl:row-start-4 min-2xl:row-end-6">
               <RecipeFormTagsSection form={form} fields={{ tags: 'tags' }} />

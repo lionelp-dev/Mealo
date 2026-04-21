@@ -7,6 +7,9 @@ export type DeclineWorkspaceInvitationRequestData = {
 export type DeleteRecipesRequestData = {
   ids: Array<string>;
 };
+export type DeleteWorkspaceInvitationRequestData = {
+  invitation: number;
+};
 export type DeleteWorkspaceMemberRequestData = {
   user_id: number;
 };
@@ -16,6 +19,10 @@ export type FilterRecipesRequestData = {
   meal_times?: Array<number> | null;
   preparation_time?: string;
   cooking_time?: string;
+};
+export type GenerateImagePreviewRequestData = {
+  name: string;
+  ingredients?: Array<IngredientRequestData>;
 };
 export type GenerateRecipeRequestData = {
   prompt: string;

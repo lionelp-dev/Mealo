@@ -25,6 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('recipes', RecipeController::class)->except(['destroy']);
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
     Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
+    Route::post('recipes/generate-image-preview', [RecipeController::class, 'generateImagePreview'])->name('recipes.generate-image-preview');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::resource('planned-meals', PlannedMealController::class)->except(['destroy']);
     Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
@@ -55,6 +56,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('workspace-invitations/{token}/accept', [WorkspaceInvitationController::class, 'acceptFromEmail'])
     ->name('workspace-invitations.acceptFromEmail');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

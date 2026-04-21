@@ -24,6 +24,7 @@ type PageProps = SharedData & {
   };
   show_generate_recipe_with_ai_modal: boolean;
   generated_recipe?: GeneratedRecipeResource;
+  generated_image_data_url?: string | null;
 };
 
 export const {

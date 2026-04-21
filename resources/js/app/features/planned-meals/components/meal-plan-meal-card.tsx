@@ -38,7 +38,7 @@ export default function MealPlanMealCard({
       className="card w-full overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
     >
       {recipe.image_url && (
-        <figure className="h-26">
+        <figure className="h-19">
           <img
             src={recipe.image_url}
             alt={recipe.name}
@@ -46,7 +46,7 @@ export default function MealPlanMealCard({
           />
         </figure>
       )}
-      <div className="card-body overflow-hidden py-1.5 pr-2 pl-3.5">
+      <div className="card-body overflow-hidden py-[0.45rem] pr-2 pl-4.5">
         <div className="flex min-w-0 items-center justify-between gap-2">
           <span className="flex w-full min-w-0 items-center text-sm">
             <span className="-ml-1 w-full truncate text-sm text-base-content">

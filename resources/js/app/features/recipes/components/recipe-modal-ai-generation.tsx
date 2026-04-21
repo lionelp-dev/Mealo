@@ -20,6 +20,9 @@ export default function GenerateRecipeWithAIModal() {
   const form = useForm({
     defaultValues: {
       prompt: '',
+      generate_image_data: {
+        generate: false,
+      },
     },
     onSubmit: ({ value }) => {
       generateRecipe(value);
@@ -71,6 +74,38 @@ export default function GenerateRecipeWithAIModal() {
               )}
             />
           </label>
+
+          {/* Switch pour générer l'image */}
+          <div className="mt-4 flex items-center justify-between border-t border-base-300/50 pt-4">
+            <div className="flex flex-col gap-1">
+              <label className="text-sm font-medium">
+                {t(
+                  'recipes.generate.imageGeneration.label',
+                  'Générer une image',
+                )}
+              </label>
+              <p className="text-xs text-base-content/60">
+                {t(
+                  'recipes.generate.imageGeneration.description',
+                  "L'IA créera une photo de la recette (peut prendre plus de temps)",
+                )}
+              </p>
+            </div>
+
+            <form.Field
+              name="generate_image_data.generate"
+              children={(field) => (
+                <input
+                  type="checkbox"
+                  className="toggle toggle-secondary"
+                  checked={field.state.value}
+                  onChange={(e) => field.handleChange(e.target.checked)}
+                  disabled={processing}
+                />
+              )}
+            />
+          </div>
+
           <div className="modal-action gap-4">
             <button
               type="button"

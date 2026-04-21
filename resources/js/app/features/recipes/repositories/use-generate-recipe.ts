@@ -9,7 +9,7 @@ export function useGenerateRecipe() {
 
   const generateRecipe = (data: GenerateRecipeRequest) => {
     router.post('/recipes/create', data, {
-      only: ['generated_recipe', 'flash'],
+      only: ['generated_recipe', 'generated_image_data_url', 'flash'],
       onBefore: () => {
         setProcessing(true);
         setWasSuccessful(false);

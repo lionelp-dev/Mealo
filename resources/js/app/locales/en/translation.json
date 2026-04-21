@@ -92,6 +92,10 @@
             "prompt": {
                 "label": "Recipe Description",
                 "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
+            },
+            "imageGeneration": {
+                "label": "Generate image",
+                "description": "AI will create a photo of the recipe (may take longer)"
             }
         },
         "edit": {
@@ -126,7 +130,12 @@
             "mealTimesTitle": "Meal times",
             "mealTimesPlaceholder": "Select meal times...",
             "saveButton": "Save recipe",
-            "cancelButton": "Cancel"
+            "cancelButton": "Cancel",
+            "imageGeneration": {
+                "button": "Generate with AI",
+                "generating": "Generating...",
+                "error": "Failed to generate image. Please try again."
+            }
         },
         "ingredients": {
             "addButton": "Add ingredient",

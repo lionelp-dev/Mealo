@@ -19,11 +19,9 @@ class SyncRecipeIngredientsAction
 
         $recipeIngredient = collect($ingredientsData)->flatMap(function (IngredientRequestData $ingredientData) use ($recipe) {
 
-            $ingredient = Ingredient::query()->updateOrCreate([
-                'id' => $ingredientData->id,
-                'user_id' => $recipe->user->id,
-            ], [
+            $ingredient = Ingredient::query()->firstOrCreate([
                 'name' => $ingredientData->name,
+                'user_id' => $recipe->user->id,
             ]);
 
             return [

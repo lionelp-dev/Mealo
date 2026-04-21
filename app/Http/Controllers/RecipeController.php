@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Recipes\DeleteRecipesAction;
 use App\Actions\Recipes\FilterRecipesAction;
+use App\Actions\Recipes\GenerateRecipeImageAction;
 use App\Actions\Recipes\GenerateRecipeWithAIAction;
 use App\Actions\Recipes\SearchIngredientsAction;
 use App\Actions\Recipes\SearchTagsAction;
@@ -12,6 +13,7 @@ use App\Actions\Recipes\UpdateRecipeAction;
 use App\Data\Requests\Recipe\DeleteRecipesRequestData;
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
 use App\Data\Requests\Recipe\FilterRecipesRequestData;
+use App\Data\Requests\Recipe\GenerateImagePreviewRequestData;
 use App\Data\Requests\Recipe\GenerateRecipeRequestData;
 use App\Data\Requests\Recipe\RecipeFormRequestData;
 use App\Data\Requests\Recipe\StoreRecipeRequestData;
@@ -72,6 +74,7 @@ class RecipeController extends Controller
         $user = $request->user();
 
         $ingredients = $searchIngredients($user, $formQuery->ingredients_search);
+
         $tags = $searchTags($user, $formQuery->tags_search);
 
         return Inertia::render(
@@ -104,6 +107,23 @@ class RecipeController extends Controller
     }
 
     /**
+     * Generate a recipe image preview using AI.
+     */
+    public function generateImagePreview(
+        GenerateImagePreviewRequestData $data,
+        GenerateRecipeImageAction $generateRecipeImageAction
+    ): RedirectResponse {
+        Gate::authorize('create', Recipe::class);
+
+        $prompt = $data->name . 'with' . json_encode($data->ingredients);
+        $base64Image = $generateRecipeImageAction->execute($prompt);
+
+        return back()->with([
+            'generated_image_data_url' => $base64Image,
+        ]);
+    }
+
+    /**
      * Generate a recipe using AI and return to create form
      */
     public function generateRecipeWithAI(
@@ -112,35 +132,32 @@ class RecipeController extends Controller
         GenerateRecipeWithAIAction $generateRecipeWithAIAction,
         SearchIngredientsAction $searchIngredients,
         SearchTagsAction $searchTags,
+        GenerateRecipeImageAction $generateRecipeImageAction
     ): Response|RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        if (! config('services.openai.api_key')) {
-            return to_route('recipes.create')->with('error', 'La génération de recettes par IA n\'est pas disponible.');
-        }
+        $recipe = $generateRecipeWithAIAction->execute($generateRecipeData);
 
-        try {
-            $recipe = $generateRecipeWithAIAction->execute($generateRecipeData);
+        /** @var User $user */
+        $user = $request->user();
 
-            /** @var User $user */
-            $user = $request->user();
+        $ingredients = $searchIngredients($user, null);
+        $tags = $searchTags($user, null);
 
-            $ingredients = $searchIngredients($user, null);
-            $tags = $searchTags($user, null);
+        $prompt = $recipe->name . 'with' . json_encode($recipe->ingredients);
+        $base64Image = $generateRecipeImageAction->execute($prompt);
 
-            return Inertia::render(
-                'recipe/create',
-                [
-                    'meal_times' => MealTimeRequestData::collect(MealTime::all()),
-                    'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
-                    'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
-                    'show_generate_recipe_with_ai_modal' => false,
-                    'generated_recipe' => $recipe,
-                ]
-            );
-        } catch (\Exception $e) {
-            return to_route('recipes.create')->with('error', $e->getMessage());
-        }
+        return Inertia::render(
+            'recipe/create',
+            [
+                'meal_times' => MealTimeRequestData::collect(MealTime::all()),
+                'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
+                'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
+                'show_generate_recipe_with_ai_modal' => false,
+                'generated_recipe' => $recipe,
+                'generated_image_data_url' => $base64Image,
+            ]
+        );
     }
 
     /**
@@ -163,9 +180,10 @@ class RecipeController extends Controller
     public function edit(
         Request $request,
         Recipe $recipe,
-        RecipeFormRequestData $formQuery,
         SearchIngredientsAction $searchIngredients,
         SearchTagsAction $searchTags,
+        RecipeFormRequestData $formQuery,
+        GenerateRecipeImageAction $generateRecipeImageAction,
     ): Response {
         Gate::authorize('update', $recipe);
 
