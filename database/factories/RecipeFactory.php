@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Actions\Recipes\SyncRecipeIngredientsAction;
-use App\Actions\Recipes\SyncRecipeMealTimesAction;
-use App\Actions\Recipes\SyncRecipeTagsAction;
+use App\Actions\Recipes\RecipeSyncIngredientsAction;
+use App\Actions\Recipes\RecipeSyncMealTimesAction;
+use App\Actions\Recipes\RecipeSyncTagsAction;
 use App\Data\Requests\Recipe\Entities\IngredientRequestData;
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
 use App\Data\Requests\Recipe\Entities\StepRequestData;
@@ -58,7 +58,7 @@ class RecipeFactory extends Factory
                 ]);
             })->all();
 
-            app(SyncRecipeMealTimesAction::class)($recipe, $mealTimesData);
+            app(RecipeSyncMealTimesAction::class)($recipe, $mealTimesData);
         });
     }
 
@@ -93,7 +93,7 @@ class RecipeFactory extends Factory
 
             $ingredientsData = collect($ingredients)->map(fn ($ingredient) => IngredientRequestData::from($ingredient))->all();
 
-            app(SyncRecipeIngredientsAction::class)($recipe, $ingredientsData);
+            app(RecipeSyncIngredientsAction::class)($recipe, $ingredientsData);
         });
     }
 
@@ -129,7 +129,7 @@ class RecipeFactory extends Factory
 
             $tagsData = collect($tags)->map(fn ($tag) => TagRequestData::from($tag))->all();
 
-            app(SyncRecipeTagsAction::class)($recipe, $tagsData);
+            app(RecipeSyncTagsAction::class)($recipe, $tagsData);
         });
     }
 

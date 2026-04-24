@@ -1,6 +1,6 @@
 <?php
 
-use App\Actions\Recipes\UploadRecipeImageAction;
+use App\Actions\Recipes\RecipeUploadImageAction;
 use App\Models\Recipe;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -19,7 +19,7 @@ test('user can upload image to their recipe', function () {
         ->put(
             route('recipes.update', $this->recipe),
             [
-                ...$this->updateRecipeRequestData->except('image')->transform(),
+                ...$this->recipeUpdateRequestData->except('image')->transform(),
                 'image' => $this->image,
             ]
         );
@@ -34,7 +34,7 @@ test('user can upload image to their recipe', function () {
 
 test('user can view their recipe image', function () {
     /** @var \Tests\TestCase $this */
-    $imagePath = (app(UploadRecipeImageAction::class))($this->recipe, $this->image);
+    $imagePath = (app(RecipeUploadImageAction::class))($this->recipe, $this->image);
 
     $response = $this->actingAs($this->user)
         ->get(route('recipes.image', $this->recipe));
@@ -49,7 +49,7 @@ test('user cannot upload image to other users recipe', function () {
         ->put(
             route('recipes.update', $this->otherUserRecipe),
             [
-                ...$this->updateRecipeRequestData->except('image')->transform(),
+                ...$this->recipeUpdateRequestData->except('image')->transform(),
                 'image' => $this->image,
             ]
         );
@@ -59,7 +59,7 @@ test('user cannot upload image to other users recipe', function () {
 
 test('user cannot view other users recipe image', function () {
     /** @var \Tests\TestCase $this */
-    (app(UploadRecipeImageAction::class))($this->otherUserRecipe, $this->image);
+    (app(RecipeUploadImageAction::class))($this->otherUserRecipe, $this->image);
 
     $response = $this->actingAs($this->user)
         ->get(route('recipes.image', $this->otherUserRecipe));
@@ -72,7 +72,7 @@ test('guest cannot upload recipe image', function () {
     $response = $this->put(
         route('recipes.update', $this->recipe),
         [
-            ...$this->updateRecipeRequestData->transform(),
+            ...$this->recipeUpdateRequestData->transform(),
             'image' => $this->image,
         ]
     );
@@ -82,7 +82,7 @@ test('guest cannot upload recipe image', function () {
 
 test('guest cannot view recipe image', function () {
     /** @var \Tests\TestCase $this */
-    (app(UploadRecipeImageAction::class))($this->recipe, $this->image);
+    (app(RecipeUploadImageAction::class))($this->recipe, $this->image);
 
     $response = $this->get(route('recipes.image', $this->recipe));
 
@@ -97,7 +97,7 @@ test('upload image validates file type', function () {
         ->putJson(
             route('recipes.update', $this->recipe),
             [
-                ...$this->updateRecipeRequestData->transform(),
+                ...$this->recipeUpdateRequestData->transform(),
                 'image' => $textFile,
             ]
         );
@@ -114,7 +114,7 @@ test('upload image validates file size', function () {
         ->putJson(
             route('recipes.update', $this->recipe),
             [
-                ...$this->updateRecipeRequestData->transform(),
+                ...$this->recipeUpdateRequestData->transform(),
                 'image' => $largeImage,
             ]
         );
@@ -129,7 +129,7 @@ test('recipe creation with image uploads and stores image', function () {
         ->post(
             route('recipes.store'),
             [
-                ...$this->storeRecipeRequestData->except('image')->transform(),
+                ...$this->recipeStoreRequestData->except('image')->transform(),
                 'image' => $this->image,
             ]
         );
@@ -163,7 +163,7 @@ test('recipe update with image uploads and stores image', function () {
         ->put(
             route('recipes.update', $this->recipe),
             [
-                ...$this->updateRecipeRequestData->except('image')->transform(),
+                ...$this->recipeUpdateRequestData->except('image')->transform(),
                 'image' => $this->image,
             ]
         );
@@ -186,7 +186,7 @@ test('viewing recipe image returns 404 when no image exists', function () {
 
 test('deleting recipe removes associated image', function () {
     /** @var \Tests\TestCase $this */
-    $imagePath = (app(UploadRecipeImageAction::class))($this->recipe, $this->image);
+    $imagePath = (app(RecipeUploadImageAction::class))($this->recipe, $this->image);
 
     Storage::disk('recipe_images')->assertExists($imagePath);
 

@@ -2,8 +2,8 @@ import { useRecipesContextValue } from '../inertia.adapter';
 import { useSearchIngredients } from '../repositories/use-search-ingredients';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { recipeIngredientRequestSchema } from '@/app/data/requests/recipe/schemas/entities/recipe-ingredient.request.schema';
-import { recipeFormRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-form.request.schema';
-import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
+import { recipeSearchRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-search.request.schema';
+import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-store.request.schema';
 import { RecipeIngredientRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
@@ -52,7 +52,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
         onSubmit: recipeIngredientRequestSchema,
         onChange: ({ value }) => {
           const result =
-            recipeFormRequestSchema.shape.ingredients_search.safeParse(
+            recipeSearchRequestSchema.shape.ingredients_search.safeParse(
               value.name,
             );
           if (!result) return;
@@ -71,8 +71,8 @@ export const RecipeFormIngredientsSection = withFieldGroup({
         name="ingredients"
         mode="array"
         validators={{
-          onSubmit: storeRecipeRequestSchema.shape.ingredients,
-          onBlur: storeRecipeRequestSchema.shape.ingredients,
+          onSubmit: recipeStoreRequestSchema.shape.ingredients,
+          onBlur: recipeStoreRequestSchema.shape.ingredients,
         }}
         children={(ingredients_field) => (
           <div className="flex flex-col gap-4">

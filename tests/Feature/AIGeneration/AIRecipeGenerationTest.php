@@ -35,7 +35,7 @@ test('user can generate a recipe successfully with simple prompt', function () {
         ],
     ]);
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), [
+    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), [
         'prompt' => 'une recette simple avec du saumon grillé',
     ]);
 
@@ -68,7 +68,7 @@ test('user cannot generate recipe with invalid prompt', function () {
         'prompt' => '',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $invalidData);
+    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $invalidData);
 
     $response->assertStatus(302);
     $response->assertSessionHasErrors(['prompt']);
@@ -84,7 +84,7 @@ test('guest user cannot generate recipe', function () {
         'prompt' => 'une recette avec du saumon',
     ];
 
-    $response = $this->post(route('recipes.generate'), $promptData);
+    $response = $this->post(route('recipes.ai-generation'), $promptData);
     $response->assertRedirect(route('login'));
 });
 
@@ -95,7 +95,7 @@ test('handles openai api failure gracefully', function () {
         'prompt' => 'une simple recette végétarienne',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
@@ -109,7 +109,7 @@ test('handles openai rate limit gracefully', function () {
         'prompt' => 'une recette végétarienne',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
@@ -123,7 +123,7 @@ test('handles openai invalid api key gracefully', function () {
         'prompt' => 'une recette avec des herbes',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.generate'), $promptData);
+    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));

@@ -8,8 +8,8 @@ import { useUpdateRecipe } from '../repositories/use-update-recipe';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
-import { updateRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/update-recipe.request.schema';
-import { UpdateRecipeRequest } from '@/app/data/requests/recipe/types';
+import { recipeUpdateRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-update.request.schema';
+import { RecipeUpdateRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
@@ -27,7 +27,7 @@ export function EditRecipesView() {
 
   const { updateRecipe } = useUpdateRecipe();
 
-  const defaultValues: UpdateRecipeRequest = {
+  const defaultValues: RecipeUpdateRequest = {
     id: recipe.id,
     name: recipe.name ?? '',
     description: recipe.description ?? '',
@@ -44,7 +44,7 @@ export function EditRecipesView() {
   const form = useAppForm({
     defaultValues,
     validators: {
-      onChange: updateRecipeRequestSchema,
+      onChange: recipeUpdateRequestSchema,
     },
     onSubmit: ({ value }) => {
       updateRecipe(value, recipe.id);
@@ -147,8 +147,8 @@ export function EditRecipesView() {
               name="meal_times"
               mode="array"
               validators={{
-                onChange: updateRecipeRequestSchema.shape.meal_times,
-                onBlur: updateRecipeRequestSchema.shape.meal_times,
+                onChange: recipeUpdateRequestSchema.shape.meal_times,
+                onBlur: recipeUpdateRequestSchema.shape.meal_times,
               }}
               children={(field) => {
                 const options = meal_times.map((mt) => ({

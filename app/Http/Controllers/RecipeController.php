@@ -2,22 +2,24 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Recipes\DeleteRecipesAction;
-use App\Actions\Recipes\FilterRecipesAction;
-use App\Actions\Recipes\GenerateRecipeImageAction;
-use App\Actions\Recipes\GenerateRecipeWithAIAction;
-use App\Actions\Recipes\SearchIngredientsAction;
-use App\Actions\Recipes\SearchTagsAction;
-use App\Actions\Recipes\StoreRecipeAction;
-use App\Actions\Recipes\UpdateRecipeAction;
-use App\Data\Requests\Recipe\DeleteRecipesRequestData;
+use App\Actions\Recipes\RecipeAIGenerationAction;
+use App\Actions\Recipes\RecipeDestroyAction;
+use App\Actions\Recipes\RecipeFiltersAction;
+use App\Actions\Recipes\RecipeImageAIGenerationAction;
+use App\Actions\Recipes\RecipeSearchAction;
+use App\Actions\Recipes\RecipeSearchIngredientsAction;
+use App\Actions\Recipes\RecipeSearchTagsAction;
+use App\Actions\Recipes\RecipeStoreAction;
+use App\Actions\Recipes\RecipeUpdateAction;
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
-use App\Data\Requests\Recipe\FilterRecipesRequestData;
-use App\Data\Requests\Recipe\GenerateImagePreviewRequestData;
-use App\Data\Requests\Recipe\GenerateRecipeRequestData;
-use App\Data\Requests\Recipe\RecipeFormRequestData;
-use App\Data\Requests\Recipe\StoreRecipeRequestData;
-use App\Data\Requests\Recipe\UpdateRecipeRequestData;
+use App\Data\Requests\Recipe\RecipeAIGenerationRequestData;
+use App\Data\Requests\Recipe\RecipeDestroyRequestData;
+use App\Data\Requests\Recipe\RecipeEditRequestData;
+use App\Data\Requests\Recipe\RecipeFiltersRequestData;
+use App\Data\Requests\Recipe\RecipeImageAIGenerationRequestData;
+use App\Data\Requests\Recipe\RecipeSearchRequestData;
+use App\Data\Requests\Recipe\RecipeStoreRequestData;
+use App\Data\Requests\Recipe\RecipeUpdateRequestData;
 use App\Data\Resources\Recipe\Entities\IngredientResourceData;
 use App\Data\Resources\Recipe\Entities\MealTimeResourceData;
 use App\Data\Resources\Recipe\Entities\RecipeResourceData;
@@ -25,9 +27,8 @@ use App\Data\Resources\Recipe\Entities\TagResourceData;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
-use App\Models\User;
+use App\Traits\AuthUser;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -36,46 +37,40 @@ use Inertia\Response;
 
 class RecipeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    use AuthUser;
+
     public function index(
-        Request $request,
-        FilterRecipesRequestData $filters,
-        FilterRecipesAction $filterRecipes
+        RecipeFiltersRequestData $recipeFiltersRequestData,
+        RecipeFiltersAction $recipeFiltersAction,
+        RecipeSearchRequestData $recipeSearchRequestData,
+        RecipeSearchAction $recipeSearchAction
     ): Response {
         Gate::authorize('viewAny', Recipe::class);
 
-        /** @var User $user */
-        $user = $request->user();
+        $recipeQuery = Recipe::query()
+            ->where('user_id', $this->user()->id)
+            ->orderBy('created_at', 'desc')
+            ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
+        $recipeQuery = $recipeFiltersAction($this->user(), $recipeQuery, $recipeFiltersRequestData);
+        $recipeQuery = $recipeSearchAction($this->user(), $recipeQuery, $recipeSearchRequestData);
 
-        $filteredRecipes = $filterRecipes($user, $filters);
-
-        $tags = Tag::query()->where('user_id', $user->id)->get();
+        $tags = Tag::query()->where('user_id', $this->user()->id)->get();
 
         return Inertia::render('recipe/index', [
-            'recipes' => Inertia::scroll(RecipeResourceData::collect($filteredRecipes->paginate(15))),
+            'recipes' => Inertia::scroll(RecipeResourceData::collect($recipeQuery->paginate(15))),
             'tags' => TagResourceData::collect($tags),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(
-        Request $request,
-        RecipeFormRequestData $formQuery,
-        SearchIngredientsAction $searchIngredients,
-        SearchTagsAction $searchTags,
+        RecipeSearchRequestData $recipeSearchRequestData,
+        RecipeSearchIngredientsAction $recipeSearchIngredientsAction,
+        RecipeSearchTagsAction $recipeSearchTagsAction,
     ): Response {
         Gate::authorize('create', Recipe::class);
 
-        /** @var User $user */
-        $user = $request->user();
-
-        $ingredients = $searchIngredients($user, $formQuery->ingredients_search);
-
-        $tags = $searchTags($user, $formQuery->tags_search);
+        $ingredients = $recipeSearchIngredientsAction($this->user(), $recipeSearchRequestData->ingredients_search);
+        $tags = $recipeSearchTagsAction($this->user(), $recipeSearchRequestData->tags_search);
 
         return Inertia::render(
             'recipe/create',
@@ -83,86 +78,70 @@ class RecipeController extends Controller
                 'meal_times' => MealTimeResourceData::collect(MealTime::all()),
                 'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
                 'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
-                'show_generate_recipe_with_ai_modal' => $formQuery->show_generate_recipe_with_ai_modal ?? false,
             ]
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(
-        Request $request,
-        StoreRecipeRequestData $recipeData,
-        StoreRecipeAction $storeRecipeAction
+        RecipeStoreRequestData $recipeStoreRequestData,
+        RecipeStoreAction $recipeStoreAction
     ): RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        /** @var User $user */
-        $user = $request->user();
-
-        $recipe = $storeRecipeAction->execute($user, $recipeData);
+        $recipe = $recipeStoreAction->execute($this->user(), $recipeStoreRequestData);
 
         return to_route('recipes.show', ['recipe' => $recipe->id])->with('success', 'Recipe successfully created');
     }
 
-    /**
-     * Generate a recipe image preview using AI.
-     */
-    public function generateImagePreview(
-        GenerateImagePreviewRequestData $data,
-        GenerateRecipeImageAction $generateRecipeImageAction
+    public function aiImageGeneration(
+        RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction
     ): RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        $prompt = $data->name . 'with' . json_encode($data->ingredients);
-        $base64Image = $generateRecipeImageAction->execute($prompt);
+        $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
+        $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
         return back()->with([
             'generated_image_data_url' => $base64Image,
         ]);
     }
 
-    /**
-     * Generate a recipe using AI and return to create form
-     */
-    public function generateRecipeWithAI(
-        Request $request,
-        GenerateRecipeRequestData $generateRecipeData,
-        GenerateRecipeWithAIAction $generateRecipeWithAIAction,
-        SearchIngredientsAction $searchIngredients,
-        SearchTagsAction $searchTags,
-        GenerateRecipeImageAction $generateRecipeImageAction
+    public function showAIGenerationModal(
+    ): RedirectResponse {
+        return to_route('recipes.create')
+            ->with([
+                'show_recipe_ai_generation_modal' => true,
+            ]);
+    }
+
+    public function aiGeneration(
+        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
+        RecipeAIGenerationAction $recipeAIGenerationAction,
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
     ): Response|RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        $recipe = $generateRecipeWithAIAction->execute($generateRecipeData);
+        try {
+            $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
 
-        /** @var User $user */
-        $user = $request->user();
+            $prompt = $recipe->name.'with'.json_encode($recipe->ingredients);
+            $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
-        $ingredients = $searchIngredients($user, null);
-        $tags = $searchTags($user, null);
-
-        $prompt = $recipe->name . 'with' . json_encode($recipe->ingredients);
-        $base64Image = $generateRecipeImageAction->execute($prompt);
-
-        return Inertia::render(
-            'recipe/create',
-            [
-                'meal_times' => MealTimeRequestData::collect(MealTime::all()),
-                'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
-                'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
-                'show_generate_recipe_with_ai_modal' => false,
-                'generated_recipe' => $recipe,
-                'generated_image_data_url' => $base64Image,
-            ]
-        );
+            return Inertia::render(
+                'recipe/create',
+                [
+                    'generated_recipe' => $recipe,
+                    'generated_image_data_url' => $base64Image,
+                    'show_recipe_ai_generation_modal' => false,
+                ]
+            );
+        } catch (\Exception $e) {
+            return to_route('recipes.create')
+                ->with('error', $e->getMessage());
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Recipe $recipe): Response
     {
         Gate::authorize('view', $recipe);
@@ -174,26 +153,20 @@ class RecipeController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(
-        Request $request,
         Recipe $recipe,
-        SearchIngredientsAction $searchIngredients,
-        SearchTagsAction $searchTags,
-        RecipeFormRequestData $formQuery,
-        GenerateRecipeImageAction $generateRecipeImageAction,
+        RecipeEditRequestData $formQuery,
+        RecipeSearchRequestData $recipeSearchRequestData,
+        RecipeSearchIngredientsAction $recipeSearchIngredientsAction,
+        RecipeSearchTagsAction $recipeSearchTagsAction,
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
     ): Response {
         Gate::authorize('update', $recipe);
 
-        /** @var User $user */
-        $user = $request->user();
-
         $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
-        $ingredients = $searchIngredients($user, $formQuery->ingredients_search);
-        $tags = $searchTags($user, $formQuery->tags_search);
+        $ingredients = $recipeSearchIngredientsAction($this->user(), $recipeSearchRequestData->ingredients_search);
+        $tags = $recipeSearchTagsAction($this->user(), $recipeSearchRequestData->tags_search);
 
         return Inertia::render('recipe/edit', [
             'meal_times' => MealTimeRequestData::collect(MealTime::all()),
@@ -203,55 +176,36 @@ class RecipeController extends Controller
         ]);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(
-        Request $request,
         Recipe $recipe,
-        UpdateRecipeRequestData $recipeData,
-        UpdateRecipeAction $updateRecipeAction
+        RecipeUpdateRequestData $recipeUpdateRequestData,
+        RecipeUpdateAction $recipeUpdateAction
     ): RedirectResponse {
         Gate::authorize('update', $recipe);
 
-        /** @var User $user */
-        $user = $request->user();
-
-        $updateRecipeAction->execute(
+        $recipeUpdateAction->execute(
             $recipe,
-            $recipeData,
+            $recipeUpdateRequestData,
         );
 
         return to_route('recipes.show', ['recipe' => $recipe])->with('success', 'Recipe successfully updated');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(
-        Request $request,
-        DeleteRecipesRequestData $data,
-        DeleteRecipesAction $action
+        RecipeDestroyRequestData $recipeDestroyRequestData,
+        RecipeDestroyAction $recipeDestroyAction
     ): RedirectResponse {
-        /** @var User $user */
-        $user = $request->user();
 
-        $action->execute($user, $data);
+        $recipeDestroyAction->execute($this->user(), $recipeDestroyRequestData);
 
         return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
     }
 
-    /**
-     * Serve recipe image
-     */
     public function image(
-        Request $request,
         Recipe $recipe
     ): HttpResponse {
-        /* @var User $user */
-        $user = $request->user();
 
-        if ($user && ($recipe->user_id !== $user->id)) {
+        if ($recipe->user_id !== $this->user()->id) {
             abort(403, 'Unauthorized access to this recipe image');
         }
 

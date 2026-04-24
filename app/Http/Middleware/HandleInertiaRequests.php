@@ -53,13 +53,14 @@ class HandleInertiaRequests extends Middleware
                 ) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-            'generated_image_data_url' => fn() => $request->session()->get('generated_image_data_url'),
+            'generated_image_data_url' => fn () => $request->session()->get('generated_image_data_url'),
+            'show_recipe_ai_generation_modal' => fn () => $request->session()->get('show_recipe_ai_generation_modal'),
             'flash' => [
-                'message' => fn() => $request->session()->get('message'),
-                'success' => fn() => $request->session()->get('success'),
-                'error' => fn() => $request->session()->get('error'),
-                'warning' => fn() => $request->session()->get('warning'),
-                'new_workspace_id' => fn() => $request->session()->get('new_workspace_id'),
+                'message' => fn () => $request->session()->get('message'),
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+                'warning' => fn () => $request->session()->get('warning'),
+                'new_workspace_id' => fn () => $request->session()->get('new_workspace_id'),
             ],
         ];
     }

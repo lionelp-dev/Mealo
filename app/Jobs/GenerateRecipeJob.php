@@ -2,9 +2,9 @@
 
 namespace App\Jobs;
 
-use App\Actions\Recipes\GenerateRecipeWithAIAction;
-use App\Actions\Recipes\StoreRecipeAction;
-use App\Data\Requests\Recipe\GenerateRecipeRequestData;
+use App\Actions\Recipes\RecipeAIGenerationAction;
+use App\Actions\Recipes\RecipeStoreAction;
+use App\Data\Requests\Recipe\RecipeAIGenerationRequestData;
 use App\Models\User;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
@@ -33,15 +33,15 @@ class GenerateRecipeJob implements ShouldQueue
     }
 
     public function handle(
-        GenerateRecipeWithAIAction $generateRecipeWithAIAction,
-        StoreRecipeAction $storeRecipeAction
+        RecipeAIGenerationAction $recipeAIGenerationAction,
+        RecipeStoreAction $recipeStoreAction
     ): void {
         try {
             echo "🔄 Generating recipe #{$this->recipeNumber}: {$this->prompt}\n";
 
             // Generate recipe data from AI
-            $generateRecipeData = GenerateRecipeRequestData::validateAndCreate(['prompt' => $this->prompt]);
-            $storeRecipeData = $generateRecipeWithAIAction->execute($generateRecipeData);
+            $generateRecipeData = RecipeAIGenerationRequestData::validateAndCreate(['prompt' => $this->prompt]);
+            $recipeStoreRequestData = $recipeAIGenerationAction->execute($generateRecipeData);
 
             $user = User::query()->find($this->userId);
 
@@ -49,7 +49,7 @@ class GenerateRecipeJob implements ShouldQueue
                 throw new \Exception('User not found');
             }
             // Store recipe with all relations
-            $recipe = $storeRecipeAction->execute($user, $storeRecipeData);
+            $recipe = $recipeStoreAction->execute($user, $recipeStoreRequestData);
 
             echo "✅ Recipe #{$this->recipeNumber} created: {$recipe->name}\n";
             Log::info("Recipe generated via queue: {$recipe->name}");

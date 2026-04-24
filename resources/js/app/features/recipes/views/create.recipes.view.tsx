@@ -1,14 +1,14 @@
+import RecipeAIGenerationModal from '../components/recipe-ai-generation-modal';
 import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredients-section';
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
-import GenerateRecipeWithAIModal from '../components/recipe-modal-ai-generation';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { viewRecipes } from '../repositories/recipes.repository';
 import { useCreateRecipe } from '../repositories/use-create-recipe';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { AppMainContent } from '@/app/components/app-main-content';
 import { ImageUpload } from '@/app/components/image-upload';
-import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
+import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-store.request.schema';
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
@@ -42,7 +42,7 @@ export function CreateRecipesView() {
   const form = useAppForm({
     defaultValues: initialValues,
     validators: {
-      onSubmit: storeRecipeRequestSchema,
+      onSubmit: recipeStoreRequestSchema,
     },
     onSubmit: ({ value }) => {
       return createRecipe(value);
@@ -114,8 +114,8 @@ export function CreateRecipesView() {
             <form.AppField
               name="name"
               validators={{
-                onChange: storeRecipeRequestSchema.shape.name,
-                onBlur: storeRecipeRequestSchema.shape.name,
+                onChange: recipeStoreRequestSchema.shape.name,
+                onBlur: recipeStoreRequestSchema.shape.name,
               }}
               children={(field) => (
                 <field.TextField
@@ -131,8 +131,8 @@ export function CreateRecipesView() {
             <form.AppField
               name="description"
               validators={{
-                onChange: storeRecipeRequestSchema.shape.description,
-                onBlur: storeRecipeRequestSchema.shape.description,
+                onChange: recipeStoreRequestSchema.shape.description,
+                onBlur: recipeStoreRequestSchema.shape.description,
               }}
               children={(field) => (
                 <field.TextAreaField
@@ -150,8 +150,8 @@ export function CreateRecipesView() {
               name="meal_times"
               mode="array"
               validators={{
-                onChange: storeRecipeRequestSchema.shape.meal_times,
-                onBlur: storeRecipeRequestSchema.shape.meal_times,
+                onChange: recipeStoreRequestSchema.shape.meal_times,
+                onBlur: recipeStoreRequestSchema.shape.meal_times,
               }}
               children={(field) => {
                 const options = meal_times.map((mt) => ({
@@ -172,7 +172,7 @@ export function CreateRecipesView() {
               <form.AppField
                 name="serving_size"
                 validators={{
-                  onChange: storeRecipeRequestSchema.shape.serving_size,
+                  onChange: recipeStoreRequestSchema.shape.serving_size,
                 }}
                 children={(field) => (
                   <field.NumberField
@@ -191,7 +191,7 @@ export function CreateRecipesView() {
               <form.AppField
                 name="preparation_time"
                 validators={{
-                  onChange: storeRecipeRequestSchema.shape.preparation_time,
+                  onChange: recipeStoreRequestSchema.shape.preparation_time,
                 }}
                 children={(field) => (
                   <field.NumberField
@@ -209,7 +209,7 @@ export function CreateRecipesView() {
               <form.AppField
                 name="cooking_time"
                 validators={{
-                  onChange: storeRecipeRequestSchema.shape.cooking_time,
+                  onChange: recipeStoreRequestSchema.shape.cooking_time,
                 }}
                 children={(field) => (
                   <field.NumberField
@@ -230,7 +230,7 @@ export function CreateRecipesView() {
               <form.AppField
                 name="image"
                 validators={{
-                  onChange: storeRecipeRequestSchema.shape.image,
+                  onChange: recipeStoreRequestSchema.shape.image,
                 }}
                 children={(field) => (
                   <ImageUpload
@@ -308,7 +308,7 @@ export function CreateRecipesView() {
           </div>
         </form>
 
-        <GenerateRecipeWithAIModal />
+        <RecipeAIGenerationModal />
       </AppMainContent>
     </AppLayout>
   );

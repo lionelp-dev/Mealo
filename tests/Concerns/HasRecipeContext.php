@@ -2,9 +2,9 @@
 
 namespace Tests\Concerns;
 
-use App\Actions\Recipes\StoreRecipeAction;
-use App\Data\Requests\Recipe\StoreRecipeRequestData;
-use App\Data\Requests\Recipe\UpdateRecipeRequestData;
+use App\Actions\Recipes\RecipeStoreAction;
+use App\Data\Requests\Recipe\RecipeStoreRequestData;
+use App\Data\Requests\Recipe\RecipeUpdateRequestData;
 use App\Data\Resources\Recipe\Entities\RecipeResourceData;
 use App\Models\Recipe;
 use App\Models\User;
@@ -20,31 +20,31 @@ trait HasRecipeContext
 
     public File $image;
 
-    public StoreRecipeRequestData $storeRecipeRequestData;
+    public RecipeStoreRequestData $recipeStoreRequestData;
 
-    public StoreRecipeRequestData $otherStoreRecipeRequestData;
+    public RecipeStoreRequestData $otherRecipeStoreRequestData;
 
-    public UpdateRecipeRequestData $updateRecipeRequestData;
+    public RecipeUpdateRequestData $recipeUpdateRequestData;
 
     public function createRecipeContext()
     {
-        $this->storeRecipeRequestData = StoreRecipeRequestData::from(Recipe::factory()->complete()->make());
-        $this->otherStoreRecipeRequestData = StoreRecipeRequestData::from(Recipe::factory()->complete()->make());
+        $this->recipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
+        $this->otherRecipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
 
-        $this->recipe = app(StoreRecipeAction::class)->execute($this->user, $this->storeRecipeRequestData);
-        $this->otherRecipe = app(StoreRecipeAction::class)->execute($this->user, $this->otherStoreRecipeRequestData);
-        $this->otherUserRecipe = app(StoreRecipeAction::class)->execute($this->otherUser, $this->otherStoreRecipeRequestData);
+        $this->recipe = app(RecipeStoreAction::class)->execute($this->user, $this->recipeStoreRequestData);
+        $this->otherRecipe = app(RecipeStoreAction::class)->execute($this->user, $this->otherRecipeStoreRequestData);
+        $this->otherUserRecipe = app(RecipeStoreAction::class)->execute($this->otherUser, $this->otherRecipeStoreRequestData);
 
-        $this->updateRecipeRequestData = $this->makeUpdateRecipeRequestDataFor($this->user);
+        $this->recipeUpdateRequestData = $this->makeRecipeUpdateRequestDataFor($this->user);
     }
 
-    public function makeUpdateRecipeRequestDataFor(
+    public function makeRecipeUpdateRequestDataFor(
         User $user,
-    ): UpdateRecipeRequestData {
+    ): RecipeUpdateRequestData {
         $recipeResourceData = RecipeResourceData::fromModel($this->recipe->load('ingredients', 'mealTimes', 'tags', 'steps'))->include('ingredients');
         $otherRecipeResourceData = RecipeResourceData::fromModel($this->otherRecipe->load('ingredients', 'mealTimes', 'tags', 'steps'))->include('ingredients');
 
-        return UpdateRecipeRequestData::from([
+        return RecipeUpdateRequestData::from([
             ...$recipeResourceData->except('ingredients', 'mealTimes', 'tags', 'steps')->transform(),
             ...$otherRecipeResourceData->only('ingredients', 'mealTimes', 'tags', 'steps')->transform(),
         ]);

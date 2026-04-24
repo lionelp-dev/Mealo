@@ -103,7 +103,8 @@
       "Bash(pnpm add:*)",
       "WebFetch(domain:vitest.dev)",
       "Bash(pnpm exec playwright install:*)",
-      "Bash(git diff:*)"
+      "Bash(git diff:*)",
+      "Bash(xargs:*)"
     ],
     "deny": [],
     "ask": []

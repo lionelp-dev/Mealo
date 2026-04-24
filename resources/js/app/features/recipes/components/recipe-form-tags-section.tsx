@@ -2,8 +2,8 @@ import { useRecipesContextValue } from '../inertia.adapter';
 import { useSearchTags } from '../repositories/use-search-tags';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { tagRequestSchema } from '@/app/data/requests/recipe/schemas/entities/tag.request.schema';
-import { recipeFormRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-form.request.schema';
-import { storeRecipeRequestSchema } from '@/app/data/requests/recipe/schemas/store-recipe.request.schema';
+import { recipeSearchRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-search.request.schema';
+import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-store.request.schema';
 import { TagRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm, withFieldGroup } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
@@ -30,7 +30,7 @@ export const RecipeFormTagsSection = withFieldGroup({
       validators: {
         onSubmit: tagRequestSchema,
         onChange: ({ value }) => {
-          const result = recipeFormRequestSchema.shape.tags_search.safeParse(
+          const result = recipeSearchRequestSchema.shape.tags_search.safeParse(
             value.name,
           );
           if (!result) return;
@@ -60,8 +60,8 @@ export const RecipeFormTagsSection = withFieldGroup({
         name="tags"
         mode="array"
         validators={{
-          onChange: storeRecipeRequestSchema.shape.tags,
-          onBlur: storeRecipeRequestSchema.shape.tags,
+          onChange: recipeStoreRequestSchema.shape.tags,
+          onBlur: recipeStoreRequestSchema.shape.tags,
         }}
         children={(tags_field) => (
           <div className="flex flex-col gap-4">

@@ -1,4 +1,4 @@
-import { UpdateRecipeRequest } from '@/app/data/requests/recipe/types';
+import { RecipeUpdateRequest } from '@/app/data/requests/recipe/types';
 import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
@@ -7,7 +7,7 @@ export function useUpdateRecipe() {
   const [processing, setProcessing] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const updateRecipe = (data: UpdateRecipeRequest, recipeId: string) => {
+  const updateRecipe = (data: RecipeUpdateRequest, recipeId: string) => {
     router.put(recipes.update.url(recipeId), data, {
       onBefore: () => setProcessing(true),
       onSuccess: () => setErrors({}),

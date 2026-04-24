@@ -51,7 +51,7 @@ class AIMealPlanningService
 
         // Get available meal times from database
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         // Filter recipes by meal_time to prevent inappropriate assignments
@@ -141,7 +141,7 @@ class AIMealPlanningService
         ────────────────────────────────────────
 
         Recettes filtrées par meal_time :
-        ' . json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE) . "
+        '.json_encode($filteredRecipesData, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE)."
 
         Meal times autorisés :
         {$mealTimeListForPrompt}
@@ -188,7 +188,7 @@ class AIMealPlanningService
         - Dates au format YYYY-MM-DD
         - Utiliser UNIQUEMENT les recipe_id fournis
         - Respect STRICT des meal_time_id
-        - TOTAL ATTENDU : {$days} jours × 4 repas = " . ($days * 4) . ' repas
+        - TOTAL ATTENDU : {$days} jours × 4 repas = ".($days * 4).' repas
         ',
                     ],
                     [

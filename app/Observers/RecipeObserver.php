@@ -2,13 +2,13 @@
 
 namespace App\Observers;
 
-use App\Actions\Recipes\DeleteRecipeImageAction;
+use App\Actions\Recipes\RecipeImageDeleteAction;
 use App\Models\Recipe;
 
 class RecipeObserver
 {
     public function __construct(
-        private DeleteRecipeImageAction $deleteImage
+        private RecipeImageDeleteAction $recipeImageDeleteAction
     ) {}
 
     /**
@@ -19,7 +19,7 @@ class RecipeObserver
     public function deleting(Recipe $recipe): void
     {
         // Delete recipe image if exists
-        ($this->deleteImage)($recipe);
+        ($this->recipeImageDeleteAction)($recipe);
 
         // Delete all planned meals for this recipe
         // This will trigger PlannedMealObserver::deleted() for each planned meal

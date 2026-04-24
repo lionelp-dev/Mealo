@@ -1,4 +1,5 @@
-import { GenerateRecipeRequest } from '@/app/data/requests/recipe/types';
+import { RecipeAIGenerationRequest } from '@/app/data/requests/recipe/types';
+import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -7,8 +8,8 @@ export function useGenerateRecipe() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [wasSuccessful, setWasSuccessful] = useState(false);
 
-  const generateRecipe = (data: GenerateRecipeRequest) => {
-    router.post('/recipes/create', data, {
+  const generateRecipe = (data: RecipeAIGenerationRequest) => {
+    router.post(recipes.aiGeneration.url(), data, {
       only: ['generated_recipe', 'generated_image_data_url', 'flash'],
       onBefore: () => {
         setProcessing(true);

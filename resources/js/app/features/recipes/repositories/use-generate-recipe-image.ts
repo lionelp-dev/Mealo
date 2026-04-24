@@ -1,4 +1,4 @@
-import { generateImagePreview } from '@/actions/App/Http/Controllers/RecipeController';
+import recipes from '@/routes/recipes';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
 
@@ -11,7 +11,7 @@ export function useGenerateRecipeImage() {
     ingredients?: Array<{ name: string; quantity: number; unit: string }>,
   ) => {
     router.post(
-      generateImagePreview.url(),
+      recipes.aiImageGeneration.url(),
       {
         name,
         ingredients: ingredients ?? null,

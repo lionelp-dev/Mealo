@@ -22,14 +22,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return to_route('planned-meals.index');
     })->name('dashboard');
 
-    Route::resource('recipes', RecipeController::class)->except(['destroy']);
-    Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
-    Route::post('recipes/create', [RecipeController::class, 'generateRecipeWithAI'])->name('recipes.generate');
-    Route::post('recipes/generate-image-preview', [RecipeController::class, 'generateImagePreview'])->name('recipes.generate-image-preview');
+    Route::get('recipes/show-ai-generation-modal', [RecipeController::class, 'showAIGenerationModal'])->name('recipes.show-ai-generation-modal');
+    Route::post('recipes/ai-generation', [RecipeController::class, 'aiGeneration'])->name('recipes.ai-generation');
+    Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
+    Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
+    Route::resource('recipes', RecipeController::class)->except(['destroy']);
+
     Route::resource('planned-meals', PlannedMealController::class)->except(['destroy']);
     Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
     Route::post('planned-meals/generate', [PlannedMealController::class, 'generatePlan'])->name('planned-meals.generate');
+
     Route::get('shopping-lists', [ShoppingListController::class, 'index'])->name('shopping-lists.index');
     Route::put('shopping-lists', [ShoppingListController::class, 'update'])->name('shopping-lists.update');
 
@@ -56,6 +59,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('workspace-invitations/{token}/accept', [WorkspaceInvitationController::class, 'acceptFromEmail'])
     ->name('workspace-invitations.acceptFromEmail');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';

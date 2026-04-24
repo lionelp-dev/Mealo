@@ -4,28 +4,11 @@ export type AcceptWorkspaceInvitationRequestData = {
 export type DeclineWorkspaceInvitationRequestData = {
   token: string;
 };
-export type DeleteRecipesRequestData = {
-  ids: Array<string>;
-};
 export type DeleteWorkspaceInvitationRequestData = {
   invitation: number;
 };
 export type DeleteWorkspaceMemberRequestData = {
   user_id: number;
-};
-export type FilterRecipesRequestData = {
-  search?: string;
-  tags?: Array<number> | null;
-  meal_times?: Array<number> | null;
-  preparation_time?: string;
-  cooking_time?: string;
-};
-export type GenerateImagePreviewRequestData = {
-  name: string;
-  ingredients?: Array<IngredientRequestData>;
-};
-export type GenerateRecipeRequestData = {
-  prompt: string;
 };
 export type IngredientRequestData = {
   name: string;
@@ -45,6 +28,10 @@ export type MealTimeResourceData = {
   id: number;
   name: string;
 };
+export type RecipeAIGenerationRequestData = {
+  prompt: string;
+  image_generation?: boolean;
+};
 export type RecipeAIPromptResourceData = {
   id: string;
   name: string;
@@ -52,10 +39,21 @@ export type RecipeAIPromptResourceData = {
   meal_times: Array<MealTimeResourceData>;
   tags: Array<TagResourceData>;
 };
-export type RecipeFormRequestData = {
-  ingredients_search?: string;
-  tags_search?: string;
-  show_generate_recipe_with_ai_modal?: boolean;
+export type RecipeDestroyRequestData = {
+  ids: Array<string>;
+};
+export type RecipeEditRequestData = {
+  show_recipe_ai_generation_modal?: boolean;
+};
+export type RecipeFiltersRequestData = {
+  tags?: Array<number> | null;
+  meal_times?: Array<number> | null;
+  preparation_time?: string;
+  cooking_time?: string;
+};
+export type RecipeImageGenerationRequestData = {
+  name: string;
+  ingredients?: Array<IngredientRequestData> | null;
 };
 export type RecipeIngredientResourceData = {
   id: string;
@@ -79,16 +77,12 @@ export type RecipeResourceData = {
   created_at: string | null;
   updated_at: string | null;
 };
-export type StepRequestData = {
-  order: number;
-  description: string;
+export type RecipeSearchRequestData = {
+  search?: string;
+  ingredients_search?: string;
+  tags_search?: string;
 };
-export type StepResourceData = {
-  id: string;
-  order: number;
-  description: string;
-};
-export type StoreRecipeRequestData = {
+export type RecipeStoreRequestData = {
   name: string;
   description: string;
   serving_size: number;
@@ -99,6 +93,28 @@ export type StoreRecipeRequestData = {
   steps: Array<StepRequestData>;
   tags: Array<TagRequestData>;
   image: File | null;
+};
+export type RecipeUpdateRequestData = {
+  id: string;
+  name: string;
+  description: string;
+  serving_size: number;
+  preparation_time: number;
+  cooking_time: number;
+  meal_times: Array<MealTimeRequestData>;
+  ingredients: Array<IngredientRequestData>;
+  steps: Array<StepRequestData>;
+  tags: Array<TagRequestData>;
+  image: File | null;
+};
+export type StepRequestData = {
+  order: number;
+  description: string;
+};
+export type StepResourceData = {
+  id: string;
+  order: number;
+  description: string;
 };
 export type StoreWorkspaceInvitationRequestData = {
   workspace_id: number;
@@ -119,19 +135,6 @@ export type TagResourceData = {
 export type Unit = {
   name: string;
   value: string;
-};
-export type UpdateRecipeRequestData = {
-  id: string;
-  name: string;
-  description: string;
-  serving_size: number;
-  preparation_time: number;
-  cooking_time: number;
-  meal_times: Array<MealTimeRequestData>;
-  ingredients: Array<IngredientRequestData>;
-  steps: Array<StepRequestData>;
-  tags: Array<TagRequestData>;
-  image: File | null;
 };
 export type UpdateWorkspaceMemberRoleRequestData = {
   user_id: number;

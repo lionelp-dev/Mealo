@@ -13,7 +13,7 @@ return new class extends Migration
             $table->foreignId('workspace_id')->constrained()->onDelete('cascade');
             $table->string('email');
             $table->enum('role', ['editor', 'viewer'])->default('editor');
-            $table->string('token', 32)->unique();
+            $table->uuid('token')->unique();
             $table->foreignId('invited_by')->constrained('users')->onDelete('cascade');
             $table->timestamp('expires_at');
             $table->timestamps();
