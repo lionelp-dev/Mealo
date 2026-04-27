@@ -99,7 +99,7 @@ class RecipeController extends Controller
     ): RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
+        $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
         $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
         return back()->with([
@@ -125,17 +125,19 @@ class RecipeController extends Controller
         try {
             $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
 
-            $prompt = $recipe->name
-                .'with'.json_encode($recipe->ingredients)
-                .'recipe steps'.json_encode($recipe->steps);
+            if ($recipeAIGenerationRequestData->image_generation) {
+                $prompt = $recipe->name
+                    . 'with' . json_encode($recipe->ingredients)
+                    . 'recipe steps' . json_encode($recipe->steps);
 
-            $base64Image = $recipeImageAIGenerationAction->execute($prompt);
+                $base64Image = $recipeImageAIGenerationAction->execute($prompt);
+            }
 
             return Inertia::render(
                 'recipe/create',
                 [
                     'generated_recipe' => $recipe,
-                    'generated_image_data_url' => $base64Image,
+                    'generated_image_data_url' => $base64Image ?? null,
                     'show_recipe_ai_generation_modal' => false,
                 ]
             );
