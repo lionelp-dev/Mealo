@@ -2,10 +2,10 @@
 
 namespace Tests\Concerns;
 
-use App\Actions\Workspace\StoreWorkspaceAction;
-use App\Actions\Workspace\StoreWorkspaceInvitationAction;
-use App\Data\Requests\Workspace\StoreWorkspaceInvitationRequestData;
-use App\Data\Requests\Workspace\StoreWorkspaceRequestData;
+use App\Actions\Workspace\WorkspaceInvitationStoreAction;
+use App\Actions\Workspace\WorkspaceStoreAction;
+use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
+use App\Data\Requests\Workspace\WorkspaceStoreRequestData;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
 use App\Policies\WorkspacePolicy;
@@ -23,19 +23,19 @@ trait HasWorkspaceContext
 
     public Workspace $otherUserSharedWorkspace;
 
-    public StoreWorkspaceRequestData $storePersonalWorkspaceRequestData;
+    public WorkspaceStoreRequestData $storePersonalWorkspaceRequestData;
 
-    public StoreWorkspaceRequestData $storeSharedWorkspaceRequestData;
+    public WorkspaceStoreRequestData $storeSharedWorkspaceRequestData;
 
-    public StoreWorkspaceRequestData $storeOtherUserSharedWorkspaceRequestData;
+    public WorkspaceStoreRequestData $storeOtherUserSharedWorkspaceRequestData;
 
     public WorkspaceInvitation $sharedWorkspaceInvitation;
 
     public WorkspaceInvitation $sharedWorkspaceExpiredInvitation;
 
-    public StoreWorkspaceInvitationRequestData $storeSharedWorkspaceInvitationRequestData;
+    public WorkspaceInvitationStoreRequestData $storeSharedWorkspaceInvitationRequestData;
 
-    public StoreWorkspaceInvitationRequestData $storeOtherSharedWorkspaceInvitationRequestData;
+    public WorkspaceInvitationStoreRequestData $storeOtherSharedWorkspaceInvitationRequestData;
 
     public function setUpHasWorkspaceContext(): void
     {
@@ -44,32 +44,32 @@ trait HasWorkspaceContext
             ->where('is_default', true)
             ->first();
 
-        $this->storePersonalWorkspaceRequestData = StoreWorkspaceRequestData::from([
+        $this->storePersonalWorkspaceRequestData = WorkspaceStoreRequestData::from([
             'owner_id' => $this->user->id,
             'name' => 'any personal workspace',
             'is_personal' => true,
             'is_default' => false,
         ]);
 
-        $this->storeSharedWorkspaceRequestData = StoreWorkspaceRequestData::from([
+        $this->storeSharedWorkspaceRequestData = WorkspaceStoreRequestData::from([
             'owner_id' => $this->user->id,
             'name' => 'any shared workspace',
             'is_personal' => false,
             'is_default' => false,
         ]);
 
-        $this->storeOtherUserSharedWorkspaceRequestData = StoreWorkspaceRequestData::from([
+        $this->storeOtherUserSharedWorkspaceRequestData = WorkspaceStoreRequestData::from([
             'owner_id' => $this->otherUser->id,
             'name' => 'any other user shared workspace',
             'is_personal' => false,
             'is_default' => false,
         ]);
 
-        $this->personalWorkspace = app(StoreWorkspaceAction::class)->execute($this->user, $this->storePersonalWorkspaceRequestData);
+        $this->personalWorkspace = app(WorkspaceStoreAction::class)->execute($this->user, $this->storePersonalWorkspaceRequestData);
 
-        $this->sharedWorkspace = app(StoreWorkspaceAction::class)->execute($this->user, $this->storeSharedWorkspaceRequestData);
+        $this->sharedWorkspace = app(WorkspaceStoreAction::class)->execute($this->user, $this->storeSharedWorkspaceRequestData);
 
-        $this->otherUserSharedWorkspace = app(StoreWorkspaceAction::class)->execute($this->otherUser, $this->storeOtherUserSharedWorkspaceRequestData);
+        $this->otherUserSharedWorkspace = app(WorkspaceStoreAction::class)->execute($this->otherUser, $this->storeOtherUserSharedWorkspaceRequestData);
 
         $this->sharedWorkspace->users()->attach($this->editorUser->id, ['joined_at' => now()]);
         $this->sharedWorkspace->users()->attach($this->viewerUser->id, ['joined_at' => now()]);
@@ -77,7 +77,7 @@ trait HasWorkspaceContext
         $this->sharedWorkspace->giveEditorPermissions($this->editorUser);
         $this->sharedWorkspace->giveViewerPermissions($this->viewerUser);
 
-        $this->storeSharedWorkspaceInvitationRequestData = StoreWorkspaceInvitationRequestData::from(
+        $this->storeSharedWorkspaceInvitationRequestData = WorkspaceInvitationStoreRequestData::from(
             [
                 'workspace_id' => $this->sharedWorkspace->id,
                 'email' => $this->inviteeUser->email,
@@ -86,7 +86,7 @@ trait HasWorkspaceContext
             ]
         );
 
-        $this->storeSharedWorkspaceExpiredInvitationRequestData = StoreWorkspaceInvitationRequestData::from(
+        $this->storeSharedWorkspaceExpiredInvitationRequestData = WorkspaceInvitationStoreRequestData::from(
             [
                 'workspace_id' => $this->sharedWorkspace->id,
                 'email' => $this->otherInviteeUser->email,
@@ -95,7 +95,7 @@ trait HasWorkspaceContext
             ]
         );
 
-        $this->storeOtherSharedWorkspaceInvitationRequestData = StoreWorkspaceInvitationRequestData::from(
+        $this->storeOtherSharedWorkspaceInvitationRequestData = WorkspaceInvitationStoreRequestData::from(
             [
                 'workspace_id' => $this->sharedWorkspace->id,
                 'email' => $this->thirdInviteeUser->email,
@@ -104,10 +104,10 @@ trait HasWorkspaceContext
             ]
         );
 
-        $this->sharedWorkspaceInvitation = app(StoreWorkspaceInvitationAction::class)
+        $this->sharedWorkspaceInvitation = app(WorkspaceInvitationStoreAction::class)
             ->execute($this->user, $this->sharedWorkspace, $this->storeSharedWorkspaceInvitationRequestData);
 
-        $this->sharedWorkspaceExpiredInvitation = app(StoreWorkspaceInvitationAction::class)
+        $this->sharedWorkspaceExpiredInvitation = app(WorkspaceInvitationStoreAction::class)
             ->execute($this->user, $this->sharedWorkspace, $this->storeSharedWorkspaceExpiredInvitationRequestData);
 
         $this->sharedWorkspaceExpiredInvitation->expires_at = CarbonImmutable::now()->subHour();

@@ -1,8 +1,14 @@
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useGenerateRecipe } from '../repositories/use-generate-recipe';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/app/components/ui/dialog';
 import { recipeAIGenerationRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-ai-generation.request.schema';
 import { useForm } from '@tanstack/react-form';
-import { Wand2, X } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -34,22 +40,14 @@ export default function RecipeAIGenerationModal() {
   if (!isOpen) return null;
 
   return (
-    <div className="modal-open modal">
-      <div className="modal-box flex max-w-2xl flex-col gap-1 divide-y divide-base-300/50 rounded-xl px-8">
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="flex items-center gap-3.5 pt-4 pb-2.5 text-xl font-semibold text-secondary">
-            <Wand2 className="mb-1 h-8 w-8" />
+    <Dialog open={true} onOpenChange={setIsOpen}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 py-2 tracking-tight text-secondary">
+            <Wand2 className="h-8 w-8" />
             {t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
-          </h2>
-          <button
-            onClick={() => setIsOpen(false)}
-            className="btn btn-circle btn-square btn-ghost btn-sm"
-            disabled={processing}
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-
+          </DialogTitle>
+        </DialogHeader>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -136,11 +134,7 @@ export default function RecipeAIGenerationModal() {
             </button>
           </div>
         </form>
-      </div>
-      <div
-        className="modal-backdrop bg-black/5 backdrop-blur-xs"
-        onClick={() => setIsOpen(false)}
-      ></div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

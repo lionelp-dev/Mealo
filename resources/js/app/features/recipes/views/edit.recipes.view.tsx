@@ -225,6 +225,7 @@ export function EditRecipesView() {
                   />
                 )}
               />
+              <div className="divider">{t('common.or', 'Ou')}</div>
               {/* Message d'erreur si échec */}
               {imageErrors &&
                 imageErrors.map((error) => (

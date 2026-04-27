@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Workspace\DeleteWorkspaceAction;
-use App\Actions\Workspace\DeleteWorkspaceMemberAction;
-use App\Actions\Workspace\GetCurrentWorkspaceAction;
-use App\Actions\Workspace\StoreWorkspaceAction;
-use App\Actions\Workspace\UpdateWorkspaceAction;
-use App\Actions\Workspace\UpdateWorkspaceMemberRoleAction;
-use App\Data\Requests\Workspace\DeleteWorkspaceMemberRequestData;
-use App\Data\Requests\Workspace\StoreWorkspaceRequestData;
-use App\Data\Requests\Workspace\UpdateWorkspaceMemberRoleRequestData;
-use App\Data\Requests\Workspace\UpdateWorkspaceRequestData;
+use App\Actions\Workspace\WorkspaceDeleteAction;
+use App\Actions\Workspace\WorkspaceGetCurrentAction;
+use App\Actions\Workspace\WorkspaceMemberDeleteAction;
+use App\Actions\Workspace\WorkspaceMemberRoleUpdateAction;
+use App\Actions\Workspace\WorkspaceStoreAction;
+use App\Actions\Workspace\WorkspaceUpdateAction;
+use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
+use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
+use App\Data\Requests\Workspace\WorkspaceStoreRequestData;
+use App\Data\Requests\Workspace\WorkspaceUpdateRequestData;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Messages\Workspace\MemberRemovedMessage;
@@ -21,65 +21,57 @@ use App\Messages\Workspace\WorkspaceDeletedMessage;
 use App\Messages\Workspace\WorkspaceLeftMessage;
 use App\Messages\Workspace\WorkspaceSwitchedMessage;
 use App\Messages\Workspace\WorkspaceUpdatedMessage;
-use App\Models\User;
 use App\Models\Workspace;
+use App\Traits\AuthUser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class WorkspaceController extends Controller
 {
+    use AuthUser;
+
     public function __construct() {}
 
     public function index(
-        Request $request,
-        GetCurrentWorkspaceAction $getCurrentWorkspaceAction
-    ): Response|RedirectResponse {
-        /** @var User $user */
-        $user = $request->user();
-
-        $currentWorkspace = $getCurrentWorkspaceAction($user);
+        WorkspaceGetCurrentAction $workspaceGetCurrentAction
+    ): Response {
+        $currentWorkspace = $workspaceGetCurrentAction($this->user());
 
         return Inertia::render('workspaces/index', [
             'workspace_data' => [
-                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations),
+                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($this->user()->workspacesInvitations),
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
-                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
+                'workspaces' => WorkspaceResourceData::collect($this->user()->workspaces),
             ],
         ]);
     }
 
     public function store(
-        Request $request,
-        StoreWorkspaceRequestData $storeWorkspaceRequestData,
-        StoreWorkspaceAction $storeWorkspaceAction
+        WorkspaceStoreRequestData $workspaceStoreRequestData,
+        WorkspaceStoreAction $workspaceStoreAction
     ): RedirectResponse {
-        /** @var User $user */
-        $user = $request->user();
-
-        $workspace = $storeWorkspaceAction->execute($user, $storeWorkspaceRequestData);
+        $workspace = $workspaceStoreAction->execute($this->user(), $workspaceStoreRequestData);
 
         return back()->with([
-            'success' => (new WorkspaceCreatedMessage)->getMessage(),
+            'success' => (new WorkspaceCreatedMessage())->getMessage(),
             'new_workspace_id' => $workspace->id,
         ]);
     }
 
     public function update(
-        Request $request,
         Workspace $workspace,
-        UpdateWorkspaceRequestData $updateWorkspaceRequestData,
-        UpdateWorkspaceAction $updateWorkspaceAction
+        WorkspaceUpdateRequestData $workspaceUpdateRequestData,
+        WorkspaceUpdateAction $workspaceUpdateAction
     ): RedirectResponse {
         try {
             Gate::authorize('update', $workspace);
 
-            $updateWorkspaceAction->execute($workspace, $updateWorkspaceRequestData);
+            $workspaceUpdateAction->execute($workspace, $workspaceUpdateRequestData);
 
-            return back()->with('success', (new WorkspaceUpdatedMessage)->getMessage());
+            return back()->with('success', (new WorkspaceUpdatedMessage())->getMessage());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -87,28 +79,29 @@ class WorkspaceController extends Controller
 
     public function updateMemberRole(
         Workspace $workspace,
-        UpdateWorkspaceMemberRoleRequestData $roleData,
-        UpdateWorkspaceMemberRoleAction $updateWorkspaceMemberRoleAction
+        WorkspaceMemberRoleUpdateRequestData $workspaceMemberRoleUpdateRequestData,
+        WorkspaceMemberRoleUpdateAction $workspaceMemberRoleUpdateAction
     ): RedirectResponse {
         try {
             Gate::authorize('manageMember', $workspace);
 
-            $updateWorkspaceMemberRoleAction->execute($workspace, $roleData);
+            $workspaceMemberRoleUpdateAction->execute($workspace, $workspaceMemberRoleUpdateRequestData);
 
-            return back()->with(['success' => (new MemberRoleUpdatedMessage)->getMessage()]);
+            return back()->with(['success' => (new MemberRoleUpdatedMessage())->getMessage()]);
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function switch(Request $request, Workspace $workspace): RedirectResponse
-    {
+    public function switch(
+        Workspace $workspace
+    ): RedirectResponse {
         try {
             Gate::authorize('view', $workspace);
 
             session(['current_workspace_id' => $workspace->id]);
 
-            return back()->with('success', (new WorkspaceSwitchedMessage)->getMessage());
+            return back()->with('success', (new WorkspaceSwitchedMessage())->getMessage());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -116,52 +109,50 @@ class WorkspaceController extends Controller
 
     public function removeMember(
         Workspace $workspace,
-        DeleteWorkspaceMemberRequestData $deleteWorkspaceMemberData,
-        DeleteWorkspaceMemberAction $deleteWorkspaceMemberAction
+        WorkspaceMemberDeleteRequestData $workspaceMemberDeleteRequestData,
+        WorkspaceMemberDeleteAction $workspaceMemberDeleteAction
     ): RedirectResponse {
         try {
             Gate::authorize('manageMember', $workspace);
 
-            $deleteWorkspaceMemberAction->execute($workspace, $deleteWorkspaceMemberData);
+            $workspaceMemberDeleteAction->execute($workspace, $workspaceMemberDeleteRequestData);
 
-            return back()->with(['success' => (new MemberRemovedMessage)->getMessage()]);
+            return back()->with(['success' => (new MemberRemovedMessage())->getMessage()]);
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
     }
 
     public function leave(
-        Request $request,
         Workspace $workspace,
-        DeleteWorkspaceMemberAction $deleteWorkspaceMemberAction
+        WorkspaceMemberDeleteAction $workspaceMemberDeleteAction
     ): RedirectResponse {
-        /** @var User $user */
-        $user = $request->user();
-
         try {
-            $deleteWorkspaceMemberAction->execute(
+            $workspaceMemberDeleteAction->execute(
                 $workspace,
-                DeleteWorkspaceMemberRequestData::from(
+                WorkspaceMemberDeleteRequestData::from(
                     [
-                        'user_id' => $user->id,
+                        'user_id' => $this->user()->id,
                     ]
                 )
             );
 
-            return back()->with('success', (new WorkspaceLeftMessage)->getMessage());
+            return back()->with('success', (new WorkspaceLeftMessage())->getMessage());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
     }
 
-    public function destroy(Workspace $workspace, DeleteWorkspaceAction $deleteWorkspaceAction): RedirectResponse
-    {
+    public function destroy(
+        Workspace $workspace,
+        WorkspaceDeleteAction $workspaceDeleteAction
+    ): RedirectResponse {
         try {
             Gate::authorize('delete', $workspace);
 
-            $deleteWorkspaceAction->execute($workspace);
+            $workspaceDeleteAction->execute($workspace);
 
-            return back()->with('success', (new WorkspaceDeletedMessage)->getMessage());
+            return back()->with('success', (new WorkspaceDeletedMessage())->getMessage());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }

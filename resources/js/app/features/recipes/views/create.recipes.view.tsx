@@ -12,7 +12,8 @@ import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/rec
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
-import { Head } from '@inertiajs/react';
+import { showAiGenerationModal } from '@/routes/recipes';
+import { Head, Link } from '@inertiajs/react';
 import { useStore } from '@tanstack/react-form';
 import { ChefHatIcon, Wand2 } from 'lucide-react';
 import { useEffect } from 'react';
@@ -74,6 +75,13 @@ export function CreateRecipesView() {
       headerRightContent={
         <div className="flex items-center gap-8">
           <div className="flex justify-end gap-4">
+            <Link
+              className="btn"
+              href={showAiGenerationModal.url()}
+              preserveUrl
+            >
+              {t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
+            </Link>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
@@ -239,6 +247,7 @@ export function CreateRecipesView() {
                   />
                 )}
               />
+              <div className="divider">{t('common.or', 'Ou')}</div>
               {/* Message d'erreur si échec */}
               {imageErrors &&
                 imageErrors.map((error) => (

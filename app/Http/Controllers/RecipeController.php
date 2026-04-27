@@ -125,7 +125,10 @@ class RecipeController extends Controller
         try {
             $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
 
-            $prompt = $recipe->name.'with'.json_encode($recipe->ingredients);
+            $prompt = $recipe->name
+                .'with'.json_encode($recipe->ingredients)
+                .'recipe steps'.json_encode($recipe->steps);
+
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
             return Inertia::render(

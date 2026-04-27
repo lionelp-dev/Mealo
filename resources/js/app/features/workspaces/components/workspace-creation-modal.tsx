@@ -7,7 +7,7 @@ import {
   DialogContent,
   DialogTitle,
 } from '@/app/components/ui/dialog';
-import type { StoreWorkspaceRequest } from '@/app/data/requests/workspace/types';
+import type { WorkspaceStoreRequest } from '@/app/data/requests/workspace/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { useStore } from '@tanstack/react-form';
@@ -42,7 +42,7 @@ export default function WorkspaceCreationModal() {
 
   const { handleCreateWorkspace } = useWorkspaces();
 
-  const defaultValues: StoreWorkspaceRequest = {
+  const defaultValues: WorkspaceStoreRequest = {
     name: '',
     is_personal: true,
   };

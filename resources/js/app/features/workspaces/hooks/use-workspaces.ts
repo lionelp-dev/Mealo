@@ -1,11 +1,11 @@
 import type {
-  AcceptWorkspaceInvitationRequest,
-  DeclineWorkspaceInvitationRequest,
-  DeleteWorkspaceMemberRequest,
-  StoreWorkspaceInvitationRequest,
-  StoreWorkspaceRequest,
-  UpdateWorkspaceMemberRoleRequest,
-  UpdateWorkspaceRequest,
+  WorkspaceAcceptInvitationRequest,
+  WorkspaceDeclineInvitationRequest,
+  WorkspaceDeleteMemberRequest,
+  WorkspaceStoreInvitationRequest,
+  WorkspaceStoreRequest,
+  WorkspaceUpdateMemberRoleRequest,
+  WorkspaceUpdateRequest,
 } from '@/app/data/requests/workspace/types';
 import workspaceInvitationsRoute from '@/routes/workspace-invitations';
 import workspaces from '@/routes/workspaces';
@@ -18,7 +18,7 @@ export function useWorkspaces() {
   const { t } = useTranslation();
 
   const handleCreateWorkspace = (
-    data: StoreWorkspaceRequest,
+    data: WorkspaceStoreRequest,
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
@@ -42,7 +42,7 @@ export function useWorkspaces() {
 
   const handleUpdateWorkspace = (
     workspaceId: number,
-    data: UpdateWorkspaceRequest,
+    data: WorkspaceUpdateRequest,
     callbacks?: {
       onStart?: () => void;
       onSuccess?: (page: { props: SharedData }) => void;
@@ -65,7 +65,7 @@ export function useWorkspaces() {
   };
 
   const handleInvite = (
-    data: StoreWorkspaceInvitationRequest,
+    data: WorkspaceStoreInvitationRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
@@ -83,7 +83,7 @@ export function useWorkspaces() {
 
   const handleRemoveMember = (
     workspaceId: number,
-    data: DeleteWorkspaceMemberRequest,
+    data: WorkspaceDeleteMemberRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
@@ -98,7 +98,7 @@ export function useWorkspaces() {
 
   const handleChangeRole = (
     workspaceId: number,
-    data: UpdateWorkspaceMemberRoleRequest,
+    data: WorkspaceUpdateMemberRoleRequest,
     callbacks?: {
       onBefore?: () => void;
       onFinish?: () => void;
@@ -133,7 +133,7 @@ export function useWorkspaces() {
     );
   };
 
-  const handleAccept = (data: AcceptWorkspaceInvitationRequest) => {
+  const handleAccept = (data: WorkspaceAcceptInvitationRequest) => {
     router.post(
       workspaceInvitationsRoute.accept.url(data.token),
       {},
@@ -143,7 +143,7 @@ export function useWorkspaces() {
     );
   };
 
-  const handleDecline = (data: DeclineWorkspaceInvitationRequest) => {
+  const handleDecline = (data: WorkspaceDeclineInvitationRequest) => {
     router.post(
       workspaceInvitationsRoute.decline.url(data.token),
       {},

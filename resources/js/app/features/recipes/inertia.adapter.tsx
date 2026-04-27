@@ -22,7 +22,7 @@ type PageProps = SharedData & {
   ingredients_search_results?: {
     data: IngredientResource[];
   };
-  show_generate_recipe_with_ai_modal: boolean;
+  show_recipe_ai_generation_modal: boolean;
   generated_recipe?: GeneratedRecipeResource;
   generated_image_data_url?: string | null;
 };

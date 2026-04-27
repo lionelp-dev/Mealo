@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Actions\Workspace\WorkspaceGetCurrentAction;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Requests\StorePlannedMealRequest;
@@ -35,7 +35,7 @@ class PlannedMealController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): Response
+    public function index(Request $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): Response
     {
         $user = $request->user();
 
@@ -71,6 +71,7 @@ class PlannedMealController extends Controller
 
         $recipesQuery = Recipe::query()
             ->where('user_id', $user->id)
+            ->orderBy('created_at', 'desc')
             ->with(['mealTimes', 'ingredients', 'steps', 'tags']);
 
         // Search filter
@@ -179,7 +180,7 @@ class PlannedMealController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StorePlannedMealRequest $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): mixed
+    public function store(StorePlannedMealRequest $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): mixed
     {
         return DB::transaction(function () use ($request, $getCurrentWorkspaceAction) {
             $validated = $request->validated();
@@ -231,7 +232,7 @@ class PlannedMealController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): mixed
+    public function destroy(Request $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): mixed
     {
         return DB::transaction(function () use ($request, $getCurrentWorkspaceAction) {
             $validated = $request->validate([
@@ -279,7 +280,7 @@ class PlannedMealController extends Controller
     /**
      * Generate a meal plan using AI
      */
-    public function generatePlan(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): RedirectResponse
+    public function generatePlan(Request $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): RedirectResponse
     {
         $user = $request->user();
 

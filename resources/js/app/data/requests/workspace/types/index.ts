@@ -1,28 +1,28 @@
-import { acceptWorkspaceInvitationRequestSchema } from '../schemas/accept-workspace-invitation.request.schema';
-import { declineWorkspaceInvitationRequestSchema } from '../schemas/decline-workspace-invitation.request.schema';
-import { deleteWorkspaceMemberRequestSchema } from '../schemas/delete-workspace-member.request.schema';
-import { storeWorkspaceInvitationRequestSchema } from '../schemas/store-workspace-invitation.request.schema';
-import { storeWorkspaceRequestSchema } from '../schemas/store-workspace.request.schema';
-import { updateWorkspaceMemberRoleRequestSchema } from '../schemas/update-workspace-member-role.request.schema';
-import { updateWorkspaceRequestSchema } from '../schemas/update-workspace.request.schema';
+import { workspaceInvitationAcceptRequestSchema } from '../schemas/workspace-invitation-accept.request.schema';
+import { workspaceInvitationDeclineRequestSchema } from '../schemas/workspace-invitation-decline.request.schema';
+import { workspaceInvitationStoreRequestSchema } from '../schemas/workspace-invitation-store.request.schema';
+import { workspaceDeleteMemberRequestSchema } from '../schemas/workspace-member-delete.request.schema';
+import { workspaceMemberRoleUpdateRequestSchema } from '../schemas/workspace-member-role-update.request.schema';
+import { workspaceStoreRequestSchema } from '../schemas/workspace-store.request.schema';
+import { workspaceUpdateRequestSchema } from '../schemas/workspace-update.request.schema';
 import z from 'zod';
 
-export type StoreWorkspaceRequest = z.infer<typeof storeWorkspaceRequestSchema>;
-export type UpdateWorkspaceRequest = z.infer<
-  typeof updateWorkspaceRequestSchema
+export type WorkspaceStoreRequest = z.infer<typeof workspaceStoreRequestSchema>;
+export type WorkspaceUpdateRequest = z.infer<
+  typeof workspaceUpdateRequestSchema
 >;
-export type DeleteWorkspaceMemberRequest = z.infer<
-  typeof deleteWorkspaceMemberRequestSchema
+export type WorkspaceDeleteMemberRequest = z.infer<
+  typeof workspaceDeleteMemberRequestSchema
 >;
-export type UpdateWorkspaceMemberRoleRequest = z.infer<
-  typeof updateWorkspaceMemberRoleRequestSchema
+export type WorkspaceUpdateMemberRoleRequest = z.infer<
+  typeof workspaceMemberRoleUpdateRequestSchema
 >;
-export type StoreWorkspaceInvitationRequest = z.infer<
-  typeof storeWorkspaceInvitationRequestSchema
+export type WorkspaceStoreInvitationRequest = z.infer<
+  typeof workspaceInvitationStoreRequestSchema
 >;
-export type AcceptWorkspaceInvitationRequest = z.infer<
-  typeof acceptWorkspaceInvitationRequestSchema
+export type WorkspaceAcceptInvitationRequest = z.infer<
+  typeof workspaceInvitationAcceptRequestSchema
 >;
-export type DeclineWorkspaceInvitationRequest = z.infer<
-  typeof declineWorkspaceInvitationRequestSchema
+export type WorkspaceDeclineInvitationRequest = z.infer<
+  typeof workspaceInvitationDeclineRequestSchema
 >;

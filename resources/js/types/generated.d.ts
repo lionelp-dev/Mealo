@@ -1,15 +1,3 @@
-export type AcceptWorkspaceInvitationRequestData = {
-  token: string;
-};
-export type DeclineWorkspaceInvitationRequestData = {
-  token: string;
-};
-export type DeleteWorkspaceInvitationRequestData = {
-  invitation: number;
-};
-export type DeleteWorkspaceMemberRequestData = {
-  user_id: number;
-};
 export type IngredientRequestData = {
   name: string;
   quantity: number;
@@ -51,7 +39,7 @@ export type RecipeFiltersRequestData = {
   preparation_time?: string;
   cooking_time?: string;
 };
-export type RecipeImageGenerationRequestData = {
+export type RecipeImageAIGenerationRequestData = {
   name: string;
   ingredients?: Array<IngredientRequestData> | null;
 };
@@ -116,15 +104,6 @@ export type StepResourceData = {
   order: number;
   description: string;
 };
-export type StoreWorkspaceInvitationRequestData = {
-  workspace_id: number;
-  email: string;
-  role: 'editor' | 'viewer';
-};
-export type StoreWorkspaceRequestData = {
-  name: string;
-  is_personal: boolean;
-};
 export type TagRequestData = {
   name: string;
 };
@@ -136,13 +115,14 @@ export type Unit = {
   name: string;
   value: string;
 };
-export type UpdateWorkspaceMemberRoleRequestData = {
-  user_id: number;
-  role: 'editor' | 'viewer';
+export type WorkspaceInvitationAcceptRequestData = {
+  token: string;
 };
-export type UpdateWorkspaceRequestData = {
-  name: string | null;
-  is_personal: boolean | null;
+export type WorkspaceInvitationDeclineRequestData = {
+  token: string;
+};
+export type WorkspaceInvitationDeleteRequestData = {
+  invitation: number;
 };
 export type WorkspaceInvitationResourceData = {
   id: number;
@@ -155,12 +135,24 @@ export type WorkspaceInvitationResourceData = {
   expires_at: string;
   invited_by: { name: string };
 };
+export type WorkspaceInvitationStoreRequestData = {
+  workspace_id: number;
+  email: string;
+  role: 'editor' | 'viewer';
+};
+export type WorkspaceMemberDeleteRequestData = {
+  user_id: number;
+};
 export type WorkspaceMemberResourceData = {
   id: number;
   name: string;
   email: string;
   role: string | null;
   joined_at: string;
+};
+export type WorkspaceMemberRoleUpdateRequestData = {
+  user_id: number;
+  role: 'editor' | 'viewer';
 };
 export type WorkspaceResourceData = {
   id: number;
@@ -173,4 +165,12 @@ export type WorkspaceResourceData = {
   updated_at: string;
   members: Array<WorkspaceMemberResourceData>;
   pending_invitations: Array<WorkspaceInvitationResourceData>;
+};
+export type WorkspaceStoreRequestData = {
+  name: string;
+  is_personal: boolean;
+};
+export type WorkspaceUpdateRequestData = {
+  name: string | null;
+  is_personal: boolean | null;
 };

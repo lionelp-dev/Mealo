@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Workspace\GetCurrentWorkspaceAction;
+use App\Actions\Workspace\WorkspaceGetCurrentAction;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Resources\ShoppingListResource;
@@ -23,7 +23,7 @@ class ShoppingListController extends Controller
     /**
      * Display the shopping list for a specific week
      */
-    public function index(Request $request, GetCurrentWorkspaceAction $getCurrentWorkspaceAction): Response
+    public function index(Request $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): Response
     {
         $validated = $request->validate([
             'week' => ['nullable', 'date'],

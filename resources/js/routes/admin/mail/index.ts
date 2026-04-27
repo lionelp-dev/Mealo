@@ -1,7 +1,7 @@
-import preview from './preview';
+import preview from './preview'
 
 const mail = {
-  preview: Object.assign(preview, preview),
-};
+    preview: Object.assign(preview, preview),
+}
 
-export default mail;
+export default mail

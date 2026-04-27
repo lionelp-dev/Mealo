@@ -104,7 +104,7 @@ export function ImageUpload({
       </label>
 
       <div
-        className={`relative flex h-[18lh] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
+        className={`relative flex h-[14.5lh] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
