@@ -62,13 +62,13 @@ class StartRecipeWorkers extends Command
     {
         $this->info('⏳ Workers are running... Press Ctrl+C to stop all workers');
 
-        // Gérer Ctrl+C pour arrêter proprement
-        pcntl_signal(SIGINT, function () {
-            $this->stopAllWorkers();
-            exit(0);
-        });
+        if (function_exists('pcntl_signal')) {
+            pcntl_signal(SIGINT, function () {
+                $this->stopAllWorkers();
+                exit(0);
+            });
+        }
 
-        // Attendre que les processus se terminent
         while (true) {
             $runningCount = 0;
 
@@ -83,7 +83,10 @@ class StartRecipeWorkers extends Command
                 break;
             }
 
-            pcntl_signal_dispatch();
+            if (function_exists('pcntl_signal_dispatch')) {
+                pcntl_signal_dispatch();
+            }
+
             sleep(1);
         }
     }
