@@ -124,5 +124,5 @@ return [
     ],
 
     'users_dev_password' => env('USERS_DEV_PASSWORD'),
-
+    'users_test_password' => env('USERS_TEST_PASSWORD'),
 ];

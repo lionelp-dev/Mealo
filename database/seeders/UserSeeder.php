@@ -69,6 +69,16 @@ class UserSeeder extends Seeder
 
         $sharedWorkspace->giveViewerPermissions($viewer);
 
+        $tester = User::query()->firstOrCreate(
+            ['email' => 'test@mail.com'],
+            [
+                'name' => 'user',
+                'password' => Hash::make(config('app.users_test_password')),
+                'email_verified_at' => Carbon::now(),
+            ]
+        );
+        new AIRecipeSeeder($tester)->run();
+
         new AIRecipeSeeder($owner)->run();
 
         new AIRecipeSeeder($editor)->run();
