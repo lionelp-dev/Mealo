@@ -99,7 +99,7 @@ class RecipeController extends Controller
     ): RedirectResponse {
         Gate::authorize('create', Recipe::class);
 
-        $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+        $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
         $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
         return back()->with([
@@ -127,8 +127,8 @@ class RecipeController extends Controller
 
             if ($recipeAIGenerationRequestData->image_generation) {
                 $prompt = $recipe->name
-                    . 'with' . json_encode($recipe->ingredients)
-                    . 'recipe steps' . json_encode($recipe->steps);
+                    .'with'.json_encode($recipe->ingredients)
+                    .'recipe steps'.json_encode($recipe->steps);
 
                 $base64Image = $recipeImageAIGenerationAction->execute($prompt);
             }
@@ -210,9 +210,7 @@ class RecipeController extends Controller
         Recipe $recipe
     ): HttpResponse {
 
-        if ($recipe->user_id !== $this->user()->id) {
-            abort(403, 'Unauthorized access to this recipe image');
-        }
+        Gate::authorize('view', $recipe);
 
         if (! $recipe->image_path) {
             abort(404, 'Image not found');

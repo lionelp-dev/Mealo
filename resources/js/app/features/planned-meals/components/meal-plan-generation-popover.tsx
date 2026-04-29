@@ -266,7 +266,7 @@ export function MealPlanGenerationPopover() {
         </Popover.Portal>
       </Popover.Root>
       {isGenerating && (
-        <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/80 text-white">
+        <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/30 text-white backdrop-blur-xs">
           <span className="loading loading-xl loading-spinner"></span>
           <div className="flex flex-col items-center gap-2">
             <p className="text-lg font-medium">

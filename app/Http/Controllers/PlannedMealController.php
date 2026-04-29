@@ -109,6 +109,11 @@ class PlannedMealController extends Controller
             'weekStart' => $weekStart->toISOString(),
             'mealTimes' => $mealTimes,
             'plannedMeals' => PlannedMealResource::collection($plannedMeals)->toArray($request),
+            'plannedMealImages' => $plannedMeals
+                ->filter(fn ($meal) => $meal->recipe?->image_path)
+                ->mapWithKeys(fn ($meal) => [
+                    $meal->recipe->id => $meal->recipe->getImageUrl(),
+                ]),
             'tags' => TagResource::collection(Tag::query()->where('user_id', $user->id)->get())->toArray($request),
             'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipesQuery->paginate(10))),
             'workspace_data' => [

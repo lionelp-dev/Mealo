@@ -1,4 +1,5 @@
 import { useMealPlanActions } from '../hooks/use-meal-plan-actions';
+import { usePlannedMealsContextValue } from '../inertia.adapter';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,8 +20,10 @@ export default function MealPlanMealCard({
   plannedMeal: PlannedMeal;
 }) {
   const { t } = useTranslation();
+  const { plannedMealImages } = usePlannedMealsContextValue();
 
   const { id, recipe, serving_size } = plannedMeal;
+  const imageUrl = plannedMealImages[recipe.id] ?? null;
   const [isOpen, setIsOpen] = useState(false);
 
   const { unplanMeals } = useMealPlanActions();
@@ -37,12 +40,14 @@ export default function MealPlanMealCard({
       key={id}
       className="card w-full overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
     >
-      {recipe.image_url && (
+      {imageUrl && (
         <figure className="h-19">
           <img
-            src={recipe.image_url}
+            src={imageUrl}
             alt={recipe.name}
             className="h-full w-full object-cover"
+            loading="lazy"
+            decoding="async"
           />
         </figure>
       )}

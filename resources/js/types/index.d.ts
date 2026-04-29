@@ -184,7 +184,7 @@ export type PlannedMeal = {
   workspace_id?: number;
   meal_time_id: number;
   planned_date: string;
-  recipe: Pick<Recipe, 'id' | 'name' | 'image_url'>;
+  recipe: Pick<Recipe, 'id' | 'name'>;
   serving_size: number;
 };
 

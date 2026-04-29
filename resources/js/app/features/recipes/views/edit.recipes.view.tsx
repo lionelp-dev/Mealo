@@ -257,6 +257,23 @@ export function EditRecipesView() {
                   </>
                 )}
               </button>
+              {imageGenerating && (
+                <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/30 text-white backdrop-blur-xs">
+                  <span className="loading loading-xl loading-spinner"></span>
+                  <div className="flex flex-col items-center gap-2">
+                    <p className="text-lg font-medium">
+                      {t("Génération de l'image de votre recette en cours")}
+                    </p>
+                    <p className="text text-white/60">
+                      {t(
+                        'mealPlanning.estimatedTime',
+                        'Cela peut prendre quelques instants',
+                      )}{' '}
+                      <span className="loading loading-xs loading-dots"></span>
+                    </p>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="min-2xl:col-start-2 min-2xl:row-start-4 min-2xl:row-end-6">

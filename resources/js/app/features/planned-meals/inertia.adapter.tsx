@@ -14,6 +14,7 @@ type PageProps = SharedData & {
   weekStart: string;
   mealTimes: MealTimeResource[];
   plannedMeals: Array<PlannedMeal>;
+  plannedMealImages: Record<string, string>;
   recipes: PaginatedCollection<RecipeResource>;
   workspace_data: WorkspaceData;
   tags: TagResource[];
