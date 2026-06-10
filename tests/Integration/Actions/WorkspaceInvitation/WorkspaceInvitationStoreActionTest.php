@@ -3,6 +3,12 @@
 namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationStoreAction;
+use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
+use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Models\WorkspaceInvitation;
+use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
+
+use function Pest\Laravel\assertDatabaseHas;
 
 describe('WorkspaceInvitationStoreAction', function () {
 
@@ -47,7 +53,7 @@ describe('WorkspaceInvitationStoreAction', function () {
 
     test('can create invitation after previous one expired', function () {
         /** @var \Tests\TestCase $this */
-        $this->sharedWorkspaceInvitation->expires_at = now()->subHour();
+        $this->sharedWorkspaceInvitation->expires_at = \Carbon\CarbonImmutable::now()->subHour();
         $this->sharedWorkspaceInvitation->save();
         $this->sharedWorkspaceInvitation->fresh();
 

@@ -4,18 +4,12 @@ use App\Actions\Recipes\RecipeSyncIngredientsAction;
 
 use function Pest\Laravel\assertDatabaseHas;
 
-describe('', function () {
-    beforeEach(function () {
+describe('RecipeIngredientsSyncAction', function () {
+    test('can sync ingredients', function () {
         /** @var \Tests\TestCase $this */
-        $this->createRecipeContext();
-        $this->recipe = $this->user->recipes()->create($this->recipeStoreRequestData->transform());
-    });
+        app(RecipeSyncIngredientsAction::class)($this->recipe, $this->otherRecipeStoreRequestData->ingredients);
 
-    test('has many ingredients', function () {
-        /** @var \Tests\TestCase $this */
-        app(RecipeSyncIngredientsAction::class)($this->recipe, $this->recipeStoreRequestData->ingredients);
-
-        foreach ($this->recipeStoreRequestData->ingredients as $ingredientData) {
+        foreach ($this->otherRecipeStoreRequestData->ingredients as $ingredientData) {
             assertDatabaseHas('ingredients', $ingredientData->only('name')->transform());
             assertDatabaseHas('recipe_ingredient', [
                 'recipe_id' => $this->recipe->id,

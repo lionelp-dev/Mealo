@@ -3,6 +3,9 @@
 namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceMemberRoleUpdateAction;
+use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
+use App\Exceptions\Workspace\CannotChangeOwnerRoleWorkspaceException;
+use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
 
 describe('WorkspaceMemberRoleUpdateAction', function () {
 

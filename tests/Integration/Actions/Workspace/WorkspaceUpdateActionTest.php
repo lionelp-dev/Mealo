@@ -4,7 +4,6 @@ namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceUpdateAction;
 use App\Data\Requests\Workspace\WorkspaceUpdateRequestData;
-use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -45,8 +44,12 @@ describe('WorkspaceUpdateAction', function () {
 
         $this->personalWorkspace->fresh();
 
-        assertDatabaseHas('workspaces', WorkspaceResourceData::from($this->personalWorkspace)
-            ->except('users_count', 'members', 'pending_invitations')
-            ->transform());
+        assertDatabaseHas('workspaces', [
+            'id' => $this->personalWorkspace->id,
+            'owner_id' => $this->personalWorkspace->owner_id,
+            'name' => 'any update workspace',
+            'is_default' => false,
+            'is_personal' => true,
+        ]);
     });
 });

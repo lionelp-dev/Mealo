@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\User;
+use App\Models\Workspace;
 
 class PlannedMealPolicy
 {
@@ -27,13 +28,22 @@ class PlannedMealPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user, ?Recipe $recipe = null): bool
+    public function store(User $user, Workspace $workspace, Recipe $recipe): bool
     {
-        if ($recipe) {
-            return $user->id === $recipe->user_id;
+        setPermissionsTeamId($workspace->id);
+
+        $recipe_user = $recipe->user()->first();
+
+        if (
+            $recipe_user
+            && $workspace->hasUser($recipe_user)
+            && $workspace->hasUser($user)
+            && $user->hasPermissionTo('workspace.planned-meal.store')
+        ) {
+            return true;
         }
 
-        return $user !== null;
+        return false;
     }
 
     /**
@@ -41,21 +51,34 @@ class PlannedMealPolicy
      */
     public function update(User $user, PlannedMeal $plannedMeal): bool
     {
-        return $user->id === $plannedMeal->user_id;
-    }
 
-    /**
-     * Determine whether the user can delete the model.
-     */
-    public function delete(User $user, PlannedMeal $plannedMeal): bool
-    {
-        if (! $plannedMeal->workspace || ! $plannedMeal->workspace->hasUser($user)) {
+        $recipe_user = $plannedMeal->recipe?->user();
+        if (
+            ! $plannedMeal->workspace
+            || ! $plannedMeal->workspace->hasUser($user)) {
             return false;
         }
 
         setPermissionsTeamId($plannedMeal->workspace->id);
 
-        return $user->hasPermissionTo('planning.edit');
+        return $user->hasPermissionTo('workspace.planned-meal.update');
+    }
+
+    /**
+     * Determine whether the user can delete the model.
+     */
+    public function delete(User $user, Workspace $workspace): bool
+    {
+        setPermissionsTeamId($workspace->id);
+
+        if (
+            $workspace->hasUser($user)
+            && $user->hasPermissionTo('workspace.planned-meal.destroy')
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

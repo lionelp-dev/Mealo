@@ -3,11 +3,11 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
+use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
 use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
-use Illuminate\Support\Facades\Gate;
 
 class WorkspaceInvitationDeclineAction
 {
@@ -24,7 +24,9 @@ class WorkspaceInvitationDeclineAction
             throw new NotFoundWorkspaceInvitationException;
         }
 
-        Gate::authorize('decline', $workspaceInvitation);
+        if ($user->email !== $workspaceInvitation->email) {
+            throw new NotForYouWorkspaceInvitationException();
+        }
 
         $workspaceInvitation->delete();
 

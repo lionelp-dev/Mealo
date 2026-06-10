@@ -14,6 +14,7 @@ use App\Data\Requests\Workspace\WorkspaceStoreRequestData;
 use App\Data\Requests\Workspace\WorkspaceUpdateRequestData;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
+use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Messages\Workspace\MemberRemovedMessage;
 use App\Messages\Workspace\MemberRoleUpdatedMessage;
 use App\Messages\Workspace\WorkspaceCreatedMessage;
@@ -22,7 +23,6 @@ use App\Messages\Workspace\WorkspaceLeftMessage;
 use App\Messages\Workspace\WorkspaceSwitchedMessage;
 use App\Messages\Workspace\WorkspaceUpdatedMessage;
 use App\Models\Workspace;
-use App\Traits\AuthUser;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -31,20 +31,20 @@ use Inertia\Response;
 
 class WorkspaceController extends Controller
 {
-    use AuthUser;
+    use HasAuthenticatedUser;
 
     public function __construct() {}
 
     public function index(
         WorkspaceGetCurrentAction $workspaceGetCurrentAction
     ): Response {
-        $currentWorkspace = $workspaceGetCurrentAction($this->user());
+        $currentWorkspace = $workspaceGetCurrentAction($this->authenticatedUser());
 
         return Inertia::render('workspaces/index', [
             'workspace_data' => [
-                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($this->user()->workspacesInvitations),
+                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($this->authenticatedUser()->workspacesInvitations),
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
-                'workspaces' => WorkspaceResourceData::collect($this->user()->workspaces),
+                'workspaces' => WorkspaceResourceData::collect($this->authenticatedUser()->workspaces),
             ],
         ]);
     }
@@ -53,7 +53,7 @@ class WorkspaceController extends Controller
         WorkspaceStoreRequestData $workspaceStoreRequestData,
         WorkspaceStoreAction $workspaceStoreAction
     ): RedirectResponse {
-        $workspace = $workspaceStoreAction->execute($this->user(), $workspaceStoreRequestData);
+        $workspace = $workspaceStoreAction->execute($this->authenticatedUser(), $workspaceStoreRequestData);
 
         return back()->with([
             'success' => (new WorkspaceCreatedMessage)->getMessage(),
@@ -132,7 +132,7 @@ class WorkspaceController extends Controller
                 $workspace,
                 WorkspaceMemberDeleteRequestData::from(
                     [
-                        'user_id' => $this->user()->id,
+                        'user_id' => $this->authenticatedUser()->id,
                     ]
                 )
             );

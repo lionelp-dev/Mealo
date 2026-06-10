@@ -43,7 +43,7 @@ class PlannedMeal extends Model
     }
 
     /**
-     * @return BelongsTo<User,PlannedMeal>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {

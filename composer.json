@@ -76,9 +76,6 @@
             "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
         ],
         "lint": "vendor/bin/pint",
-        "test:unit": "php artisan test tests/Unit --parallel",
-        "test:integration": "php artisan test tests/Integration --parallel",
-        "test:feature": "php artisan test tests/Feature --parallel",
         "test:types": "phpstan analyse --memory-limit=512M",
         "test:coverage": "php artisan test --coverage --min=80",
         "test": [

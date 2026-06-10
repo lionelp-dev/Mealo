@@ -3,6 +3,9 @@
 namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationDeclineAction;
+use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
+use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
+use App\Models\WorkspaceInvitation;
 
 describe('WorkspaceInvitationDeclineAction', function () {
     test('cannot decline an invitation that is not intended for the user', function () {

@@ -19,5 +19,4 @@ describe('WorkspaceStoreAction', function () {
         expect($this->personalWorkspace)->toBeInstanceOf(Workspace::class);
         assertDatabaseHas('workspaces', $this->storePersonalWorkspaceRequestData->transform());
     });
-
 });

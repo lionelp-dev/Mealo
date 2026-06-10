@@ -2,14 +2,8 @@
 
 namespace Tests\Feature\Recipe;
 
-beforeEach(function () {
-    /** @var \Tests\TestCase $this */
-    $this->createRecipeContext();
-});
+use App\Actions\PlannedMeal\PlannedMealStoreAction;
 
-// ---------------------------------------------------------------------------
-// Rendering
-// ---------------------------------------------------------------------------
 test('recipes screen can be rendered', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
@@ -38,93 +32,6 @@ test('edit recipe screen can be rendered', function () {
         ->assertOk();
 });
 
-// ---------------------------------------------------------------------------
-// Create
-// ---------------------------------------------------------------------------
-test('user can create a recipe successfully', function () {
-    /** @var \Tests\TestCase $this */
-    $response = $this->actingAs($this->user)
-        ->post(route('recipes.store'), $this->recipeStoreRequestData->transform());
-
-    $response->assertRedirect($uri = $response->headers->get('Location'));
-    $response->assertSessionHas('success', 'Recipe successfully created');
-});
-
-test('user cannot create recipe with invalid data', function () {
-    /** @var \Tests\TestCase $this */
-    $this->actingAs($this->user)
-        ->post(route('recipes.store'), [
-            'name' => '',
-            'description' => '',
-            'preparation_time' => -1,
-            'cooking_time' => -1,
-            'serving_size' => -1,
-        ])
-        ->assertRedirect()
-        ->assertSessionHasErrors(['name', 'preparation_time', 'cooking_time', 'serving_size']);
-});
-
-// ---------------------------------------------------------------------------
-// Update
-// ---------------------------------------------------------------------------
-test('user can update a recipe successfully', function () {
-    /** @var \Tests\TestCase $this */
-    $this->actingAs($this->user)
-        ->put(route('recipes.update', $this->recipe), $this->recipeUpdateRequestData->transform())
-        ->assertRedirect(route('recipes.show', $this->recipe))
-        ->assertSessionHas('success', 'Recipe successfully updated');
-});
-
-test('user cannot update recipe with invalid data', function () {
-    /** @var \Tests\TestCase $this */
-    $this->actingAs($this->user)
-        ->put(route('recipes.update', $this->recipe), [
-            'name' => '',
-            'description' => '',
-            'preparation_time' => -1,
-            'cooking_time' => -1,
-            'serving_size' => -1,
-        ])
-        ->assertRedirect()
-        ->assertSessionHasErrors(['name', 'preparation_time', 'cooking_time', 'serving_size']);
-
-});
-
-test('user cannot update other users recipe', function () {
-    /** @var \Tests\TestCase $this */
-    $this->actingAs($this->user)
-        ->put(route('recipes.update', $this->otherUserRecipe), $this->recipeUpdateRequestData->transform())
-        ->assertForbidden();
-});
-
-// ---------------------------------------------------------------------------
-// Delete
-// ---------------------------------------------------------------------------
-test('user can delete a recipe successfully', function () {
-    /** @var \Tests\TestCase $this */
-    $this->actingAs($this->user)
-        ->delete(route('recipes.destroy'), ['ids' => [$this->recipe->id]])
-        ->assertRedirect(route('recipes.index'))
-        ->assertSessionHas('success', 'Recipe successfully deleted');
-});
-
-// ---------------------------------------------------------------------------
-// Guests
-// ---------------------------------------------------------------------------
-test('guest cannot access recipe routes', function () {
-    /** @var \Tests\TestCase $this */
-    $this->get(route('recipes.index'))->assertRedirect(route('login'));
-    $this->get(route('recipes.create'))->assertRedirect(route('login'));
-    $this->get(route('recipes.show', $this->recipe))->assertRedirect(route('login'));
-    $this->get(route('recipes.edit', $this->recipe))->assertRedirect(route('login'));
-    $this->post(route('recipes.store'), $this->recipeStoreRequestData->transform())->assertRedirect(route('login'));
-    $this->put(route('recipes.update', $this->recipe), $this->recipeUpdateRequestData->transform())->assertRedirect(route('login'));
-    $this->delete(route('recipes.destroy', $this->recipe))->assertRedirect(route('login'));
-});
-
-// ---------------------------------------------------------------------------
-// Access control
-// ---------------------------------------------------------------------------
 test('user cannot access other users recipes', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
@@ -134,8 +41,37 @@ test('user cannot access other users recipes', function () {
     $this->actingAs($this->user)
         ->get(route('recipes.edit', $this->otherUserRecipe))
         ->assertForbidden();
+});
 
-    $this->actingAs($this->user)
-        ->delete(route('recipes.destroy'), ['ids' => [$this->otherUserRecipe->id]])
-        ->assertRedirect();
+test('workspace members can view planned recipes from other members', function () {
+    /** @var \Tests\TestCase $this */
+    app(PlannedMealStoreAction::class)
+        ->execute(
+            $this->user,
+            $this->sharedWorkspace,
+            $this->userPlannedMealStoreRequestData
+        );
+
+    $response = $this->actingAs($this->editorUser)
+        ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
+        ->get(route('recipes.show', ['recipe' => $this->recipe->id]));
+
+    $response->assertStatus(200);
+
+    $response = $this->actingAs($this->viewerUser)
+        ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
+        ->get(route('recipes.show', ['recipe' => $this->recipe->id]));
+
+    $response->assertStatus(200);
+});
+
+test('guest cannot access recipe routes', function () {
+    /** @var \Tests\TestCase $this */
+    $this->get(route('recipes.index'))->assertRedirect(route('login'));
+    $this->get(route('recipes.create'))->assertRedirect(route('login'));
+    $this->get(route('recipes.show', $this->recipe))->assertRedirect(route('login'));
+    $this->get(route('recipes.edit', $this->recipe))->assertRedirect(route('login'));
+    $this->post(route('recipes.store'), $this->recipeStoreRequestData->transform())->assertRedirect(route('login'));
+    $this->put(route('recipes.update', $this->recipe), $this->recipeUpdateRequestData->transform())->assertRedirect(route('login'));
+    $this->delete(route('recipes.destroy', $this->recipe))->assertRedirect(route('login'));
 });

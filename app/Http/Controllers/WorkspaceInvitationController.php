@@ -17,13 +17,14 @@ use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
 use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
 use App\Exceptions\Workspace\CannotInviteToWorkspaceException;
 use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
 use App\Messages\WorkspaceInvitation\InvitationCancelledMessage;
 use App\Messages\WorkspaceInvitation\InvitationDeclinedMessage;
 use App\Messages\WorkspaceInvitation\InvitationSentMessage;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
-use App\Traits\AuthUser;
+use Exception;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -31,18 +32,18 @@ use Inertia\Response;
 
 class WorkspaceInvitationController extends Controller
 {
-    use AuthUser;
+    use HasAuthenticatedUser;
 
     public function index(
         WorkspaceGetCurrentAction $getCurrentWorkspaceAction
     ): Response {
-        $currentWorkspace = $getCurrentWorkspaceAction($this->user());
+        $currentWorkspace = $getCurrentWorkspaceAction($this->authenticatedUser());
 
         return inertia('workspaces/invitations', [
             'workspace_data' => [
-                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($this->user()->workspacesInvitations),
+                'workspaces_invitations' => WorkspaceInvitationResourceData::collect($this->authenticatedUser()->workspacesInvitations),
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
-                'workspaces' => WorkspaceResourceData::collect($this->user()->workspaces),
+                'workspaces' => WorkspaceResourceData::collect($this->authenticatedUser()->workspaces),
             ],
         ]);
     }
@@ -56,7 +57,7 @@ class WorkspaceInvitationController extends Controller
 
             Gate::authorize('invite', $workspace);
 
-            $workspaceInvitationStoreAction->execute($this->user(), $workspace, $workspaceInvitationStoreRequestData);
+            $workspaceInvitationStoreAction->execute($this->authenticatedUser(), $workspace, $workspaceInvitationStoreRequestData);
 
             return back()->with('success', (new InvitationSentMessage)->getMessage());
         } catch (
@@ -73,15 +74,10 @@ class WorkspaceInvitationController extends Controller
         WorkspaceInvitationAcceptAction $workspaceInvitationAcceptAction
     ): RedirectResponse {
         try {
-            $workspaceInvitationAcceptAction->execute($this->user(), $workspaceInvitationAcceptRequestData);
+            $workspaceInvitationAcceptAction->execute($this->authenticatedUser(), $workspaceInvitationAcceptRequestData);
 
             return back()->with('success', (new InvitationAcceptedMessage)->getMessage());
-        } catch (
-            ExpiredWorkspaceInvitationException|
-            NotFoundWorkspaceInvitationException $e
-        ) {
-            return back()->with('error', $e->getMessage());
-        } catch (AuthorizationException $e) {
+        } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
     }
@@ -91,7 +87,7 @@ class WorkspaceInvitationController extends Controller
         WorkspaceInvitationAcceptAction $workspaceInvitationAcceptAction
     ): RedirectResponse {
         try {
-            $workspaceInvitationAcceptAction->execute($this->user(), $workspaceInvitationAcceptRequestData);
+            $workspaceInvitationAcceptAction->execute($this->authenticatedUser(), $workspaceInvitationAcceptRequestData);
 
             return redirect()->route('workspaces.index')
                 ->with('success', (new InvitationAcceptedMessage)->getMessage());
@@ -112,7 +108,7 @@ class WorkspaceInvitationController extends Controller
         WorkspaceInvitationDeclineAction $workspaceInvitationDeclineAction
     ): RedirectResponse {
         try {
-            $workspaceInvitationDeclineAction->execute($this->user(), $workspaceInvitationDeclineRequestData);
+            $workspaceInvitationDeclineAction->execute($this->authenticatedUser(), $workspaceInvitationDeclineRequestData);
 
             return back()->with('success', (new InvitationDeclinedMessage)->getMessage());
         } catch (NotFoundWorkspaceInvitationException $e) {

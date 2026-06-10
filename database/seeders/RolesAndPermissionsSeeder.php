@@ -22,7 +22,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'workspace.view',
             'workspace.edit',
             'workspace.manage',
-            'workspace.planned-meal.create',
+            'workspace.planned-meal.store',
             'workspace.planned-meal.update',
             'workspace.planned-meal.view',
             'workspace.planned-meal.destroy',
@@ -37,7 +37,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $ownerRole->givePermissionTo('workspace.view');
         $ownerRole->givePermissionTo('workspace.edit');
         $ownerRole->givePermissionTo('workspace.manage');
-        $ownerRole->givePermissionTo('workspace.planned-meal.create');
+        $ownerRole->givePermissionTo('workspace.planned-meal.store');
         $ownerRole->givePermissionTo('workspace.planned-meal.update');
         $ownerRole->givePermissionTo('workspace.planned-meal.view');
         $ownerRole->givePermissionTo('workspace.planned-meal.destroy');
@@ -45,7 +45,7 @@ class RolesAndPermissionsSeeder extends Seeder
 
         $editorRole = Role::query()->firstOrCreate(['name' => 'editor']);
         $editorRole->givePermissionTo('workspace.view');
-        $editorRole->givePermissionTo('workspace.planned-meal.create');
+        $editorRole->givePermissionTo('workspace.planned-meal.store');
         $editorRole->givePermissionTo('workspace.planned-meal.update');
         $editorRole->givePermissionTo('workspace.planned-meal.view');
         $editorRole->givePermissionTo('workspace.planned-meal.destroy');

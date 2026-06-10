@@ -2,22 +2,10 @@
 
 namespace Tests\Integration\Actions\Recipes;
 
-use App\Actions\Recipes\RecipeStoreAction;
 use App\Actions\Recipes\RecipeUpdateAction;
-
 use function Pest\Laravel\assertDatabaseHas;
 
 describe('RecipeUpdateAction', function () {
-    beforeEach(function () {
-        /** @var \Tests\TestCase $this */
-        $this->createRecipeContext();
-
-        $this->recipe = app(RecipeStoreAction::class)->execute($this->user, $this->recipeStoreRequestData);
-        $this->otherRecipe = app(RecipeStoreAction::class)->execute($this->user, $this->otherRecipeStoreRequestData);
-
-        $this->recipeUpdateRequestData = $this->makeUpdateRecipeRequestDataFor($this->user);
-    });
-
     test('can update a recipe', function () {
         /** @var \Tests\TestCase $this */
         app(RecipeUpdateAction::class)->execute($this->recipe, $this->recipeUpdateRequestData);
@@ -35,5 +23,4 @@ describe('RecipeUpdateAction', function () {
         expect($this->recipe->tags)->toHaveCount(count($this->recipeUpdateRequestData->tags));
         expect($this->recipe->steps)->toHaveCount(count($this->recipeUpdateRequestData->steps));
     });
-
 });

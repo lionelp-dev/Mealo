@@ -3,6 +3,10 @@
 namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationAcceptAction;
+use App\Data\Requests\Workspace\WorkspaceInvitationAcceptRequestData;
+use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
+use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
+use App\Models\WorkspaceInvitation;
 
 describe('WorkspaceInvitationAcceptAction', function () {
     test('cannot accept expired invitation', function () {
@@ -10,7 +14,7 @@ describe('WorkspaceInvitationAcceptAction', function () {
         expect(function () {
             app(WorkspaceInvitationAcceptAction::class)
                 ->execute(
-                    $this->inviteeUser,
+                    $this->otherInviteeUser,
                     WorkspaceInvitationAcceptRequestData::from([
                         'token' => $this->sharedWorkspaceExpiredInvitation->token,
                     ]),

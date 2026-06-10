@@ -19,6 +19,7 @@ describe('WorkspaceDeleteAction', function () {
 
     test('can delete workspace and removes all member permissions', function () {
         /** @var \Tests\TestCase $this */
+        setPermissionsTeamId($this->sharedWorkspace->id);
         expect($this->user->hasRole('owner'))->toBeTrue();
         expect($this->editorUser->hasRole('editor'))->toBeTrue();
         expect($this->viewerUser->hasRole('viewer'))->toBeTrue();
