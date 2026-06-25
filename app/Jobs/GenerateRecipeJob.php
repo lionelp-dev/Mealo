@@ -18,7 +18,9 @@ class GenerateRecipeJob implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    public int $tries = 3;
+    public int $tries = 0;
+
+    public int $maxExceptions = 3;
 
     public int $timeout = 120;
 
@@ -38,6 +40,21 @@ class GenerateRecipeJob implements ShouldQueue
     ): void {
         try {
             echo "🔄 Generating recipe #{$this->recipeNumber}: {$this->prompt}\n";
+
+            if ($this->missingOpenRouterApiKey()) {
+                $delay = (int) config('recipe-queue.missing_api_key_release_delay', 300);
+
+                echo "⏸️ OPEN_ROUTER_API_KEY is missing. Recipe #{$this->recipeNumber} released for {$delay}s.\n";
+                Log::warning('Recipe generation delayed because OPEN_ROUTER_API_KEY is missing.', [
+                    'prompt' => $this->prompt,
+                    'recipe_number' => $this->recipeNumber,
+                    'release_delay' => $delay,
+                ]);
+
+                $this->release($delay);
+
+                return;
+            }
 
             // Generate recipe data from AI
             $generateRecipeData = RecipeAIGenerationRequestData::validateAndCreate(['prompt' => $this->prompt]);
@@ -59,5 +76,12 @@ class GenerateRecipeJob implements ShouldQueue
             Log::error("Recipe generation failed: {$this->prompt} - {$e->getMessage()}");
             throw $e;
         }
+    }
+
+    private function missingOpenRouterApiKey(): bool
+    {
+        $apiKey = config('services.openai.api_key');
+
+        return blank($apiKey) || $apiKey === 'sk-or-v1-fake-key-for-testing';
     }
 }

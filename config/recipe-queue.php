@@ -15,4 +15,6 @@ return [
     'rate_limit' => [
         'delay_between_jobs' => env('RECIPE_JOB_DELAY', 6), // 6 seconds between jobs
     ],
+
+    'missing_api_key_release_delay' => env('RECIPE_JOB_MISSING_API_KEY_RELEASE_DELAY', 300),
 ];

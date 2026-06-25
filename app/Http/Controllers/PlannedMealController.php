@@ -71,11 +71,11 @@ class PlannedMealController extends Controller
             'mealTimes' => MealTime::all(),
             'plannedMeals' => PlannedMealResourceData::collect($plannedMeals),
             'plannedMealImages' => $plannedMeals
-                ->filter(fn($plannedMeal) => $plannedMeal->recipe?->image_path)
-                ->mapWithKeys(fn($plannedMeal) => [
+                ->filter(fn ($plannedMeal) => $plannedMeal->recipe?->image_path)
+                ->mapWithKeys(fn ($plannedMeal) => [
                     $plannedMeal->recipe->id => $plannedMeal->recipe->getImageUrl(),
                 ]),
-            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipeQuery->paginate(10))),
+            'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipeQuery->paginate(10))),
             'tags' => TagResourceData::collect($tags),
             'workspace_data' => [
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
@@ -160,12 +160,12 @@ class PlannedMealController extends Controller
 
             return redirect()->back()->with(
                 'success',
-                'Planning généré avec succès ! ' . $createdCount . ' repas créés.'
+                'Planning généré avec succès ! '.$createdCount.' repas créés.'
             );
         } catch (\Exception $e) {
             return redirect()->back()->with(
                 'error',
-                'Erreur lors de la génération du planning : ' . $e->getMessage()
+                'Erreur lors de la génération du planning : '.$e->getMessage()
             );
         }
     }
