@@ -1,0 +1,154 @@
+erDiagram
+  users {
+    number id PK
+    string name
+    string email
+    string locale
+    string password
+  }
+
+  workspaces {
+    number id PK
+    string name
+    number owner_id FK
+    boolean is_personal
+    boolean is_default
+  }
+
+  workspace_users {
+    number id PK
+    number workspace_id FK
+    number user_id FK
+    timestamp joined_at
+  }
+
+  workspace_invitations {
+    number id PK
+    number workspace_id FK
+    string email
+    string role
+    string token
+    number invited_by FK
+    timestamp expires_at
+  }
+
+  beta_requests {
+    number id PK
+    string email
+    string status
+    string token
+    timestamp token_expires_at
+    timestamp account_expires_at
+    number approved_by FK
+    number user_id FK
+  }
+
+  recipes {
+    string id PK
+    number user_id FK
+    string name
+    string description
+    number serving_size
+    number preparation_time
+    number cooking_time
+    string image_path
+  }
+
+  ingredients {
+    string id PK
+    number user_id FK
+    string name
+  }
+
+  recipe_ingredient {
+    string id PK
+    string recipe_id FK
+    string ingredient_id FK
+    number quantity
+    string unit
+  }
+
+  steps {
+    number id PK
+    string recipe_id FK
+    number order
+    string description
+  }
+
+  planned_meals {
+    number id PK
+    number user_id FK
+    number workspace_id FK
+    string recipe_id FK
+    number meal_time_id FK
+    date planned_date
+    number serving_size
+  }
+
+  shopping_lists {
+    number id PK
+    number user_id FK
+    number workspace_id FK
+    date week_start
+  }
+
+  shopping_list_planned_meal_ingredients {
+    number id PK
+    number shopping_list_id FK
+    number planned_meal_id FK
+    string ingredient_id FK
+    string unit
+    boolean is_checked
+  }
+
+  meal_times {
+    number id PK
+    string name
+  }
+
+  recipe_meal_time {
+    number id PK
+    string recipe_id FK
+    number meal_time_id FK
+  }
+
+  tags {
+    number id PK
+    number user_id FK
+    string name
+  }
+
+  recipe_tag {
+    number id PK
+    string recipe_id FK
+    number tag_id FK
+  }
+
+  users ||--o{ workspaces : owns
+  users ||--o{ workspace_users : belongs_to
+  workspaces ||--o{ workspace_users : has_members
+  workspaces ||--o{ workspace_invitations : has_invitations
+  workspaces ||--o{ planned_meals : contains
+  workspaces ||--o{ shopping_lists : contains
+  users ||--o{ workspace_invitations : invited_by
+  users o|--o{ beta_requests : approves
+  users o|--o{ beta_requests : converts_to_account
+
+  users ||--o{ recipes : creates
+  recipes ||--|{ recipe_ingredient : has
+  recipes ||--|{ recipe_meal_time : has
+  recipes ||--o{ recipe_tag : has
+  recipes ||--|{ steps : has
+  ingredients ||--o{ recipe_ingredient : used_in
+  tags ||--o{ recipe_tag : assigned_to
+  meal_times ||--o{ recipe_meal_time : used_in
+  users ||--o{ ingredients : creates
+  users ||--o{ tags : creates
+  users ||--o{ planned_meals : plans
+  recipes ||--o{ planned_meals : planned_as
+  meal_times ||--o{ planned_meals : scheduled_for
+
+  users ||--o{ shopping_lists : owns
+  shopping_lists ||--|{ shopping_list_planned_meal_ingredients : contains
+  planned_meals ||--o{ shopping_list_planned_meal_ingredients : contributes_to
+  ingredients ||--o{ shopping_list_planned_meal_ingredients : listed_as
