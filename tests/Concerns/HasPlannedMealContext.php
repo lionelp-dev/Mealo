@@ -36,28 +36,28 @@ trait HasPlannedMealContext
         $this->userPlannedMealRequestData = PlannedMealRequestData::from([
             'meal_time_id' => $this->mealTime->id,
             'recipe_id' => $this->recipe->id,
-            'planned_date' => now()->addDay(),
+            'planned_date' => now()->addDay()->format('Y-m-d'),
             'serving_size' => 1,
         ]);
 
         $this->userSecondPlannedMealRequestData = PlannedMealRequestData::from([
             'meal_time_id' => $this->mealTime->id,
             'recipe_id' => $this->otherRecipe->id,
-            'planned_date' => now()->addDay(),
+            'planned_date' => now()->addDay()->format('Y-m-d'),
             'serving_size' => 1,
-        ]);
-
-        $this->userPlannedMealUpdateRequestData = PlannedMealUpdateRequestData::from([
-            'meal_time_id' => $this->mealTime->id,
-            'recipe_id' => $this->recipe->id,
-            'planned_date' => now()->addDays(2),
-            'serving_size' => 2,
         ]);
 
         $this->userPlannedMealStoreRequestData = PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from($this->userPlannedMealRequestData)->toArray(),
             ],
+        ]);
+
+        $this->userPlannedMealUpdateRequestData = PlannedMealUpdateRequestData::from([
+            'meal_time_id' => $this->mealTime->id,
+            'recipe_id' => $this->recipe->id,
+            'planned_date' => now()->addDays(2)->format('Y-m-d'),
+            'serving_size' => 2,
         ]);
 
         $this->userMultiplePlannedMealStoreRequestData = PlannedMealStoreRequestData::from([
@@ -86,8 +86,6 @@ trait HasPlannedMealContext
                 PlannedMealRequestData::from($this->userInvalidPlannedMealRequestData)->toArray(),
             ],
         ]);
-
-
 
         $this->editorPlannedMealRequestData = PlannedMealRequestData::from([
             'meal_time_id' => $this->mealTime->id,
@@ -118,7 +116,7 @@ trait HasPlannedMealContext
         $this->viewerPlannedMealUpdateRequestData = PlannedMealUpdateRequestData::from([
             'meal_time_id' => $this->mealTime->id,
             'recipe_id' => $this->recipe->id,
-            'planned_date' => now()->addDays(2),
+            'planned_date' => now()->addDays(2)->format('Y-m-d'),
             'serving_size' => 2,
         ]);
 

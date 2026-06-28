@@ -5,6 +5,7 @@ namespace Tests\Integration\Actions\PlannedMeal;
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Actions\PlannedMeal\PlannedMealUpdateAction;
 use App\Data\Requests\PlannedMeal\PlannedMealUpdateRequestData;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
@@ -27,11 +28,14 @@ describe('PlannedMealUpdateAction', function () {
 
         expect($updatedPlannedMeal->id)->toBe($plannedMeals[0]->id);
 
+        $plannedMealData = $this->userPlannedMealUpdateRequestData->transform();
+
         assertDatabaseHas('planned_meals', [
             'id' => $plannedMeals[0]->id,
             'workspace_id' => $this->defaultWorkspace->id,
             'user_id' => $this->user->id,
-            ...$this->userPlannedMealUpdateRequestData->transform(),
+            ...$plannedMealData,
+            'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
         ]);
     });
 

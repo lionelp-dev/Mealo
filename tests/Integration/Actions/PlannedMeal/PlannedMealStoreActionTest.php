@@ -5,6 +5,7 @@ namespace Tests\Integration\Actions\PlannedMeal;
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Data\Requests\PlannedMeal\Entities\PlannedMealRequestData;
 use App\Data\Requests\PlannedMeal\PlannedMealStoreRequestData;
+use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Spatie\LaravelData\Exceptions\CannotCreateData;
 
@@ -19,10 +20,13 @@ describe('PlannedMealStoreAction', function () {
             $this->userPlannedMealStoreRequestData
         );
 
+        $plannedMealData = $this->userPlannedMealRequestData->transform();
+
         assertDatabaseHas('planned_meals', [
             'workspace_id' => $this->defaultWorkspace->id,
             'user_id' => $this->user->id,
-            ...$this->userPlannedMealRequestData->transform(),
+            ...$plannedMealData,
+            'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
         ]);
     });
 
@@ -40,10 +44,13 @@ describe('PlannedMealStoreAction', function () {
             $this->userPlannedMealStoreRequestData
         );
 
+        $plannedMealData = $this->userPlannedMealRequestData->transform();
+
         assertDatabaseHas('planned_meals', [
             'workspace_id' => $this->sharedWorkspace->id,
             'user_id' => $this->editorUser->id,
-            ...$this->userPlannedMealRequestData->transform(),
+            ...$plannedMealData,
+            'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
         ]);
     });
 
@@ -61,10 +68,13 @@ describe('PlannedMealStoreAction', function () {
             $this->userPlannedMealStoreRequestData
         );
 
+        $plannedMealData = $this->userPlannedMealRequestData->transform();
+
         assertDatabaseHas('planned_meals', [
             'workspace_id' => $this->defaultWorkspace->id,
             'user_id' => $this->user->id,
-            ...$this->userPlannedMealRequestData->transform(),
+            ...$plannedMealData,
+            'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
             'serving_size' => 2,
         ]);
     });

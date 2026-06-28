@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::index
-* @see app/Http/Controllers/ShoppingListController.php:26
+* @see app/Http/Controllers/ShoppingListController.php:28
 * @route '/shopping-lists'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::update
-* @see app/Http/Controllers/ShoppingListController.php:60
+* @see app/Http/Controllers/ShoppingListController.php:58
 * @route '/shopping-lists'
 */
 export const update = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -97,7 +97,7 @@ update.definition = {
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::update
-* @see app/Http/Controllers/ShoppingListController.php:60
+* @see app/Http/Controllers/ShoppingListController.php:58
 * @route '/shopping-lists'
 */
 update.url = (options?: RouteQueryOptions) => {
@@ -106,7 +106,7 @@ update.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::update
-* @see app/Http/Controllers/ShoppingListController.php:60
+* @see app/Http/Controllers/ShoppingListController.php:58
 * @route '/shopping-lists'
 */
 update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -116,7 +116,7 @@ update.put = (options?: RouteQueryOptions): RouteDefinition<'put'> => ({
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::update
-* @see app/Http/Controllers/ShoppingListController.php:60
+* @see app/Http/Controllers/ShoppingListController.php:58
 * @route '/shopping-lists'
 */
 const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -131,7 +131,7 @@ const updateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =>
 
 /**
 * @see \App\Http\Controllers\ShoppingListController::update
-* @see app/Http/Controllers/ShoppingListController.php:60
+* @see app/Http/Controllers/ShoppingListController.php:58
 * @route '/shopping-lists'
 */
 updateForm.put = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

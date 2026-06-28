@@ -1,5 +1,6 @@
 <?php
 
+namespace Tests\Feature\Recipe;
 
 describe('RecipeStoreTest', function () {
 

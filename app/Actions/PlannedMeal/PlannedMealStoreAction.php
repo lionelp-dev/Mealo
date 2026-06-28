@@ -50,7 +50,7 @@ class PlannedMealStoreAction
                         'workspace_id' => $workspace->id,
                         'recipe_id' => $plannedMealData->recipe_id,
                         'meal_time_id' => $plannedMealData->meal_time_id,
-                        'planned_date' => $plannedMealData->planned_date,
+                        'planned_date' => $parsedDate,
                         'serving_size' => $plannedMealData->serving_size,
                     ]);
                 }
