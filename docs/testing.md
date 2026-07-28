@@ -235,4 +235,4 @@ Cette assertion négative est essentielle : vérifier uniquement le message d’
 
 ---
 
-← [Précédent : Architecture frontend](architecture/frontend.md) | [Documentation](../README.md) | [Suivant : Dette connue](known-debt.md)
+← [Précédent : Architecture frontend](architecture/frontend.md) | [Sommaire](../README.md#documentation) | [Suivant : Dette connue](known-debt.md)

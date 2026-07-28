@@ -58,4 +58,4 @@ L’infrastructure `react-i18next` est active, mais son adoption reste incomplè
 
 ---
 
-← [Précédent : Tests](testing.md) | [Documentation](../README.md)
+← [Précédent : Tests](testing.md) | [Sommaire](../README.md#documentation)

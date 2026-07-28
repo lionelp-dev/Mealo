@@ -402,4 +402,4 @@ const { t } = useTranslation();
 
 ---
 
-← [Précédent : Architecture backend](backend.md) | [Documentation](../../README.md) | [Suivant : Tests](../testing.md) →
+← [Précédent : Architecture backend](backend.md) | [Sommaire](../../README.md#documentation) | [Suivant : Tests](../testing.md) →

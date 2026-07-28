@@ -406,4 +406,4 @@ Ces exceptions ne remplacent pas la validation et ne doivent pas masquer une err
 
 ---
 
-← [Précédent : Modèle de données](erd.mmd) | [Documentation](../../README.md) | [Suivant : Architecture frontend](frontend.md) →
+← [Précédent : Modèle de données](data-model.md) | [Sommaire](../../README.md#documentation) | [Suivant : Architecture frontend](frontend.md) →
