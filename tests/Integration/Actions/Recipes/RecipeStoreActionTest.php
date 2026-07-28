@@ -17,7 +17,7 @@ describe('RecipeStoreAction', function () {
         ]);
 
         expect($this->recipe->ingredients)->toHaveCount(count($this->recipeStoreRequestData->ingredients));
-        expect($this->recipe->tags)->toHaveCount(count($this->recipeStoreRequestData->tags));
+        expect($this->recipe->tags)->toHaveCount(collect($this->recipeStoreRequestData->tags)->pluck('name')->unique()->count());
         expect($this->recipe->steps)->toHaveCount(count($this->recipeStoreRequestData->steps));
         expect($this->recipe->mealTimes)->toHaveCount(count($this->recipeStoreRequestData->meal_times));
     });

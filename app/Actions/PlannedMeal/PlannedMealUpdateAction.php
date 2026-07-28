@@ -45,7 +45,7 @@ class PlannedMealUpdateAction
             $plannedMeal->update([
                 'recipe_id' => $plannedMealUpdateRequestData->recipe_id,
                 'meal_time_id' => $plannedMealUpdateRequestData->meal_time_id,
-                'planned_date' => $plannedMealUpdateRequestData->planned_date,
+                'planned_date' => $parsedDate,
                 'serving_size' => $plannedMealUpdateRequestData->serving_size,
             ]);
 

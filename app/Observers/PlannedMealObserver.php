@@ -2,19 +2,19 @@
 
 namespace App\Observers;
 
+use App\Actions\ShoppingList\ShoppingListSyncAction;
 use App\Models\PlannedMeal;
-use App\Services\ShoppingListService;
 
 class PlannedMealObserver
 {
-    public function __construct(private ShoppingListService $shoppingListService) {}
+    public function __construct(private ShoppingListSyncAction $syncShoppingList) {}
 
     /**
      * Handle the PlannedMeal "created" event.
      */
     public function created(PlannedMeal $plannedMeal): void
     {
-        $this->shoppingListService->sync($plannedMeal);
+        ($this->syncShoppingList)($plannedMeal);
     }
 
     /**
@@ -22,7 +22,7 @@ class PlannedMealObserver
      */
     public function updated(PlannedMeal $plannedMeal): void
     {
-        $this->shoppingListService->sync($plannedMeal);
+        ($this->syncShoppingList)($plannedMeal);
     }
 
     /**
@@ -30,6 +30,6 @@ class PlannedMealObserver
      */
     public function deleted(PlannedMeal $plannedMeal): void
     {
-        $this->shoppingListService->sync($plannedMeal);
+        ($this->syncShoppingList)($plannedMeal);
     }
 }

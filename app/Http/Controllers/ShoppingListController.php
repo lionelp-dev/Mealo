@@ -2,38 +2,38 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ShoppingList\ShoppingListUpdateCheckedItemsAction;
 use App\Actions\Workspace\WorkspaceGetCurrentAction;
+use App\Data\Requests\ShoppingList\ShoppingListIndexRequestData;
+use App\Data\Requests\ShoppingList\ShoppingListToggleIngredientRequestData;
+use App\Data\Requests\ShoppingList\ShoppingListUpdateRequestData;
+use App\Data\Resources\ShoppingList\ShoppingListResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
-use App\Http\Resources\ShoppingListResource;
+use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ShoppingListController extends Controller
 {
-    public function __construct(
-    ) {}
-
+    use HasAuthenticatedUser;
     /**
      * Display the shopping list for a specific week
      */
-    public function index(Request $request, WorkspaceGetCurrentAction $getCurrentWorkspaceAction): Response
-    {
-        $validated = $request->validate([
-            'week' => ['nullable', 'date'],
-        ]);
+    public function index(
+        WorkspaceGetCurrentAction $getCurrentWorkspaceAction,
+        ShoppingListIndexRequestData $shoppingListIndexRequestData
+    ): Response {
+        $weekStart = $shoppingListIndexRequestData->week
+            ? Carbon::parse($shoppingListIndexRequestData->week)->startOfWeek()
+            : Carbon::now()->startOfWeek();
 
-        $weekStart = ($validated['week'] ?? null) ? Carbon::parse($validated['week'])->startOfWeek() : Carbon::now()->startOfWeek();
-
-        $user = $request->user();
-
-        $currentWorkspace = $getCurrentWorkspaceAction($user);
+        $currentWorkspace = $getCurrentWorkspaceAction($this->authenticatedUser());
 
         $shoppingList = ShoppingList::query()
             ->where('workspace_id', $currentWorkspace->id)
@@ -41,68 +41,55 @@ class ShoppingListController extends Controller
             ->with('plannedMealIngredients')
             ->first();
 
-        $shoppingListData = $shoppingList ? new ShoppingListResource($shoppingList)->toArray($request) : [];
-
         return Inertia::render('shopping-lists/index', [
             'weekStart' => $weekStart->toDateString(),
             'workspace_data' => [
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
-                'workspaces' => WorkspaceResourceData::collect($user->workspaces),
-                'pending_invitations' => WorkspaceInvitationResourceData::collect($user->workspacesInvitations()
+                'workspaces' => WorkspaceResourceData::collect($this->authenticatedUser()->workspaces),
+                'pending_invitations' => WorkspaceInvitationResourceData::collect($this->authenticatedUser()->workspacesInvitations()
                     ->where('expires_at', '>', now())
                     ->with(['workspace', 'invitedBy'])
                     ->get()),
             ],
-            'shopping_list_data' => $shoppingListData,
+            'shopping_list_data' => $shoppingList ? ShoppingListResourceData::from($shoppingList) : [],
         ]);
     }
 
-    public function update(Request $request): RedirectResponse
-    {
-
-        $validated = $request->validate([
-            'shopping_list_planned_meal_ingredients' => ['required', 'array'],
-            'shopping_list_planned_meal_ingredients.*.shopping_list_id' => ['required', 'integer'],
-            'shopping_list_planned_meal_ingredients.*.planned_meal_id' => ['required', 'integer'],
-            'shopping_list_planned_meal_ingredients.*.ingredient_id' => ['required', 'string'],
-            'shopping_list_planned_meal_ingredients.*.is_checked' => ['required', 'boolean:strict'],
-        ]);
-
+    public function update(
+        ShoppingListUpdateRequestData $shoppingListUpdateRequestData,
+        WorkspaceGetCurrentAction $getCurrentWorkspaceAction,
+        ShoppingListUpdateCheckedItemsAction $updateCheckedItemsAction
+    ): RedirectResponse {
         try {
-            foreach ($validated['shopping_list_planned_meal_ingredients'] as $planned_meal_ingredient) {
-                $shoppingListIngredient = ShoppingListPlannedMealIngredient::query()
-                    ->where('shopping_list_id', $planned_meal_ingredient['shopping_list_id'])
-                    ->where('planned_meal_id', $planned_meal_ingredient['planned_meal_id'])
-                    ->where('ingredient_id', $planned_meal_ingredient['ingredient_id'])
-                    ->firstOrFail();
-                $shoppingListIngredient->is_checked = $planned_meal_ingredient['is_checked'];
+            $currentWorkspace = $getCurrentWorkspaceAction($this->authenticatedUser());
 
-                $shoppingListIngredient->save();
-            }
+            $updateCheckedItemsAction->execute(
+                $this->authenticatedUser(),
+                $currentWorkspace,
+                $shoppingListUpdateRequestData
+            );
 
+            return back()->with('success', 'Ingredient updated successfully');
         } catch (Exception $e) {
-            return back()->with(['error' => 'Failed to update ingredient'], 500);
+            return back()->with('error', 'This action is unauthorized');
         }
-
-        return back()->with('success', 'Ingredient updated successfully');
     }
 
     /**
      * Toggle the checked status of a shopping list ingredient
      */
-    public function toggleIngredient(Request $request, ShoppingListPlannedMealIngredient $ingredient): RedirectResponse
-    {
-        $validated = $request->validate([
-            'is_checked' => ['required', 'boolean:strict'],
-        ]);
-
+    public function toggleIngredient(
+        ShoppingListToggleIngredientRequestData $shoppingListToggleIngredientRequestData,
+        ShoppingListPlannedMealIngredient $ingredient
+    ): RedirectResponse {
         try {
-            $ingredient->is_checked = $validated['is_checked'];
+            $ingredient->is_checked = $shoppingListToggleIngredientRequestData->is_checked;
+
             $ingredient->save();
+
+            return back()->with('success', 'Ingredient updated successfully');
         } catch (Exception $e) {
             return back()->with('error', 'This action is unauthorized');
         }
-
-        return back()->with('success', 'Ingredient updated successfully');
     }
 }

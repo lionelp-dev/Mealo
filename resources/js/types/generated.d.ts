@@ -16,6 +16,45 @@ export type MealTimeResourceData = {
   id: number;
   name: string;
 };
+export type PlannedMealDestroyRequestData = {
+  planned_meals: Array<number>;
+};
+export type PlannedMealGeneratePlanRequestData = {
+  startDate: string;
+  endDate: string;
+  serving_size: number;
+};
+export type PlannedMealIndexRequestData = {
+  week?: string;
+};
+export type PlannedMealRecipeResourceData = {
+  id: string;
+  name: string;
+  image_url: string | null;
+};
+export type PlannedMealRequestData = {
+  recipe_id: string;
+  meal_time_id: number;
+  planned_date: string;
+  serving_size: number;
+};
+export type PlannedMealResourceData = {
+  id: number;
+  planned_date: string;
+  meal_time_id: number;
+  meal_time_name?: string;
+  serving_size: number;
+  recipe: PlannedMealRecipeResourceData | null;
+};
+export type PlannedMealStoreRequestData = {
+  planned_meals: Array<PlannedMealRequestData>;
+};
+export type PlannedMealUpdateRequestData = {
+  recipe_id: string;
+  meal_time_id: number;
+  planned_date: string;
+  serving_size?: number;
+};
 export type RecipeAIGenerationRequestData = {
   prompt: string;
   image_generation?: boolean;
@@ -94,6 +133,41 @@ export type RecipeUpdateRequestData = {
   steps: Array<StepRequestData>;
   tags: Array<TagRequestData>;
   image: File | null;
+};
+export type ShoppingListIndexRequestData = {
+  week?: string;
+};
+export type ShoppingListPlannedMealIngredientRequestData = {
+  shopping_list_id: number;
+  planned_meal_id: number;
+  ingredient_id: string;
+  is_checked: boolean;
+};
+export type ShoppingListResourceData = {
+  id: number;
+  user_id: number;
+  workspace_id: number;
+  week_start: string;
+  by_ingredients: {
+    checked: PlannedMealIngredient[];
+    unchecked: PlannedMealIngredient[];
+  };
+  by_recipes: Array<{
+    recipe_id: number;
+    recipe_name: string;
+    ingredients: {
+      checked: PlannedMealRecipeIngredient[];
+      unchecked: PlannedMealRecipeIngredient[];
+    };
+  }>;
+  created_at: string | null;
+  updated_at: string | null;
+};
+export type ShoppingListToggleIngredientRequestData = {
+  is_checked: boolean;
+};
+export type ShoppingListUpdateRequestData = {
+  shopping_list_planned_meal_ingredients: Array<ShoppingListPlannedMealIngredientRequestData>;
 };
 export type StepRequestData = {
   order: number;

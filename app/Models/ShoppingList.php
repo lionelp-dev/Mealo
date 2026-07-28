@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[UsePolicy(ShoppingListPolicy::class)]
 class ShoppingList extends Model
 {
+    /** @use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<ShoppingList>> */
     use HasFactory;
 
     protected $table = 'shopping_lists';
@@ -27,7 +28,7 @@ class ShoppingList extends Model
     ];
 
     /**
-     * @return BelongsTo<User,ShoppingList>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -35,13 +36,16 @@ class ShoppingList extends Model
     }
 
     /**
-     * @return BelongsTo<Workspace,ShoppingList>
+     * @return BelongsTo<Workspace, $this>
      */
     public function workspace(): BelongsTo
     {
         return $this->belongsTo(Workspace::class);
     }
 
+    /**
+     * @return HasMany<ShoppingListPlannedMealIngredient, $this>
+     */
     public function plannedMealIngredients(): HasMany
     {
         return $this->hasMany(ShoppingListPlannedMealIngredient::class);

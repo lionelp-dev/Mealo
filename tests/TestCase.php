@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Tests\Concerns\HasPlannedMealContext;
 use Tests\Concerns\HasRecipeContext;
+use Tests\Concerns\HasShoppingListContext;
 use Tests\Concerns\HasUserContext;
 use Tests\Concerns\HasWorkspaceContext;
 
@@ -18,6 +19,7 @@ abstract class TestCase extends BaseTestCase
     use HasWorkspaceContext;
     use HasRecipeContext;
     use HasPlannedMealContext;
+    use HasShoppingListContext;
 
     protected bool $seed = true;
 
