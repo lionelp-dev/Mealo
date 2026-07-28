@@ -99,14 +99,18 @@ class RecipeController extends Controller
         RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
         RecipeImageAIGenerationAction $recipeImageAIGenerationAction
     ): RedirectResponse {
-        Gate::authorize('create', Recipe::class);
+        try {
+            Gate::authorize('create', Recipe::class);
 
-        $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
-        $base64Image = $recipeImageAIGenerationAction->execute($prompt);
+            $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+            $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
-        return back()->with([
-            'generated_image_data_url' => $base64Image,
-        ]);
+            return back()->with([
+                'generated_image_data_url' => $base64Image,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function showAIGenerationModal(

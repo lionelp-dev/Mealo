@@ -85,7 +85,7 @@ index.form = indexForm
 * @see app/Http/Controllers/Admin/BetaManagementController.php:67
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
-export const approve = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const approve = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: approve.url(args, options),
     method: 'post',
 })
@@ -100,7 +100,7 @@ approve.definition = {
 * @see app/Http/Controllers/Admin/BetaManagementController.php:67
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
-approve.url = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+approve.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { betaRequest: args }
     }
@@ -133,7 +133,7 @@ approve.url = (args: { betaRequest: string | number | { id: string | number } } 
 * @see app/Http/Controllers/Admin/BetaManagementController.php:67
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
-approve.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+approve.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: approve.url(args, options),
     method: 'post',
 })
@@ -143,7 +143,7 @@ approve.post = (args: { betaRequest: string | number | { id: string | number } }
 * @see app/Http/Controllers/Admin/BetaManagementController.php:67
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
-const approveForm = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const approveForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: approve.url(args, options),
     method: 'post',
 })
@@ -153,7 +153,7 @@ const approveForm = (args: { betaRequest: string | number | { id: string | numbe
 * @see app/Http/Controllers/Admin/BetaManagementController.php:67
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
-approveForm.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+approveForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: approve.url(args, options),
     method: 'post',
 })
@@ -165,7 +165,7 @@ approve.form = approveForm
 * @see app/Http/Controllers/Admin/BetaManagementController.php:88
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
-export const reject = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const reject = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reject.url(args, options),
     method: 'post',
 })
@@ -180,7 +180,7 @@ reject.definition = {
 * @see app/Http/Controllers/Admin/BetaManagementController.php:88
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
-reject.url = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+reject.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { betaRequest: args }
     }
@@ -213,7 +213,7 @@ reject.url = (args: { betaRequest: string | number | { id: string | number } } |
 * @see app/Http/Controllers/Admin/BetaManagementController.php:88
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
-reject.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+reject.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: reject.url(args, options),
     method: 'post',
 })
@@ -223,7 +223,7 @@ reject.post = (args: { betaRequest: string | number | { id: string | number } } 
 * @see app/Http/Controllers/Admin/BetaManagementController.php:88
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
-const rejectForm = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const rejectForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: reject.url(args, options),
     method: 'post',
 })
@@ -233,7 +233,7 @@ const rejectForm = (args: { betaRequest: string | number | { id: string | number
 * @see app/Http/Controllers/Admin/BetaManagementController.php:88
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
-rejectForm.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+rejectForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: reject.url(args, options),
     method: 'post',
 })
@@ -245,7 +245,7 @@ reject.form = rejectForm
 * @see app/Http/Controllers/Admin/BetaManagementController.php:104
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
-export const resend = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+export const resend = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resend.url(args, options),
     method: 'post',
 })
@@ -260,7 +260,7 @@ resend.definition = {
 * @see app/Http/Controllers/Admin/BetaManagementController.php:104
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
-resend.url = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
+resend.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { betaRequest: args }
     }
@@ -293,7 +293,7 @@ resend.url = (args: { betaRequest: string | number | { id: string | number } } |
 * @see app/Http/Controllers/Admin/BetaManagementController.php:104
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
-resend.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+resend.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: resend.url(args, options),
     method: 'post',
 })
@@ -303,7 +303,7 @@ resend.post = (args: { betaRequest: string | number | { id: string | number } } 
 * @see app/Http/Controllers/Admin/BetaManagementController.php:104
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
-const resendForm = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+const resendForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: resend.url(args, options),
     method: 'post',
 })
@@ -313,7 +313,7 @@ const resendForm = (args: { betaRequest: string | number | { id: string | number
 * @see app/Http/Controllers/Admin/BetaManagementController.php:104
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
-resendForm.post = (args: { betaRequest: string | number | { id: string | number } } | [betaRequest: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+resendForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: resend.url(args, options),
     method: 'post',
 })

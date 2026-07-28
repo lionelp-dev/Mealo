@@ -31,7 +31,6 @@ class GenerateRecipeJob implements ShouldQueue
         public string $prompt,
         public int $recipeNumber
     ) {
-        $this->onQueue('recipes');
     }
 
     public function handle(
