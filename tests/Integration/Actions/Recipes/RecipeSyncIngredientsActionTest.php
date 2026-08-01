@@ -4,6 +4,11 @@ use App\Actions\Recipes\RecipeSyncIngredientsAction;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+});
+
 describe('RecipeIngredientsSyncAction', function () {
     test('can sync ingredients', function () {
         /** @var \Tests\TestCase $this */

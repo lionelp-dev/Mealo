@@ -7,14 +7,22 @@ use App\Data\Requests\ShoppingList\Entities\ShoppingListPlannedMealIngredientReq
 use App\Data\Requests\ShoppingList\ShoppingListUpdateRequestData;
 use App\Models\ShoppingListPlannedMealIngredient;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpOtherUserSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpOtherUserPlannedMealStoreRequestDataContext();
+});
+
 test('owner can check and uncheck an ingredient', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $ingredient = $shoppingList->plannedMealIngredients()->firstOrFail();
 
     expect($ingredient->is_checked)->toBeFalse();
@@ -138,10 +146,10 @@ test('validates nested ingredient checked status', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $ingredient = $shoppingList->plannedMealIngredients()->firstOrFail();
 
     $this->actingAs($this->user)
@@ -172,7 +180,7 @@ test('keeps bulk update atomic when one ingredient is forbidden', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
     $otherPlannedMeals = app(PlannedMealStoreAction::class)->execute(
@@ -181,7 +189,7 @@ test('keeps bulk update atomic when one ingredient is forbidden', function () {
         $this->otherUserPlannedMealStoreRequestData
     );
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $otherShoppingList = $this->findShoppingListForWorkspaceAndDate($this->otherUserSharedWorkspace, $otherPlannedMeals[0]->planned_date);
 
     $ingredient = $shoppingList->plannedMealIngredients()->firstOrFail();

@@ -11,6 +11,7 @@ use Spatie\Permission\Models\Role;
 
 describe('Admin Beta Management', function () {
     beforeEach(function () {
+        /** @var \Tests\TestCase $this */
         Mail::fake();
 
         // Set team context to null for global permissions
@@ -59,6 +60,7 @@ describe('Admin Beta Management', function () {
 
     describe('Index & Filtering', function () {
         beforeEach(function () {
+            /** @var \Tests\TestCase $this */
             BetaRequest::factory()->pending()->create(['email' => 'pending@example.com']);
             BetaRequest::factory()->approved()->create(['email' => 'approved@example.com']);
             BetaRequest::factory()->rejected()->create(['email' => 'rejected@example.com']);

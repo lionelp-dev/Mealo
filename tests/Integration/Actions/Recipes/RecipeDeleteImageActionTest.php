@@ -5,6 +5,11 @@ namespace Tests\Integration\Actions\Recipes;
 use App\Actions\Recipes\RecipeImageDeleteAction;
 use Illuminate\Support\Facades\Storage;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUploadedRecipeImageContext();
+});
+
 describe('RecipeImageDeleteAction', function () {
     test('can delete recipe image', function () {
         /** @var \Tests\TestCase $this */

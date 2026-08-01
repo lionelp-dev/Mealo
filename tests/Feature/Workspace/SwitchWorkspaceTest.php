@@ -5,6 +5,11 @@ namespace Tests\Feature\Workspace;
 use App\Exceptions\Workspace\CannotViewWorkspaceException;
 use App\Messages\Workspace\WorkspaceSwitchedMessage;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpOtherUserSharedWorkspaceContext();
+});
+
 describe('SwitchWorkspace', function () {
     test('user cannot switch to inaccessible workspace', function () {
         /** @var \Tests\TestCase $this */

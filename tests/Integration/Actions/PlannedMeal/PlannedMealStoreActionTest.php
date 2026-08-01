@@ -11,19 +11,27 @@ use Spatie\LaravelData\Exceptions\CannotCreateData;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpViewerPlannedMealStoreRequestDataContext();
+    $this->setUpOtherUserPlannedMealStoreRequestDataContext();
+});
+
 describe('PlannedMealStoreAction', function () {
     test('successfully stores a planned meal', function () {
         /** @var \Tests\TestCase $this */
         (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 
         $plannedMealData = $this->userPlannedMealRequestData->transform();
 
         assertDatabaseHas('planned_meals', [
-            'workspace_id' => $this->defaultWorkspace->id,
+            'workspace_id' => $this->user->defaultWorkspace()->id,
             'user_id' => $this->user->id,
             ...$plannedMealData,
             'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
@@ -58,20 +66,20 @@ describe('PlannedMealStoreAction', function () {
         /** @var \Tests\TestCase $this */
         (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 
         (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 
         $plannedMealData = $this->userPlannedMealRequestData->transform();
 
         assertDatabaseHas('planned_meals', [
-            'workspace_id' => $this->defaultWorkspace->id,
+            'workspace_id' => $this->user->defaultWorkspace()->id,
             'user_id' => $this->user->id,
             ...$plannedMealData,
             'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
@@ -107,9 +115,9 @@ describe('PlannedMealStoreAction', function () {
 
         expect(function () use ($plannedMealData) {
             (app(PlannedMealStoreAction::class))->execute(
-        /** @var \Tests\TestCase $this */
+                /** @var \Tests\TestCase $this */
                 $this->user,
-                $this->defaultWorkspace,
+                $this->user->defaultWorkspace(),
                 PlannedMealStoreRequestData::from(
                     [
                         'planned_meals' => [

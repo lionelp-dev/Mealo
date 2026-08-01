@@ -7,6 +7,13 @@ use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
 use App\Exceptions\Workspace\CannotChangeOwnerRoleWorkspaceException;
 use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpPersonalWorkspaceContext();
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpInviteeUserContext();
+});
+
 describe('WorkspaceMemberRoleUpdateAction', function () {
 
     test('cannot change owner role', function () {

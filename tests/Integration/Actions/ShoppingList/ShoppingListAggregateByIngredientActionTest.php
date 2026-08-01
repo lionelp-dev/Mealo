@@ -9,15 +9,20 @@ use App\Data\Requests\PlannedMeal\Entities\PlannedMealRequestData;
 use App\Data\Requests\PlannedMeal\PlannedMealStoreRequestData;
 use App\Data\Requests\Recipe\RecipeStoreRequestData;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUserMultiplePlannedMealStoreRequestDataContext();
+});
+
 test('groups ingredients by checked status', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userMultiplePlannedMealStoreRequestData
     );
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $shoppingList->plannedMealIngredients()
         ->where('planned_meal_id', $plannedMeals[0]->id)
         ->update(['is_checked' => true]);
@@ -72,7 +77,7 @@ test('aggregates quantities by ingredient and unit', function () {
 
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from([
@@ -87,7 +92,7 @@ test('aggregates quantities by ingredient and unit', function () {
         ])
     );
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $grouped = app(ShoppingListAggregateByIngredientAction::class)($shoppingList);
 
     expect($grouped['checked'])->toBeEmpty();

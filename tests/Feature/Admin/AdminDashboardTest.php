@@ -1,7 +1,5 @@
 <?php
 
-use App\Models\BetaRequest;
-use App\Models\Recipe;
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -9,6 +7,7 @@ use Spatie\Permission\Models\Role;
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
+    /** @var \Tests\TestCase $this */
     // Set team context to null for global permissions
     setPermissionsTeamId(null);
 
@@ -28,7 +27,7 @@ it('allows admins to access dashboard', function () {
     $response = actingAs($admin)->get('/admin');
 
     $response->assertSuccessful();
-    $response->assertInertia(fn($page) => $page
+    $response->assertInertia(fn ($page) => $page
         ->component('admin/dashboard')
         ->has('stats'));
 });

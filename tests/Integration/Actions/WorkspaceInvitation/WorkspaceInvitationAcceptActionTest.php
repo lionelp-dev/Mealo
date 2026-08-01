@@ -8,6 +8,13 @@ use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
 use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
 use App\Models\WorkspaceInvitation;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpThirdInviteeUserContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+    $this->setUpSharedWorkspaceExpiredInvitationContext();
+});
+
 describe('WorkspaceInvitationAcceptAction', function () {
     test('cannot accept expired invitation', function () {
         /** @var \Tests\TestCase $this */

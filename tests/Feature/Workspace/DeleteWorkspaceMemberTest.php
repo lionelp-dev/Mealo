@@ -7,6 +7,11 @@ use App\Exceptions\Workspace\CannotRemoveOwnerWorkspaceException;
 use App\Exceptions\Workspace\CannotUpdateMemberWorkspaceException;
 use App\Messages\Workspace\MemberRemovedMessage;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+});
+
 describe('DeleteWorkspaceMember', function () {
     test('cannot remove workspace owner', function () {
         /** @var \Tests\TestCase $this */

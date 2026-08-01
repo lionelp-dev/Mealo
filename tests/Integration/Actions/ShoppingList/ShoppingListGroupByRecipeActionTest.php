@@ -5,15 +5,20 @@ namespace Tests\Integration\Actions\ShoppingList;
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Actions\ShoppingList\ShoppingListGroupByRecipeAction;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUserMultiplePlannedMealStoreRequestDataContext();
+});
+
 test('groups ingredients by recipe and checked status', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userMultiplePlannedMealStoreRequestData
     );
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $checkedIngredient = $shoppingList->plannedMealIngredients()
         ->where('planned_meal_id', $plannedMeals[0]->id)
         ->firstOrFail();

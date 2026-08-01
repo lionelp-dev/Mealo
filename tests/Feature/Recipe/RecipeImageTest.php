@@ -5,16 +5,23 @@ use App\Models\Recipe;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeUpdateRequestDataContext();
+    $this->setUpOtherUserRecipeContext();
+    $this->setUpRecipeImageContext();
+});
+
 test('user can upload image to their recipe', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
-         ->put(
-             route('recipes.update', $this->recipe),
-             [
-                 ...$this->recipeUpdateRequestData->except('image')->transform(),
-                 'image' => $this->recipeImage,
-             ]
-         )->assertStatus(302);
+        ->put(
+            route('recipes.update', $this->recipe),
+            [
+                ...$this->recipeUpdateRequestData->except('image')->transform(),
+                'image' => $this->recipeImage,
+            ]
+        )->assertStatus(302);
 
     $this->recipe->refresh();
 
@@ -69,7 +76,7 @@ test('guest cannot view recipe image', function () {
     (app(RecipeUploadImageAction::class))($this->recipe, $this->recipeImage);
 
     $this->get(route('recipes.image', $this->recipe))
-         ->assertRedirect(route('login'));
+        ->assertRedirect(route('login'));
 });
 
 test('upload image validates file type', function () {
@@ -158,8 +165,8 @@ test('recipe update with image uploads and stores image', function () {
 test('viewing recipe image returns 404 when no image exists', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
-         ->get(route('recipes.image', $this->otherRecipe))
-         ->assertStatus(404);
+        ->get(route('recipes.image', $this->otherRecipe))
+        ->assertStatus(404);
 });
 
 test('deleting recipe removes associated image', function () {

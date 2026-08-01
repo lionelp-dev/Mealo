@@ -6,6 +6,11 @@ use App\Actions\Recipes\RecipeSyncMealTimesAction;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+});
+
 describe('RecipeMealTimesSyncAction', function () {
     test('can sync meal times', function () {
         /** @var \Tests\TestCase $this */

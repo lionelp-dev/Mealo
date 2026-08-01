@@ -8,6 +8,11 @@ use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
 
 use function Pest\Laravel\actingAs;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+});
+
 describe('WorkspaceGetCurrentAction', function () {
     test('return current workspace when user has access', function () {
         /** @var \Tests\TestCase $this */

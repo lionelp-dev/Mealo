@@ -39,20 +39,108 @@ trait HasRecipeContext
 
     public function setUpHasRecipeContext(): void
     {
-        $this->recipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
-        $this->otherRecipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
+        if (! isset($this->recipeStoreRequestData)) {
+            $this->recipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
+        }
+
+        if (! isset($this->otherRecipeStoreRequestData)) {
+            $this->otherRecipeStoreRequestData = RecipeStoreRequestData::from(Recipe::factory()->complete()->make());
+        }
+    }
+
+    public function setUpRecipeContext(): void
+    {
+        if (isset($this->recipe)) {
+            return;
+        }
 
         $this->recipe = app(RecipeStoreAction::class)->execute($this->user, $this->recipeStoreRequestData);
+    }
+
+    public function setUpOtherRecipeContext(): void
+    {
+        if (isset($this->otherRecipe)) {
+            return;
+        }
+
         $this->otherRecipe = app(RecipeStoreAction::class)->execute($this->user, $this->otherRecipeStoreRequestData);
+    }
+
+    public function setUpOtherUserRecipeContext(): void
+    {
+        if (isset($this->otherUserRecipe)) {
+            return;
+        }
+
+        $this->setUpOtherUserContext();
+
         $this->otherUserRecipe = app(RecipeStoreAction::class)->execute($this->otherUser, $this->otherRecipeStoreRequestData);
+    }
+
+    public function setUpEditorRecipeContext(): void
+    {
+        if (isset($this->editorRecipe)) {
+            return;
+        }
+
+        $this->setUpEditorUserContext();
+
         $this->editorRecipe = app(RecipeStoreAction::class)->execute($this->editorUser, $this->recipeStoreRequestData);
+    }
+
+    public function setUpViewerRecipeContext(): void
+    {
+        if (isset($this->viewerRecipe)) {
+            return;
+        }
+
+        $this->setUpViewerUserContext();
+
         $this->viewerRecipe = app(RecipeStoreAction::class)->execute($this->viewerUser, $this->recipeStoreRequestData);
+    }
+
+    public function setUpInviteeRecipeContext(): void
+    {
+        if (isset($this->inviteeRecipe)) {
+            return;
+        }
+
+        $this->setUpInviteeUserContext();
+
         $this->inviteeRecipe = app(RecipeStoreAction::class)->execute($this->inviteeUser, $this->recipeStoreRequestData);
+    }
+
+    public function setUpRecipeUpdateRequestDataContext(): void
+    {
+        if (isset($this->recipeUpdateRequestData)) {
+            return;
+        }
+
+        $this->setUpRecipeContext();
+        $this->setUpOtherRecipeContext();
 
         $this->recipeUpdateRequestData = $this->makeRecipeUpdateRequestDataFor($this->user);
+    }
+
+    public function setUpRecipeImageContext(): void
+    {
+        if (isset($this->recipeImage)) {
+            return;
+        }
 
         Storage::fake('recipe_images');
         $this->recipeImage = UploadedFile::fake()->image('recipe.jpg', 800, 600);
+    }
+
+    public function setUpUploadedRecipeImageContext(): void
+    {
+        if (isset($this->recipeImagePath)) {
+            return;
+        }
+
+        $this->setUpRecipeContext();
+        $this->setUpRecipeImageContext();
+
         $this->recipeImagePath = (app(RecipeUploadImageAction::class))($this->recipe, $this->recipeImage);
     }
 

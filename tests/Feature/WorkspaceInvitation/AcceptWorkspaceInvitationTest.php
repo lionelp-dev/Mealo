@@ -8,6 +8,13 @@ use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
 use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
 use App\Models\WorkspaceInvitation;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpOtherUserContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+    $this->setUpSharedWorkspaceExpiredInvitationContext();
+});
+
 describe('AcceptWorkspaceInvitation', function () {
     test('cannot accept expired invitation', function () {
         /** @var \Tests\TestCase $this */

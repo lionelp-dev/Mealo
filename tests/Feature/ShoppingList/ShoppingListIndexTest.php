@@ -9,6 +9,13 @@ use App\Models\PlannedMeal;
 use Carbon\Carbon;
 use Inertia\Testing\AssertableInertia;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUserPlannedMealRequestDataContext();
+    $this->setUpOtherUserRecipeContext();
+    $this->setUpOtherUserSharedWorkspaceContext();
+});
+
 test('renders the screen', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
@@ -30,7 +37,7 @@ test('shows the current week by default', function () {
 
     app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from([
@@ -42,7 +49,7 @@ test('shows the current week by default', function () {
     );
     app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from([
@@ -60,7 +67,7 @@ test('shows the current week by default', function () {
         ->assertStatus(200)
         ->assertInertia(function ($page) use ($thisWeekStart) {
             expect($page->toArray()['props']['weekStart'])->toBe($thisWeekStart->format('Y-m-d'));
-            expect($page->toArray()['props']['shopping_list_data']['workspace_id'])->toBe($this->defaultWorkspace->id);
+            expect($page->toArray()['props']['shopping_list_data']['workspace_id'])->toBe($this->user->defaultWorkspace()->id);
 
             return true;
         });
@@ -72,7 +79,7 @@ test('filters by week', function () {
 
     app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from([
@@ -90,7 +97,7 @@ test('filters by week', function () {
         ->assertStatus(200)
         ->assertInertia(function ($page) use ($nextWeekStart) {
             expect($page->toArray()['props']['weekStart'])->toBe($nextWeekStart->format('Y-m-d'));
-            expect($page->toArray()['props']['shopping_list_data']['workspace_id'])->toBe($this->defaultWorkspace->id);
+            expect($page->toArray()['props']['shopping_list_data']['workspace_id'])->toBe($this->user->defaultWorkspace()->id);
 
             return true;
         });
@@ -129,7 +136,7 @@ test('falls back to the default workspace when current workspace is inaccessible
         ->assertInertia(function ($page) {
             $currentWorkspace = $page->toArray()['props']['workspace_data']['current_workspace'];
 
-            expect($currentWorkspace['id'])->toBe($this->defaultWorkspace->id);
+            expect($currentWorkspace['id'])->toBe($this->user->defaultWorkspace()->id);
             expect($currentWorkspace['id'])->not->toBe($this->otherUserSharedWorkspace->id);
             expect($page->toArray()['props']['shopping_list_data'])->toBeEmpty();
 

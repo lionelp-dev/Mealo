@@ -9,6 +9,12 @@ use App\Models\WorkspaceInvitation;
 
 use function Pest\Laravel\assertDatabaseMissing;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
+
 describe('WorkspaceDeleteAction', function () {
     test('can delete workspace successfully', function () {
         /** @var \Tests\TestCase $this */

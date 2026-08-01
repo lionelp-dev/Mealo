@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Mail;
 
 describe('Beta Request Submission', function () {
     beforeEach(function () {
+        /** @var \Tests\TestCase $this */
         Mail::fake();
     });
 

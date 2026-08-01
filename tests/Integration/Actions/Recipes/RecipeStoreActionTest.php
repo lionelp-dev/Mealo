@@ -3,7 +3,13 @@
 namespace Tests\Integration\Actions\Recipes;
 
 use App\Actions\Recipes\RecipeStoreAction;
+
 use function Pest\Laravel\assertDatabaseHas;
+
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+});
 
 describe('RecipeStoreAction', function () {
     test('can store a recipe with all relationships', function () {

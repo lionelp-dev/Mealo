@@ -7,6 +7,14 @@ use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
 use App\Exceptions\Workspace\CannotRemoveOwnerWorkspaceException;
 use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpPersonalWorkspaceContext();
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpInviteeUserContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
+
 describe('WorkspaceMemberDeleteAction', function () {
 
     test('cannot remove workspace owner', function () {

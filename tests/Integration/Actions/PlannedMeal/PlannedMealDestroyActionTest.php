@@ -9,18 +9,24 @@ use Illuminate\Auth\Access\AuthorizationException;
 
 use function Pest\Laravel\assertDatabaseMissing;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+});
+
 describe('PlannedMealDestroyAction', function () {
     test('successfully deletes a planned meal', function () {
         /** @var \Tests\TestCase $this */
         $plannedMeals = (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 
         $deletedCount = (app(PlannedMealDestroyAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             PlannedMealDestroyRequestData::from([
                 'planned_meals' => collect($plannedMeals)->pluck('id')->all(),
             ])

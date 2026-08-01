@@ -7,6 +7,12 @@ use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
 use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
 use App\Models\WorkspaceInvitation;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpThirdInviteeUserContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
+
 describe('WorkspaceInvitationDeclineAction', function () {
     test('cannot decline an invitation that is not intended for the user', function () {
         /** @var \Tests\TestCase $this */

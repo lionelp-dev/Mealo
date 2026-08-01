@@ -3,6 +3,7 @@
 namespace Tests\Feature\Workspace;
 
 use App\Messages\Workspace\WorkspaceCreatedMessage;
+use App\Models\Workspace;
 
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -36,7 +37,11 @@ describe('CreateWorkspace', function () {
 
         assertDatabaseHas('workspaces', $this->storeSharedWorkspaceRequestData->transform());
 
-        expect($this->sharedWorkspace->hasUser($this->user))->toBeTrue();
+        $workspace = Workspace::query()
+            ->where($this->storeSharedWorkspaceRequestData->transform())
+            ->firstOrFail();
+
+        expect($workspace->hasUser($this->user))->toBeTrue();
         expect($this->user->hasRole('owner'))->toBeTrue();
         expect($this->user->hasPermissionTo('workspace.manage'))->toBeTrue();
 

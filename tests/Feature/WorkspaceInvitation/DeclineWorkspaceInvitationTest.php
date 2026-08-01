@@ -7,6 +7,12 @@ use App\Messages\WorkspaceInvitation\InvitationCancelledMessage;
 use App\Messages\WorkspaceInvitation\InvitationDeclinedMessage;
 use App\Models\WorkspaceInvitation;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceInvitationContext();
+    $this->setUpSharedWorkspaceExpiredInvitationContext();
+});
+
 describe('DeclineWorkspaceInvitation', function () {
     test('non-owner cannot cancel invitation', function () {
         /** @var \Tests\TestCase $this */

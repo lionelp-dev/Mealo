@@ -11,12 +11,20 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpUserPlannedMealUpdateRequestDataContext();
+    $this->setUpViewerPlannedMealUpdateRequestDataContext();
+});
+
 describe('PlannedMealUpdateAction', function () {
     test('successfully updates a planned meal', function () {
         /** @var \Tests\TestCase $this */
         $plannedMeals = (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 
@@ -32,7 +40,7 @@ describe('PlannedMealUpdateAction', function () {
 
         assertDatabaseHas('planned_meals', [
             'id' => $plannedMeals[0]->id,
-            'workspace_id' => $this->defaultWorkspace->id,
+            'workspace_id' => $this->user->defaultWorkspace()->id,
             'user_id' => $this->user->id,
             ...$plannedMealData,
             'planned_date' => Carbon::parse($plannedMealData['planned_date'])->toDateTimeString(),
@@ -61,7 +69,7 @@ describe('PlannedMealUpdateAction', function () {
         /** @var \Tests\TestCase $this */
         $plannedMeals = (app(PlannedMealStoreAction::class))->execute(
             $this->user,
-            $this->defaultWorkspace,
+            $this->user->defaultWorkspace(),
             $this->userPlannedMealStoreRequestData
         );
 

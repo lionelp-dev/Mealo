@@ -11,6 +11,7 @@ use Tests\Helpers\OpenAITestHelper;
 require_once __DIR__.'/../../Helpers/RecipeHelpers.php';
 
 beforeEach(function () {
+    /** @var \Tests\TestCase $this */
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
 });

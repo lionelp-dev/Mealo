@@ -8,6 +8,11 @@ use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpPersonalWorkspaceContext();
+});
+
 describe('WorkspaceUpdateAction', function () {
 
     test(
@@ -16,7 +21,7 @@ describe('WorkspaceUpdateAction', function () {
             /** @var \Tests\TestCase $this */
             expect(function () {
                 app(WorkspaceUpdateAction::class)->execute(
-                    $this->defaultWorkspace,
+                    $this->user->defaultWorkspace(),
                     WorkspaceUpdateRequestData::from(
                         [
                             ...$this->storePersonalWorkspaceRequestData->transform(),

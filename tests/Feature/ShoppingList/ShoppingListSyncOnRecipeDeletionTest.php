@@ -9,16 +9,22 @@ use App\Data\Requests\PlannedMeal\PlannedMealStoreRequestData;
 use App\Data\Requests\Recipe\RecipeDestroyRequestData;
 use App\Models\PlannedMeal;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpUserSecondPlannedMealRequestDataContext();
+});
+
 test('synchronizes when a recipe with planned meals is deleted', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
     $plannedMeal = $plannedMeals[0];
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeal->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeal->planned_date);
 
     expect($shoppingList->plannedMealIngredients)->toHaveCount($this->recipe->ingredients()->count());
 
@@ -40,7 +46,7 @@ test('synchronizes multiple weeks when a recipe with multiple planned meals is d
 
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from([
@@ -61,8 +67,8 @@ test('synchronizes multiple weeks when a recipe with multiple planned meals is d
 
     [$deletedRecipeWeekOnePlannedMeal, $remainingWeekOnePlannedMeal, $deletedRecipeWeekTwoPlannedMeal] = $plannedMeals;
 
-    $shoppingListWeekOne = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $weekOneDate);
-    $shoppingListWeekTwo = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $weekTwoDate);
+    $shoppingListWeekOne = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $weekOneDate);
+    $shoppingListWeekTwo = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $weekTwoDate);
 
     expect($shoppingListWeekOne->plannedMealIngredients)->toHaveCount(
         $this->recipe->ingredients()->count() + $this->otherRecipe->ingredients()->count()
@@ -93,7 +99,7 @@ test('does not change when deleting a recipe without planned meals', function ()
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         PlannedMealStoreRequestData::from([
             'planned_meals' => [
                 PlannedMealRequestData::from($this->userSecondPlannedMealRequestData)->toArray(),
@@ -102,7 +108,7 @@ test('does not change when deleting a recipe without planned meals', function ()
     );
     $plannedMeal = $plannedMeals[0];
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeal->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeal->planned_date);
 
     expect($shoppingList->plannedMealIngredients)->toHaveCount($this->otherRecipe->ingredients()->count());
 

@@ -3,13 +3,18 @@
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Data\Requests\PlannedMeal\PlannedMealDestroyRequestData;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+});
+
 describe('PlannedMealDestroyTest', function () {
     describe('success messages', function () {
         test('when a planned meal successfully removed', function () {
             /** @var \Tests\TestCase $this */
             $plannedMeals = (app(PlannedMealStoreAction::class))->execute(
                 $this->user,
-                $this->defaultWorkspace,
+                $this->user->defaultWorkspace(),
                 $this->userPlannedMealStoreRequestData
             );
 

@@ -6,6 +6,11 @@ use App\Actions\Recipes\RecipeSyncTagsAction;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+});
+
 describe('RecipeTagsSyncAction', function () {
     test('can sync tags', function () {
         /** @var \Tests\TestCase $this */

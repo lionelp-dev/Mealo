@@ -6,6 +6,7 @@ use App\Models\User;
 use Tests\Helpers\OpenAITestHelper;
 
 beforeEach(function () {
+    /** @var \Tests\TestCase $this */
     $this->user = User::factory()->create();
     $this->otherUser = User::factory()->create();
 });

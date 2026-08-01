@@ -6,12 +6,18 @@ use App\Exceptions\Workspace\CannotDeleteWorkspaceException;
 use App\Messages\Workspace\WorkspaceDeletedMessage;
 use App\Models\Workspace;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpOtherUserContext();
+    $this->setUpSharedWorkspaceContext();
+});
+
 describe('DeleteWorkspace', function () {
     test('cannot delete default workspace', function () {
         /** @var \Tests\TestCase $this */
-        $response = $this->actingAs($this->user)->delete(route('workspaces.destroy', $this->defaultWorkspace));
+        $response = $this->actingAs($this->user)->delete(route('workspaces.destroy', $this->user->defaultWorkspace()));
 
-        expect(Workspace::find($this->defaultWorkspace->id))->not->toBeNull();
+        expect(Workspace::find($this->user->defaultWorkspace()->id))->not->toBeNull();
         $response->assertSessionHas('error', new CannotDeleteWorkspaceException()->getMessage());
     });
 

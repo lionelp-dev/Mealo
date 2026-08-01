@@ -10,6 +10,14 @@ use App\Models\WorkspaceInvitation;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpPersonalWorkspaceContext();
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpThirdUserContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
+
 describe('UpdateWorkspace', function () {
     test('non-owner cannot update workspace', function () {
         /** @var \Tests\TestCase $this */
@@ -38,7 +46,7 @@ describe('UpdateWorkspace', function () {
         ];
 
         $response = $this->actingAs($this->user)->put(
-            route('workspaces.update', $this->defaultWorkspace),
+            route('workspaces.update', $this->user->defaultWorkspace()),
             $update
         );
 
@@ -77,16 +85,16 @@ describe('UpdateWorkspace', function () {
     test('cannot change is_personal on default workspace', function () {
         /** @var \Tests\TestCase $this */
         $response = $this->actingAs($this->user)->put(
-            route('workspaces.update', $this->defaultWorkspace),
+            route('workspaces.update', $this->user->defaultWorkspace()),
             [
                 'name' => 'Default Workspace',
                 'is_personal' => false,
             ]
         );
 
-        $this->defaultWorkspace->refresh();
+        $this->user->defaultWorkspace()->refresh();
 
-        expect($this->defaultWorkspace->is_personal)->toBeTrue();
+        expect($this->user->defaultWorkspace()->is_personal)->toBeTrue();
 
         $response->assertStatus(302);
         $response->assertSessionHas('error', new CannotUpdateWorkspaceException()->getMessage());

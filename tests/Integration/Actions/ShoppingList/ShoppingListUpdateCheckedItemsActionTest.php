@@ -10,19 +10,27 @@ use App\Models\ShoppingListPlannedMealIngredient;
 use Illuminate\Auth\Access\AuthorizationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpOtherUserSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpOtherUserPlannedMealStoreRequestDataContext();
+});
+
 test('updates checked status', function () {
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $ingredient = $shoppingList->plannedMealIngredients()->firstOrFail();
 
     app(ShoppingListUpdateCheckedItemsAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         ShoppingListUpdateRequestData::from([
             'shopping_list_planned_meal_ingredients' => [
                 ShoppingListPlannedMealIngredientRequestData::from([
@@ -70,7 +78,7 @@ test('rolls back all changes when one ingredient belongs to another workspace', 
     /** @var \Tests\TestCase $this */
     $plannedMeals = app(PlannedMealStoreAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         $this->userPlannedMealStoreRequestData
     );
     $otherPlannedMeals = app(PlannedMealStoreAction::class)->execute(
@@ -79,14 +87,14 @@ test('rolls back all changes when one ingredient belongs to another workspace', 
         $this->otherUserPlannedMealStoreRequestData
     );
 
-    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->defaultWorkspace, $plannedMeals[0]->planned_date);
+    $shoppingList = $this->findShoppingListForWorkspaceAndDate($this->user->defaultWorkspace(), $plannedMeals[0]->planned_date);
     $otherShoppingList = $this->findShoppingListForWorkspaceAndDate($this->otherUserSharedWorkspace, $otherPlannedMeals[0]->planned_date);
     $ingredient = $shoppingList->plannedMealIngredients()->firstOrFail();
     $otherIngredient = $otherShoppingList->plannedMealIngredients()->firstOrFail();
 
     expect(fn () => app(ShoppingListUpdateCheckedItemsAction::class)->execute(
         $this->user,
-        $this->defaultWorkspace,
+        $this->user->defaultWorkspace(),
         ShoppingListUpdateRequestData::from([
             'shopping_list_planned_meal_ingredients' => [
                 ShoppingListPlannedMealIngredientRequestData::from([

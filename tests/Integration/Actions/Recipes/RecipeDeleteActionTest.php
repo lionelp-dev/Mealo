@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Storage;
 
 use function Pest\Laravel\assertDatabaseMissing;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpUploadedRecipeImageContext();
+});
+
 describe('RecipeDeleteAction', function () {
     test('can delete a recipe', function () {
         /** @var \Tests\TestCase $this */

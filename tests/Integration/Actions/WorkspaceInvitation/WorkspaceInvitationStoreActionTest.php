@@ -3,12 +3,18 @@
 namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationStoreAction;
+use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
 use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
 use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
 use App\Models\WorkspaceInvitation;
-use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
 
 use function Pest\Laravel\assertDatabaseHas;
+
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
 
 describe('WorkspaceInvitationStoreAction', function () {
 

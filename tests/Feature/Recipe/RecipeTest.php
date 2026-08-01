@@ -4,6 +4,15 @@ namespace Tests\Feature\Recipe;
 
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+    $this->setUpOtherUserRecipeContext();
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpUserPlannedMealStoreRequestDataContext();
+    $this->setUpRecipeUpdateRequestDataContext();
+});
+
 test('recipes screen can be rendered', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)

@@ -6,6 +6,11 @@ use App\Actions\Recipes\RecipeSyncStepsAction;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+});
+
 describe('RecipeStepsSyncAction', function () {
     test('can sync steps', function () {
         /** @var \Tests\TestCase $this */

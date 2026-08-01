@@ -8,6 +8,13 @@ use App\Messages\WorkspaceInvitation\InvitationSentMessage;
 
 use function Pest\Laravel\assertDatabaseHas;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpSharedWorkspaceContext();
+    $this->setUpStoreOtherSharedWorkspaceInvitationRequestData();
+    $this->setUpSharedWorkspaceInvitationContext();
+});
+
 describe('StoreWorkspaceInvitation', function () {
     test('non-owner user cannot send invitation', function () {
         /** @var \Tests\TestCase $this */

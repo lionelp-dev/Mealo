@@ -2,14 +2,20 @@
 
 namespace Tests\Feature\Recipe;
 
+beforeEach(function () {
+    /** @var \Tests\TestCase $this */
+    $this->setUpRecipeContext();
+    $this->setUpOtherUserRecipeContext();
+});
+
 describe('RecipeDestroy', function () {
     describe('forbidden messages', function () {
         test('when user is unauthorized', function () {
             /** @var \Tests\TestCase $this */
             $response = $this->actingAs($this->user)
-                 ->delete(route('recipes.destroy'), ['ids' => [$this->otherUserRecipe->id]])
-                 ->assertRedirect()
-                 ->assertSessionHas('error', 'Recipe unsuccessfully deleted');
+                ->delete(route('recipes.destroy'), ['ids' => [$this->otherUserRecipe->id]])
+                ->assertRedirect()
+                ->assertSessionHas('error', 'Recipe unsuccessfully deleted');
         });
     });
 
