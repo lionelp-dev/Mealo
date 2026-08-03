@@ -2,14 +2,20 @@
 
 namespace App\Messages\Workspace;
 
+use App\Concerns\HasDefaultMessage;
 use App\Messages\Message;
 
 class MemberRoleUpdatedMessage extends Message
 {
-    public function __construct(?string $message = null)
+    use HasDefaultMessage;
+
+    protected static function translationKey(): ?string
     {
-        parent::__construct(
-            $message ?? __('messages.workspace.member_role_updated')
-        );
+        return 'messages.workspace.member_role_updated';
+    }
+
+    protected static function defaultMessage(): string
+    {
+        return 'Member role updated successfully';
     }
 }

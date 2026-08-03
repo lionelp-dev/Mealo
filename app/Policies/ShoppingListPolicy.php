@@ -2,8 +2,10 @@
 
 namespace App\Policies;
 
+use App\Exceptions\ShoppingList\ShoppingListUpdateAuthorizationException;
 use App\Models\ShoppingList;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class ShoppingListPolicy
 {
@@ -34,16 +36,18 @@ class ShoppingListPolicy
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, ShoppingList $shoppingList): bool
+    public function update(User $user, ShoppingList $shoppingList): Response
     {
         // Check if user has planning.edit permission in the workspace
         if (! $shoppingList->workspace || ! $shoppingList->workspace->hasUser($user)) {
-            return false;
+            return Response::deny(ShoppingListUpdateAuthorizationException::message());
         }
 
         setPermissionsTeamId($shoppingList->workspace->id);
 
-        return $user->hasPermissionTo('planning.edit');
+        return $user->hasPermissionTo('planning.edit')
+            ? Response::allow()
+            : Response::deny(ShoppingListUpdateAuthorizationException::message());
     }
 
     /**

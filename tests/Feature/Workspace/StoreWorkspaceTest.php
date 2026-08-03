@@ -46,7 +46,7 @@ describe('CreateWorkspace', function () {
         expect($this->user->hasPermissionTo('workspace.manage'))->toBeTrue();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', (new WorkspaceCreatedMessage)->getMessage());
+        $response->assertSessionHas('success', WorkspaceCreatedMessage::message());
     });
 
     test('user can view their workspaces', function () {

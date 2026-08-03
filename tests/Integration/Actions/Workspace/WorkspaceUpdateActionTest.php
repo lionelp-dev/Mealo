@@ -4,7 +4,7 @@ namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceUpdateAction;
 use App\Data\Requests\Workspace\WorkspaceUpdateRequestData;
-use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceUpdateAuthorizationException;
 
 use function Pest\Laravel\assertDatabaseHas;
 
@@ -30,7 +30,7 @@ describe('WorkspaceUpdateAction', function () {
                     )
                 );
             })->toThrow(
-                CannotUpdateWorkspaceException::class,
+                WorkspaceUpdateAuthorizationException::class,
             );
         }
     );

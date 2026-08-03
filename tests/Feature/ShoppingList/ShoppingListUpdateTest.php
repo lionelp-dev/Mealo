@@ -5,6 +5,8 @@ namespace Tests\Feature\ShoppingList;
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Data\Requests\ShoppingList\Entities\ShoppingListPlannedMealIngredientRequestData;
 use App\Data\Requests\ShoppingList\ShoppingListUpdateRequestData;
+use App\Exceptions\ShoppingList\ShoppingListUpdateAuthorizationException;
+use App\Messages\ShoppingList\ShoppingListIngredientUpdatedMessage;
 use App\Models\ShoppingListPlannedMealIngredient;
 
 beforeEach(function () {
@@ -82,7 +84,7 @@ test('editor can update an ingredient in a shared workspace', function () {
             ],
         ])->transform())
         ->assertStatus(302)
-        ->assertSessionHas('success', 'Ingredient updated successfully');
+        ->assertSessionHas('success', ShoppingListIngredientUpdatedMessage::message());
 
     expect($ingredient->refresh()->is_checked)->toBeTrue();
 });
@@ -110,7 +112,7 @@ test('viewer cannot update an ingredient in a shared workspace', function () {
             ],
         ])->transform())
         ->assertStatus(302)
-        ->assertSessionHas('error', 'This action is unauthorized');
+        ->assertSessionHas('error', ShoppingListUpdateAuthorizationException::message());
 
     expect($ingredient->refresh()->is_checked)->toBeFalse();
 });
@@ -137,7 +139,7 @@ test('user cannot update an ingredient outside the current workspace', function 
             ],
         ])->transform())
         ->assertStatus(302)
-        ->assertSessionHas('error', 'This action is unauthorized');
+        ->assertSessionHas('error', ShoppingListUpdateAuthorizationException::message());
 
     expect($ingredient->refresh()->is_checked)->toBeFalse();
 });
@@ -213,7 +215,7 @@ test('keeps bulk update atomic when one ingredient is forbidden', function () {
             ],
         ])->transform())
         ->assertStatus(302)
-        ->assertSessionHas('error', 'This action is unauthorized');
+        ->assertSessionHas('error', ShoppingListUpdateAuthorizationException::message());
 
     expect(ShoppingListPlannedMealIngredient::find($ingredient->id)->is_checked)->toBeFalse();
     expect(ShoppingListPlannedMealIngredient::find($otherIngredient->id)->is_checked)->toBeFalse();

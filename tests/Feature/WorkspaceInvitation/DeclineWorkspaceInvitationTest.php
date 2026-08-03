@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\WorkspaceInvitation;
 
-use App\Exceptions\WokspaceInvitation\CannotCancelWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationCancelAuthorizationException;
 use App\Messages\WorkspaceInvitation\InvitationCancelledMessage;
 use App\Messages\WorkspaceInvitation\InvitationDeclinedMessage;
 use App\Models\WorkspaceInvitation;
@@ -22,7 +22,7 @@ describe('DeclineWorkspaceInvitation', function () {
         expect(WorkspaceInvitation::find($this->sharedWorkspaceInvitation->id))->not->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotCancelWorkspaceInvitationException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceInvitationCancelAuthorizationException::message());
     });
 
     test('can decline expired invitation', function () {
@@ -33,7 +33,7 @@ describe('DeclineWorkspaceInvitation', function () {
         expect(WorkspaceInvitation::find($this->sharedWorkspaceExpiredInvitation->id))->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new InvitationDeclinedMessage()->getMessage());
+        $response->assertSessionHas('success', InvitationDeclinedMessage::message());
     });
 
     test('invited user can decline invitation', function () {
@@ -45,7 +45,7 @@ describe('DeclineWorkspaceInvitation', function () {
         expect(WorkspaceInvitation::find($this->sharedWorkspaceInvitation->id))->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new InvitationDeclinedMessage()->getMessage());
+        $response->assertSessionHas('success', InvitationDeclinedMessage::message());
     });
 
     test('workspace owner can cancel invitation', function () {
@@ -56,6 +56,6 @@ describe('DeclineWorkspaceInvitation', function () {
         expect(WorkspaceInvitation::find($this->sharedWorkspaceInvitation->id))->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new InvitationCancelledMessage()->getMessage());
+        $response->assertSessionHas('success', InvitationCancelledMessage::message());
     });
 });

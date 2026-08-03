@@ -3,10 +3,10 @@
 namespace App\Actions\PlannedMeal;
 
 use App\Data\Requests\PlannedMeal\PlannedMealDestroyRequestData;
+use App\Exceptions\PlannedMeal\PlannedMealDeleteAuthorizationException;
 use App\Models\PlannedMeal;
 use App\Models\User;
 use App\Models\Workspace;
-use Http\Discovery\Exception;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -25,7 +25,7 @@ class PlannedMealDestroyAction
                 ->get();
 
             if ($plannedMeals->count() !== count($plannedMealIds)) {
-                abort(403, 'Some planned meals are not accessible in this workspace');
+                throw new PlannedMealDeleteAuthorizationException;
             }
 
             foreach ($plannedMeals as $plannedMeal) {

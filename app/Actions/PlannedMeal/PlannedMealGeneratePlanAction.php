@@ -4,12 +4,14 @@ namespace App\Actions\PlannedMeal;
 
 use App\Data\Requests\PlannedMeal\PlannedMealGeneratePlanRequestData;
 use App\Data\Requests\PlannedMeal\PlannedMealStoreRequestData;
+use App\Exceptions\PlannedMeal\MealPlanGenerateAuthorizationException;
 use App\Models\PlannedMeal;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Services\AIMealPlanningService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class PlannedMealGeneratePlanAction
 {
@@ -21,21 +23,25 @@ class PlannedMealGeneratePlanAction
         $startDate = Carbon::parse($data->startDate);
         $endDate = Carbon::parse($data->endDate);
 
-        $generatedPlannedMeals = collect(app(AIMealPlanningService::class)->generateMealPlan([
-            'userId' => $user->id,
-            'workspaceId' => $workspace->id,
-            'startDate' => $startDate,
-            'endDate' => $endDate,
-        ]))->map(function (array $meal) use ($data) {
-            return array_merge(
-                $meal,
-                ['serving_size' => $data->serving_size]
-            );
-        })->all();
+        try {
+            $generatedPlannedMeals = collect(app(AIMealPlanningService::class)->generateMealPlan([
+                'userId' => $user->id,
+                'workspaceId' => $workspace->id,
+                'startDate' => $startDate,
+                'endDate' => $endDate,
+            ]))->map(function (array $meal) use ($data) {
+                return array_merge(
+                    $meal,
+                    ['serving_size' => $data->serving_size]
+                );
+            })->all();
 
-        $plannedMeals = PlannedMealStoreRequestData::from([
-            'planned_meals' => $generatedPlannedMeals,
-        ]);
+            $plannedMeals = PlannedMealStoreRequestData::from([
+                'planned_meals' => $generatedPlannedMeals,
+            ]);
+        } catch (Throwable $e) {
+            throw new MealPlanGenerateAuthorizationException(previous: $e);
+        }
 
         $createdCount = 0;
 

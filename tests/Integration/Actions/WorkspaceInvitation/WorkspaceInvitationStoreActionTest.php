@@ -4,8 +4,8 @@ namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationStoreAction;
 use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
-use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
-use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
+use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
 use App\Models\WorkspaceInvitation;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -28,7 +28,7 @@ describe('WorkspaceInvitationStoreAction', function () {
                     $this->storeSharedWorkspaceInvitationRequestData
                 );
         })->toThrow(
-            AlreadyExistWorkspaceInvitationException::class
+            WorkspaceInvitationAlreadyExistsException::class
         );
     });
 
@@ -47,7 +47,7 @@ describe('WorkspaceInvitationStoreAction', function () {
                     )
                 );
         })->toThrow(
-            MemberAlreadyExistWorkspaceException::class
+            WorkspaceMemberAlreadyExistsException::class
         );
     });
 

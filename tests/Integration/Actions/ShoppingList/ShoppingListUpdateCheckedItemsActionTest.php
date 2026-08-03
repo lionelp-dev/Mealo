@@ -6,9 +6,9 @@ use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Actions\ShoppingList\ShoppingListUpdateCheckedItemsAction;
 use App\Data\Requests\ShoppingList\Entities\ShoppingListPlannedMealIngredientRequestData;
 use App\Data\Requests\ShoppingList\ShoppingListUpdateRequestData;
+use App\Exceptions\ShoppingList\ShoppingListUpdateAuthorizationException;
 use App\Models\ShoppingListPlannedMealIngredient;
 use Illuminate\Auth\Access\AuthorizationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -111,7 +111,7 @@ test('rolls back all changes when one ingredient belongs to another workspace', 
                 ])->toArray(),
             ],
         ])
-    ))->toThrow(HttpException::class);
+    ))->toThrow(ShoppingListUpdateAuthorizationException::class);
 
     expect(ShoppingListPlannedMealIngredient::find($ingredient->id)->is_checked)->toBeFalse();
     expect(ShoppingListPlannedMealIngredient::find($otherIngredient->id)->is_checked)->toBeFalse();

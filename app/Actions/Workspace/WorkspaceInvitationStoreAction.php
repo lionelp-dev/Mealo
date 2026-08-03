@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
-use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
-use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
+use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
 use App\Mail\WorkspaceInvitationMail;
 use App\Models\User;
 use App\Models\Workspace;
@@ -28,13 +28,13 @@ class WorkspaceInvitationStoreAction
             ->exists();
 
         if ($existingInvitation) {
-            throw new AlreadyExistWorkspaceInvitationException;
+            throw new WorkspaceInvitationAlreadyExistsException;
         }
 
         $existingUser = User::where('email', $storeWorkspaceInvitationRequestData->email)->first();
 
         if ($existingUser && $workspace->hasUser($existingUser)) {
-            throw new MemberAlreadyExistWorkspaceException;
+            throw new WorkspaceMemberAlreadyExistsException;
         }
 
         $workspaceInvitation = DB::transaction(function () use ($user, $storeWorkspaceInvitationRequestData, $workspace): WorkspaceInvitation {

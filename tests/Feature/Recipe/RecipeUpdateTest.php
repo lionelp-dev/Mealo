@@ -2,6 +2,10 @@
 
 namespace Tests\Feature\Recipe;
 
+use App\Exceptions\Recipe\RecipeUpdateAuthorizationException;
+use App\Messages\Recipe\RecipeUpdatedMessage;
+use Illuminate\Support\Facades\Gate;
+
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
     $this->setUpRecipeContext();
@@ -9,6 +13,14 @@ beforeEach(function () {
 });
 
 describe('RecipeUpdate', function () {
+    describe('authorization', function () {
+        test('only the recipe owner can update recipes', function () {
+            /** @var \Tests\TestCase $this */
+            expect(Gate::forUser($this->user)->allows('update', $this->recipe))->toBeTrue()
+                ->and(Gate::forUser($this->user)->allows('update', $this->otherUserRecipe))->toBeFalse();
+        });
+    });
+
     describe('forbidden messages', function () {
         test('when user is unauthorized', function () {
             /** @var \Tests\TestCase $this */
@@ -22,7 +34,7 @@ describe('RecipeUpdate', function () {
                     ]
                 )
                 ->assertRedirect()
-                ->assertSessionHas('error', 'Recipe unsuccessfully updated');
+                ->assertSessionHas('error', RecipeUpdateAuthorizationException::message());
         });
     });
 
@@ -58,7 +70,7 @@ describe('RecipeUpdate', function () {
                     ]
                 )
                 ->assertRedirect()
-                ->assertSessionHas('success', 'Recipe successfully updated');
+                ->assertSessionHas('success', RecipeUpdatedMessage::message());
         });
     });
 });

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Workspace;
 
-use App\Exceptions\Workspace\CannotChangeOwnerRoleWorkspaceException;
-use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceUpdateAuthorizationException;
 use App\Messages\Workspace\MemberRoleUpdatedMessage;
 use App\Messages\Workspace\WorkspaceUpdatedMessage;
 use App\Models\WorkspaceInvitation;
@@ -36,7 +36,7 @@ describe('UpdateWorkspace', function () {
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotUpdateWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceUpdateAuthorizationException::message());
     });
 
     test('cannot update default workspace', function () {
@@ -51,7 +51,7 @@ describe('UpdateWorkspace', function () {
         );
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotUpdateWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceUpdateAuthorizationException::message());
     });
 
     test('non-owner cannot update workspace type', function () {
@@ -65,7 +65,7 @@ describe('UpdateWorkspace', function () {
         );
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotUpdateWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceUpdateAuthorizationException::message());
     });
 
     test('cannot change owner role', function () {
@@ -79,7 +79,7 @@ describe('UpdateWorkspace', function () {
         );
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotChangeOwnerRoleWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceOwnerRoleChangeAuthorizationException::message());
     });
 
     test('cannot change is_personal on default workspace', function () {
@@ -97,7 +97,7 @@ describe('UpdateWorkspace', function () {
         expect($this->user->defaultWorkspace()->is_personal)->toBeTrue();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotUpdateWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceUpdateAuthorizationException::message());
     });
 
     test('owner can update workspace name', function () {
@@ -117,7 +117,7 @@ describe('UpdateWorkspace', function () {
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new WorkspaceUpdatedMessage()->getMessage());
+        $response->assertSessionHas('success', WorkspaceUpdatedMessage::message());
     });
 
     test('owner can change member role', function () {
@@ -135,7 +135,7 @@ describe('UpdateWorkspace', function () {
         expect($this->editorUser->hasPermissionTo('planning.edit'))->toBeFalse();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new MemberRoleUpdatedMessage()->getMessage());
+        $response->assertSessionHas('success', MemberRoleUpdatedMessage::message());
     });
 
     test('converts shared workspace to personal and removes non-owner members', function () {
@@ -155,7 +155,7 @@ describe('UpdateWorkspace', function () {
         expect($this->sharedWorkspace->users()->where('user_id', $this->user->id)->exists())->toBeTrue();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new WorkspaceUpdatedMessage()->getMessage());
+        $response->assertSessionHas('success', WorkspaceUpdatedMessage::message());
     });
 
     test('cancels pending invitations when converting to personal', function () {

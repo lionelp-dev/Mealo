@@ -2,8 +2,11 @@
 
 namespace App\Policies;
 
+use App\Exceptions\Recipe\RecipeDeleteAuthorizationException;
+use App\Exceptions\Recipe\RecipeUpdateAuthorizationException;
 use App\Models\Recipe;
 use App\Models\User;
+use Illuminate\Auth\Access\Response;
 
 class RecipePolicy
 {
@@ -38,25 +41,29 @@ class RecipePolicy
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(?User $user): bool
     {
-        return true;
+        return $user !== null;
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Recipe $recipe): bool
+    public function update(User $user, Recipe $recipe): Response
     {
-        return $user->id === $recipe->user_id;
+        return $user->id === $recipe->user_id
+            ? Response::allow()
+            : Response::deny(RecipeUpdateAuthorizationException::message());
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Recipe $recipe): bool
+    public function delete(User $user, Recipe $recipe): Response
     {
-        return $user->id === $recipe->user_id;
+        return $user->id === $recipe->user_id
+            ? Response::allow()
+            : Response::deny(RecipeDeleteAuthorizationException::message());
     }
 
     /**

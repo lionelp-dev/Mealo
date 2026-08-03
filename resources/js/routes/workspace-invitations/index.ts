@@ -156,7 +156,7 @@ store.form = storeForm
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::destroy
-* @see app/Http/Controllers/WorkspaceInvitationController.php:121
+* @see app/Http/Controllers/WorkspaceInvitationController.php:120
 * @route '/workspace-invitations/{invitation}'
 */
 export const destroy = (args: { invitation: string | number | { id: string | number } } | [invitation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -171,7 +171,7 @@ destroy.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::destroy
-* @see app/Http/Controllers/WorkspaceInvitationController.php:121
+* @see app/Http/Controllers/WorkspaceInvitationController.php:120
 * @route '/workspace-invitations/{invitation}'
 */
 destroy.url = (args: { invitation: string | number | { id: string | number } } | [invitation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions) => {
@@ -204,7 +204,7 @@ destroy.url = (args: { invitation: string | number | { id: string | number } } |
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::destroy
-* @see app/Http/Controllers/WorkspaceInvitationController.php:121
+* @see app/Http/Controllers/WorkspaceInvitationController.php:120
 * @route '/workspace-invitations/{invitation}'
 */
 destroy.delete = (args: { invitation: string | number | { id: string | number } } | [invitation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -214,7 +214,7 @@ destroy.delete = (args: { invitation: string | number | { id: string | number } 
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::destroy
-* @see app/Http/Controllers/WorkspaceInvitationController.php:121
+* @see app/Http/Controllers/WorkspaceInvitationController.php:120
 * @route '/workspace-invitations/{invitation}'
 */
 const destroyForm = (args: { invitation: string | number | { id: string | number } } | [invitation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -229,7 +229,7 @@ const destroyForm = (args: { invitation: string | number | { id: string | number
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::destroy
-* @see app/Http/Controllers/WorkspaceInvitationController.php:121
+* @see app/Http/Controllers/WorkspaceInvitationController.php:120
 * @route '/workspace-invitations/{invitation}'
 */
 destroyForm.delete = (args: { invitation: string | number | { id: string | number } } | [invitation: string | number | { id: string | number } ] | string | number | { id: string | number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -320,7 +320,7 @@ accept.form = acceptForm
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::decline
-* @see app/Http/Controllers/WorkspaceInvitationController.php:106
+* @see app/Http/Controllers/WorkspaceInvitationController.php:104
 * @route '/workspace-invitations/{token}/decline'
 */
 export const decline = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -335,7 +335,7 @@ decline.definition = {
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::decline
-* @see app/Http/Controllers/WorkspaceInvitationController.php:106
+* @see app/Http/Controllers/WorkspaceInvitationController.php:104
 * @route '/workspace-invitations/{token}/decline'
 */
 decline.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ decline.url = (args: { token: string | number } | [token: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::decline
-* @see app/Http/Controllers/WorkspaceInvitationController.php:106
+* @see app/Http/Controllers/WorkspaceInvitationController.php:104
 * @route '/workspace-invitations/{token}/decline'
 */
 decline.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -372,7 +372,7 @@ decline.post = (args: { token: string | number } | [token: string | number ] | s
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::decline
-* @see app/Http/Controllers/WorkspaceInvitationController.php:106
+* @see app/Http/Controllers/WorkspaceInvitationController.php:104
 * @route '/workspace-invitations/{token}/decline'
 */
 const declineForm = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -382,7 +382,7 @@ const declineForm = (args: { token: string | number } | [token: string | number 
 
 /**
 * @see \App\Http\Controllers\WorkspaceInvitationController::decline
-* @see app/Http/Controllers/WorkspaceInvitationController.php:106
+* @see app/Http/Controllers/WorkspaceInvitationController.php:104
 * @route '/workspace-invitations/{token}/decline'
 */
 declineForm.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

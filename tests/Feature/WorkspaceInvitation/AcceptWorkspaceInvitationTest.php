@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\WorkspaceInvitation;
 
-use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationExpiredException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationNotFoundException;
 use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
 use App\Models\WorkspaceInvitation;
 
@@ -24,7 +24,7 @@ describe('AcceptWorkspaceInvitation', function () {
         expect($this->sharedWorkspace->fresh()?->hasUser($this->otherInviteeUser))->toBeFalse();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new ExpiredWorkspaceInvitationException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceInvitationExpiredException::message());
     });
 
     test('cannot accept invitation for different email', function () {
@@ -35,7 +35,7 @@ describe('AcceptWorkspaceInvitation', function () {
         expect($this->sharedWorkspace->fresh()?->hasUser($this->otherUser))->toBeFalse();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new NotForYouWorkspaceInvitationException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceInvitationRespondAuthorizationException::message());
     });
 
     test('cannot accept non-existent invitation', function () {
@@ -44,7 +44,7 @@ describe('AcceptWorkspaceInvitation', function () {
             ->post(route('workspace-invitations.accept', 'invalid-token'));
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new NotFoundWorkspaceInvitationException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceInvitationNotFoundException::message());
     });
 
     test('invited user can accept invitation', function () {
@@ -57,6 +57,6 @@ describe('AcceptWorkspaceInvitation', function () {
         expect(WorkspaceInvitation::find($this->sharedWorkspaceInvitation->id))->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', (new InvitationAcceptedMessage)->getMessage());
+        $response->assertSessionHas('success', InvitationAcceptedMessage::message());
     });
 });

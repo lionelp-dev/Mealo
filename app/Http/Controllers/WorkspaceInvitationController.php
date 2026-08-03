@@ -12,11 +12,11 @@ use App\Data\Requests\Workspace\WorkspaceInvitationDeleteRequestData;
 use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
-use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
-use App\Exceptions\Workspace\CannotInviteToWorkspaceException;
-use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationExpiredException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationNotFoundException;
+use App\Exceptions\Workspace\WorkspaceInviteAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
 use App\Messages\WorkspaceInvitation\InvitationCancelledMessage;
@@ -59,11 +59,11 @@ class WorkspaceInvitationController extends Controller
 
             $workspaceInvitationStoreAction->execute($this->authenticatedUser(), $workspace, $workspaceInvitationStoreRequestData);
 
-            return back()->with('success', (new InvitationSentMessage)->getMessage());
+            return back()->with('success', InvitationSentMessage::message());
         } catch (
-            MemberAlreadyExistWorkspaceException|
-            AlreadyExistWorkspaceInvitationException|
-            CannotInviteToWorkspaceException $e
+            WorkspaceMemberAlreadyExistsException|
+            WorkspaceInvitationAlreadyExistsException|
+            WorkspaceInviteAuthorizationException $e
         ) {
             return back()->with('error', $e->getMessage());
         }
@@ -76,7 +76,7 @@ class WorkspaceInvitationController extends Controller
         try {
             $workspaceInvitationAcceptAction->execute($this->authenticatedUser(), $workspaceInvitationAcceptRequestData);
 
-            return back()->with('success', (new InvitationAcceptedMessage)->getMessage());
+            return back()->with('success', InvitationAcceptedMessage::message());
         } catch (Exception $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -90,14 +90,12 @@ class WorkspaceInvitationController extends Controller
             $workspaceInvitationAcceptAction->execute($this->authenticatedUser(), $workspaceInvitationAcceptRequestData);
 
             return redirect()->route('workspaces.index')
-                ->with('success', (new InvitationAcceptedMessage)->getMessage());
+                ->with('success', InvitationAcceptedMessage::message());
         } catch (
-            ExpiredWorkspaceInvitationException|
-            NotFoundWorkspaceInvitationException $e
+            WorkspaceInvitationExpiredException|
+            WorkspaceInvitationNotFoundException|
+            AuthorizationException $e
         ) {
-            return redirect()->route('workspaces.index')
-                ->with('error', $e->getMessage());
-        } catch (AuthorizationException $e) {
             return redirect()->route('workspaces.index')
                 ->with('error', $e->getMessage());
         }
@@ -110,10 +108,11 @@ class WorkspaceInvitationController extends Controller
         try {
             $workspaceInvitationDeclineAction->execute($this->authenticatedUser(), $workspaceInvitationDeclineRequestData);
 
-            return back()->with('success', (new InvitationDeclinedMessage)->getMessage());
-        } catch (NotFoundWorkspaceInvitationException $e) {
-            return back()->with('error', $e->getMessage());
-        } catch (AuthorizationException $e) {
+            return back()->with('success', InvitationDeclinedMessage::message());
+        } catch (
+            WorkspaceInvitationNotFoundException
+            |AuthorizationException $e
+        ) {
             return back()->with('error', $e->getMessage());
         }
     }
@@ -131,7 +130,7 @@ class WorkspaceInvitationController extends Controller
 
             $invitation->delete();
 
-            return back()->with(['success' => (new InvitationCancelledMessage)->getMessage()]);
+            return back()->with(['success' => InvitationCancelledMessage::message()]);
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }

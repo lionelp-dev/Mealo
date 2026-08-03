@@ -25,11 +25,13 @@ use App\Data\Resources\Recipe\Entities\MealTimeResourceData;
 use App\Data\Resources\Recipe\Entities\RecipeResourceData;
 use App\Data\Resources\Recipe\Entities\TagResourceData;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
+use App\Messages\Recipe\RecipeCreatedMessage;
+use App\Messages\Recipe\RecipeDeletedMessage;
+use App\Messages\Recipe\RecipeUpdatedMessage;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Foundation\Exceptions\Renderer\Exception;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Gate;
@@ -88,11 +90,16 @@ class RecipeController extends Controller
         RecipeStoreRequestData $recipeStoreRequestData,
         RecipeStoreAction $recipeStoreAction
     ): RedirectResponse {
-        Gate::authorize('create', Recipe::class);
+        try {
+            Gate::authorize('create', Recipe::class);
 
-        $recipe = $recipeStoreAction->execute($this->authenticatedUser(), $recipeStoreRequestData);
+            $recipe = $recipeStoreAction->execute($this->authenticatedUser(), $recipeStoreRequestData);
 
-        return to_route('recipes.show', ['recipe' => $recipe->id])->with('success', 'Recipe successfully created');
+            return to_route('recipes.show', ['recipe' => $recipe->id])
+                ->with('success', RecipeCreatedMessage::message());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function aiImageGeneration(
@@ -102,7 +109,7 @@ class RecipeController extends Controller
         try {
             Gate::authorize('create', Recipe::class);
 
-            $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+            $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
             return back()->with([
@@ -126,15 +133,15 @@ class RecipeController extends Controller
         RecipeAIGenerationAction $recipeAIGenerationAction,
         RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
     ): Response|RedirectResponse {
-        Gate::authorize('create', Recipe::class);
-
         try {
+            Gate::authorize('create', Recipe::class);
+
             $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
 
             if ($recipeAIGenerationRequestData->image_generation) {
                 $prompt = $recipe->name
-                    . 'with' . json_encode($recipe->ingredients)
-                    . 'recipe steps' . json_encode($recipe->steps);
+                    .'with'.json_encode($recipe->ingredients)
+                    .'recipe steps'.json_encode($recipe->steps);
 
                 $base64Image = $recipeImageAIGenerationAction->execute($prompt);
             }
@@ -171,20 +178,24 @@ class RecipeController extends Controller
         RecipeSearchIngredientsAction $recipeSearchIngredientsAction,
         RecipeSearchTagsAction $recipeSearchTagsAction,
         RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
-    ): Response {
-        Gate::authorize('update', $recipe);
+    ): Response|RedirectResponse {
+        try {
+            Gate::authorize('update', $recipe);
 
-        $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
+            $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
 
-        $ingredients = $recipeSearchIngredientsAction($this->authenticatedUser(), $recipeSearchRequestData->ingredients_search);
-        $tags = $recipeSearchTagsAction($this->authenticatedUser(), $recipeSearchRequestData->tags_search);
+            $ingredients = $recipeSearchIngredientsAction($this->authenticatedUser(), $recipeSearchRequestData->ingredients_search);
+            $tags = $recipeSearchTagsAction($this->authenticatedUser(), $recipeSearchRequestData->tags_search);
 
-        return Inertia::render('recipe/edit', [
-            'meal_times' => MealTimeRequestData::collect(MealTime::all()),
-            'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
-            'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
-            'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
-        ]);
+            return Inertia::render('recipe/edit', [
+                'meal_times' => MealTimeRequestData::collect(MealTime::all()),
+                'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
+                'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
+                'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
+            ]);
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function update(
@@ -200,9 +211,10 @@ class RecipeController extends Controller
                 $recipeUpdateRequestData,
             );
 
-            return to_route('recipes.show', ['recipe' => $recipe])->with('success', 'Recipe successfully updated');
+            return to_route('recipes.show', ['recipe' => $recipe])
+                ->with('success', RecipeUpdatedMessage::message());
         } catch (AuthorizationException $e) {
-            return back()->with('error', 'Recipe unsuccessfully updated');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -213,11 +225,10 @@ class RecipeController extends Controller
         try {
             $recipeDestroyAction->execute($this->authenticatedUser(), $recipeDestroyRequestData);
 
-            return to_route('recipes.index')->with('success', 'Recipe successfully deleted');
-        } catch (
-            \Exception $e
-        ) {
-            return back()->with('error', 'Recipe unsuccessfully deleted');
+            return to_route('recipes.index')
+                ->with('success', RecipeDeletedMessage::message());
+        } catch (AuthorizationException $e) {
+            return back()->with('error', $e->getMessage());
         }
     }
 

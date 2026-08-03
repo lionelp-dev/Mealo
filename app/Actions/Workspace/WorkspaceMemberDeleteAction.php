@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
-use App\Exceptions\Workspace\CannotRemoveOwnerWorkspaceException;
-use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;
@@ -22,11 +22,11 @@ class WorkspaceMemberDeleteAction
         $user = User::query()->findOrFail($deleteWorkspaceMemberRequestData->user_id);
 
         if ($workspace->owner_id === $user->id) {
-            throw new CannotRemoveOwnerWorkspaceException;
+            throw new WorkspaceOwnerRemoveAuthorizationException;
         }
 
         if (! $workspace->hasUser($user)) {
-            throw new MemberNotFoundWorkspaceException;
+            throw new WorkspaceMemberNotFoundException;
         }
 
         DB::transaction(function () use ($workspace, $user): void {

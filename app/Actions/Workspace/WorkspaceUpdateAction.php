@@ -3,7 +3,7 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceUpdateRequestData;
-use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceUpdateAuthorizationException;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;
 
@@ -19,7 +19,7 @@ class WorkspaceUpdateAction
             && $workspaceData->is_personal !== $workspace->is_personal
             && $workspace->is_default
         ) {
-            throw new CannotUpdateWorkspaceException;
+            throw new WorkspaceUpdateAuthorizationException;
         }
 
         $convertingToPersonal = $workspaceData->is_personal === true;

@@ -4,8 +4,8 @@ namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceMemberDeleteAction;
 use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
-use App\Exceptions\Workspace\CannotRemoveOwnerWorkspaceException;
-use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -28,7 +28,7 @@ describe('WorkspaceMemberDeleteAction', function () {
                     ]),
                 );
         })->toThrow(
-            CannotRemoveOwnerWorkspaceException::class,
+            WorkspaceOwnerRemoveAuthorizationException::class,
         );
     });
 
@@ -43,7 +43,7 @@ describe('WorkspaceMemberDeleteAction', function () {
                     ]),
                 );
         })->toThrow(
-            MemberNotFoundWorkspaceException::class
+            WorkspaceMemberNotFoundException::class
         );
     });
 

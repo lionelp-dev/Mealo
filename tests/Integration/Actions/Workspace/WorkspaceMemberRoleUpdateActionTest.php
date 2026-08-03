@@ -4,8 +4,8 @@ namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceMemberRoleUpdateAction;
 use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
-use App\Exceptions\Workspace\CannotChangeOwnerRoleWorkspaceException;
-use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -28,7 +28,7 @@ describe('WorkspaceMemberRoleUpdateAction', function () {
                     ]),
                 );
         })->toThrow(
-            CannotChangeOwnerRoleWorkspaceException::class
+            WorkspaceOwnerRoleChangeAuthorizationException::class
         );
     });
 
@@ -44,7 +44,7 @@ describe('WorkspaceMemberRoleUpdateAction', function () {
                     ]),
                 );
         })->toThrow(
-            MemberNotFoundWorkspaceException::class,
+            WorkspaceMemberNotFoundException::class,
         );
     });
 

@@ -3,6 +3,7 @@
 namespace Tests\Feature\Recipe;
 
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
+use App\Exceptions\Recipe\RecipeUpdateAuthorizationException;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -49,7 +50,8 @@ test('user cannot access other users recipes', function () {
 
     $this->actingAs($this->user)
         ->get(route('recipes.edit', $this->otherUserRecipe))
-        ->assertForbidden();
+        ->assertRedirect()
+        ->assertSessionHas('error', RecipeUpdateAuthorizationException::message());
 });
 
 test('workspace members can view planned recipes from other members', function () {

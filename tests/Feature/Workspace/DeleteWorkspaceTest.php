@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Workspace;
 
-use App\Exceptions\Workspace\CannotDeleteWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceDeleteAuthorizationException;
 use App\Messages\Workspace\WorkspaceDeletedMessage;
 use App\Models\Workspace;
 
@@ -18,7 +18,7 @@ describe('DeleteWorkspace', function () {
         $response = $this->actingAs($this->user)->delete(route('workspaces.destroy', $this->user->defaultWorkspace()));
 
         expect(Workspace::find($this->user->defaultWorkspace()->id))->not->toBeNull();
-        $response->assertSessionHas('error', new CannotDeleteWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceDeleteAuthorizationException::message());
     });
 
     test('non-owner cannot delete workspace', function () {
@@ -28,7 +28,7 @@ describe('DeleteWorkspace', function () {
         expect(Workspace::find($this->sharedWorkspace->id))->not->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotDeleteWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceDeleteAuthorizationException::message());
     });
 
     test('owner can delete shared workspace', function () {
@@ -38,6 +38,6 @@ describe('DeleteWorkspace', function () {
         expect(Workspace::find($this->sharedWorkspace->id))->toBeNull();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new WorkspaceDeletedMessage()->getMessage());
+        $response->assertSessionHas('success', WorkspaceDeletedMessage::message());
     });
 });

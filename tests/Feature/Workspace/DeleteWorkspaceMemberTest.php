@@ -2,9 +2,9 @@
 
 namespace Tests\Feature\Workspace;
 
-use App\Exceptions\Workspace\CannotDeleteMemberWorkspaceException;
-use App\Exceptions\Workspace\CannotRemoveOwnerWorkspaceException;
-use App\Exceptions\Workspace\CannotUpdateMemberWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceMemberDeleteAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberUpdateAuthorizationException;
 use App\Messages\Workspace\MemberRemovedMessage;
 
 beforeEach(function () {
@@ -21,7 +21,7 @@ describe('DeleteWorkspaceMember', function () {
             ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotRemoveOwnerWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceOwnerRemoveAuthorizationException::message());
     });
 
     test('non-owner cannot delete member', function () {
@@ -31,7 +31,7 @@ describe('DeleteWorkspaceMember', function () {
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotDeleteMemberWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceMemberDeleteAuthorizationException::message());
     });
 
     test('non-owner cannot update member role', function () {
@@ -42,7 +42,7 @@ describe('DeleteWorkspaceMember', function () {
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotUpdateMemberWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceMemberUpdateAuthorizationException::message());
     });
 
     test('workspace owner can delete member', function () {
@@ -54,6 +54,6 @@ describe('DeleteWorkspaceMember', function () {
         expect($this->sharedWorkspace->fresh()?->hasUser($this->editorUser))->toBeFalse();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', (new MemberRemovedMessage)->getMessage());
+        $response->assertSessionHas('success', MemberRemovedMessage::message());
     });
 });

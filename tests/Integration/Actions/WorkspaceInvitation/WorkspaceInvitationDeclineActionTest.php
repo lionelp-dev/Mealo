@@ -4,7 +4,7 @@ namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationDeclineAction;
 use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
-use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Models\WorkspaceInvitation;
 
 beforeEach(function () {
@@ -25,7 +25,7 @@ describe('WorkspaceInvitationDeclineAction', function () {
                     ]),
                 );
         })->toThrow(
-            NotForYouWorkspaceInvitationException::class,
+            WorkspaceInvitationRespondAuthorizationException::class,
             'This invitation is not for you'
         );
         expect($this->sharedWorkspace->fresh()?->hasUser($this->inviteeUser))->toBeFalse();

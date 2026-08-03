@@ -1,6 +1,21 @@
 <?php
 
 return [
+    'recipe' => [
+        'created' => 'Recipe successfully created',
+        'updated' => 'Recipe successfully updated',
+        'deleted' => 'Recipe successfully deleted',
+    ],
+    'planned_meal' => [
+        'stored' => 'Meal successfully planned',
+        'updated' => 'Planned meal successfully updated',
+        'unplanned' => 'Planned meal successfully unplanned',
+        'unplanned_many' => 'Planned meals successfully unplanned',
+        'plan_generated' => 'Meal plan generated successfully! :count meals created.',
+    ],
+    'shopping_list' => [
+        'ingredient_updated' => 'Ingredient updated successfully',
+    ],
     'workspace' => [
         'created' => 'Workspace created successfully',
         'updated' => 'Workspace updated successfully',

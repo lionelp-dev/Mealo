@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\WorkspaceInvitation;
 
-use App\Exceptions\WokspaceInvitation\AlreadyExistWorkspaceInvitationException;
-use App\Exceptions\Workspace\MemberAlreadyExistWorkspaceException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
+use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
 use App\Messages\WorkspaceInvitation\InvitationSentMessage;
 
 use function Pest\Laravel\assertDatabaseHas;
@@ -85,7 +85,7 @@ describe('StoreWorkspaceInvitation', function () {
 
         $response->assertRedirect();
         $response->assertSessionHas([
-            'error' => new AlreadyExistWorkspaceInvitationException()->getMessage(),
+            'error' => WorkspaceInvitationAlreadyExistsException::message(),
         ]);
     });
 
@@ -102,7 +102,7 @@ describe('StoreWorkspaceInvitation', function () {
 
         $response->assertRedirect();
         $response->assertSessionHas([
-            'error' => new MemberAlreadyExistWorkspaceException()->getMessage(),
+            'error' => WorkspaceMemberAlreadyExistsException::message(),
         ]);
     });
 
@@ -120,7 +120,7 @@ describe('StoreWorkspaceInvitation', function () {
         );
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new InvitationSentMessage()->getMessage());
+        $response->assertSessionHas('success', InvitationSentMessage::message());
     });
 
     test('can send invitation after previous one expired', function () {
@@ -136,6 +136,6 @@ describe('StoreWorkspaceInvitation', function () {
             );
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', new InvitationSentMessage()->getMessage());
+        $response->assertSessionHas('success', InvitationSentMessage::message());
     });
 });

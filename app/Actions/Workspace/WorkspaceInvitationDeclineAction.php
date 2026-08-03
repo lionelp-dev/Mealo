@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
-use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotFoundWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationNotFoundException;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
@@ -21,11 +21,11 @@ class WorkspaceInvitationDeclineAction
         $workspaceInvitation = WorkspaceInvitation::where('token', $declineWorkspaceInvitationRequestData->token)->first();
 
         if (! $workspaceInvitation) {
-            throw new NotFoundWorkspaceInvitationException;
+            throw new WorkspaceInvitationNotFoundException;
         }
 
         if ($user->email !== $workspaceInvitation->email) {
-            throw new NotForYouWorkspaceInvitationException();
+            throw new WorkspaceInvitationRespondAuthorizationException();
         }
 
         $workspaceInvitation->delete();

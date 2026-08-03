@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Exceptions\WokspaceInvitation\CannotCancelWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationCancelAuthorizationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Models\User;
 use App\Models\WorkspaceInvitation;
 use Illuminate\Auth\Access\Response;
@@ -36,20 +36,20 @@ class WorkspaceInvitationPolicy
 
         return $workspaceInvitation->workspace?->hasUser($user) && $user->hasPermissionTo('workspace.manage')
             ? Response::allow()
-            : Response::deny(new CannotCancelWorkspaceInvitationException()->getMessage());
+            : Response::deny(WorkspaceInvitationCancelAuthorizationException::message());
     }
 
     public function accept(User $user, WorkspaceInvitation $workspaceInvitation): Response
     {
         return $user->email === $workspaceInvitation->email
             ? Response::allow()
-            : Response::deny((new NotForYouWorkspaceInvitationException)->getMessage());
+            : Response::deny(WorkspaceInvitationRespondAuthorizationException::message());
     }
 
     public function decline(User $user, WorkspaceInvitation $workspaceInvitation): Response
     {
         return $user->email === $workspaceInvitation->email
             ? Response::allow()
-            : Response::deny((new NotForYouWorkspaceInvitationException)->getMessage());
+            : Response::deny(WorkspaceInvitationRespondAuthorizationException::message());
     }
 }

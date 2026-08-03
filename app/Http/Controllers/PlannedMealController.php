@@ -23,6 +23,11 @@ use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Http\Resources\RecipeCollection;
+use App\Messages\PlannedMeal\MealPlanGeneratedMessage;
+use App\Messages\PlannedMeal\PlannedMealStoredMessage;
+use App\Messages\PlannedMeal\PlannedMealsUnplannedMessage;
+use App\Messages\PlannedMeal\PlannedMealUnplannedMessage;
+use App\Messages\PlannedMeal\PlannedMealUpdatedMessage;
 use App\Models\MealTime;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
@@ -71,11 +76,11 @@ class PlannedMealController extends Controller
             'mealTimes' => MealTime::all(),
             'plannedMeals' => PlannedMealResourceData::collect($plannedMeals),
             'plannedMealImages' => $plannedMeals
-                ->filter(fn ($plannedMeal) => $plannedMeal->recipe?->image_path)
-                ->mapWithKeys(fn ($plannedMeal) => [
+                ->filter(fn($plannedMeal) => $plannedMeal->recipe?->image_path)
+                ->mapWithKeys(fn($plannedMeal) => [
                     $plannedMeal->recipe->id => $plannedMeal->recipe->getImageUrl(),
                 ]),
-            'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipeQuery->paginate(10))),
+            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipeQuery->paginate(10))),
             'tags' => TagResourceData::collect($tags),
             'workspace_data' => [
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
@@ -98,9 +103,9 @@ class PlannedMealController extends Controller
 
             $plannedMealStoreAction->execute($this->authenticatedUser(), $currentWorkspace, $plannedMealStoreRequest);
 
-            return back()->with('success', 'Meal successfully planned');
+            return back()->with('success', PlannedMealStoredMessage::message());
         } catch (Exception $e) {
-            return back()->with('error', 'This action is unauthorized');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -118,9 +123,9 @@ class PlannedMealController extends Controller
                 $plannedMealUpdateRequestData
             );
 
-            return back()->with('success', 'Planned meal successfully updated');
+            return back()->with('success', PlannedMealUpdatedMessage::message());
         } catch (AuthorizationException $e) {
-            return back()->with('success', 'Planned meal unsuccessfully updated');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -134,11 +139,13 @@ class PlannedMealController extends Controller
 
             $deletedCount = $plannedMealDestroyAction->execute($this->authenticatedUser(), $currentWorkspace, $plannedMealDestroyRequestData);
 
-            $successMessage = $deletedCount > 1 ? 'Planned meals successfully unplanned' : 'Planned meal successfully unplanned';
+            $successMessage = $deletedCount > 1
+                ? PlannedMealsUnplannedMessage::message()
+                : PlannedMealUnplannedMessage::message();
 
             return back()->with('success', $successMessage);
         } catch (Exception $e) {
-            return back()->with('success', 'Planned meal unsuccessfully deleted');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -160,12 +167,15 @@ class PlannedMealController extends Controller
 
             return redirect()->back()->with(
                 'success',
-                'Planning généré avec succès ! '.$createdCount.' repas créés.'
+                MealPlanGeneratedMessage::forCreatedCount($createdCount)
             );
-        } catch (\Exception $e) {
+        } catch (
+            Exception
+            |AuthorizationException $e
+        ) {
             return redirect()->back()->with(
                 'error',
-                'Erreur lors de la génération du planning : '.$e->getMessage()
+                $e->getMessage()
             );
         }
     }

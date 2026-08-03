@@ -2,12 +2,12 @@
 
 namespace App\Policies;
 
-use App\Exceptions\Workspace\CannotDeleteWorkspaceException;
-use App\Exceptions\Workspace\CannotEditPlanningWorkspaceException;
-use App\Exceptions\Workspace\CannotInviteToWorkspaceException;
-use App\Exceptions\Workspace\CannotManageWorkspaceMembersException;
-use App\Exceptions\Workspace\CannotUpdateWorkspaceException;
-use App\Exceptions\Workspace\CannotViewWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceDeleteAuthorizationException;
+use App\Exceptions\Workspace\WorkspacePlanningEditAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceInviteAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberManageAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceUpdateAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceViewAuthorizationException;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Auth\Access\Response;
@@ -25,7 +25,7 @@ class WorkspacePolicy
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.view')
             ? Response::allow()
-            : Response::deny((new CannotViewWorkspaceException)->getMessage());
+            : Response::deny(WorkspaceViewAuthorizationException::message());
     }
 
     public function create(User $user): bool
@@ -36,40 +36,40 @@ class WorkspacePolicy
     public function update(User $user, Workspace $workspace): Response
     {
         if ($workspace->is_default) {
-            return Response::deny((new CannotUpdateWorkspaceException)->getMessage());
+            return Response::deny(WorkspaceUpdateAuthorizationException::message());
         }
 
         setPermissionsTeamId($workspace->id);
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.edit')
             ? Response::allow()
-            : Response::deny((new CannotUpdateWorkspaceException)->getMessage());
+            : Response::deny(WorkspaceUpdateAuthorizationException::message());
     }
 
     public function delete(User $user, Workspace $workspace): Response
     {
         if ($workspace->is_default) {
-            return Response::deny((new CannotDeleteWorkspaceException)->getMessage());
+            return Response::deny(WorkspaceDeleteAuthorizationException::message());
         }
 
         setPermissionsTeamId($workspace->id);
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
             ? Response::allow()
-            : Response::deny((new CannotDeleteWorkspaceException)->getMessage());
+            : Response::deny(WorkspaceDeleteAuthorizationException::message());
     }
 
     public function invite(User $user, Workspace $workspace): Response
     {
         if ($workspace->is_default) {
-            return Response::deny((new CannotInviteToWorkspaceException)->getMessage());
+            return Response::deny(WorkspaceInviteAuthorizationException::message());
         }
 
         setPermissionsTeamId($workspace->id);
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
             ? Response::allow()
-            : Response::deny((new CannotInviteToWorkspaceException)->getMessage());
+            : Response::deny(WorkspaceInviteAuthorizationException::message());
     }
 
     public function manageMember(User $user, Workspace $workspace): Response
@@ -78,7 +78,7 @@ class WorkspacePolicy
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('workspace.manage')
              ? Response::allow()
-             : Response::deny((new CannotManageWorkspaceMembersException)->getMessage());
+             : Response::deny(WorkspaceMemberManageAuthorizationException::message());
     }
 
     public function editPlanning(User $user, Workspace $workspace): Response
@@ -87,6 +87,6 @@ class WorkspacePolicy
 
         return $workspace->hasUser($user) && $user->hasPermissionTo('planning.edit')
             ? Response::allow()
-            : Response::deny((new CannotEditPlanningWorkspaceException)->getMessage());
+            : Response::deny(WorkspacePlanningEditAuthorizationException::message());
     }
 }

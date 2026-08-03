@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Workspace;
 
-use App\Exceptions\Workspace\CannotViewWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceViewAuthorizationException;
 use App\Messages\Workspace\WorkspaceSwitchedMessage;
 
 beforeEach(function () {
@@ -17,7 +17,7 @@ describe('SwitchWorkspace', function () {
             ->post(route('workspaces.switch', $this->otherUserSharedWorkspace));
 
         $response->assertStatus(302);
-        $response->assertSessionHas('error', new CannotViewWorkspaceException()->getMessage());
+        $response->assertSessionHas('error', WorkspaceViewAuthorizationException::message());
     });
 
     test('user can switch to accessible workspace', function () {
@@ -32,7 +32,7 @@ describe('SwitchWorkspace', function () {
             ->post(route('workspaces.switch', $this->otherUserSharedWorkspace));
 
         $response->assertStatus(302);
-        $response->assertSessionHas('success', (new WorkspaceSwitchedMessage)->getMessage());
+        $response->assertSessionHas('success', WorkspaceSwitchedMessage::message());
         $response->assertSessionHas('current_workspace_id', $this->otherUserSharedWorkspace->id);
     });
 });

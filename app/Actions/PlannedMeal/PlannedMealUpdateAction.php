@@ -17,7 +17,7 @@ class PlannedMealUpdateAction
         PlannedMeal $plannedMeal,
         PlannedMealUpdateRequestData $plannedMealUpdateRequestData
     ): PlannedMeal {
-        Gate::forUser($user)->authorize('workspace.planned-meal.update', $plannedMeal);
+        Gate::forUser($user)->authorize('update', $plannedMeal);
 
         return DB::transaction(function () use ($plannedMeal, $plannedMealUpdateRequestData): PlannedMeal {
             Recipe::findOrFail($plannedMealUpdateRequestData->recipe_id);

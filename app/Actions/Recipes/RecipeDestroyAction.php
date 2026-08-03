@@ -3,11 +3,10 @@
 namespace App\Actions\Recipes;
 
 use App\Data\Requests\Recipe\RecipeDestroyRequestData;
+use App\Exceptions\Recipe\RecipeDeleteAuthorizationException;
 use App\Models\Recipe;
 use App\Models\User;
-use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Gate;
 
 class RecipeDestroyAction
 {
@@ -23,7 +22,7 @@ class RecipeDestroyAction
                     ->first();
 
                 if (! isset($recipe)) {
-                    throw new AuthorizationException();
+                    throw new RecipeDeleteAuthorizationException;
                 }
 
                 $recipe->delete();

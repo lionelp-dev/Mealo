@@ -4,8 +4,8 @@ namespace Tests\Integration\Actions\WorkspaceInvitation;
 
 use App\Actions\Workspace\WorkspaceInvitationAcceptAction;
 use App\Data\Requests\Workspace\WorkspaceInvitationAcceptRequestData;
-use App\Exceptions\WokspaceInvitation\ExpiredWorkspaceInvitationException;
-use App\Exceptions\WokspaceInvitation\NotForYouWorkspaceInvitationException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationExpiredException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Models\WorkspaceInvitation;
 
 beforeEach(function () {
@@ -27,7 +27,7 @@ describe('WorkspaceInvitationAcceptAction', function () {
                     ]),
                 );
         })->toThrow(
-            ExpiredWorkspaceInvitationException::class,
+            WorkspaceInvitationExpiredException::class,
             'This invitation is expired'
         );
     });
@@ -43,7 +43,7 @@ describe('WorkspaceInvitationAcceptAction', function () {
                     ]),
                 );
         })->toThrow(
-            NotForYouWorkspaceInvitationException::class,
+            WorkspaceInvitationRespondAuthorizationException::class,
             'This invitation is not for you'
         );
         expect($this->sharedWorkspace->fresh()?->hasUser($this->inviteeUser))->toBeFalse();

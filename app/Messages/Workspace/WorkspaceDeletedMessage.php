@@ -2,14 +2,20 @@
 
 namespace App\Messages\Workspace;
 
+use App\Concerns\HasDefaultMessage;
 use App\Messages\Message;
 
 class WorkspaceDeletedMessage extends Message
 {
-    public function __construct(?string $message = null)
+    use HasDefaultMessage;
+
+    protected static function translationKey(): ?string
     {
-        parent::__construct(
-            $message ?? __('messages.workspace.deleted')
-        );
+        return 'messages.workspace.deleted';
+    }
+
+    protected static function defaultMessage(): string
+    {
+        return 'Workspace deleted successfully';
     }
 }

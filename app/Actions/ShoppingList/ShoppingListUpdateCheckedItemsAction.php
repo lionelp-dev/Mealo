@@ -3,6 +3,7 @@
 namespace App\Actions\ShoppingList;
 
 use App\Data\Requests\ShoppingList\ShoppingListUpdateRequestData;
+use App\Exceptions\ShoppingList\ShoppingListUpdateAuthorizationException;
 use App\Models\ShoppingListPlannedMealIngredient;
 use App\Models\User;
 use App\Models\Workspace;
@@ -29,7 +30,9 @@ class ShoppingListUpdateCheckedItemsAction
 
                 $shoppingList = $shoppingListIngredient->shoppingList;
 
-                abort_unless($shoppingList && $shoppingList->workspace_id === $currentWorkspace->id, 403);
+                if (! $shoppingList || $shoppingList->workspace_id !== $currentWorkspace->id) {
+                    throw new ShoppingListUpdateAuthorizationException;
+                }
 
                 if (! in_array($shoppingList->id, $authorizedShoppingListIds, true)) {
                     Gate::forUser($user)->authorize('update', $shoppingList);

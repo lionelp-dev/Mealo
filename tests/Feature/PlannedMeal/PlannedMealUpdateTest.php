@@ -3,6 +3,8 @@
 namespace Tests\Feature\PlannedMeal;
 
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
+use App\Exceptions\PlannedMeal\PlannedMealUpdateAuthorizationException;
+use App\Messages\PlannedMeal\PlannedMealUpdatedMessage;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -32,7 +34,7 @@ describe('PlannedMealUpdate', function () {
                     ),
                     $this->userPlannedMealUpdateRequestData->transform()
                 )
-                ->assertSessionHas('success', 'Planned meal successfully updated');
+                ->assertSessionHas('success', PlannedMealUpdatedMessage::message());
         });
 
         test('when meal is duplicate', function () {
@@ -51,7 +53,7 @@ describe('PlannedMealUpdate', function () {
                     ),
                     $this->userPlannedMealUpdateRequestData->transform()
                 )
-                ->assertSessionHas('success', 'Planned meal successfully updated');
+                ->assertSessionHas('success', PlannedMealUpdatedMessage::message());
         });
     });
 
@@ -96,7 +98,7 @@ describe('PlannedMealUpdate', function () {
                     $this->viewerPlannedMealUpdateRequestData
                         ->transform(),
                 )
-                ->assertSessionHas('success', 'Planned meal unsuccessfully updated');
+                ->assertSessionHas('error', PlannedMealUpdateAuthorizationException::message());
         });
     });
 });

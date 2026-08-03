@@ -11,17 +11,20 @@ use App\Data\Resources\ShoppingList\ShoppingListResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceInvitationResourceData;
 use App\Data\Resources\Workspace\Entities\WorkspaceResourceData;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
+use App\Messages\ShoppingList\ShoppingListIngredientUpdatedMessage;
 use App\Models\ShoppingList;
 use App\Models\ShoppingListPlannedMealIngredient;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class ShoppingListController extends Controller
 {
     use HasAuthenticatedUser;
+
     /**
      * Display the shopping list for a specific week
      */
@@ -69,9 +72,9 @@ class ShoppingListController extends Controller
                 $shoppingListUpdateRequestData
             );
 
-            return back()->with('success', 'Ingredient updated successfully');
+            return back()->with('success', ShoppingListIngredientUpdatedMessage::message());
         } catch (Exception $e) {
-            return back()->with('error', 'This action is unauthorized');
+            return back()->with('error', $e->getMessage());
         }
     }
 
@@ -83,13 +86,15 @@ class ShoppingListController extends Controller
         ShoppingListPlannedMealIngredient $ingredient
     ): RedirectResponse {
         try {
+            Gate::authorize('update', $ingredient->shoppingList);
+
             $ingredient->is_checked = $shoppingListToggleIngredientRequestData->is_checked;
 
             $ingredient->save();
 
-            return back()->with('success', 'Ingredient updated successfully');
+            return back()->with('success', ShoppingListIngredientUpdatedMessage::message());
         } catch (Exception $e) {
-            return back()->with('error', 'This action is unauthorized');
+            return back()->with('error', $e->getMessage());
         }
     }
 }

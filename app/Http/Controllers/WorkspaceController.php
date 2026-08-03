@@ -56,7 +56,7 @@ class WorkspaceController extends Controller
         $workspace = $workspaceStoreAction->execute($this->authenticatedUser(), $workspaceStoreRequestData);
 
         return back()->with([
-            'success' => (new WorkspaceCreatedMessage)->getMessage(),
+            'success' => WorkspaceCreatedMessage::message(),
             'new_workspace_id' => $workspace->id,
         ]);
     }
@@ -71,7 +71,7 @@ class WorkspaceController extends Controller
 
             $workspaceUpdateAction->execute($workspace, $workspaceUpdateRequestData);
 
-            return back()->with('success', (new WorkspaceUpdatedMessage)->getMessage());
+            return back()->with('success', WorkspaceUpdatedMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -87,7 +87,7 @@ class WorkspaceController extends Controller
 
             $workspaceMemberRoleUpdateAction->execute($workspace, $workspaceMemberRoleUpdateRequestData);
 
-            return back()->with(['success' => (new MemberRoleUpdatedMessage)->getMessage()]);
+            return back()->with(['success' => MemberRoleUpdatedMessage::message()]);
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -101,7 +101,7 @@ class WorkspaceController extends Controller
 
             session(['current_workspace_id' => $workspace->id]);
 
-            return back()->with('success', (new WorkspaceSwitchedMessage)->getMessage());
+            return back()->with('success', WorkspaceSwitchedMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -117,7 +117,7 @@ class WorkspaceController extends Controller
 
             $workspaceMemberDeleteAction->execute($workspace, $workspaceMemberDeleteRequestData);
 
-            return back()->with(['success' => (new MemberRemovedMessage)->getMessage()]);
+            return back()->with(['success' => MemberRemovedMessage::message()]);
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -137,7 +137,7 @@ class WorkspaceController extends Controller
                 )
             );
 
-            return back()->with('success', (new WorkspaceLeftMessage)->getMessage());
+            return back()->with('success', WorkspaceLeftMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
@@ -152,7 +152,7 @@ class WorkspaceController extends Controller
 
             $workspaceDeleteAction->execute($workspace);
 
-            return back()->with('success', (new WorkspaceDeletedMessage)->getMessage());
+            return back()->with('success', WorkspaceDeletedMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }

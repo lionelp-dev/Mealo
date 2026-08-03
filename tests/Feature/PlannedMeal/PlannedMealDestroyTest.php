@@ -2,6 +2,7 @@
 
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Data\Requests\PlannedMeal\PlannedMealDestroyRequestData;
+use App\Messages\PlannedMeal\PlannedMealUnplannedMessage;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -28,7 +29,7 @@ describe('PlannedMealDestroyTest', function () {
                             ->all(),
                     ])->transform()
                 )
-                ->assertSessionHas('success', 'Planned meal successfully unplanned');
+                ->assertSessionHas('success', PlannedMealUnplannedMessage::message());
         });
     });
 });

@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
-use App\Exceptions\Workspace\CannotChangeOwnerRoleWorkspaceException;
-use App\Exceptions\Workspace\MemberNotFoundWorkspaceException;
+use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;
@@ -23,11 +23,11 @@ class WorkspaceMemberRoleUpdateAction
         $user = User::query()->findOrFail($updateWorkspaceMemberRoleData->user_id);
 
         if ($workspace->owner_id === $user->id) {
-            throw new CannotChangeOwnerRoleWorkspaceException;
+            throw new WorkspaceOwnerRoleChangeAuthorizationException;
         }
 
         if (! $workspace->hasUser($user)) {
-            throw new MemberNotFoundWorkspaceException;
+            throw new WorkspaceMemberNotFoundException;
         }
 
         DB::transaction(function () use ($workspace, $user, $updateWorkspaceMemberRoleData): void {

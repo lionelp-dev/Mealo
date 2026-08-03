@@ -2,14 +2,20 @@
 
 namespace App\Messages\WorkspaceInvitation;
 
+use App\Concerns\HasDefaultMessage;
 use App\Messages\Message;
 
 class InvitationSentMessage extends Message
 {
-    public function __construct(?string $message = null)
+    use HasDefaultMessage;
+
+    protected static function translationKey(): ?string
     {
-        parent::__construct(
-            $message ?? __('messages.workspace_invitation.sent')
-        );
+        return 'messages.workspace_invitation.sent';
+    }
+
+    protected static function defaultMessage(): string
+    {
+        return 'Invitation sent successfully';
     }
 }

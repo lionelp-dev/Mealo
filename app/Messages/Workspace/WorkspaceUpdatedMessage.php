@@ -2,14 +2,20 @@
 
 namespace App\Messages\Workspace;
 
+use App\Concerns\HasDefaultMessage;
 use App\Messages\Message;
 
 class WorkspaceUpdatedMessage extends Message
 {
-    public function __construct(?string $message = null)
+    use HasDefaultMessage;
+
+    protected static function translationKey(): ?string
     {
-        parent::__construct(
-            $message ?? __('messages.workspace.updated')
-        );
+        return 'messages.workspace.updated';
+    }
+
+    protected static function defaultMessage(): string
+    {
+        return 'Workspace updated successfully';
     }
 }

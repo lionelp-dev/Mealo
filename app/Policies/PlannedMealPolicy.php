@@ -2,10 +2,14 @@
 
 namespace App\Policies;
 
+use App\Exceptions\PlannedMeal\PlannedMealDeleteAuthorizationException;
+use App\Exceptions\PlannedMeal\PlannedMealStoreAuthorizationException;
+use App\Exceptions\PlannedMeal\PlannedMealUpdateAuthorizationException;
 use App\Models\PlannedMeal;
 use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Workspace;
+use Illuminate\Auth\Access\Response;
 
 class PlannedMealPolicy
 {
@@ -28,7 +32,7 @@ class PlannedMealPolicy
     /**
      * Determine whether the user can create models.
      */
-    public function store(User $user, Workspace $workspace, Recipe $recipe): bool
+    public function store(User $user, Workspace $workspace, Recipe $recipe): Response
     {
         setPermissionsTeamId($workspace->id);
 
@@ -40,34 +44,34 @@ class PlannedMealPolicy
             && $workspace->hasUser($user)
             && $user->hasPermissionTo('workspace.planned-meal.store')
         ) {
-            return true;
+            return Response::allow();
         }
 
-        return false;
+        return Response::deny(PlannedMealStoreAuthorizationException::message());
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, PlannedMeal $plannedMeal): bool
+    public function update(User $user, PlannedMeal $plannedMeal): Response
     {
-
-        $recipe_user = $plannedMeal->recipe?->user();
         if (
             ! $plannedMeal->workspace
             || ! $plannedMeal->workspace->hasUser($user)) {
-            return false;
+            return Response::deny(PlannedMealUpdateAuthorizationException::message());
         }
 
         setPermissionsTeamId($plannedMeal->workspace->id);
 
-        return $user->hasPermissionTo('workspace.planned-meal.update');
+        return $user->hasPermissionTo('workspace.planned-meal.update')
+            ? Response::allow()
+            : Response::deny(PlannedMealUpdateAuthorizationException::message());
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Workspace $workspace): bool
+    public function delete(User $user, Workspace $workspace): Response
     {
         setPermissionsTeamId($workspace->id);
 
@@ -75,10 +79,10 @@ class PlannedMealPolicy
             $workspace->hasUser($user)
             && $user->hasPermissionTo('workspace.planned-meal.destroy')
         ) {
-            return true;
+            return Response::allow();
         }
 
-        return false;
+        return Response::deny(PlannedMealDeleteAuthorizationException::message());
     }
 
     /**
