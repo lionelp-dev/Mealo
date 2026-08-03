@@ -40,6 +40,9 @@ jobs:
       - name: Generate Wayfinder Routes
         run: php artisan wayfinder:generate --with-form
 
+      - name: PHPStan
+        run: ./vendor/bin/phpstan analyse app --memory-limit=2G
+
       - name: Run Pint
         run: vendor/bin/pint
 
