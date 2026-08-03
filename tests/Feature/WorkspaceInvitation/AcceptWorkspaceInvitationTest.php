@@ -3,8 +3,8 @@
 namespace Tests\Feature\WorkspaceInvitation;
 
 use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationExpiredException;
-use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationNotFoundException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Messages\WorkspaceInvitation\InvitationAcceptedMessage;
 use App\Models\WorkspaceInvitation;
 

@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class MealTime extends Model
 {
     /**
-     * @use HasFactory<\Database\Factories\MealTimeFactory>
+     * @use HasFactory<\Illuminate\Database\Eloquent\Factories\Factory<MealTime>>
      */
     use HasFactory;
 
     /**
      * @var class-string<\Illuminate\Database\Eloquent\Model>
      */
-    protected $model = MealTime::class;
+    protected string $model = MealTime::class;
 
     protected $fillable = [
         'name',

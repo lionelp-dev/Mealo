@@ -3,6 +3,8 @@
 namespace App\Data\Resources\Workspace\Entities;
 
 use App\Models\Workspace;
+use App\Models\WorkspaceInvitation;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;
@@ -45,12 +47,12 @@ class WorkspaceResourceData extends Data
             members: collect($workspace->users()
                 ->withPivot('joined_at')
                 ->get()
-                ->map(fn ($user) => WorkspaceMemberResourceData::fromModel($user, $workspace))),
+                ->map(fn (User $user) => WorkspaceMemberResourceData::fromModel($user, $workspace))),
             pending_invitations: collect($workspace->invitations()
                 ->where('expires_at', '>', now())
                 ->with('invitedBy:id,name')
                 ->get()
-                ->map(fn ($invitation) => WorkspaceInvitationResourceData::fromModel($invitation))),
+                ->map(fn (WorkspaceInvitation $invitation) => WorkspaceInvitationResourceData::fromModel($invitation))),
         );
     }
 }

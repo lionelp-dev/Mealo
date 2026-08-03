@@ -71,16 +71,22 @@ class PlannedMealController extends Controller
             ? Carbon::parse($plannedMealIndexRequestData->week)->startOf('week')
             : Carbon::now()->startOf('week');
 
+        $plannedMealImages = [];
+        foreach ($plannedMeals as $plannedMeal) {
+            $recipe = $plannedMeal->recipe;
+            if ($recipe === null || ! $recipe->image_path) {
+                continue;
+            }
+
+            $plannedMealImages[$recipe->id] = $recipe->getImageUrl();
+        }
+
         return Inertia::render('planned-meals/index', [
             'weekStart' => $weekStart->toISOString(),
             'mealTimes' => MealTime::all(),
             'plannedMeals' => PlannedMealResourceData::collect($plannedMeals),
-            'plannedMealImages' => $plannedMeals
-                ->filter(fn($plannedMeal) => $plannedMeal->recipe?->image_path)
-                ->mapWithKeys(fn($plannedMeal) => [
-                    $plannedMeal->recipe->id => $plannedMeal->recipe->getImageUrl(),
-                ]),
-            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipeQuery->paginate(10))),
+            'plannedMealImages' => $plannedMealImages,
+            'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipeQuery->paginate(10))),
             'tags' => TagResourceData::collect($tags),
             'workspace_data' => [
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),

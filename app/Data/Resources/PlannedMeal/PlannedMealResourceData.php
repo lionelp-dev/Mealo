@@ -24,14 +24,17 @@ class PlannedMealResourceData extends Data
 
     public static function fromModel(PlannedMeal $plannedMeal): self
     {
+        $mealTime = $plannedMeal->relationLoaded('mealTime') ? $plannedMeal->mealTime : null;
+        $recipe = $plannedMeal->relationLoaded('recipe') ? $plannedMeal->recipe : null;
+
         return new self(
             id: $plannedMeal->id,
             planned_date: $plannedMeal->planned_date->toImmutable(),
             meal_time_id: $plannedMeal->meal_time_id,
-            meal_time_name: $plannedMeal->relationLoaded('mealTime') ? $plannedMeal->mealTime->name : null,
+            meal_time_name: $mealTime?->name,
             serving_size: $plannedMeal->serving_size,
-            recipe: $plannedMeal->relationLoaded('recipe')
-                ? PlannedMealRecipeResourceData::fromModel($plannedMeal->recipe)
+            recipe: $recipe !== null
+                ? PlannedMealRecipeResourceData::fromModel($recipe)
                 : null,
         );
     }

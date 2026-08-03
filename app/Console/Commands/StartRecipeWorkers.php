@@ -14,6 +14,9 @@ class StartRecipeWorkers extends Command
 
     protected $description = 'Start multiple recipe queue workers simultaneously';
 
+    /**
+     * @var list<Process>
+     */
     private array $processes = [];
 
     public function handle(): void

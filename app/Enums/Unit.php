@@ -131,8 +131,11 @@ enum Unit: string
         ]);
     }
 
+    /**
+     * @return list<string>
+     */
     public static function values(): array
     {
-        return collect(self::cases())->pluck('value')->all();
+        return array_map(fn (self $case): string => $case->value, self::cases());
     }
 }

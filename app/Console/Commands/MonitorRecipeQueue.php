@@ -14,13 +14,15 @@ class MonitorRecipeQueue extends Command
 
     protected $description = 'Monitor recipe generation queue progress';
 
-    public function handle()
+    public function handle(): int
     {
         if ($this->option('watch')) {
             $this->watchMode();
         } else {
             $this->singleCheck();
         }
+
+        return self::SUCCESS;
     }
 
     private function watchMode(): void
@@ -37,7 +39,7 @@ class MonitorRecipeQueue extends Command
             exit(0);
         });
 
-        while (true) {
+        for (; ;) {
             // Effacer l'écran (compatibilité cross-platform)
             if (PHP_OS_FAMILY === 'Windows') {
                 system('cls');
@@ -103,7 +105,7 @@ class MonitorRecipeQueue extends Command
         if ($recentRecipes->count() > 0) {
             $this->info("\n🍽️  Recent Recipes:");
             foreach ($recentRecipes as $recipe) {
-                $timeAgo = $recipe->created_at->diffForHumans();
+                $timeAgo = $recipe->created_at?->diffForHumans() ?? 'unknown';
                 $this->line("  • {$recipe->name} ({$timeAgo})");
             }
         }

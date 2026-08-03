@@ -22,13 +22,16 @@ class BetaRequestCollection extends ResourceCollection
     /**
      * Customize the pagination information for the resource.
      *
-     * @param  array  $paginated
-     * @param  array  $default
-     * @return array
+     * @param  array<string, mixed>  $paginated
+     * @param  array<string, mixed>  $default
+     * @return array<string, mixed>
      */
-    public function paginationInformation($request, $paginated, $default)
+    public function paginationInformation(Request $request, array $paginated, array $default): array
     {
-        $default['meta']['has_more_pages'] = $default['meta']['current_page'] < $default['meta']['last_page'];
+        /** @var array{current_page: int, last_page: int} $meta */
+        $meta = $default['meta'];
+        $meta['has_more_pages'] = $meta['current_page'] < $meta['last_page'];
+        $default['meta'] = $meta;
 
         return $default;
     }

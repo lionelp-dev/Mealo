@@ -7,6 +7,7 @@ use App\Exceptions\Recipe\RecipeUpdateAuthorizationException;
 use App\Models\Recipe;
 use App\Models\User;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Database\Eloquent\Builder;
 
 class RecipePolicy
 {
@@ -30,8 +31,8 @@ class RecipePolicy
 
         // Recette utilisée dans un workspace accessible à l'utilisateur
         return $recipe->plannedMeals()
-            ->whereHas('workspace', function ($query) use ($user) {
-                $query->whereHas('users', function ($q) use ($user) {
+            ->whereHas('workspace', function (Builder $query) use ($user): void {
+                $query->whereHas('users', function (Builder $q) use ($user): void {
                     $q->where('users.id', $user->id);
                 });
             })

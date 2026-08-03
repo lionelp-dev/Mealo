@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceInvitationDeclineRequestData;
-use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationNotFoundException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationRespondAuthorizationException;
 use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
@@ -25,7 +25,7 @@ class WorkspaceInvitationDeclineAction
         }
 
         if ($user->email !== $workspaceInvitation->email) {
-            throw new WorkspaceInvitationRespondAuthorizationException();
+            throw new WorkspaceInvitationRespondAuthorizationException;
         }
 
         $workspaceInvitation->delete();

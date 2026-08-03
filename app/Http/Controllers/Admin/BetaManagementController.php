@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\BetaRequestCollection;
 use App\Mail\BetaInvitationMail;
 use App\Models\BetaRequest;
+use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +34,8 @@ class BetaManagementController extends Controller
 
         // Apply email search
         if ($request->filled('search')) {
-            $query->where('email', 'like', '%'.$request->search.'%');
+            $search = $request->string('search')->toString();
+            $query->where('email', 'like', '%'.$search.'%');
         }
 
         // Order by most recent first
@@ -68,11 +70,15 @@ class BetaManagementController extends Controller
     {
         $this->authorize('approve', $betaRequest);
 
-        $betaRequest->approve(Auth::user());
+        $admin = Auth::user();
+        abort_unless($admin instanceof User, 403);
+
+        $betaRequest->approve($admin);
 
         // Determine locale: check if user exists, otherwise use app fallback
-        $existingUser = \App\Models\User::where('email', $betaRequest->email)->first();
-        $locale = $existingUser?->locale ?? config('app.fallback_locale');
+        $existingUser = User::where('email', $betaRequest->email)->first();
+        $fallbackLocale = config('app.fallback_locale');
+        $locale = $existingUser->locale ?? (is_string($fallbackLocale) ? $fallbackLocale : 'fr');
 
         // Send invitation email in appropriate language
         Mail::to($betaRequest->email)
@@ -89,11 +95,12 @@ class BetaManagementController extends Controller
     {
         $this->authorize('reject', $betaRequest);
 
-        $request->validate([
+        /** @var array{rejection_reason?: string|null} $validated */
+        $validated = $request->validate([
             'rejection_reason' => 'nullable|string|max:1000',
         ]);
 
-        $betaRequest->reject($request->rejection_reason);
+        $betaRequest->reject($validated['rejection_reason'] ?? null);
 
         return back()->with('success', 'Demande rejetée.');
     }
@@ -110,8 +117,9 @@ class BetaManagementController extends Controller
         }
 
         // Determine locale: check if user exists, otherwise use app fallback
-        $existingUser = \App\Models\User::where('email', $betaRequest->email)->first();
-        $locale = $existingUser?->locale ?? config('app.fallback_locale');
+        $existingUser = User::where('email', $betaRequest->email)->first();
+        $fallbackLocale = config('app.fallback_locale');
+        $locale = $existingUser->locale ?? (is_string($fallbackLocale) ? $fallbackLocale : 'fr');
 
         // Resend invitation email in appropriate language
         Mail::to($betaRequest->email)

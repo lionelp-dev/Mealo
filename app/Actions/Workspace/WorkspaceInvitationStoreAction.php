@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceInvitationStoreRequestData;
-use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
 use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
 use App\Mail\WorkspaceInvitationMail;
 use App\Models\User;
 use App\Models\Workspace;
@@ -46,7 +46,10 @@ class WorkspaceInvitationStoreAction
             ]);
         });
 
-        $locale = $existingUser->locale ?? $user->locale;
+        $fallbackLocale = config('app.fallback_locale');
+        $locale = $existingUser->locale
+            ?? $user->locale
+            ?? (is_string($fallbackLocale) ? $fallbackLocale : 'fr');
 
         Mail::to($storeWorkspaceInvitationRequestData->email)
             ->locale($locale)

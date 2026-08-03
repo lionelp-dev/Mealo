@@ -25,7 +25,8 @@ class BetaInvitationController extends Controller
         if (! $betaRequest
             || $betaRequest->status !== 'approved'
             || $betaRequest->user_id !== null
-            || $betaRequest->isTokenExpired()) {
+            || $betaRequest->isTokenExpired()
+            || $betaRequest->token_expires_at === null) {
             return redirect()->route('home')->with('error', 'Lien d\'invitation invalide ou expiré.');
         }
 
@@ -51,11 +52,14 @@ class BetaInvitationController extends Controller
             return redirect()->route('home')->with('error', 'Lien d\'invitation invalide ou expiré.');
         }
 
+        /** @var array{name: string, password: string} $validated */
+        $validated = $request->validated();
+
         // Create user
         $user = User::create([
-            'name' => $request->name,
+            'name' => $validated['name'],
             'email' => $betaRequest->email,
-            'password' => Hash::make($request->password),
+            'password' => Hash::make($validated['password']),
         ]);
 
         // Mark email as verified (not mass assignable, so set separately)

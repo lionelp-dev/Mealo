@@ -3,7 +3,7 @@ import beta from './beta'
 import mail from './mail'
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 export const dashboard = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -18,7 +18,7 @@ dashboard.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 dashboard.url = (options?: RouteQueryOptions) => {
@@ -27,7 +27,7 @@ dashboard.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -37,7 +37,7 @@ dashboard.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -47,7 +47,7 @@ dashboard.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -57,7 +57,7 @@ const dashboardForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> 
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -67,7 +67,7 @@ dashboardForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> =>
 
 /**
 * @see \App\Http\Controllers\Admin\AdminController::dashboard
-* @see app/Http/Controllers/Admin/AdminController.php:18
+* @see app/Http/Controllers/Admin/AdminController.php:19
 * @route '/admin'
 */
 dashboardForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

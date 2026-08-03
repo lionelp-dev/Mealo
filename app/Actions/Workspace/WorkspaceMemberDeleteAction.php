@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceMemberDeleteRequestData;
-use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
+use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;

@@ -29,7 +29,7 @@ class PlannedMealGeneratePlanAction
                 'workspaceId' => $workspace->id,
                 'startDate' => $startDate,
                 'endDate' => $endDate,
-            ]))->map(function (array $meal) use ($data) {
+            ]))->map(function (array $meal) use ($data): array {
                 return array_merge(
                     $meal,
                     ['serving_size' => $data->serving_size]

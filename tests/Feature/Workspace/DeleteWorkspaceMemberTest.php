@@ -3,8 +3,8 @@
 namespace Tests\Feature\Workspace;
 
 use App\Exceptions\Workspace\WorkspaceMemberDeleteAuthorizationException;
-use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceMemberUpdateAuthorizationException;
+use App\Exceptions\Workspace\WorkspaceOwnerRemoveAuthorizationException;
 use App\Messages\Workspace\MemberRemovedMessage;
 
 beforeEach(function () {

@@ -14,8 +14,7 @@ class EnsureGlobalPermissionContext
      * Sets the permissions team ID to null to ensure global permission checks
      * (used for admin routes that should not be scoped to workspaces).
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
-     * @param  Closure(): void  $next
+     * @param  Closure(Request): Response  $next
      */
     public function handle(Request $request, Closure $next): Response
     {

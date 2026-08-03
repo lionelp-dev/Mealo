@@ -7,10 +7,11 @@ use App\Data\Requests\Recipe\RecipeStoreRequestData;
 use App\Enums\Unit;
 use App\Models\MealTime;
 use Exception;
+use OpenAI\Contracts\ClientContract;
 
 class RecipeAIGenerationAction
 {
-    private $client;
+    private ?ClientContract $client;
 
     private string $mealTimes;
 
@@ -18,12 +19,13 @@ class RecipeAIGenerationAction
 
     public function __construct()
     {
-        $this->client = app('openai.client');
+        $client = app('openai.client');
+        $this->client = $client instanceof ClientContract ? $client : null;
 
         try {
             $mealTimes = MealTime::all();
             $this->mealTimes = json_encode(
-                $mealTimes->map(fn ($mt) => [
+                $mealTimes->map(fn (MealTime $mt) => [
                     'id' => $mt->id,
                     'name' => $mt->name,
                 ])->toArray(),
@@ -210,6 +212,10 @@ class RecipeAIGenerationAction
      */
     public function execute(RecipeAIGenerationRequestData $promptData): RecipeStoreRequestData
     {
+        if ($this->client === null) {
+            throw new Exception('AI recipe generation is not configured');
+        }
+
         try {
             $response = $this->client->chat()->create([
                 'model' => 'gpt-4o-mini',
@@ -227,8 +233,9 @@ class RecipeAIGenerationAction
                 'messages' => $this->buildMessages($promptData),
             ]);
 
-            if (isset($response->choices[0]->message->toolCalls)) {
-                foreach ($response->choices[0]->message->toolCalls as $toolCall) {
+            $choice = $response->choices[0] ?? null;
+            if ($choice !== null) {
+                foreach ($choice->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_recipe') {
                         $args = json_decode($toolCall->function->arguments, true);
 

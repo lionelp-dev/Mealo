@@ -30,8 +30,7 @@ class GenerateRecipeJob implements ShouldQueue
         public int $userId,
         public string $prompt,
         public int $recipeNumber
-    ) {
-    }
+    ) {}
 
     public function handle(
         RecipeAIGenerationAction $recipeAIGenerationAction,
@@ -41,7 +40,8 @@ class GenerateRecipeJob implements ShouldQueue
             echo "🔄 Generating recipe #{$this->recipeNumber}: {$this->prompt}\n";
 
             if ($this->missingOpenRouterApiKey()) {
-                $delay = (int) config('recipe-queue.missing_api_key_release_delay', 300);
+                $configuredDelay = config('recipe-queue.missing_api_key_release_delay', 300);
+                $delay = is_numeric($configuredDelay) ? (int) $configuredDelay : 300;
 
                 echo "⏸️ OPEN_ROUTER_API_KEY is missing. Recipe #{$this->recipeNumber} released for {$delay}s.\n";
                 Log::warning('Recipe generation delayed because OPEN_ROUTER_API_KEY is missing.', [

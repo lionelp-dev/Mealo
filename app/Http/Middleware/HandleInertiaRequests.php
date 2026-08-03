@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -36,19 +37,25 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
-        [$message, $author] = str(Inspiring::quotes()->random())->explode('-');
+        $quote = Inspiring::quotes()->random();
+        $quote = is_string($quote) ? $quote : '';
+        [$message, $author] = str($quote)->explode('-', 2)->pad(2, '');
+        $message = is_string($message) ? $message : '';
+        $author = is_string($author) ? $author : '';
+
+        $user = $request->user();
 
         return [
             ...parent::share($request),
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-                'user' => $request->user() ? array_merge(
-                    $request->user()->toArray(),
+                'user' => $user instanceof User ? array_merge(
+                    $user->toArray(),
                     [
-                        'is_beta_user' => $request->user()->is_beta_user,
-                        'beta_expires_at' => $request->user()->betaRequest?->account_expires_at?->toISOString(),
-                        'locale' => $request->user()->locale,
+                        'is_beta_user' => $user->is_beta_user,
+                        'beta_expires_at' => $user->betaRequest?->account_expires_at?->toISOString(),
+                        'locale' => $user->locale,
                     ]
                 ) : null,
             ],

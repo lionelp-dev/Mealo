@@ -11,10 +11,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
- * @property bool $is_default_
+ * @property int $id
+ * @property int $owner_id
+ * @property string $name
+ * @property bool $is_default
  * @property bool $is_personal
  * @property CarbonImmutable $created_at
- * @property CarbonImmutable $expired_at
+ * @property CarbonImmutable $updated_at
  */
 #[UsePolicy(WorkspacePolicy::class)]
 class Workspace extends Model

@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../wayfinder'
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -35,7 +35,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -45,7 +45,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -55,7 +55,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -65,7 +65,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::index
-* @see app/Http/Controllers/Admin/BetaManagementController.php:25
+* @see app/Http/Controllers/Admin/BetaManagementController.php:26
 * @route '/admin/beta-requests'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -82,7 +82,7 @@ index.form = indexForm
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::approve
-* @see app/Http/Controllers/Admin/BetaManagementController.php:67
+* @see app/Http/Controllers/Admin/BetaManagementController.php:69
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
 export const approve = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +97,7 @@ approve.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::approve
-* @see app/Http/Controllers/Admin/BetaManagementController.php:67
+* @see app/Http/Controllers/Admin/BetaManagementController.php:69
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
 approve.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -130,7 +130,7 @@ approve.url = (args: { betaRequest: number | { id: number } } | [betaRequest: nu
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::approve
-* @see app/Http/Controllers/Admin/BetaManagementController.php:67
+* @see app/Http/Controllers/Admin/BetaManagementController.php:69
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
 approve.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -140,7 +140,7 @@ approve.post = (args: { betaRequest: number | { id: number } } | [betaRequest: n
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::approve
-* @see app/Http/Controllers/Admin/BetaManagementController.php:67
+* @see app/Http/Controllers/Admin/BetaManagementController.php:69
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
 const approveForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -150,7 +150,7 @@ const approveForm = (args: { betaRequest: number | { id: number } } | [betaReque
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::approve
-* @see app/Http/Controllers/Admin/BetaManagementController.php:67
+* @see app/Http/Controllers/Admin/BetaManagementController.php:69
 * @route '/admin/beta-requests/{betaRequest}/approve'
 */
 approveForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -162,7 +162,7 @@ approve.form = approveForm
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::reject
-* @see app/Http/Controllers/Admin/BetaManagementController.php:88
+* @see app/Http/Controllers/Admin/BetaManagementController.php:94
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
 export const reject = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -177,7 +177,7 @@ reject.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::reject
-* @see app/Http/Controllers/Admin/BetaManagementController.php:88
+* @see app/Http/Controllers/Admin/BetaManagementController.php:94
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
 reject.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -210,7 +210,7 @@ reject.url = (args: { betaRequest: number | { id: number } } | [betaRequest: num
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::reject
-* @see app/Http/Controllers/Admin/BetaManagementController.php:88
+* @see app/Http/Controllers/Admin/BetaManagementController.php:94
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
 reject.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -220,7 +220,7 @@ reject.post = (args: { betaRequest: number | { id: number } } | [betaRequest: nu
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::reject
-* @see app/Http/Controllers/Admin/BetaManagementController.php:88
+* @see app/Http/Controllers/Admin/BetaManagementController.php:94
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
 const rejectForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -230,7 +230,7 @@ const rejectForm = (args: { betaRequest: number | { id: number } } | [betaReques
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::reject
-* @see app/Http/Controllers/Admin/BetaManagementController.php:88
+* @see app/Http/Controllers/Admin/BetaManagementController.php:94
 * @route '/admin/beta-requests/{betaRequest}/reject'
 */
 rejectForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -242,7 +242,7 @@ reject.form = rejectForm
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::resend
-* @see app/Http/Controllers/Admin/BetaManagementController.php:104
+* @see app/Http/Controllers/Admin/BetaManagementController.php:111
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
 export const resend = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -257,7 +257,7 @@ resend.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::resend
-* @see app/Http/Controllers/Admin/BetaManagementController.php:104
+* @see app/Http/Controllers/Admin/BetaManagementController.php:111
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
 resend.url = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
@@ -290,7 +290,7 @@ resend.url = (args: { betaRequest: number | { id: number } } | [betaRequest: num
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::resend
-* @see app/Http/Controllers/Admin/BetaManagementController.php:104
+* @see app/Http/Controllers/Admin/BetaManagementController.php:111
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
 resend.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -300,7 +300,7 @@ resend.post = (args: { betaRequest: number | { id: number } } | [betaRequest: nu
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::resend
-* @see app/Http/Controllers/Admin/BetaManagementController.php:104
+* @see app/Http/Controllers/Admin/BetaManagementController.php:111
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
 const resendForm = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -310,7 +310,7 @@ const resendForm = (args: { betaRequest: number | { id: number } } | [betaReques
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::resend
-* @see app/Http/Controllers/Admin/BetaManagementController.php:104
+* @see app/Http/Controllers/Admin/BetaManagementController.php:111
 * @route '/admin/beta-requests/{betaRequest}/resend'
 */
 resendForm.post = (args: { betaRequest: number | { id: number } } | [betaRequest: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -322,7 +322,7 @@ resend.form = resendForm
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::cleanupAll
-* @see app/Http/Controllers/Admin/BetaManagementController.php:127
+* @see app/Http/Controllers/Admin/BetaManagementController.php:135
 * @route '/admin/beta-requests/cleanup-all'
 */
 export const cleanupAll = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -337,7 +337,7 @@ cleanupAll.definition = {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::cleanupAll
-* @see app/Http/Controllers/Admin/BetaManagementController.php:127
+* @see app/Http/Controllers/Admin/BetaManagementController.php:135
 * @route '/admin/beta-requests/cleanup-all'
 */
 cleanupAll.url = (options?: RouteQueryOptions) => {
@@ -346,7 +346,7 @@ cleanupAll.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::cleanupAll
-* @see app/Http/Controllers/Admin/BetaManagementController.php:127
+* @see app/Http/Controllers/Admin/BetaManagementController.php:135
 * @route '/admin/beta-requests/cleanup-all'
 */
 cleanupAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -356,7 +356,7 @@ cleanupAll.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::cleanupAll
-* @see app/Http/Controllers/Admin/BetaManagementController.php:127
+* @see app/Http/Controllers/Admin/BetaManagementController.php:135
 * @route '/admin/beta-requests/cleanup-all'
 */
 const cleanupAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -366,7 +366,7 @@ const cleanupAllForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'
 
 /**
 * @see \App\Http\Controllers\Admin\BetaManagementController::cleanupAll
-* @see app/Http/Controllers/Admin/BetaManagementController.php:127
+* @see app/Http/Controllers/Admin/BetaManagementController.php:135
 * @route '/admin/beta-requests/cleanup-all'
 */
 cleanupAllForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

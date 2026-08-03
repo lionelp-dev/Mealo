@@ -2,9 +2,13 @@
 
 namespace App\Actions\ShoppingList;
 
+use App\Models\Ingredient;
 use App\Models\PlannedMeal;
+use App\Models\Recipe;
 use App\Models\ShoppingList;
+use App\Models\ShoppingListPlannedMealIngredient;
 use Carbon\Carbon;
+use RuntimeException;
 
 class ShoppingListSyncAction
 {
@@ -27,7 +31,7 @@ class ShoppingListSyncAction
 
         $existingCheckedStatuses = $shoppingList->plannedMealIngredients()
             ->get()
-            ->mapWithKeys(function ($item) {
+            ->mapWithKeys(function (ShoppingListPlannedMealIngredient $item) {
                 $key = $item->planned_meal_id.':'.$item->ingredient_id.':'.$item->unit;
 
                 return [$key => $item->is_checked];
@@ -40,8 +44,13 @@ class ShoppingListSyncAction
             ->with(['recipe.ingredients'])
             ->get();
 
-        $plannedMealIngredients = collect($plannedMeals)->flatMap(function ($plannedMeal) use ($shoppingList, $existingCheckedStatuses) {
-            return collect($plannedMeal->recipe->ingredients)->map(function ($ingredient) use ($shoppingList, $plannedMeal, $existingCheckedStatuses) {
+        $plannedMealIngredients = collect($plannedMeals)->flatMap(function (PlannedMeal $plannedMeal) use ($shoppingList, $existingCheckedStatuses) {
+            $recipe = $plannedMeal->recipe;
+            if (! $recipe instanceof Recipe) {
+                throw new RuntimeException('Planned meal is missing its recipe.');
+            }
+
+            return collect($recipe->ingredients)->map(function (Ingredient $ingredient) use ($shoppingList, $plannedMeal, $existingCheckedStatuses) {
                 $unit = $ingredient->pivot->unit;
                 $key = $plannedMeal->id.':'.$ingredient->id.':'.$unit;
 

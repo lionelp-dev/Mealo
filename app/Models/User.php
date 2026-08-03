@@ -14,6 +14,12 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
+/**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $locale
+ */
 class User extends Authenticatable implements HasLocalePreference
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -148,6 +154,8 @@ class User extends Authenticatable implements HasLocalePreference
 
     /**
      * Send the password reset notification.
+     *
+     * @param  string  $token
      */
     public function sendPasswordResetNotification($token): void
     {

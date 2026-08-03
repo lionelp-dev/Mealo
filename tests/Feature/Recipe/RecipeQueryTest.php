@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Recipe;
 
-use App\Actions\PlannedMeal\PlannedMealStoreAction;
-
 test('can search recipes by name in planned meals index', function () {});
 
 test('can filter recipes by tags in planned meals index', function () {});

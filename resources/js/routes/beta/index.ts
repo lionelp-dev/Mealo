@@ -57,7 +57,7 @@ request.form = requestForm
 
 /**
 * @see \App\Http\Controllers\Auth\BetaInvitationController::accept
-* @see app/Http/Controllers/Auth/BetaInvitationController.php:42
+* @see app/Http/Controllers/Auth/BetaInvitationController.php:43
 * @route '/beta/accept/{token}'
 */
 export const accept = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -72,7 +72,7 @@ accept.definition = {
 
 /**
 * @see \App\Http\Controllers\Auth\BetaInvitationController::accept
-* @see app/Http/Controllers/Auth/BetaInvitationController.php:42
+* @see app/Http/Controllers/Auth/BetaInvitationController.php:43
 * @route '/beta/accept/{token}'
 */
 accept.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -99,7 +99,7 @@ accept.url = (args: { token: string | number } | [token: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\Auth\BetaInvitationController::accept
-* @see app/Http/Controllers/Auth/BetaInvitationController.php:42
+* @see app/Http/Controllers/Auth/BetaInvitationController.php:43
 * @route '/beta/accept/{token}'
 */
 accept.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -109,7 +109,7 @@ accept.post = (args: { token: string | number } | [token: string | number ] | st
 
 /**
 * @see \App\Http\Controllers\Auth\BetaInvitationController::accept
-* @see app/Http/Controllers/Auth/BetaInvitationController.php:42
+* @see app/Http/Controllers/Auth/BetaInvitationController.php:43
 * @route '/beta/accept/{token}'
 */
 const acceptForm = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -119,7 +119,7 @@ const acceptForm = (args: { token: string | number } | [token: string | number ]
 
 /**
 * @see \App\Http\Controllers\Auth\BetaInvitationController::accept
-* @see app/Http/Controllers/Auth/BetaInvitationController.php:42
+* @see app/Http/Controllers/Auth/BetaInvitationController.php:43
 * @route '/beta/accept/{token}'
 */
 acceptForm.post = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

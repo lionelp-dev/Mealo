@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PlannedMealWeekQueryAction
 {
+    /**
+     * @return Collection<int, PlannedMeal>
+     */
     public function __invoke(
         Workspace $workspace,
         ?string $week = null

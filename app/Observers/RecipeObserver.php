@@ -3,6 +3,7 @@
 namespace App\Observers;
 
 use App\Actions\Recipes\RecipeImageDeleteAction;
+use App\Models\PlannedMeal;
 use App\Models\Recipe;
 
 class RecipeObserver
@@ -24,7 +25,7 @@ class RecipeObserver
         // Delete all planned meals for this recipe
         // This will trigger PlannedMealObserver::deleted() for each planned meal
         // which will sync the shopping lists
-        $recipe->plannedMeals()->each(function ($plannedMeal) {
+        $recipe->plannedMeals()->each(function (PlannedMeal $plannedMeal) {
             $plannedMeal->delete();
         });
     }

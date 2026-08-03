@@ -3,9 +3,9 @@
 namespace App\Policies;
 
 use App\Exceptions\Workspace\WorkspaceDeleteAuthorizationException;
-use App\Exceptions\Workspace\WorkspacePlanningEditAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceInviteAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceMemberManageAuthorizationException;
+use App\Exceptions\Workspace\WorkspacePlanningEditAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceUpdateAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceViewAuthorizationException;
 use App\Models\User;

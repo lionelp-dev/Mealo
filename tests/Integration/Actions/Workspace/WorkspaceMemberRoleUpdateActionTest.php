@@ -4,8 +4,8 @@ namespace Tests\Integration\Actions\Workspace;
 
 use App\Actions\Workspace\WorkspaceMemberRoleUpdateAction;
 use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
-use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
+use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */

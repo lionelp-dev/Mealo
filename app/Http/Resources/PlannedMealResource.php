@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\PlannedMeal;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,18 +15,26 @@ class PlannedMealResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var PlannedMeal $plannedMeal */
+        $plannedMeal = $this->resource;
+
         return [
-            'id' => $this->resource->id,
-            'planned_date' => $this->resource->planned_date,
-            'meal_time_id' => $this->resource->meal_time_id,
-            'meal_time_name' => $this->whenLoaded('mealTime', function () {
-                return $this->resource->mealTime->name;
+            'id' => $plannedMeal->id,
+            'planned_date' => $plannedMeal->planned_date,
+            'meal_time_id' => $plannedMeal->meal_time_id,
+            'meal_time_name' => $this->whenLoaded('mealTime', function () use ($plannedMeal) {
+                return $plannedMeal->mealTime?->name;
             }),
-            'serving_size' => $this->resource->serving_size,
-            'recipe' => $this->whenLoaded('recipe', function () {
+            'serving_size' => $plannedMeal->serving_size,
+            'recipe' => $this->whenLoaded('recipe', function () use ($plannedMeal) {
+                $recipe = $plannedMeal->recipe;
+                if ($recipe === null) {
+                    return null;
+                }
+
                 return [
-                    'id' => $this->resource->recipe->id,
-                    'name' => $this->resource->recipe->name,
+                    'id' => $recipe->id,
+                    'name' => $recipe->name,
                 ];
             }),
         ];

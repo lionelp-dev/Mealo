@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Step;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,10 +15,13 @@ class StepResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        /** @var Step $step */
+        $step = $this->resource;
+
         return [
-            'id' => $this->resource->id,
-            'order' => $this->resource->order,
-            'description' => $this->resource->description,
+            'id' => $step->id,
+            'order' => $step->order,
+            'description' => $step->description,
         ];
     }
 }

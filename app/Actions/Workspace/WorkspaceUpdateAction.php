@@ -28,7 +28,7 @@ class WorkspaceUpdateAction
             $workspace->update(array_filter([
                 'name' => $workspaceData->name,
                 'is_personal' => $workspaceData->is_personal,
-            ], fn ($value) => $value !== null));
+            ], fn (mixed $value) => $value !== null));
 
             if ($convertingToPersonal) {
                 $workspace->removeAllNonOwnerMembers();

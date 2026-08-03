@@ -13,13 +13,12 @@ use Tests\Concerns\HasWorkspaceContext;
 
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase;
-
+    use HasPlannedMealContext;
+    use HasRecipeContext;
+    use HasShoppingListContext;
     use HasUserContext;
     use HasWorkspaceContext;
-    use HasRecipeContext;
-    use HasPlannedMealContext;
-    use HasShoppingListContext;
+    use RefreshDatabase;
 
     protected bool $seed = true;
 

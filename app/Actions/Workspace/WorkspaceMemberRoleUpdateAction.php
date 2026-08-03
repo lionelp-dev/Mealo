@@ -3,8 +3,8 @@
 namespace App\Actions\Workspace;
 
 use App\Data\Requests\Workspace\WorkspaceMemberRoleUpdateRequestData;
-use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
 use App\Exceptions\Workspace\WorkspaceMemberNotFoundException;
+use App\Exceptions\Workspace\WorkspaceOwnerRoleChangeAuthorizationException;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Support\Facades\DB;

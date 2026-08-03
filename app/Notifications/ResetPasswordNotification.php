@@ -3,7 +3,9 @@
 namespace App\Notifications;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Notifications\Messages\MailMessage;
+use InvalidArgumentException;
 
 class ResetPasswordNotification extends ResetPassword
 {
@@ -12,7 +14,10 @@ class ResetPasswordNotification extends ResetPassword
      */
     public function toMail(mixed $notifiable): MailMessage
     {
-        $expireMinutes = config('auth.passwords.'.config('auth.defaults.passwords').'.expire');
+        $passwordBroker = config('auth.defaults.passwords');
+        $passwordBroker = is_string($passwordBroker) ? $passwordBroker : 'users';
+        $expireMinutes = config('auth.passwords.'.$passwordBroker.'.expire');
+        $expireMinutes = is_numeric($expireMinutes) ? (int) $expireMinutes : 60;
 
         return (new MailMessage)
             ->subject(__('auth.reset_password_notification'))
@@ -27,6 +32,10 @@ class ResetPasswordNotification extends ResetPassword
      */
     protected function resetUrl(mixed $notifiable): string
     {
+        if (! $notifiable instanceof CanResetPassword) {
+            throw new InvalidArgumentException('Password reset notification requires a resettable notifiable.');
+        }
+
         return url(route('password.reset', [
             'token' => $this->token,
             'email' => $notifiable->getEmailForPasswordReset(),

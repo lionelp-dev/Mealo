@@ -8,23 +8,32 @@ use App\Models\Recipe;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Support\Facades\Log;
+use OpenAI\Contracts\ClientContract;
 
 class AIMealPlanningService
 {
-    private $client;
+    private ?ClientContract $client;
 
     public function __construct()
     {
-        $this->client = app('openai.client');
+        $client = app('openai.client');
+        $this->client = $client instanceof ClientContract ? $client : null;
     }
 
     /**
      * Generate a meal plan using user recipes with function calling
+     *
+     * @param  array{userId: int|string, workspaceId: int|string, startDate: Carbon|string, endDate: Carbon|string}  $params
+     * @return list<array<string, mixed>>
      */
     public function generateMealPlan(array $params): array
     {
+        if ($this->client === null) {
+            throw new Exception('AI meal planning is not configured');
+        }
+
         // Extract parameters from array
-        $userId = $params['userId'];
+        $userId = (string) $params['userId'];
         $workspaceId = $params['workspaceId'];
         $startDate = new Carbon($params['startDate']);
         $endDate = new Carbon($params['endDate']);
@@ -36,7 +45,7 @@ class AIMealPlanningService
         // Récupérer un échantillon aléatoire de recettes pour optimiser
         $totalRecipes = Recipe::where('user_id', $userId)->count();
         $limit = min(25, $totalRecipes); // Plus de recettes pour plus de variété
-        $randomOffset = $totalRecipes > $limit ? random_int(0, $totalRecipes - $limit) : 0;
+        $randomOffset = $totalRecipes > $limit ? random_int(0, max(0, $totalRecipes - $limit)) : 0;
 
         $recipes = Recipe::where('user_id', $userId)
             ->with(['mealTimes:id,name', 'tags:id,name'])
@@ -51,23 +60,23 @@ class AIMealPlanningService
 
         // Get available meal times from database
         $mealTimes = MealTime::all();
-        $availableMealTimes = $mealTimes->map(fn ($mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
+        $availableMealTimes = $mealTimes->map(fn (MealTime $mt) => ['id' => $mt->id, 'name' => $mt->name])->toArray();
         $mealTimeListForPrompt = json_encode($availableMealTimes);
 
         // Filter recipes by meal_time to prevent inappropriate assignments
-        $breakfastRecipes = $recipes->filter(function ($recipe) {
+        $breakfastRecipes = $recipes->filter(function (Recipe $recipe) {
             return $recipe->mealTimes->contains('name', 'breakfast');
         });
 
-        $lunchRecipes = $recipes->filter(function ($recipe) {
+        $lunchRecipes = $recipes->filter(function (Recipe $recipe) {
             return $recipe->mealTimes->contains('name', 'lunch');
         });
 
-        $dinnerRecipes = $recipes->filter(function ($recipe) {
+        $dinnerRecipes = $recipes->filter(function (Recipe $recipe) {
             return $recipe->mealTimes->contains('name', 'diner');
         });
 
-        $snackRecipes = $recipes->filter(function ($recipe) {
+        $snackRecipes = $recipes->filter(function (Recipe $recipe) {
             return $recipe->mealTimes->contains('name', 'snack');
         });
 
@@ -199,11 +208,17 @@ class AIMealPlanningService
             ]);
 
             // Parse the function calling response
-            if (isset($response->choices[0]->message->toolCalls)) {
-                foreach ($response->choices[0]->message->toolCalls as $toolCall) {
+            $choice = $response->choices[0] ?? null;
+            if ($choice !== null) {
+                foreach ($choice->message->toolCalls as $toolCall) {
                     if ($toolCall->function->name === 'generate_meal_plan') {
                         $args = json_decode($toolCall->function->arguments, true);
-                        $plannedMeals = $args['planned_meals'];
+                        if (! is_array($args) || ! isset($args['planned_meals']) || ! is_array($args['planned_meals'])) {
+                            throw new Exception('Invalid JSON arguments from OpenAI response');
+                        }
+
+                        /** @var list<array<string, mixed>> $plannedMeals */
+                        $plannedMeals = array_values($args['planned_meals']);
 
                         // Validate recipe IDs before returning
                         return $this->validateRecipeIds($plannedMeals, $userId);
@@ -212,12 +227,13 @@ class AIMealPlanningService
             }
 
             // For backward compatibility with mocked responses
-            if (isset($response->choices[0]->message->content)) {
-                $content = $response->choices[0]->message->content;
+            if ($choice !== null) {
+                $content = $choice->message->content;
                 if (is_string($content)) {
                     $data = json_decode($content, true);
-                    if ($data) {
-                        $plannedMeals = $data['planned_meals'] ?? [];
+                    if (is_array($data) && isset($data['planned_meals']) && is_array($data['planned_meals'])) {
+                        /** @var list<array<string, mixed>> $plannedMeals */
+                        $plannedMeals = array_values($data['planned_meals']);
 
                         return $this->validateRecipeIds($plannedMeals, $userId);
                     }
@@ -232,6 +248,9 @@ class AIMealPlanningService
 
     /**
      * Validate recipe IDs from AI response and filter invalid ones
+     *
+     * @param  list<array<string, mixed>>  $plannedMeals
+     * @return list<array<string, mixed>>
      */
     private function validateRecipeIds(array $plannedMeals, string $userId): array
     {
@@ -245,8 +264,10 @@ class AIMealPlanningService
             ->toArray();
 
         // Filter planned meals to only include valid recipe IDs
-        $validPlannedMeals = array_filter($plannedMeals, function ($meal) use ($validRecipeIds) {
-            return in_array($meal['recipe_id'], $validRecipeIds);
+        $validPlannedMeals = array_filter($plannedMeals, function (array $meal) use ($validRecipeIds): bool {
+            return isset($meal['recipe_id'])
+                && is_string($meal['recipe_id'])
+                && in_array($meal['recipe_id'], $validRecipeIds, true);
         });
 
         // Log invalid recipe IDs if any

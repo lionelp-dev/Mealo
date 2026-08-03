@@ -9,9 +9,19 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * @property int $id
+ * @property int $user_id
+ * @property int $workspace_id
+ * @property string $recipe_id
+ * @property int $meal_time_id
+ * @property \Carbon\Carbon $planned_date
+ * @property int $serving_size
+ */
 #[ObservedBy([PlannedMealObserver::class])]
 class PlannedMeal extends Model
 {
+    /** @use HasFactory<\Database\Factories\PlannedMealFactory> */
     use HasFactory;
 
     protected $table = 'planned_meals';
@@ -51,7 +61,7 @@ class PlannedMeal extends Model
     }
 
     /**
-     * @return BelongsTo<Workspace,PlannedMeal>
+     * @return BelongsTo<Workspace, $this>
      */
     public function workspace(): BelongsTo
     {
@@ -59,7 +69,7 @@ class PlannedMeal extends Model
     }
 
     /**
-     * @return BelongsTo<MealTime,PlannedMeal>
+     * @return BelongsTo<MealTime, $this>
      */
     public function mealTime(): BelongsTo
     {
@@ -67,7 +77,7 @@ class PlannedMeal extends Model
     }
 
     /**
-     * @return BelongsTo<Recipe,PlannedMeal>
+     * @return BelongsTo<Recipe, $this>
      */
     public function recipe(): BelongsTo
     {
@@ -75,7 +85,7 @@ class PlannedMeal extends Model
     }
 
     /**
-     * @return HasMany<ShoppingListPlannedMealIngredient,PlannedMeal>
+     * @return HasMany<ShoppingListPlannedMealIngredient, $this>
      */
     public function shoppingListIngredients(): HasMany
     {

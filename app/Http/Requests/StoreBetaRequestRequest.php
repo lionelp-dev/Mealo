@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Database\Query\Builder;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -29,7 +30,7 @@ class StoreBetaRequestRequest extends FormRequest
                 'email',
                 'max:255',
                 // Email must not already exist in beta_requests with pending or approved status
-                Rule::unique('beta_requests', 'email')->where(function ($query) {
+                Rule::unique('beta_requests', 'email')->where(function (Builder $query): Builder {
                     return $query->whereIn('status', ['pending', 'approved']);
                 }),
                 // Email must not already exist as a registered user
@@ -40,6 +41,8 @@ class StoreBetaRequestRequest extends FormRequest
 
     /**
      * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
      */
     public function messages(): array
     {

@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\WorkspaceInvitation;
 
-use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
 use App\Exceptions\Workspace\WorkspaceMemberAlreadyExistsException;
+use App\Exceptions\WorkspaceInvitation\WorkspaceInvitationAlreadyExistsException;
 use App\Messages\WorkspaceInvitation\InvitationSentMessage;
 
 use function Pest\Laravel\assertDatabaseHas;

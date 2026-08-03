@@ -7,6 +7,7 @@ use App\Models\BetaRequest;
 use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Workspace;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,7 +20,7 @@ class AdminController extends Controller
     {
         $stats = [
             'total_users' => User::query()->count(),
-            'beta_users' => User::query()->whereHas('betaRequest', function ($query) {
+            'beta_users' => User::query()->whereHas('betaRequest', function (Builder $query) {
                 $query->where('status', 'converted');
             })->count(),
             'pending_beta_requests' => BetaRequest::query()->where('status', 'pending')->count(),

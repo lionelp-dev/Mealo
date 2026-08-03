@@ -2,13 +2,27 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * @property int $id
+ * @property string $email
+ * @property string $status
+ * @property string|null $token
+ * @property \Carbon\Carbon|null $token_expires_at
+ * @property \Carbon\Carbon|null $account_expires_at
+ * @property \Carbon\Carbon|null $approved_at
+ * @property int|null $approved_by
+ * @property int|null $user_id
+ * @property string|null $rejection_reason
+ */
 class BetaRequest extends Model
 {
+    /** @use HasFactory<\Database\Factories\BetaRequestFactory> */
     use HasFactory;
 
     protected $fillable = [
@@ -37,7 +51,7 @@ class BetaRequest extends Model
     /**
      * The user created from this beta request.
      *
-     * @return BelongsTo<User,BetaRequest>
+     * @return BelongsTo<User, $this>
      */
     public function user(): BelongsTo
     {
@@ -47,7 +61,7 @@ class BetaRequest extends Model
     /**
      * The admin who approved this request.
      *
-     * @return BelongsTo<User,BetaRequest>
+     * @return BelongsTo<User, $this>
      */
     public function approvedBy(): BelongsTo
     {
@@ -59,8 +73,10 @@ class BetaRequest extends Model
      */
     public function generateToken(): void
     {
+        $expirationDays = config('beta.token_expiration_days', 7);
+
         $this->token = Str::random(32);
-        $this->token_expires_at = now()->addDays(config('beta.token_expiration_days', 7));
+        $this->token_expires_at = now()->addDays(is_numeric($expirationDays) ? (int) $expirationDays : 7);
     }
 
     /**
@@ -118,9 +134,11 @@ class BetaRequest extends Model
      */
     public function markAsConverted(User $user): void
     {
+        $expirationDays = config('beta.expiration_days', 30);
+
         $this->status = 'converted';
         $this->user_id = $user->id;
-        $this->account_expires_at = now()->addDays(config('beta.expiration_days', 30));
+        $this->account_expires_at = now()->addDays(is_numeric($expirationDays) ? (int) $expirationDays : 30);
         $this->save();
     }
 
@@ -136,9 +154,10 @@ class BetaRequest extends Model
     /**
      * Scope a query to only include pending requests.
      *
-     * @param  mixed  $query
+     * @param  Builder<self>  $query
+     * @return Builder<self>
      */
-    public function scopePending($query)
+    public function scopePending(Builder $query): Builder
     {
         return $query->where('status', 'pending');
     }
@@ -146,9 +165,10 @@ class BetaRequest extends Model
     /**
      * Scope a query to only include approved requests.
      *
-     * @param  mixed  $query
+     * @param  Builder<self>  $query
+     * @return Builder<self>
      */
-    public function scopeApproved($query)
+    public function scopeApproved(Builder $query): Builder
     {
         return $query->where('status', 'approved');
     }
@@ -156,9 +176,10 @@ class BetaRequest extends Model
     /**
      * Scope a query to only include converted requests.
      *
-     * @param  mixed  $query
+     * @param  Builder<self>  $query
+     * @return Builder<self>
      */
-    public function scopeConverted($query)
+    public function scopeConverted(Builder $query): Builder
     {
         return $query->where('status', 'converted');
     }
@@ -166,9 +187,10 @@ class BetaRequest extends Model
     /**
      * Scope a query to only include expired account requests.
      *
-     * @param  mixed  $query
+     * @param  Builder<self>  $query
+     * @return Builder<self>
      */
-    public function scopeAccountExpired($query)
+    public function scopeAccountExpired(Builder $query): Builder
     {
         return $query->where('status', 'converted')
             ->where('account_expires_at', '<', now());
