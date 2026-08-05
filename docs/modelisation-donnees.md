@@ -1,10 +1,7 @@
-# Modèle de données
-
-Ce diagramme présente les principales tables de l'application et leurs relations.
-
-Si le diagramme ne s'affiche pas sur cette page, ouvrez le [diagramme Mermaid brut](erd.mmd).
+#
 
 ```mermaid
+
 erDiagram
   users {
     number id PK
@@ -31,6 +28,7 @@ erDiagram
 
   workspace_invitations {
     number id PK
+    number workspace_id FK
     string email
     string role
     string token
@@ -159,7 +157,3 @@ erDiagram
   planned_meals ||--o{ shopping_list_planned_meal_ingredients : contributes_to
   ingredients ||--o{ shopping_list_planned_meal_ingredients : listed_as
 ```
-
----
-
-← [Précédent : Domaine métier](../domain.md) | [Sommaire](../../README.md#documentation) | [Suivant : Architecture backend](backend.md) →
