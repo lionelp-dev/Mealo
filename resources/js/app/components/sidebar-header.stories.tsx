@@ -30,7 +30,7 @@ export const MealPlanSideBarHeader: Story = {
     headerLeftContent: (
       <WeekSelector
         currentWeek={DateTime.fromISO('2025-12-15')}
-        url="/planned-meals"
+        url="/meal-planning"
       />
     ),
     headerRightContent: <LanguageSwitcher />,

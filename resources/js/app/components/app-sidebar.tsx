@@ -13,7 +13,7 @@ import {
   SidebarMenuItem,
 } from '@/app/components/ui/sidebar';
 import { dashboard } from '@/routes';
-import plannedMeals from '@/routes/planned-meals';
+import mealPlanning from '@/routes/meal-planning';
 import recipes from '@/routes/recipes';
 import shoppingLists from '@/routes/shopping-lists';
 import { type NavItem } from '@/types';
@@ -27,7 +27,7 @@ export function AppSidebar() {
   const mainNavItems: NavItem[] = [
     {
       title: t('mealPlanning.title', 'Meal Planning'),
-      href: plannedMeals.index.url(),
+      href: mealPlanning.index.url(),
       icon: Calendar,
     },
     {

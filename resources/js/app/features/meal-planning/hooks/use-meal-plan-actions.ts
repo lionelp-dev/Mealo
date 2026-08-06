@@ -14,7 +14,7 @@ export function useMealPlanActions() {
     onSuccess?: () => void;
   }) => {
     router.post(
-      '/planned-meals',
+      '/meal-planning',
       { planned_meals: meals },
       {
         preserveState: true,
@@ -29,7 +29,7 @@ export function useMealPlanActions() {
   };
 
   const unplanMeals = (ids: number[]) => {
-    router.delete(`/planned-meals`, {
+    router.delete(`/meal-planning`, {
       data: { planned_meals: ids },
       preserveUrl: true,
       preserveState: true,

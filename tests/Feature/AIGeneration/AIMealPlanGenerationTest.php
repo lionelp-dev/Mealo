@@ -17,7 +17,7 @@ beforeEach(function () {
 });
 
 test('guest user cannot access meal plan generation', function () {
-    $response = $this->post(route('planned-meals.generate'), [
+    $response = $this->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -60,7 +60,7 @@ test('user can generate meal plan successfully', function () {
         ['recipe_id' => $snackRecipe->id, 'planned_date' => $endDate, 'meal_time_id' => $snackMealTime->id],
     ]);
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $endDate,
         'serving_size' => 1,
@@ -82,14 +82,14 @@ test('user can generate meal plan successfully', function () {
     expect($mealsInRange)->toBeGreaterThan(0, 'Expected meals within the requested date range');
 
     for ($i = 0; $i < 5; $i++) {
-        $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+        $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
             'startDate' => $startDate,
             'endDate' => $endDate,
             'serving_size' => 1,
         ]);
     }
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $endDate,
         'serving_size' => 1,
@@ -100,7 +100,7 @@ test('user can generate meal plan successfully', function () {
 
 test('user cannot generate meal plan with invalid data', function () {
     // Missing startDate
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
     ]);
@@ -108,7 +108,7 @@ test('user cannot generate meal plan with invalid data', function () {
     $response->assertSessionHasErrors(['startDate']);
 
     // Invalid startDate format
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => 'invalid-date',
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -117,7 +117,7 @@ test('user cannot generate meal plan with invalid data', function () {
     $response->assertSessionHasErrors(['startDate']);
 
     // Missing endDate
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'serving_size' => 1,
     ]);
@@ -125,7 +125,7 @@ test('user cannot generate meal plan with invalid data', function () {
     $response->assertSessionHasErrors(['endDate']);
 
     // Missing serving_size
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->addDays(7)->format('Y-m-d'),
     ]);
@@ -139,7 +139,7 @@ test('handles openai api failure gracefully', function () {
 
     OpenAITestHelper::mockOpenAIErrorException('OpenAI API error');
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -200,7 +200,7 @@ test('clears existing planned meals in date range before generating', function (
     // Generate meal plan
     $response = $this->actingAs($this->user)
         ->withSession(['current_workspace_id' => $personalWorkspace->id])
-        ->post(route('planned-meals.generate'), [
+        ->post(route('meal-planning.generate'), [
             'startDate' => $generationStartDate->format('Y-m-d'),
             'endDate' => $generationStartDate->copy()->addDay()->format('Y-m-d'),
             'serving_size' => 1,
@@ -237,7 +237,7 @@ test('generates shopping list after creating planned meals', function () {
     ]);
 
     // Generate meal plan
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $startDate,
         'serving_size' => 1,
@@ -276,7 +276,7 @@ test('user can only generate meals with their own recipes', function () {
     ]);
 
     // Generate meal plan
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $mealDate,
         'endDate' => $mealDate,
         'serving_size' => 1,
@@ -324,7 +324,7 @@ test('generation works with minimum number of recipes', function () {
     ]);
 
     // Generate meal plan
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $startDate,
         'serving_size' => 1,
@@ -343,7 +343,7 @@ test('handles openai rate limit during meal plan generation', function () {
 
     OpenAITestHelper::mockOpenAIRateLimit();
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -362,7 +362,7 @@ test('handles openai server error during meal plan generation', function () {
 
     OpenAITestHelper::mockOpenAIServerError();
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->addDays(2)->format('Y-m-d'),
         'serving_size' => 1,
@@ -378,7 +378,7 @@ test('handles openai server error during meal plan generation', function () {
 
 test('generation fails gracefully when user has no recipes', function () {
     // Don't create any recipes for the user
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => now()->format('Y-m-d'),
         'endDate' => now()->format('Y-m-d'),
         'serving_size' => 1,
@@ -404,7 +404,7 @@ test('handles invalid recipe ids from openai gracefully', function () {
         ['recipe_id' => $invalidRecipeId, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
     ]);
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $startDate,
         'serving_size' => 1,
@@ -434,7 +434,7 @@ test('fails when openai returns only invalid recipe ids', function () {
         ['recipe_id' => $invalidRecipeId, 'planned_date' => $startDate, 'meal_time_id' => $mealTime->id],
     ]);
 
-    $response = $this->actingAs($this->user)->post(route('planned-meals.generate'), [
+    $response = $this->actingAs($this->user)->post(route('meal-planning.generate'), [
         'startDate' => $startDate,
         'endDate' => $startDate,
         'serving_size' => 1,

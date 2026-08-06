@@ -19,7 +19,7 @@ Route::post('/beta/request', [BetaRequestController::class, 'store'])
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {
-        return to_route('planned-meals.index');
+        return to_route('meal-planning.index');
     })->name('dashboard');
 
     Route::get('recipes/show-ai-generation-modal', [RecipeController::class, 'showAIGenerationModal'])->name('recipes.show-ai-generation-modal');
@@ -29,9 +29,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
     Route::resource('recipes', RecipeController::class)->except(['destroy']);
 
-    Route::resource('planned-meals', PlannedMealController::class)->except(['destroy']);
-    Route::delete('planned-meals', [PlannedMealController::class, 'destroy'])->name('planned-meals.destroy');
-    Route::post('planned-meals/generate', [PlannedMealController::class, 'generatePlan'])->name('planned-meals.generate');
+    Route::resource('meal-planning', PlannedMealController::class)
+        ->parameters(['meal-planning' => 'planned_meal'])
+        ->except(['destroy']);
+    Route::delete('meal-planning', [PlannedMealController::class, 'destroy'])->name('meal-planning.destroy');
+    Route::post('meal-planning/generate', [PlannedMealController::class, 'generatePlan'])->name('meal-planning.generate');
 
     Route::get('shopping-lists', [ShoppingListController::class, 'index'])->name('shopping-lists.index');
     Route::put('shopping-lists', [ShoppingListController::class, 'update'])->name('shopping-lists.update');

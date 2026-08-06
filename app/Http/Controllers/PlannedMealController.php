@@ -81,7 +81,7 @@ class PlannedMealController extends Controller
             $plannedMealImages[$recipe->id] = $recipe->getImageUrl();
         }
 
-        return Inertia::render('planned-meals/index', [
+        return Inertia::render('meal-planning/index', [
             'weekStart' => $weekStart->toISOString(),
             'mealTimes' => MealTime::all(),
             'plannedMeals' => PlannedMealResourceData::collect($plannedMeals),

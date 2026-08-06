@@ -2,7 +2,7 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -11,13 +11,13 @@ export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 
 index.definition = {
     methods: ["get","head"],
-    url: '/planned-meals',
+    url: '/meal-planning',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 index.url = (options?: RouteQueryOptions) => {
     return index.definition.url + queryParams(options)
@@ -26,7 +26,7 @@ index.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: index.url(options),
@@ -36,7 +36,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: index.url(options),
@@ -46,7 +46,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -56,7 +56,7 @@ const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => (
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url(options),
@@ -66,7 +66,7 @@ indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::index
 * @see app/Http/Controllers/PlannedMealController.php:47
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: index.url({
@@ -83,7 +83,7 @@ index.form = indexForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
@@ -92,13 +92,13 @@ export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => (
 
 create.definition = {
     methods: ["get","head"],
-    url: '/planned-meals/create',
+    url: '/meal-planning/create',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 create.url = (options?: RouteQueryOptions) => {
     return create.definition.url + queryParams(options)
@@ -107,7 +107,7 @@ create.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: create.url(options),
@@ -117,7 +117,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: create.url(options),
@@ -127,7 +127,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
@@ -137,7 +137,7 @@ const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => 
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url(options),
@@ -147,7 +147,7 @@ createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::create
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/create'
+* @route '/meal-planning/create'
 */
 createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: create.url({
@@ -164,7 +164,7 @@ create.form = createForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::store
 * @see app/Http/Controllers/PlannedMealController.php:102
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -173,13 +173,13 @@ export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => (
 
 store.definition = {
     methods: ["post"],
-    url: '/planned-meals',
+    url: '/meal-planning',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::store
 * @see app/Http/Controllers/PlannedMealController.php:102
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 store.url = (options?: RouteQueryOptions) => {
     return store.definition.url + queryParams(options)
@@ -188,7 +188,7 @@ store.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\PlannedMealController::store
 * @see app/Http/Controllers/PlannedMealController.php:102
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: store.url(options),
@@ -198,7 +198,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::store
 * @see app/Http/Controllers/PlannedMealController.php:102
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
@@ -208,7 +208,7 @@ const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => 
 /**
 * @see \App\Http\Controllers\PlannedMealController::store
 * @see app/Http/Controllers/PlannedMealController.php:102
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: store.url(options),
@@ -220,7 +220,7 @@ store.form = storeForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 export const show = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -229,13 +229,13 @@ export const show = (args: { planned_meal: string | number } | [planned_meal: st
 
 show.definition = {
     methods: ["get","head"],
-    url: '/planned-meals/{planned_meal}',
+    url: '/meal-planning/{planned_meal}',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 show.url = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -262,7 +262,7 @@ show.url = (args: { planned_meal: string | number } | [planned_meal: string | nu
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 show.get = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
@@ -272,7 +272,7 @@ show.get = (args: { planned_meal: string | number } | [planned_meal: string | nu
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 show.head = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
@@ -282,7 +282,7 @@ show.head = (args: { planned_meal: string | number } | [planned_meal: string | n
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 const showForm = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
@@ -292,7 +292,7 @@ const showForm = (args: { planned_meal: string | number } | [planned_meal: strin
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 showForm.get = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, options),
@@ -302,7 +302,7 @@ showForm.get = (args: { planned_meal: string | number } | [planned_meal: string 
 /**
 * @see \App\Http\Controllers\PlannedMealController::show
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 showForm.head = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: show.url(args, {
@@ -319,7 +319,7 @@ show.form = showForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 export const edit = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
@@ -328,13 +328,13 @@ export const edit = (args: { planned_meal: string | number } | [planned_meal: st
 
 edit.definition = {
     methods: ["get","head"],
-    url: '/planned-meals/{planned_meal}/edit',
+    url: '/meal-planning/{planned_meal}/edit',
 } satisfies RouteDefinition<["get","head"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 edit.url = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -361,7 +361,7 @@ edit.url = (args: { planned_meal: string | number } | [planned_meal: string | nu
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 edit.get = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
@@ -371,7 +371,7 @@ edit.get = (args: { planned_meal: string | number } | [planned_meal: string | nu
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 edit.head = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
@@ -381,7 +381,7 @@ edit.head = (args: { planned_meal: string | number } | [planned_meal: string | n
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 const editForm = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
@@ -391,7 +391,7 @@ const editForm = (args: { planned_meal: string | number } | [planned_meal: strin
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 editForm.get = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, options),
@@ -401,7 +401,7 @@ editForm.get = (args: { planned_meal: string | number } | [planned_meal: string 
 /**
 * @see \App\Http\Controllers\PlannedMealController::edit
 * @see app/Http/Controllers/PlannedMealController.php:0
-* @route '/planned-meals/{planned_meal}/edit'
+* @route '/meal-planning/{planned_meal}/edit'
 */
 editForm.head = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
     action: edit.url(args, {
@@ -418,7 +418,7 @@ edit.form = editForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 export const update = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -427,13 +427,13 @@ export const update = (args: { planned_meal: string | number } | [planned_meal: 
 
 update.definition = {
     methods: ["put","patch"],
-    url: '/planned-meals/{planned_meal}',
+    url: '/meal-planning/{planned_meal}',
 } satisfies RouteDefinition<["put","patch"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 update.url = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
@@ -460,7 +460,7 @@ update.url = (args: { planned_meal: string | number } | [planned_meal: string | 
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 update.put = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
@@ -470,7 +470,7 @@ update.put = (args: { planned_meal: string | number } | [planned_meal: string | 
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 update.patch = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
@@ -480,7 +480,7 @@ update.patch = (args: { planned_meal: string | number } | [planned_meal: string 
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 const updateForm = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -495,7 +495,7 @@ const updateForm = (args: { planned_meal: string | number } | [planned_meal: str
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 updateForm.put = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -510,7 +510,7 @@ updateForm.put = (args: { planned_meal: string | number } | [planned_meal: strin
 /**
 * @see \App\Http\Controllers\PlannedMealController::update
 * @see app/Http/Controllers/PlannedMealController.php:118
-* @route '/planned-meals/{planned_meal}'
+* @route '/meal-planning/{planned_meal}'
 */
 updateForm.patch = (args: { planned_meal: string | number } | [planned_meal: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: update.url(args, {
@@ -527,7 +527,7 @@ update.form = updateForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::destroy
 * @see app/Http/Controllers/PlannedMealController.php:138
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
@@ -536,13 +536,13 @@ export const destroy = (options?: RouteQueryOptions): RouteDefinition<'delete'> 
 
 destroy.definition = {
     methods: ["delete"],
-    url: '/planned-meals',
+    url: '/meal-planning',
 } satisfies RouteDefinition<["delete"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::destroy
 * @see app/Http/Controllers/PlannedMealController.php:138
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 destroy.url = (options?: RouteQueryOptions) => {
     return destroy.definition.url + queryParams(options)
@@ -551,7 +551,7 @@ destroy.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\PlannedMealController::destroy
 * @see app/Http/Controllers/PlannedMealController.php:138
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
     url: destroy.url(options),
@@ -561,7 +561,7 @@ destroy.delete = (options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::destroy
 * @see app/Http/Controllers/PlannedMealController.php:138
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url({
@@ -576,7 +576,7 @@ const destroyForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 /**
 * @see \App\Http\Controllers\PlannedMealController::destroy
 * @see app/Http/Controllers/PlannedMealController.php:138
-* @route '/planned-meals'
+* @route '/meal-planning'
 */
 destroyForm.delete = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: destroy.url({
@@ -593,7 +593,7 @@ destroy.form = destroyForm
 /**
 * @see \App\Http\Controllers\PlannedMealController::generate
 * @see app/Http/Controllers/PlannedMealController.php:158
-* @route '/planned-meals/generate'
+* @route '/meal-planning/generate'
 */
 export const generate = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generate.url(options),
@@ -602,13 +602,13 @@ export const generate = (options?: RouteQueryOptions): RouteDefinition<'post'> =
 
 generate.definition = {
     methods: ["post"],
-    url: '/planned-meals/generate',
+    url: '/meal-planning/generate',
 } satisfies RouteDefinition<["post"]>
 
 /**
 * @see \App\Http\Controllers\PlannedMealController::generate
 * @see app/Http/Controllers/PlannedMealController.php:158
-* @route '/planned-meals/generate'
+* @route '/meal-planning/generate'
 */
 generate.url = (options?: RouteQueryOptions) => {
     return generate.definition.url + queryParams(options)
@@ -617,7 +617,7 @@ generate.url = (options?: RouteQueryOptions) => {
 /**
 * @see \App\Http\Controllers\PlannedMealController::generate
 * @see app/Http/Controllers/PlannedMealController.php:158
-* @route '/planned-meals/generate'
+* @route '/meal-planning/generate'
 */
 generate.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     url: generate.url(options),
@@ -627,7 +627,7 @@ generate.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 /**
 * @see \App\Http\Controllers\PlannedMealController::generate
 * @see app/Http/Controllers/PlannedMealController.php:158
-* @route '/planned-meals/generate'
+* @route '/meal-planning/generate'
 */
 const generateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: generate.url(options),
@@ -637,7 +637,7 @@ const generateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> 
 /**
 * @see \App\Http\Controllers\PlannedMealController::generate
 * @see app/Http/Controllers/PlannedMealController.php:158
-* @route '/planned-meals/generate'
+* @route '/meal-planning/generate'
 */
 generateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
     action: generate.url(options),
@@ -646,7 +646,7 @@ generateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> =
 
 generate.form = generateForm
 
-const plannedMeals = {
+const mealPlanning = {
     index: Object.assign(index, index),
     create: Object.assign(create, create),
     store: Object.assign(store, store),
@@ -657,4 +657,4 @@ const plannedMeals = {
     generate: Object.assign(generate, generate),
 }
 
-export default plannedMeals
+export default mealPlanning

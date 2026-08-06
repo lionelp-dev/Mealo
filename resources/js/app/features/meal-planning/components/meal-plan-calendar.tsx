@@ -1,4 +1,4 @@
-import { useWeekPlannedMeals } from '../hooks/use-week-planned-meals';
+import { useWeekPlannedMeals } from '../hooks/use-week-meal-plan';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import MealPlanDayHeader from './meal-plan-day-header';
 import MealPlanDialog from './meal-plan-dialog';

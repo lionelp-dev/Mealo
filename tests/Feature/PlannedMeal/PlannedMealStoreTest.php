@@ -20,7 +20,7 @@ describe('PlannedMealStore', function () {
             /** @var \Tests\TestCase $this */
             $response = $this->actingAs($this->user)
                 ->post(
-                    route('planned-meals.store'),
+                    route('meal-planning.store'),
                     $this->userInvalidPlannedMealStoreRequestData->transform()
                 )->assertSessionHasErrors();
         });
@@ -31,7 +31,7 @@ describe('PlannedMealStore', function () {
             /** @var \Tests\TestCase $this */
             $response = $this->actingAs($this->viewerUser)
                 ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
-                ->post(route('planned-meals.store'), $this->viewerPlannedMealStoreRequestData->transform())
+                ->post(route('meal-planning.store'), $this->viewerPlannedMealStoreRequestData->transform())
                 ->assertSessionHas(
                     'error',
                     PlannedMealStoreAuthorizationException::message(),
@@ -43,7 +43,7 @@ describe('PlannedMealStore', function () {
         test('when single meal is valid', function () {
             /** @var \Tests\TestCase $this */
             $this->actingAs($this->user)
-                ->post(route('planned-meals.store'), $this->userPlannedMealStoreRequestData->transform())
+                ->post(route('meal-planning.store'), $this->userPlannedMealStoreRequestData->transform())
                 ->assertSessionHas('success', PlannedMealStoredMessage::message());
         });
 
@@ -51,7 +51,7 @@ describe('PlannedMealStore', function () {
             /** @var \Tests\TestCase $this */
             $this->actingAs($this->user)
                 ->post(
-                    route('planned-meals.store'),
+                    route('meal-planning.store'),
                     $this->userMultiplePlannedMealStoreRequestData->transform()
                 )
                 ->assertSessionHas('success', PlannedMealStoredMessage::message());
@@ -61,13 +61,13 @@ describe('PlannedMealStore', function () {
             /** @var \Tests\TestCase $this */
             $this->actingAs($this->user)
                 ->post(
-                    route('planned-meals.store'),
+                    route('meal-planning.store'),
                     $this->userPlannedMealStoreRequestData->transform()
                 );
 
             $this->actingAs($this->user)
                 ->post(
-                    route('planned-meals.store'),
+                    route('meal-planning.store'),
                     $this->userPlannedMealStoreRequestData->transform()
                 )
                 ->assertSessionHas('success', PlannedMealStoredMessage::message());

@@ -166,7 +166,7 @@ resources/js/
     generated.d.ts  # Auto-generated from #[TypeScript] PHP classes (DO NOT EDIT)
     enum.ts         # TypeScript enums mirroring PHP enums
   app/
-    features/       # Domain modules: recipes/, planned-meals/, workspaces/, shopping-lists/, admin/
+    features/       # Domain modules: recipes/, meal-planning/, workspaces/, shopping-lists/, admin/
     components/     # Shared UI components; ui/ sub-folder holds primitives (Button, Input, Dialog, …)
     hooks/          # Shared hooks (usePermissions, useAppForm, useWeekSelector, …)
     stores/         # Shared Zustand stores
@@ -205,7 +205,7 @@ Forms use **TanStack Form** via the custom `useAppForm` hook (`app/hooks/form-ho
 
 ### State, routing & i18n
 
-- **State**: Zustand stores. Feature stores in `features/{domain}/stores/`, shared stores in `app/stores/`. The planned-meals page polls with `usePoll(3000, { only: ['plannedMeals'] })`.
+- **State**: Zustand stores. Feature stores in `features/{domain}/stores/`, shared stores in `app/stores/`. The meal-planning page polls with `usePoll(3000, { only: ['plannedMeals'] })`.
 - **Routing**: Import from `resources/js/routes/` (e.g. `import recipesRoute from '@/routes/recipes'`). Never hardcode URLs.
 - **i18n**: `react-i18next` — use `useTranslation()` + `t('key')`. Translations in `app/locales/`.
 - **Pagination**: Backend sends `Inertia::scroll()` responses; frontend uses Inertia's `<InfiniteScroll>` with `PaginatedCollection<T>` props.

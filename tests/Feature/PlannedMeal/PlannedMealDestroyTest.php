@@ -21,7 +21,7 @@ describe('PlannedMealDestroyTest', function () {
 
             $response = $this->actingAs($this->user)
                 ->delete(
-                    route('planned-meals.destroy'),
+                    route('meal-planning.destroy'),
                     PlannedMealDestroyRequestData::from([
                         'planned_meals' => collect($plannedMeals)
                             ->pluck('id')

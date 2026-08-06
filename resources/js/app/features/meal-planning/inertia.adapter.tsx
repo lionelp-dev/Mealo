@@ -25,7 +25,7 @@ export const {
   useContextValue: usePlannedMealsContextValue,
 } = createGenericContext<PageProps & { url: string }>();
 
-export function PlannedMealsInertiaAdapter({ children }: PropsWithChildren) {
+export function MealPlanningInertiaAdapter({ children }: PropsWithChildren) {
   const url = usePage().url;
   const pageProps = usePage<PageProps>().props;
   const data = useMemo(() => ({ ...pageProps, url }), [pageProps]);

@@ -29,7 +29,7 @@ describe('PlannedMealUpdate', function () {
             $this->actingAs($this->user)
                 ->put(
                     route(
-                        'planned-meals.update',
+                        'meal-planning.update',
                         $planned_meals[0]
                     ),
                     $this->userPlannedMealUpdateRequestData->transform()
@@ -48,7 +48,7 @@ describe('PlannedMealUpdate', function () {
             $this->actingAs($this->user)
                 ->put(
                     route(
-                        'planned-meals.update',
+                        'meal-planning.update',
                         $planned_meals[0]
                     ),
                     $this->userPlannedMealUpdateRequestData->transform()
@@ -69,7 +69,7 @@ describe('PlannedMealUpdate', function () {
             $response = $this->actingAs($this->user)
                 ->put(
                     route(
-                        'planned-meals.update',
+                        'meal-planning.update',
                         $planned_meals[0]
                     ),
                     $this->userInvalidPlannedMealStoreRequestData
@@ -92,7 +92,7 @@ describe('PlannedMealUpdate', function () {
                 ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
                 ->put(
                     route(
-                        'planned-meals.update',
+                        'meal-planning.update',
                         $planned_meals[0]
                     ),
                     $this->viewerPlannedMealUpdateRequestData

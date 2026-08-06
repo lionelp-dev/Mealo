@@ -5,12 +5,12 @@ import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
 import WeekSelector from '@/app/components/week-selector';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import AppLayout from '@/app/layouts/app-layout';
-import plannedMealsRoute from '@/routes/planned-meals';
+import mealPlanningRoute from '@/routes/meal-planning';
 import { Head } from '@inertiajs/react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
-export function PlannedMealsIndexView() {
+export function MealPlanningIndexView() {
   const { t } = useTranslation();
 
   const { weekStart, workspace_data } = usePlannedMealsContextValue();
@@ -28,7 +28,7 @@ export function PlannedMealsIndexView() {
       <div className="flex items-center gap-4">
         <WeekSelector
           currentWeek={DateTime.fromISO(weekStart)}
-          url={plannedMealsRoute.index.url()}
+          url={mealPlanningRoute.index.url()}
         />
       </div>
     ),

@@ -703,7 +703,7 @@ Les tests fonctionnels vérifient les parcours utilisateur en passant par les ro
 test('synchronizes the shopping list when a meal is planned', function () {
     $this->actingAs($this->user)
         ->post(
-            route('planned-meals.store'),
+            route('meal-planning.store'),
             $this->userPlannedMealStoreRequestData->transform(),
         )
         ->assertSessionHas(

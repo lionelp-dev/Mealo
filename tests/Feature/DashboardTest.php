@@ -9,5 +9,5 @@ test('guests are redirected to the login page', function () {
 test('authenticated users can visit the dashboard', function () {
     $this->actingAs($user = User::factory()->create());
 
-    $this->get(route('planned-meals.index'))->assertOk();
+    $this->get(route('meal-planning.index'))->assertOk();
 });

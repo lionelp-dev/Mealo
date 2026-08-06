@@ -1,6 +1,6 @@
 import { useMealPlanGeneration } from '../hooks/use-meal-plan-generation';
 import { useAppForm } from '@/app/hooks/form-hook';
-import plannedMeals from '@/routes/planned-meals';
+import mealPlanning from '@/routes/meal-planning';
 import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import 'cally';
@@ -40,7 +40,7 @@ export function MealPlanGenerationPopover() {
     defaultValues,
     onSubmit: ({ value }) => {
       router.post(
-        plannedMeals.generate.url(),
+        mealPlanning.generate.url(),
         {
           startDate: value.range.startDate.toISODate(),
           endDate: value.range.endDate.toISODate(),
