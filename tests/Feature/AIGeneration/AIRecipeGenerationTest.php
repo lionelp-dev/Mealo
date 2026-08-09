@@ -2,8 +2,9 @@
 
 namespace Tests\Feature\AIRecipeGeneration;
 
+use App\Ai\Agents\RecipeGenerator;
 use App\Models\User;
-use Tests\Helpers\OpenAITestHelper;
+use Exception;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -17,24 +18,29 @@ test('recipe generation screen can be rendered', function () {
 });
 
 test('user can generate a recipe successfully with simple prompt', function () {
-    // Mock the OpenAI response
-    OpenAITestHelper::mockSuccessfulRecipeGeneration([
-        'name' => 'Saumon Grillé au Citron',
-        'description' => 'Un délicieux saumon grillé avec une touche de citron',
-        'preparation_time' => 15,
-        'cooking_time' => 20,
-        'serving_size' => 2,
-        'meal_times' => [['id' => 2, 'name' => 'lunch']],
-        'tags' => [['name' => 'healthy'], ['name' => 'seafood']],
-        'ingredients' => [
-            ['name' => 'Filet de saumon', 'quantity' => 500, 'unit' => 'g'],
-            ['name' => 'Citron', 'quantity' => 1, 'unit' => 'pièce'],
-        ],
-        'steps' => [
-            ['description' => 'Préchauffer le grill', 'order' => 1],
-            ['description' => 'Griller le saumon 10 min de chaque côté', 'order' => 2],
-        ],
-    ]);
+    RecipeGenerator::fake(function (string $prompt, mixed $attachments, mixed $provider, string $model): array {
+        expect($provider->name())->toBe('openrouter')
+            ->and($model)->toBe('openai/gpt-4o-mini')
+            ->and($prompt)->toBe('une recette simple avec du saumon grillé');
+
+        return [
+            'name' => 'Saumon Grillé au Citron',
+            'description' => 'Un délicieux saumon grillé avec une touche de citron',
+            'preparation_time' => 15,
+            'cooking_time' => 20,
+            'serving_size' => 2,
+            'meal_times' => [['id' => 2, 'name' => 'lunch']],
+            'tags' => [['name' => 'healthy'], ['name' => 'seafood']],
+            'ingredients' => [
+                ['name' => 'Filet de saumon', 'quantity' => 500, 'unit' => 'g'],
+                ['name' => 'Citron', 'quantity' => 1, 'unit' => 'piece'],
+            ],
+            'steps' => [
+                ['description' => 'Préchauffer le grill', 'order' => 1],
+                ['description' => 'Griller le saumon 10 min de chaque côté', 'order' => 2],
+            ],
+        ];
+    });
 
     $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), [
         'prompt' => 'une recette simple avec du saumon grillé',
@@ -62,6 +68,8 @@ test('user can generate a recipe successfully with simple prompt', function () {
 
     // Basic validation - ensure key fields exist
     expect($generatedRecipe)->toHaveKeys(['name', 'description', 'preparation_time', 'cooking_time', 'meal_times', 'tags', 'ingredients', 'steps']);
+
+    RecipeGenerator::assertPrompted('une recette simple avec du saumon grillé');
 });
 
 test('user cannot generate recipe with invalid prompt', function () {
@@ -89,8 +97,10 @@ test('guest user cannot generate recipe', function () {
     $response->assertRedirect(route('login'));
 });
 
-test('handles openai api failure gracefully', function () {
-    OpenAITestHelper::mockOpenAIErrorException('OpenAI API error');
+test('handles ai api failure gracefully', function () {
+    RecipeGenerator::fake([
+        fn () => throw new Exception('OpenAI API error'),
+    ]);
 
     $promptData = [
         'prompt' => 'une simple recette végétarienne',
@@ -103,8 +113,10 @@ test('handles openai api failure gracefully', function () {
     $response->assertSessionHas('error', 'Failed to generate recipe: OpenAI API error');
 });
 
-test('handles openai rate limit gracefully', function () {
-    OpenAITestHelper::mockOpenAIRateLimit();
+test('handles ai rate limit gracefully', function () {
+    RecipeGenerator::fake([
+        fn () => throw new Exception('Rate limit exceeded'),
+    ]);
 
     $promptData = [
         'prompt' => 'une recette végétarienne',
@@ -117,8 +129,10 @@ test('handles openai rate limit gracefully', function () {
     $response->assertSessionHas('error');
 });
 
-test('handles openai invalid api key gracefully', function () {
-    OpenAITestHelper::mockOpenAIInvalidApiKey();
+test('handles ai invalid api key gracefully', function () {
+    RecipeGenerator::fake([
+        fn () => throw new Exception('Invalid API key'),
+    ]);
 
     $promptData = [
         'prompt' => 'une recette avec des herbes',
