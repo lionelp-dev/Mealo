@@ -48,4 +48,5 @@ export const recipeUpdateRequestSchema = z.object({
       ),
     z.null(),
   ]),
+  remove_image: z.boolean(),
 }) satisfies z.ZodType<RecipeUpdateRequestData>;

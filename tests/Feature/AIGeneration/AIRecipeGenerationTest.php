@@ -106,7 +106,9 @@ test('handles ai api failure gracefully', function () {
         'prompt' => 'une simple recette végétarienne',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
+    $response = $this->actingAs($this->user)
+        ->from(route('recipes.create'))
+        ->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
@@ -122,7 +124,9 @@ test('handles ai rate limit gracefully', function () {
         'prompt' => 'une recette végétarienne',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
+    $response = $this->actingAs($this->user)
+        ->from(route('recipes.create'))
+        ->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));
@@ -138,7 +142,9 @@ test('handles ai invalid api key gracefully', function () {
         'prompt' => 'une recette avec des herbes',
     ];
 
-    $response = $this->actingAs($this->user)->post(route('recipes.ai-generation'), $promptData);
+    $response = $this->actingAs($this->user)
+        ->from(route('recipes.create'))
+        ->post(route('recipes.ai-generation'), $promptData);
 
     $response->assertStatus(302);
     $response->assertRedirect(route('recipes.create'));

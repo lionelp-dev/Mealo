@@ -102,64 +102,6 @@ class RecipeController extends Controller
         }
     }
 
-    public function aiImageGeneration(
-        RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
-        RecipeImageAIGenerationAction $recipeImageAIGenerationAction
-    ): RedirectResponse {
-        try {
-            Gate::authorize('create', Recipe::class);
-
-            $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
-            $base64Image = $recipeImageAIGenerationAction->execute($prompt);
-
-            return back()->with([
-                'generated_image_data_url' => $base64Image,
-            ]);
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function showAIGenerationModal(
-    ): RedirectResponse {
-        return to_route('recipes.create')
-            ->with([
-                'show_recipe_ai_generation_modal' => true,
-            ]);
-    }
-
-    public function aiGeneration(
-        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
-        RecipeAIGenerationAction $recipeAIGenerationAction,
-        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
-    ): Response|RedirectResponse {
-        try {
-            Gate::authorize('create', Recipe::class);
-
-            $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
-
-            if ($recipeAIGenerationRequestData->image_generation) {
-                $prompt = $recipe->name
-                    .'with'.json_encode($recipe->ingredients)
-                    .'recipe steps'.json_encode($recipe->steps);
-
-                $base64Image = $recipeImageAIGenerationAction->execute($prompt);
-            }
-
-            return Inertia::render(
-                'recipe/create',
-                [
-                    'generated_recipe' => $recipe,
-                    'generated_image_data_url' => $base64Image ?? null,
-                    'show_recipe_ai_generation_modal' => false,
-                ]
-            );
-        } catch (\Exception $e) {
-            return to_route('recipes.create')
-                ->with('error', $e->getMessage());
-        }
-    }
-
     public function show(Recipe $recipe): Response
     {
         Gate::authorize('view', $recipe);
@@ -255,5 +197,62 @@ class RecipeController extends Controller
             'Content-Type' => $mimeType,
             'Cache-Control' => 'public, max-age=86400', // Cache for 1 day
         ]);
+    }
+
+    public function showAIGenerationModal(
+    ): RedirectResponse {
+        return to_route('recipes.create')
+            ->with([
+                'show_recipe_ai_generation_modal' => true,
+            ]);
+    }
+
+    public function aiGeneration(
+        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
+        RecipeAIGenerationAction $recipeAIGenerationAction,
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
+    ): Response|RedirectResponse {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
+
+            if ($recipeAIGenerationRequestData->image_generation) {
+                $prompt = $recipe->name
+                    . 'with' . json_encode($recipe->ingredients)
+                    . 'recipe steps' . json_encode($recipe->steps);
+
+                $base64Image = $recipeImageAIGenerationAction->execute($prompt);
+            }
+
+            return Inertia::render(
+                'recipe/create',
+                [
+                    'generated_recipe' => $recipe,
+                    'generated_image_data_url' => $base64Image ?? null,
+                    'show_recipe_ai_generation_modal' => false,
+                ]
+            );
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function aiImageGeneration(
+        RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction
+    ) {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+            $base64Image = $recipeImageAIGenerationAction->execute($prompt);
+
+            return Inertia::render('recipe/create')->with([
+                'generated_image_data_url' => $base64Image,
+            ]);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 }

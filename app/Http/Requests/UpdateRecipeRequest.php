@@ -39,6 +39,7 @@ class UpdateRecipeRequest extends FormRequest
             'tags' => ['required', 'array'],
             'tags.*.name' => ['string', 'max:255'],
             'image' => ['nullable', 'image', 'mimes:jpeg,jpg,png', 'max:5120'],
+            'remove_image' => ['boolean'],
         ];
     }
 }

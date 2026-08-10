@@ -21,7 +21,7 @@ describe('RecipeUpdateAction', function () {
         assertDatabaseHas('recipes', [
             'id' => $this->recipe->id,
             'user_id' => $this->user->id,
-            ...$this->recipeUpdateRequestData->except('meal_times', 'ingredients', 'tags', 'steps', 'image')->transform(),
+            ...$this->recipeUpdateRequestData->except('meal_times', 'ingredients', 'tags', 'steps', 'image', 'remove_image')->transform(),
         ]);
 
         expect($this->recipe->mealTimes)->toHaveCount(count($this->recipeUpdateRequestData->meal_times));

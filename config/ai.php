@@ -14,7 +14,7 @@ return [
     */
 
     'default' => 'openai',
-    'default_for_images' => 'gemini',
+    'default_for_images' => 'openrouter',
     'default_for_audio' => 'openai',
     'default_for_transcription' => 'openai',
     'default_for_embeddings' => 'openai',
@@ -133,6 +133,9 @@ return [
             'models' => [
                 'text' => [
                     'default' => 'openai/gpt-4o-mini',
+                ],
+                'image' => [
+                    'default' => env('OPENROUTER_IMAGE_MODEL', 'google/gemini-2.5-flash-image'),
                 ],
             ],
         ],

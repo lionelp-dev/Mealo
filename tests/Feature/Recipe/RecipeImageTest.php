@@ -162,6 +162,43 @@ test('recipe update with image uploads and stores image', function () {
     Storage::disk('recipe_images')->assertExists($this->recipe->image_path ?? '');
 });
 
+test('recipe update without image preserves existing image', function () {
+    /** @var \Tests\TestCase $this */
+    $imagePath = (app(RecipeUploadImageAction::class))($this->recipe, $this->recipeImage);
+
+    $this->actingAs($this->user)
+        ->put(
+            route('recipes.update', $this->recipe),
+            $this->recipeUpdateRequestData->except('image')->transform()
+        )
+        ->assertStatus(302);
+
+    $this->recipe->refresh();
+
+    expect($this->recipe->image_path)->toBe($imagePath);
+    Storage::disk('recipe_images')->assertExists($imagePath);
+});
+
+test('recipe update can remove existing image', function () {
+    /** @var \Tests\TestCase $this */
+    $imagePath = (app(RecipeUploadImageAction::class))($this->recipe, $this->recipeImage);
+
+    $this->actingAs($this->user)
+        ->put(
+            route('recipes.update', $this->recipe),
+            [
+                ...$this->recipeUpdateRequestData->except('image')->transform(),
+                'remove_image' => true,
+            ]
+        )
+        ->assertStatus(302);
+
+    $this->recipe->refresh();
+
+    expect($this->recipe->image_path)->toBeNull();
+    Storage::disk('recipe_images')->assertMissing($imagePath);
+});
+
 test('viewing recipe image returns 404 when no image exists', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)

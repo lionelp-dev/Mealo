@@ -30,7 +30,8 @@ class RecipeUpdateRequestData extends Data
         /** @var TagRequestData[] */
         public array $tags,
         #[LiteralTypeScriptType('File|null')]
-        public ?UploadedFile $image = null
+        public ?UploadedFile $image = null,
+        public bool $remove_image = false,
     ) {}
 
     /**
@@ -50,6 +51,7 @@ class RecipeUpdateRequestData extends Data
             'steps' => 'required|array|min:1|max:255',
             'tags' => 'required|array|min:1|max:255',
             'image' => 'nullable|image|mimes:jpeg,jpg,png|max:5120',
+            'remove_image' => 'boolean',
         ];
     }
 }

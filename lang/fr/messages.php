@@ -5,6 +5,7 @@ return [
         'created' => 'Recette créée avec succès',
         'updated' => 'Recette mise à jour avec succès',
         'deleted' => 'Recette supprimée avec succès',
+        'image_generation_failed' => "Impossible de générer l'image de la recette pour le moment.",
     ],
     'planned_meal' => [
         'stored' => 'Repas planifié avec succès',

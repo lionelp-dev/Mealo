@@ -11,6 +11,7 @@ export function useGenerateRecipe() {
   const generateRecipe = (data: RecipeAIGenerationRequest) => {
     router.post(recipes.aiGeneration.url(), data, {
       only: ['generated_recipe', 'generated_image_data_url', 'flash'],
+      preserveUrl: true,
       onBefore: () => {
         setProcessing(true);
         setWasSuccessful(false);

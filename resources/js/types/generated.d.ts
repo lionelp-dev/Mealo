@@ -133,6 +133,7 @@ export type RecipeUpdateRequestData = {
   steps: Array<StepRequestData>;
   tags: Array<TagRequestData>;
   image: File | null;
+  remove_image: boolean;
 };
 export type ShoppingListIndexRequestData = {
   week?: string;

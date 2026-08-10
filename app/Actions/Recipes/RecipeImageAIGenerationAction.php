@@ -2,114 +2,68 @@
 
 namespace App\Actions\Recipes;
 
-use Exception;
-use Illuminate\Support\Facades\Http;
-use OpenAI\Contracts\ClientContract;
+use App\Exceptions\Recipe\RecipeImageGenerationException;
+use Laravel\Ai\Image;
+use RuntimeException;
+use Throwable;
 
 class RecipeImageAIGenerationAction
 {
-    private ?ClientContract $client;
-
-    public function __construct()
+    /**
+     * Get the instructions that the agent should follow.
+     */
+    public function instructions(string $prompt): string
     {
-        $client = app('openai.client');
-        $this->client = $client instanceof ClientContract ? $client : null;
+        return "A professional food photography of {$prompt}, appetizing presentation, "
+               . 'high quality, well-lit, centered on a clean white plate, neutral background, '
+               . 'culinary magazine style, realistic, detailed';
     }
 
     /**
-     * Generate a recipe image using OpenRouter Gemini and return base64
+     * Generate a recipe image using Laravel AI and return a base64 data URL.
      */
     public function execute(string $prompt): string
     {
-        if (! $this->client) {
-            throw new Exception('AI image generation is not configured');
+        try {
+            $response = Image::of($this->instructions($prompt))
+                ->square()
+                ->quality('low')
+                ->timeout(60)
+                ->generate();
+        } catch (Throwable $e) {
+            throw new RecipeImageGenerationException(previous: $e);
         }
 
-        $apiKey = config('services.openai.api_key');
-        $baseUri = config('services.openai.base_uri', 'https://api.openai.com/v1');
-        $appUrl = config('app.url');
-        $appName = config('app.name');
-
-        if (! is_string($apiKey) || $apiKey === '' || ! is_string($baseUri) || $baseUri === '') {
-            throw new Exception('AI image generation is not configured');
+        if ($response->count() === 0) {
+            throw new RecipeImageGenerationException(
+                previous: new RuntimeException('No image returned by provider')
+            );
         }
 
-        $responseArray = Http::withHeaders([
-            'Authorization' => 'Bearer '.$apiKey,
-            'HTTP-Referer' => is_string($appUrl) ? $appUrl : '',
-            'X-Title' => is_string($appName) ? $appName : '',
-        ])->timeout(60)->post($baseUri.'/chat/completions', [
-            'model' => 'google/gemini-2.5-flash-image',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => 'Generate an image of: '.$this->buildPrompt($prompt),
-                ],
-            ],
-            'modalities' => ['image'],
-        ])->json();
+        $image = $response->firstImage();
+        $base64Data = $image->image;
 
-        if (! is_array($responseArray)) {
-            throw new Exception('Invalid response returned from API');
+        if ($base64Data === '') {
+            throw new RecipeImageGenerationException(
+                previous: new RuntimeException('Empty image data returned by provider')
+            );
         }
 
-        $choices = $responseArray['choices'] ?? null;
-        if (! is_array($choices)) {
-            throw new Exception('Invalid response returned from API');
+        if (base64_decode($base64Data, true) === false) {
+            throw new RecipeImageGenerationException(
+                previous: new RuntimeException('Invalid base64 image data returned by provider')
+            );
         }
 
-        $firstChoice = $choices[0] ?? null;
-        if (! is_array($firstChoice)) {
-            throw new Exception('Invalid response returned from API');
-        }
-
-        $message = $firstChoice['message'] ?? null;
-        if (! is_array($message)) {
-            throw new Exception('Invalid response returned from API');
-        }
-
-        $images = $message['images'] ?? null;
-        if (! is_array($images)) {
-            throw new Exception('Invalid response returned from API');
-        }
-
-        $firstImage = $images[0] ?? null;
-        if (! is_array($firstImage)) {
-            throw new Exception('Invalid response returned from API');
-        }
-
-        $imageUrl = $firstImage['image_url'] ?? null;
-        if (! is_array($imageUrl)) {
-            throw new Exception('Invalid response returned from API');
-        }
-
-        $dataUri = $imageUrl['url'] ?? null;
-
-        if (! is_string($dataUri) || $dataUri === '') {
-            throw new Exception('No image data returned from API');
-        }
-
-        if (! preg_match('/^data:image\/(\w+);base64,(.+)$/', $dataUri, $matches)) {
-            throw new Exception('Invalid image data format');
-        }
-
-        $base64Data = $matches[2];
-
-        $decodedSize = strlen(base64_decode($base64Data));
+        $decodedSize = strlen((string) base64_decode($base64Data, true));
         if ($decodedSize > 5 * 1024 * 1024) {
-            throw new Exception('Generated image exceeds 5MB limit');
+            throw new RecipeImageGenerationException(
+                previous: new RuntimeException('Generated image exceeds 5MB limit')
+            );
         }
 
-        return 'data:image/png;base64,'.$base64Data;
-    }
+        $mime = $image->mime ?: 'image/png';
 
-    /**
-     * Build an optimized prompt for food photography
-     */
-    private function buildPrompt(string $prompt): string
-    {
-        return "A professional food photography of {$prompt}, appetizing presentation, "
-               .'high quality, well-lit, centered on a clean white plate, neutral background, '
-               .'culinary magazine style, realistic, detailed';
+        return "data:{$mime};base64,{$base64Data}";
     }
 }

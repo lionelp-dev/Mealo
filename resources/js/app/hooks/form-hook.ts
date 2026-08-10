@@ -1,3 +1,4 @@
+import { ImageUploadField } from '../components/ui/form-image-upload-field';
 import { fieldContext, formContext } from './form-context';
 import CheckboxField from '@/app/components/ui/form-checkbox-field';
 import EmailField from '@/app/components/ui/form-email-field';
@@ -20,6 +21,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
     CheckboxField,
     RadioField,
     MultiSelectField,
+    ImageUploadField,
   },
   formComponents: {
     SubmitButton,

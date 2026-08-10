@@ -7,7 +7,6 @@ import { viewRecipes } from '../repositories/recipes.repository';
 import { useCreateRecipe } from '../repositories/use-create-recipe';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { AppMainContent } from '@/app/components/app-main-content';
-import { ImageUpload } from '@/app/components/image-upload';
 import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-store.request.schema';
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
@@ -37,7 +36,9 @@ export function CreateRecipesView() {
     steps: generated_recipe?.steps ?? [],
     tags: generated_recipe?.tags ?? [],
     meal_times: generated_recipe?.meal_times ?? [],
-    image: generated_recipe?.image ?? null,
+    image: generated_image_data_url
+      ? base64ToFile(generated_image_data_url, 'image')
+      : null,
   };
 
   const form = useAppForm({
@@ -56,6 +57,12 @@ export function CreateRecipesView() {
     errors: imageErrors,
   } = useGenerateRecipeImage();
 
+  const { name, ingredients } = useStore(form.store, (state) => state.values);
+
+  const handleGenerateImage = () => {
+    generateRecipeImage(name, ingredients);
+  };
+
   useEffect(() => {
     if (generated_image_data_url)
       form.setFieldValue(
@@ -63,12 +70,6 @@ export function CreateRecipesView() {
         base64ToFile(generated_image_data_url, 'image'),
       );
   }, [generated_image_data_url]);
-
-  const { name, ingredients } = useStore(form.store, (state) => state.values);
-
-  const handleGenerateImage = () => {
-    generateRecipeImage(name, ingredients);
-  };
 
   return (
     <AppLayout
@@ -240,12 +241,14 @@ export function CreateRecipesView() {
                 validators={{
                   onChange: recipeStoreRequestSchema.shape.image,
                 }}
-                children={(field) => (
-                  <ImageUpload
-                    value={field.state.value}
-                    onChange={field.handleChange}
-                  />
-                )}
+                children={(field) => {
+                  return (
+                    <field.ImageUploadField
+                      value={field.state.value}
+                      onChange={field.handleChange}
+                    />
+                  );
+                }}
               />
               <div className="divider">{t('common.or', 'Ou')}</div>
               {/* Message d'erreur si échec */}

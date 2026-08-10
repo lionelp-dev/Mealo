@@ -86,7 +86,7 @@ class PlannedMealController extends Controller
             'mealTimes' => MealTime::all(),
             'plannedMeals' => PlannedMealResourceData::collect($plannedMeals),
             'plannedMealImages' => $plannedMealImages,
-            'recipes' => Inertia::scroll(fn () => new RecipeCollection($recipeQuery->paginate(10))),
+            'recipes' => Inertia::scroll(fn() => new RecipeCollection($recipeQuery->paginate(10))),
             'tags' => TagResourceData::collect($tags),
             'workspace_data' => [
                 'current_workspace' => WorkspaceResourceData::from($currentWorkspace),
@@ -171,7 +171,7 @@ class PlannedMealController extends Controller
                 $plannedMealPlanGenerationRequestData,
             );
 
-            return redirect()->back()->with(
+            return back()->with(
                 'success',
                 MealPlanGeneratedMessage::forCreatedCount($createdCount)
             );
@@ -179,7 +179,7 @@ class PlannedMealController extends Controller
             Exception
             |AuthorizationException $e
         ) {
-            return redirect()->back()->with(
+            return back()->with(
                 'error',
                 $e->getMessage()
             );

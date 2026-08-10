@@ -6,7 +6,6 @@ import { viewRecipe } from '../repositories/recipes.repository';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { useUpdateRecipe } from '../repositories/use-update-recipe';
 import { AppMainContent } from '@/app/components/app-main-content';
-import { ImageUpload } from '@/app/components/image-upload';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
 import { recipeUpdateRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-update.request.schema';
 import { RecipeUpdateRequest } from '@/app/data/requests/recipe/types';
@@ -38,7 +37,10 @@ export function EditRecipesView() {
     steps: recipe.steps ?? [],
     tags: recipe.tags ?? [],
     meal_times: recipe.meal_times ?? [],
-    image: null,
+    image: generated_image_data_url
+      ? base64ToFile(generated_image_data_url, 'image')
+      : null,
+    remove_image: false,
   };
 
   const form = useAppForm({
@@ -51,11 +53,14 @@ export function EditRecipesView() {
     },
   });
 
-  const {
-    generateRecipeImage,
-    processing: imageGenerating,
-    errors: imageErrors,
-  } = useGenerateRecipeImage();
+  const { generateRecipeImage, processing: imageGenerating } =
+    useGenerateRecipeImage();
+
+  const { name, ingredients } = useStore(form.store, (state) => state.values);
+
+  const handleGenerateImage = () => {
+    generateRecipeImage(name, ingredients);
+  };
 
   useEffect(() => {
     if (generated_image_data_url)
@@ -64,12 +69,6 @@ export function EditRecipesView() {
         base64ToFile(generated_image_data_url, 'image'),
       );
   }, [generated_image_data_url]);
-
-  const { name, ingredients } = useStore(form.store, (state) => state.values);
-
-  const handleGenerateImage = () => {
-    generateRecipeImage(name, ingredients);
-  };
 
   return (
     <AppLayout
@@ -218,21 +217,22 @@ export function EditRecipesView() {
               <form.AppField
                 name="image"
                 children={(field) => (
-                  <ImageUpload
+                  <field.ImageUploadField
+                    previewUrl={
+                      generated_image_data_url ? null : recipe.image_url
+                    }
                     value={field.state.value}
-                    onChange={field.handleChange}
-                    currentImageUrl={recipe.image_url}
+                    onChange={(file) => {
+                      field.handleChange(file);
+                      if (file) {
+                        form.setFieldValue('remove_image', false);
+                      }
+                    }}
+                    onRemove={() => form.setFieldValue('remove_image', true)}
                   />
                 )}
               />
               <div className="divider">{t('common.or', 'Ou')}</div>
-              {/* Message d'erreur si échec */}
-              {imageErrors &&
-                imageErrors.map((error) => (
-                  <div className="alert-sm alert alert-error">
-                    <span className="text-xs">{error}</span>
-                  </div>
-                ))}
               <button
                 type="button"
                 onClick={handleGenerateImage}

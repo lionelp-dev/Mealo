@@ -41,7 +41,7 @@ class RecipeUpdateAction
 
         if ($recipeData->image) {
             ($this->uploadImage)($recipe, $recipeData->image);
-        } else {
+        } elseif ($recipeData->remove_image) {
             ($this->recipeImageDeleteAction)($recipe);
         }
 
