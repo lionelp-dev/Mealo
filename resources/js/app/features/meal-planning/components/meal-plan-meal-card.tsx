@@ -9,6 +9,7 @@ import {
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
+import { RecipeResourceData } from '@/types/generated';
 import { router } from '@inertiajs/react';
 import { Ellipsis, EyeIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
@@ -16,8 +17,10 @@ import { useTranslation } from 'react-i18next';
 
 export default function MealPlanMealCard({
   plannedMeal,
+  onSelectRecipe,
 }: {
   plannedMeal: PlannedMeal;
+  onSelectRecipe: (recipe: RecipeResourceData) => void;
 }) {
   const { t } = useTranslation();
   const { plannedMealImages } = usePlannedMealsContextValue();
@@ -38,21 +41,22 @@ export default function MealPlanMealCard({
   return (
     <div
       key={id}
-      className="card w-full overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
+      className="card w-full cursor-pointer flex-row items-center overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
+      onClick={() => onSelectRecipe(recipe)}
     >
-      {imageUrl && (
-        <figure className="h-19">
-          <img
-            src={imageUrl}
-            alt={recipe.name}
-            className="h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-          />
-        </figure>
-      )}
-      <div className="card-body overflow-hidden py-[0.45rem] pr-2 pl-4.5">
-        <div className="flex min-w-0 items-center justify-between gap-2">
+      <div className="card-body flex-row overflow-hidden p-0 pr-2">
+        {imageUrl && (
+          <figure className="aspect-square h-17">
+            <img
+              src={imageUrl}
+              alt={recipe.name}
+              className="h-full w-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        )}
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-2 pl-3">
           <span className="flex w-full min-w-0 items-center text-sm">
             <span className="-ml-1 w-full truncate text-sm text-base-content">
               {recipe.name}
@@ -63,7 +67,10 @@ export default function MealPlanMealCard({
           </span>
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
-              <button className="meal-card-actions-btn btn invisible btn-circle shrink-0 btn-ghost btn-sm hover:bg-base-200">
+              <button
+                className="meal-card-actions-btn btn invisible btn-circle shrink-0 btn-ghost btn-sm hover:bg-base-200"
+                onClick={(event) => event.stopPropagation()}
+              >
                 <Ellipsis size={15} className="text-base-content/75" />
               </button>
             </DropdownMenuTrigger>
@@ -73,14 +80,22 @@ export default function MealPlanMealCard({
               sideOffset={4}
               onMouseLeave={() => setIsOpen(false)}
             >
-              <DropdownMenuItem onClick={handleView}>
+              <DropdownMenuItem
+                onClick={(event) => {
+                  event.stopPropagation();
+                  handleView();
+                }}
+              >
                 <EyeIcon size={14} />
                 {t('common.buttons.view', 'View')}
               </DropdownMenuItem>
               {canEditMealPlan && (
                 <DropdownMenuItem
                   variant="destructive"
-                  onClick={() => unplanMeals([plannedMeal.id])}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    unplanMeals([plannedMeal.id]);
+                  }}
                 >
                   <Trash2Icon size={14} />
                   {t('common.buttons.delete', 'Delete')}

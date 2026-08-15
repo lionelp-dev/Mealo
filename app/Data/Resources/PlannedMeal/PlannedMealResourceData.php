@@ -2,7 +2,7 @@
 
 namespace App\Data\Resources\PlannedMeal;
 
-use App\Data\Resources\PlannedMeal\Entities\PlannedMealRecipeResourceData;
+use App\Data\Resources\Recipe\Entities\RecipeResourceData;
 use App\Models\PlannedMeal;
 use Carbon\CarbonImmutable;
 use Spatie\LaravelData\Data;
@@ -19,7 +19,7 @@ class PlannedMealResourceData extends Data
         #[Optional]
         public ?string $meal_time_name,
         public int $serving_size,
-        public ?PlannedMealRecipeResourceData $recipe,
+        public ?RecipeResourceData $recipe,
     ) {}
 
     public static function fromModel(PlannedMeal $plannedMeal): self
@@ -34,7 +34,7 @@ class PlannedMealResourceData extends Data
             meal_time_name: $mealTime?->name,
             serving_size: $plannedMeal->serving_size,
             recipe: $recipe !== null
-                ? PlannedMealRecipeResourceData::fromModel($recipe)
+                ? RecipeResourceData::fromModel($recipe)->include('ingredients')
                 : null,
         );
     }

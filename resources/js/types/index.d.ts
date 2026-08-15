@@ -1,4 +1,5 @@
 import {
+  RecipeResourceData,
   WorkspaceInvitationResourceData,
   WorkspaceResourceData,
 } from './generated';
@@ -184,7 +185,7 @@ export type PlannedMeal = {
   workspace_id?: number;
   meal_time_id: number;
   planned_date: string;
-  recipe: Pick<Recipe, 'id' | 'name'>;
+  recipe: RecipeResourceData;
   serving_size: number;
 };
 

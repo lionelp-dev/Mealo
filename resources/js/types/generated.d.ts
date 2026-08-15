@@ -44,7 +44,7 @@ export type PlannedMealResourceData = {
   meal_time_id: number;
   meal_time_name?: string;
   serving_size: number;
-  recipe: PlannedMealRecipeResourceData | null;
+  recipe: RecipeResourceData | null;
 };
 export type PlannedMealStoreRequestData = {
   planned_meals: Array<PlannedMealRequestData>;

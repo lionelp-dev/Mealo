@@ -24,7 +24,13 @@ class PlannedMealWeekQueryAction
 
         return PlannedMeal::query()
             ->where('workspace_id', $workspace->id)
-            ->with(['recipe:id,name,image_path', 'user:id,name'])
+            ->with([
+                'recipe.mealTimes',
+                'recipe.ingredients',
+                'recipe.steps',
+                'recipe.tags',
+                'user:id,name',
+            ])
             ->whereBetween('planned_date', [$weekStart, $weekEnd])
             ->get();
     }

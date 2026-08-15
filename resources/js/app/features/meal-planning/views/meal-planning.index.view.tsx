@@ -19,7 +19,7 @@ export function MealPlanningIndexView() {
 
   return AppLayout({
     children: (
-      <div className="w-full overflow-y-scroll py-7 pr-6 pl-7.5">
+      <div className="w-full overflow-y-scroll px-4 py-5">
         <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
         <MealPlanCalendar />
       </div>

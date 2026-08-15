@@ -241,14 +241,14 @@ class RecipeController extends Controller
     public function aiImageGeneration(
         RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
         RecipeImageAIGenerationAction $recipeImageAIGenerationAction
-    ) {
+    ): RedirectResponse {
         try {
             Gate::authorize('create', Recipe::class);
 
             $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
-            return Inertia::render('recipe/create')->with([
+            return back()->with([
                 'generated_image_data_url' => $base64Image,
             ]);
         } catch (\Exception $e) {

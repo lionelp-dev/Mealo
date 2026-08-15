@@ -1,15 +1,20 @@
 import MealPlanEmptySlot from './meal-plan-empty-slot';
 import MealPlanMealCard from './meal-plan-meal-card';
 import { DayPlannedMeals } from '@/types';
+import { RecipeResourceData } from '@/types/generated';
 import { ScrollArea } from '@radix-ui/themes';
 import { useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanProps = {
   dayPlannedMeals: DayPlannedMeals;
+  onSelectRecipe: (recipe: RecipeResourceData) => void;
 };
 
-export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
+export default function MealPlanSlots({
+  dayPlannedMeals,
+  onSelectRecipe,
+}: MealPlanProps) {
   const { t } = useTranslation();
 
   const { date, plannedMealsSlots } = dayPlannedMeals;
@@ -43,6 +48,7 @@ export default function MealPlanSlots({ dayPlannedMeals }: MealPlanProps) {
                       <MealPlanMealCard
                         key={plannedMeal.id}
                         plannedMeal={plannedMeal}
+                        onSelectRecipe={onSelectRecipe}
                       />
                     ))}
                   </div>
