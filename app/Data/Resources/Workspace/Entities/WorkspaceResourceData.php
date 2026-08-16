@@ -2,9 +2,9 @@
 
 namespace App\Data\Resources\Workspace\Entities;
 
+use App\Models\User;
 use App\Models\Workspace;
 use App\Models\WorkspaceInvitation;
-use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Collection;
 use Spatie\LaravelData\Data;

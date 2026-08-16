@@ -12,7 +12,7 @@ import {
 } from '@/app/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { LayoutDashboard, Users } from 'lucide-react';
+import { LayoutDashboard, Ticket, Users } from 'lucide-react';
 
 export function AdminSidebar() {
   const adminNavItems: NavItem[] = [
@@ -22,9 +22,14 @@ export function AdminSidebar() {
       icon: LayoutDashboard,
     },
     {
-      title: 'Beta Requests',
-      href: '/admin/beta-requests',
+      title: 'Users',
+      href: '/admin/users',
       icon: Users,
+    },
+    {
+      title: 'Demo links',
+      href: '/admin/demo-invites',
+      icon: Ticket,
     },
   ];
 

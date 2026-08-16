@@ -14,11 +14,11 @@ Artisan::command('inspire', function () {
 |--------------------------------------------------------------------------
 */
 
-// Cleanup expired beta users daily at 3:00 AM
-Schedule::command('beta:cleanup-expired')
+// Cleanup expired demo users daily at 3:00 AM
+Schedule::command('demo:cleanup-expired')
     ->daily()
     ->at('03:00')
     ->withoutOverlapping()
     ->onSuccess(function () {
-        \Illuminate\Support\Facades\Log::info('Beta cleanup completed successfully');
+        \Illuminate\Support\Facades\Log::info('Demo cleanup completed successfully');
     });

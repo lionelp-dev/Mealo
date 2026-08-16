@@ -1,10 +1,12 @@
 import AdminController from './AdminController'
-import BetaManagementController from './BetaManagementController'
+import UserManagementController from './UserManagementController'
+import DemoInviteController from './DemoInviteController'
 import MailPreviewController from './MailPreviewController'
 
 const Admin = {
     AdminController: Object.assign(AdminController, AdminController),
-    BetaManagementController: Object.assign(BetaManagementController, BetaManagementController),
+    UserManagementController: Object.assign(UserManagementController, UserManagementController),
+    DemoInviteController: Object.assign(DemoInviteController, DemoInviteController),
     MailPreviewController: Object.assign(MailPreviewController, MailPreviewController),
 }
 

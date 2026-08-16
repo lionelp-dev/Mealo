@@ -16,8 +16,9 @@ class AIMealPlanningService
 
     public function __construct()
     {
+        /** @var ClientContract|null $client */
         $client = app('openai.client');
-        $this->client = $client instanceof ClientContract ? $client : null;
+        $this->client = $client;
     }
 
     /**

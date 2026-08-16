@@ -1,5 +1,5 @@
 import AppLogo from './app-logo';
-import { BetaWarningBanner } from './beta-warning-banner';
+import { DemoWarningBanner } from './demo-warning-banner';
 import { NavWorkspace } from './nav-workspace';
 import { NavMain } from '@/app/components/nav-main';
 import { NavUser } from '@/app/components/nav-user';
@@ -72,7 +72,7 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <BetaWarningBanner />
+        <DemoWarningBanner />
         <NavUser />
       </SidebarFooter>
     </Sidebar>

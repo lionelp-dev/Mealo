@@ -238,6 +238,13 @@
             "emailPlaceholder": "your@email.com",
             "saveButton": "Save"
         },
+        "demoAccount": {
+            "title": "Demo account",
+            "sectionDescription": "Keep your reconnect link to come back to this demo account later.",
+            "expiryLine": "This account expires in {{days}} day(s) and will be deleted on {{date}}.",
+            "copyLink": "Copy reconnect link",
+            "linkCopied": "Link copied"
+        },
         "password": {
             "title": "Password",
             "pageTitle": "Password settings",
@@ -507,7 +514,6 @@
             "features": "Features",
             "howItWorks": "How it works",
             "preview": "Preview",
-            "joinBeta": "Join demo",
             "signIn": "Sign in"
         },
         "hero": {
@@ -574,19 +580,6 @@
             "sectionTitle": "A peek inside Mealo",
             "sectionDescription": "Clean, intuitive interfaces designed to make meal planning a joy.",
             "imageAlt": "Product preview"
-        },
-        "demoCta": {
-            "badge": "Limited spots available",
-            "title": "Join the Closed Beta",
-            "description": "We're currently testing Mealo with a small group of users. Request access to be notified when a spot opens up.",
-            "emailPlaceholder": "your@email.com",
-            "submitButton": "Request access",
-            "submitting": "...",
-            "validation": {
-                "emailRequired": "Email address is required.",
-                "emailInvalid": "Email address must be valid.",
-                "emailMaxLength": "Email address must not exceed 255 characters."
-            }
         },
         "footer": {
             "appName": "Mealo Planner",

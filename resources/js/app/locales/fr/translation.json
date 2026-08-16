@@ -260,6 +260,13 @@
             "emailPlaceholder": "votre@email.com",
             "saveButton": "Enregistrer"
         },
+        "demoAccount": {
+            "title": "Compte démo",
+            "sectionDescription": "Conservez votre lien de reconnexion pour revenir sur ce compte démo plus tard.",
+            "expiryLine": "Ce compte expire dans {{days}} jour(s) et sera supprimé le {{date}}.",
+            "copyLink": "Copier le lien de reconnexion",
+            "linkCopied": "Lien copié"
+        },
         "password": {
             "title": "Mot de passe",
             "pageTitle": "Paramètres du mot de passe",
@@ -596,19 +603,6 @@
             "sectionTitle": "Un aperçu de Mealo",
             "sectionDescription": "Des interfaces épurées et intuitives conçues pour rendre la planification des repas agréable.",
             "imageAlt": "Aperçu du produit"
-        },
-        "demoCta": {
-            "badge": "Places limitées disponibles",
-            "title": "Rejoignez la Demo",
-            "description": "Nous testons actuellement Mealo avec un petit groupe d'utilisateurs. Demandez l'accès pour être notifié quand une place se libère.",
-            "emailPlaceholder": "votre@email.com",
-            "submitButton": "Demander l'accès",
-            "submitting": "...",
-            "validation": {
-                "emailRequired": "L'adresse email est requise.",
-                "emailInvalid": "L'adresse email doit être valide.",
-                "emailMaxLength": "L'adresse email ne doit pas dépasser 255 caractères."
-            }
         },
         "footer": {
             "appName": "Mealo Planner",

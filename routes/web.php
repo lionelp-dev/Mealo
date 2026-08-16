@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\BetaRequestController;
+use App\Http\Controllers\DemoController;
 use App\Http\Controllers\PlannedMealController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\ShoppingListController;
@@ -10,12 +10,22 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
+    $user = auth()->user();
+
+    if ($user instanceof \App\Models\User && $user->isAdmin()) {
+        return to_route('admin.dashboard');
+    }
+
     return Inertia::render('landing/index');
 })->name('home');
 
-Route::post('/beta/request', [BetaRequestController::class, 'store'])
+Route::get('/demo/{token}', [DemoController::class, 'enter'])
     ->middleware('throttle:5,1')
-    ->name('beta.request');
+    ->name('demo.enter');
+
+Route::get('/demo/session/{demoToken}', [DemoController::class, 'reconnect'])
+    ->middleware('throttle:10,1')
+    ->name('demo.reconnect');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('dashboard', function () {

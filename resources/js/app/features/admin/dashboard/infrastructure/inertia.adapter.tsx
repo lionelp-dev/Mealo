@@ -6,8 +6,7 @@ import { PropsWithChildren } from 'react';
 type Props = PageProps & {
   stats: {
     total_users: number;
-    beta_users: number;
-    pending_beta_requests: number;
+    demo_users: number;
     total_recipes: number;
     total_workspaces: number;
     recent_signups_week: number;

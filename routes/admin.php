@@ -1,8 +1,9 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\BetaManagementController;
+use App\Http\Controllers\Admin\DemoInviteController;
 use App\Http\Controllers\Admin\MailPreviewController;
+use App\Http\Controllers\Admin\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'global.permissions', 'can:access-admin-panel'])
@@ -13,37 +14,20 @@ Route::middleware(['auth', 'global.permissions', 'can:access-admin-panel'])
         Route::get('/', [AdminController::class, 'dashboard'])
             ->name('dashboard');
 
-        Route::prefix('beta-requests')->name('beta.')->group(function () {
+        // User management
+        Route::get('users', [UserManagementController::class, 'index'])->name('users.index');
+        Route::delete('users/{user}', [UserManagementController::class, 'destroy'])->name('users.destroy');
+        Route::post('users/{user}/demo/extend', [UserManagementController::class, 'extendDemo'])->name('users.demo.extend');
+        Route::post('users/{user}/demo/revoke', [UserManagementController::class, 'revokeDemo'])->name('users.demo.revoke');
 
-            // Liste des demandes beta (avec filtres et stats)
-            Route::get('/', [BetaManagementController::class, 'index'])
-                ->name('index');
-
-            // Approuver une demande → génère token + envoie email
-            Route::post('/{betaRequest}/approve', [BetaManagementController::class, 'approve'])
-                ->name('approve');
-
-            // Rejeter une demande
-            Route::post('/{betaRequest}/reject', [BetaManagementController::class, 'reject'])
-                ->name('reject');
-
-            // Renvoyer email invitation (si approved et non expiré)
-            Route::post('/{betaRequest}/resend', [BetaManagementController::class, 'resend'])
-                ->name('resend');
-
-            // Cleanup TOUS les beta users (même non expirés) - DANGER
-            Route::post('/cleanup-all', [BetaManagementController::class, 'cleanupAll'])
-                ->name('cleanup-all');
-        });
+        // Demo share links
+        Route::resource('demo-invites', DemoInviteController::class)
+            ->only(['index', 'store', 'update', 'destroy'])
+            ->names('demo-invites');
+        Route::post('demo-invites/{demo_invite}/toggle', [DemoInviteController::class, 'toggle'])->name('demo-invites.toggle');
 
         // Email preview routes (admin only)
         Route::prefix('mail-preview')->name('mail.preview.')->group(function () {
-            Route::get('beta-invitation/{locale}', [MailPreviewController::class, 'betaInvitation'])
-                ->name('beta-invitation');
-
-            Route::get('beta-confirmation/{locale}', [MailPreviewController::class, 'betaConfirmation'])
-                ->name('beta-confirmation');
-
             Route::get('workspace-invitation/{locale}', [MailPreviewController::class, 'workspaceInvitation'])
                 ->name('workspace-invitation');
 

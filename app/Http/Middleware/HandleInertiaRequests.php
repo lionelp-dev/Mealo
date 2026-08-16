@@ -51,10 +51,11 @@ class HandleInertiaRequests extends Middleware
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
                 'user' => $user instanceof User ? array_merge(
-                    $user->toArray(),
+                    $user->loadMissing('demoAccount')->toArray(),
                     [
-                        'is_beta_user' => $user->is_beta_user,
-                        'beta_expires_at' => $user->betaRequest?->account_expires_at?->toISOString(),
+                        'is_demo' => $user->demoAccount !== null,
+                        'demo_expires_at' => $user->demoAccount?->expires_at?->toISOString(),
+                        'demo_token' => $user->demoAccount?->token,
                         'locale' => $user->locale,
                     ]
                 ) : null,

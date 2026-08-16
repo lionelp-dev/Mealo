@@ -1,3 +1,4 @@
+import { login } from '@/routes';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -31,7 +32,7 @@ export function Hero() {
           {/* CTAs */}
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
             <a
-              href="#join-beta"
+              href={login.url()}
               className="btn gap-2 rounded-full px-8 pb-[1px] shadow-sm btn-secondary"
             >
               {t('landing.hero.cta')}

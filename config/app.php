@@ -123,6 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    'admin_password' => env('ADMIN_PASSWORD'),
     'users_dev_password' => env('USERS_DEV_PASSWORD'),
-    'users_test_password' => env('USERS_TEST_PASSWORD'),
 ];

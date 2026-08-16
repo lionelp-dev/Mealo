@@ -1,3 +1,37 @@
+export type DemoAccountResource = {
+  id: number;
+  user_id: number | null;
+  user_name: string | null;
+  user_email: string | null;
+  token: string;
+  expires_at: string;
+  is_expired: boolean;
+  created_at: string;
+};
+export type DemoInviteResource = {
+  id: number;
+  token: string;
+  label: string | null;
+  max_uses: number;
+  used_count: number;
+  expires_at: string | null;
+  is_active: boolean;
+  is_usable: boolean;
+  url: string;
+  demo_accounts: Array<DemoAccountResource>;
+};
+export type DemoInviteStoreRequestData = {
+  label: string | null;
+  max_uses: number;
+  expires_at: string | null;
+  is_active: boolean;
+};
+export type DemoInviteUpdateRequestData = {
+  label: string | null;
+  max_uses: number;
+  expires_at: string | null;
+  is_active: boolean;
+};
 export type IngredientRequestData = {
   name: string;
   quantity: number;
@@ -189,6 +223,17 @@ export type TagResourceData = {
 export type Unit = {
   name: string;
   value: string;
+};
+export type UserResource = {
+  id: number;
+  name: string;
+  email: string;
+  is_admin: boolean;
+  is_demo: boolean;
+  demo_expires_at: string | null;
+  recipes_count: number;
+  workspaces_count: number;
+  created_at: string;
 };
 export type WorkspaceInvitationAcceptRequestData = {
   token: string;

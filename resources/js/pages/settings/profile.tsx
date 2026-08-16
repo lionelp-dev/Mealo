@@ -1,5 +1,6 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/app/components/delete-user';
+import { DemoAccountSettings } from '@/app/components/demo-account-settings';
 import HeadingSmall from '@/app/components/heading-small';
 import InputError from '@/app/components/input-error';
 import { Input } from '@/app/components/ui/input';
@@ -142,6 +143,8 @@ export default function Profile({
             )}
           </Form>
         </div>
+
+        <DemoAccountSettings />
 
         <DeleteUser />
       </SettingsLayout>

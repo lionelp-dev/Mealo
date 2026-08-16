@@ -1,4 +1,3 @@
-import { DemoCTA } from './demo-cta';
 import { Features } from './features';
 import { Footer } from './footer';
 import { Header } from './header';
@@ -13,7 +12,6 @@ export default function Landing() {
         <Hero />
         <Features />
         <ProductPreview />
-        <DemoCTA />
       </main>
       <Footer />
     </>

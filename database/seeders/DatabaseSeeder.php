@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             AdminRoleSeeder::class,  // Create admin role and access-admin-panel permission
             MealTimeSeeder::class,
             UserSeeder::class,  // Users need roles to be assigned
+            DemoInviteSeeder::class,  // Single demo share-link invite (from config)
         ]);
     }
 }

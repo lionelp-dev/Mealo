@@ -219,8 +219,8 @@ class RecipeController extends Controller
 
             if ($recipeAIGenerationRequestData->image_generation) {
                 $prompt = $recipe->name
-                    . 'with' . json_encode($recipe->ingredients)
-                    . 'recipe steps' . json_encode($recipe->steps);
+                    .'with'.json_encode($recipe->ingredients)
+                    .'recipe steps'.json_encode($recipe->steps);
 
                 $base64Image = $recipeImageAIGenerationAction->execute($prompt);
             }
@@ -245,7 +245,7 @@ class RecipeController extends Controller
         try {
             Gate::authorize('create', Recipe::class);
 
-            $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+            $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
             return back()->with([

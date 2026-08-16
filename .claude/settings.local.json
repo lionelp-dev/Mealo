@@ -104,7 +104,9 @@
       "WebFetch(domain:vitest.dev)",
       "Bash(pnpm exec playwright install:*)",
       "Bash(git diff:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(./vendor/bin/pint app/Models/User.php app/Providers/AppServiceProvider.php routes/web.php database/seeders/AdminRoleSeeder.php)",
+      "Bash(./vendor/bin/pint tests/Feature/Admin/AdminDashboardTest.php)"
     ],
     "deny": [],
     "ask": []

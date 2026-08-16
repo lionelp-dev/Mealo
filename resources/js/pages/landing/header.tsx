@@ -35,12 +35,6 @@ export function Header() {
           >
             {t('landing.header.preview')}
           </a>
-          <a
-            href="#join-beta"
-            className="text-sm text-muted-foreground transition-colors hover:text-foreground"
-          >
-            {t('landing.header.joinBeta')}
-          </a>
         </nav>
 
         {/* CTA */}

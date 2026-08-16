@@ -1,5 +1,5 @@
 import Auth from './Auth'
-import BetaRequestController from './BetaRequestController'
+import DemoController from './DemoController'
 import RecipeController from './RecipeController'
 import PlannedMealController from './PlannedMealController'
 import ShoppingListController from './ShoppingListController'
@@ -10,7 +10,7 @@ import Admin from './Admin'
 
 const Controllers = {
     Auth: Object.assign(Auth, Auth),
-    BetaRequestController: Object.assign(BetaRequestController, BetaRequestController),
+    DemoController: Object.assign(DemoController, DemoController),
     RecipeController: Object.assign(RecipeController, RecipeController),
     PlannedMealController: Object.assign(PlannedMealController, PlannedMealController),
     ShoppingListController: Object.assign(ShoppingListController, ShoppingListController),

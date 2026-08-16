@@ -5,13 +5,16 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Notifications\ResetPasswordNotification;
 use Illuminate\Contracts\Translation\HasLocalePreference;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Fortify\TwoFactorAuthenticatable;
+use Spatie\Permission\Models\Role;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -19,6 +22,7 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string $name
  * @property string $email
  * @property string|null $locale
+ * @property \Carbon\CarbonImmutable $created_at
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -64,6 +68,7 @@ class User extends Authenticatable implements HasLocalePreference
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'locale' => 'string',
+            'created_at' => 'immutable_datetime',
         ];
     }
 
@@ -126,19 +131,50 @@ class User extends Authenticatable implements HasLocalePreference
     }
 
     /**
-     * @return HasOne<BetaRequest, $this>
+     * @return HasOne<DemoAccount, $this>
      */
-    public function betaRequest(): HasOne
+    public function demoAccount(): HasOne
     {
-        return $this->hasOne(BetaRequest::class);
+        return $this->hasOne(DemoAccount::class);
     }
 
     /**
-     * Check if the user is a beta user.
+     * Check whether this user is a demo account.
      */
-    public function getIsBetaUserAttribute(): bool
+    public function isDemo(): bool
     {
-        return $this->betaRequest?->status === 'converted';
+        return $this->demoAccount()->exists();
+    }
+
+    /**
+     * Scope a query to only include demo users.
+     *
+     * @param  Builder<self>  $query
+     * @return Builder<self>
+     */
+    public function scopeDemo(Builder $query): Builder
+    {
+        return $query->whereHas('demoAccount');
+    }
+
+    /**
+     * Determine if the user has the global admin role.
+     *
+     * Checks the role assignment directly, ignoring the current permission
+     * team (workspace) context, since admin access is app-wide.
+     */
+    public function isAdmin(): bool
+    {
+        /** @var array<string, string> $tableNames */
+        $tableNames = config('permission.table_names');
+        /** @var array<string, string> $columnNames */
+        $columnNames = config('permission.column_names');
+
+        return DB::table($tableNames['model_has_roles'])
+            ->where($columnNames['model_morph_key'], $this->getKey())
+            ->where('model_type', $this->getMorphClass())
+            ->whereIn('role_id', Role::query()->where('name', 'admin')->pluck('id'))
+            ->exists();
     }
 
     /**

@@ -1,10 +1,8 @@
 import { useAdminDashboardContext } from '../infrastructure/inertia.adapter';
 import { AppMainContent } from '@/app/components/app-main-content';
 import AdminLayout from '@/app/layouts/admin-layout';
-import { index as betaRequestsIndex } from '@/routes/admin/beta';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import {
-  Clock,
   CookingPot,
   FolderKanban,
   TrendingUp,
@@ -47,28 +45,12 @@ export default function AdminDashboard() {
                 <div className="stat-figure text-success">
                   <UserCheck className="h-8 w-8" />
                 </div>
-                <div className="stat-title">Beta Users</div>
+                <div className="stat-title">Demo Users</div>
                 <div className="stat-value text-success">
-                  {stats.beta_users}
+                  {stats.demo_users}
                 </div>
               </div>
             </div>
-
-            <Link
-              href={betaRequestsIndex().url}
-              className="stats shadow transition-shadow hover:shadow-lg"
-            >
-              <div className="stat">
-                <div className="stat-figure text-warning">
-                  <Clock className="h-8 w-8" />
-                </div>
-                <div className="stat-title">Pending Beta Requests</div>
-                <div className="stat-value text-warning">
-                  {stats.pending_beta_requests}
-                </div>
-                <div className="stat-desc">Click to manage</div>
-              </div>
-            </Link>
 
             <div className="stats shadow">
               <div className="stat">

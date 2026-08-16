@@ -15,8 +15,8 @@ class RecipeImageAIGenerationAction
     public function instructions(string $prompt): string
     {
         return "A professional food photography of {$prompt}, appetizing presentation, "
-               . 'high quality, well-lit, centered on a clean white plate, neutral background, '
-               . 'culinary magazine style, realistic, detailed';
+               .'high quality, well-lit, centered on a clean white plate, neutral background, '
+               .'culinary magazine style, realistic, detailed';
     }
 
     /**

@@ -29,7 +29,7 @@ class AdminRoleSeeder extends Seeder
             ['email' => 'admin@mail.com'],
             [
                 'name' => 'admin',
-                'password' => Hash::make(config('app.users_dev_password')),
+                'password' => Hash::make(config('app.admin_password')),
                 'email_verified_at' => Carbon::now(),
             ]
         );
@@ -39,7 +39,9 @@ class AdminRoleSeeder extends Seeder
             \App\Models\Workspace::createPersonalWorkspace($admin);
         }
 
-        // Assign admin role within the workspace context
+        // Assign the admin role within a workspace context (the model_has_roles
+        // pivot requires a non-null workspace_id). The `access-admin-panel` gate
+        // resolves admin status via User::isAdmin(), which ignores team scope.
         $workspace = $admin->workspaces()->first();
         setPermissionsTeamId($workspace->id);
         $admin->assignRole('admin');

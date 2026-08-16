@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\Recipe;
+use App\Models\User;
 use App\Policies\RecipePolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
@@ -23,5 +24,10 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(Recipe::class, RecipePolicy::class);
+
+        // Admin panel access is app-wide and not scoped to a workspace, so it is
+        // resolved via the team-agnostic User::isAdmin() rather than a
+        // team-scoped Spatie permission check.
+        Gate::define('access-admin-panel', fn (User $user): bool => $user->isAdmin());
     }
 }

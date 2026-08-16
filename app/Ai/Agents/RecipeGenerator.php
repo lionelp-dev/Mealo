@@ -5,6 +5,7 @@ namespace App\Ai\Agents;
 use App\Enums\Unit;
 use App\Models\MealTime;
 use Illuminate\Contracts\JsonSchema\JsonSchema;
+use Illuminate\JsonSchema\JsonSchemaTypeFactory;
 use Laravel\Ai\Contracts\Agent;
 use Laravel\Ai\Contracts\Conversational;
 use Laravel\Ai\Contracts\HasStructuredOutput;
@@ -120,6 +121,8 @@ class RecipeGenerator implements Agent, Conversational, HasStructuredOutput, Has
      */
     public function schema(JsonSchema $schema): array
     {
+        assert($schema instanceof JsonSchemaTypeFactory);
+
         return [
             'name' => $schema->string()
                 ->description('Recipe name')
