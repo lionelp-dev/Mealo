@@ -20,37 +20,36 @@ export default function WeekSelector({ currentWeek, url }: WeekSelectorProps) {
   });
 
   return (
-    <div className="flex gap-5 divide-x divide-base-300">
-      <div className="flex items-center gap-9">
+    <div className="order-3 flex w-full flex-1 items-center gap-2 px-1 min-md:order-1">
+      <span className="font-medium whitespace-nowrap text-base-content capitalize">
+        {weekStart.month === endOfWeek.month
+          ? `${weekStart.toLocaleString({ month: 'long', year: 'numeric' })}`
+          : `${weekStart.toLocaleString({ month: 'long' })} ${weekStart.year !== endOfWeek.year ? weekStart.year : ''} - ${weekStart.toLocaleString({ month: 'long', year: 'numeric' })} `}
+      </span>
+      <span className="mx-3 -mb-[1px] badge rounded-full badge-soft badge-outline border-secondary/40 badge-sm py-[10.5px] whitespace-nowrap badge-secondary">
+        {t('mealPlanning.weekSelector.week', 'Week')}{' '}
+        {currentWeek.weekNumber.toString().padStart(2, '0')}
+      </span>
+      <span className="grow min-sm:hidden"></span>
+      <button
+        className="btn border border-secondary/40 btn-outline btn-soft btn-secondary max-sm:btn-sm min-sm:-order-2"
+        onClick={goToCurrentWeek}
+      >
+        {t('mealPlanning.weekSelector.today', 'Today')}
+      </button>
+      <div className="flex items-center gap-2 justify-self-end min-sm:-order-1">
         <button
-          className="btn border border-secondary/40 px-5 btn-outline btn-soft btn-secondary"
-          onClick={goToCurrentWeek}
+          className="btn px-1 text-base-content btn-ghost btn-sm"
+          onClick={goToPreviousWeek}
         >
-          {t('mealPlanning.weekSelector.today', 'Today')}
+          <ChevronLeft />
         </button>
-        <div className="-ml-4 flex items-center gap-2">
-          <button
-            className="btn px-1 text-base-content btn-ghost btn-sm"
-            onClick={goToPreviousWeek}
-          >
-            <ChevronLeft />
-          </button>
-          <button
-            className="btn px-1 text-base-content btn-ghost btn-sm"
-            onClick={goToNextWeek}
-          >
-            <ChevronRight />
-          </button>
-        </div>
-        <span className="-ml-2 whitespace-nowrap text-base-content">
-          {weekStart.month === endOfWeek.month
-            ? `${weekStart.day}-${endOfWeek.day} ${weekStart.toLocaleString({ month: 'long', year: 'numeric' })}`
-            : `${weekStart.toLocaleString({ day: 'numeric', month: 'long' })} ${weekStart.year !== endOfWeek.year ? weekStart.year : ''} - ${weekStart.toLocaleString({ day: 'numeric', month: 'long', year: 'numeric' })} `}
-        </span>
-        <span className="-mb-[1px] badge rounded-full badge-soft badge-outline border-secondary/40 badge-sm py-[10.5px] whitespace-nowrap badge-secondary">
-          {t('mealPlanning.weekSelector.week', 'Week')}{' '}
-          {currentWeek.weekNumber.toString().padStart(2, '0')}
-        </span>
+        <button
+          className="btn px-1 text-base-content btn-ghost btn-sm"
+          onClick={goToNextWeek}
+        >
+          <ChevronRight />
+        </button>
       </div>
     </div>
   );

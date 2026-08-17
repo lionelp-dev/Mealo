@@ -2,8 +2,10 @@
 
 namespace Tests\Feature\Demo;
 
+use App\Http\Controllers\DemoController;
 use App\Models\DemoInvite;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 
 use function Pest\Laravel\get;
 
@@ -18,6 +20,10 @@ function makeInvite(array $attributes = []): DemoInvite
 }
 
 describe('Demo entry via share link', function () {
+    // Creating a demo account dispatches a starter-pack recipe generation
+    // chain; keep it off the (sync) queue so no real AI call is made.
+    beforeEach(fn () => Bus::fake());
+
     test('creates a demo account, logs in, redirects to dashboard and increments usage', function () {
         /** @var \Tests\TestCase $this */
         $invite = makeInvite();
@@ -34,6 +40,16 @@ describe('Demo entry via share link', function () {
         $this->assertAuthenticatedAs($user);
 
         expect($invite->fresh()->used_count)->toBe(1);
+    });
+
+    test('flags the session for starter recipes without flashing a toast', function () {
+        /** @var \Tests\TestCase $this */
+        $invite = makeInvite();
+
+        $response = get(route('demo.enter', ['token' => $invite->token]));
+
+        $response->assertSessionHas('starter_recipes_requested_at');
+        $response->assertSessionMissing('message');
     });
 
     test('returns 404 for an unknown token', function () {
@@ -77,12 +93,40 @@ describe('Demo entry via share link', function () {
         expect(User::query()->demo()->count())->toBe(0);
     });
 
-    test('two visits create two distinct demo accounts', function () {
+    test('entering the demo sets a persistent demo_session cookie', function () {
+        /** @var \Tests\TestCase $this */
+        $invite = makeInvite();
+
+        $response = get(route('demo.enter', ['token' => $invite->token]));
+
+        $token = User::query()->demo()->firstOrFail()->demoAccount->token;
+        $response->assertCookie(DemoController::SESSION_COOKIE, $token, encrypted: false);
+    });
+
+    test('two visits from the same browser reuse the same demo account', function () {
         /** @var \Tests\TestCase $this */
         $invite = makeInvite(['max_uses' => 5]);
 
-        get(route('demo.enter', ['token' => $invite->token]));
+        $first = get(route('demo.enter', ['token' => $invite->token]));
         // Log out the first demo session before the second visit.
+        auth()->logout();
+
+        $token = User::query()->demo()->firstOrFail()->demoAccount->token;
+
+        $this->withUnencryptedCookie(DemoController::SESSION_COOKIE, $token)
+            ->get(route('demo.enter', ['token' => $invite->token]));
+
+        expect(User::query()->demo()->count())->toBe(1)
+            ->and($invite->fresh()->used_count)->toBe(1);
+        $this->assertAuthenticatedAs(User::query()->demo()->firstOrFail());
+    });
+
+    test('two visits from different browsers create two distinct demo accounts', function () {
+        /** @var \Tests\TestCase $this */
+        $invite = makeInvite(['max_uses' => 5]);
+
+        // No demo_session cookie carried over between the two visits.
+        get(route('demo.enter', ['token' => $invite->token]));
         auth()->logout();
         get(route('demo.enter', ['token' => $invite->token]));
 

@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        /*
         $owner = User::query()->firstOrCreate(
             ['email' => 'owner@mail.com'],
             [
@@ -77,12 +78,11 @@ class UserSeeder extends Seeder
                 'email_verified_at' => Carbon::now(),
             ]
         );
-        new AIRecipeSeeder($tester)->run();
 
         new AIRecipeSeeder($owner)->run();
 
         new AIRecipeSeeder($editor)->run();
 
-        new AIRecipeSeeder($viewer)->run();
+        */
     }
 }

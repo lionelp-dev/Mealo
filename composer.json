@@ -10,12 +10,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-gd": "*",
         "inertiajs/inertia-laravel": "^2.0",
+        "intervention/image": "^4.2",
         "laravel/ai": "^0.7.2",
         "laravel/fortify": "^1.30",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "laravel/wayfinder": "^0.1.9",
+        "league/flysystem-aws-s3-v3": "^3.0",
         "openai-php/client": "^0.18.0",
         "spatie/laravel-data": "^4.20",
         "spatie/laravel-permission": "^6.24",
@@ -69,12 +72,12 @@
         ],
         "dev": [
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"npm run dev\" --names=server,queue,logs,vite --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#a7f3d0,#fcd34d,#fb7185,#fdba74,#67e8f9\" \"php artisan serve\" \"php artisan queue:listen --queue=default --tries=1 --timeout=60\" \"php artisan queue:listen --queue=recipes-ai-generation --tries=1 --timeout=120\" \"php artisan queue:listen --queue=recipes-images-ai-generation --tries=1 --timeout=300\" \"php artisan pail --timeout=0\" \"npm run dev\" \"cd api/ai-services-adonis && pnpm dev\" --names=server,queue-default,queue-recipes,queue-images,logs,vite,ai-service --kill-others"
         ],
         "dev:ssr": [
             "npm run build:ssr",
             "Composer\\Config::disableProcessTimeout",
-            "npx concurrently -c \"#93c5fd,#c4b5fd,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --tries=1\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue,logs,ssr --kill-others"
+            "npx concurrently -c \"#93c5fd,#c4b5fd,#a7f3d0,#fcd34d,#fb7185,#fdba74\" \"php artisan serve\" \"php artisan queue:listen --queue=default --tries=1 --timeout=60\" \"php artisan queue:listen --queue=recipes-ai-generation --tries=1 --timeout=120\" \"php artisan queue:listen --queue=recipes-images-ai-generation --tries=1 --timeout=300\" \"php artisan pail --timeout=0\" \"php artisan inertia:start-ssr\" --names=server,queue-default,queue-recipes,queue-images,logs,ssr --kill-others"
         ],
         "lint": "vendor/bin/pint",
         "test:types": "phpstan analyse --memory-limit=512M",

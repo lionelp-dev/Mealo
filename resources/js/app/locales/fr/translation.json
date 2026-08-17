@@ -87,11 +87,48 @@
         },
         "generate": {
             "button": "Générer une recette",
+            "triggerButton": "Générer avec l’IA",
+            "title": "Générer des recettes",
+            "submit": "Générer",
             "modalTitle": "Générer une recette avec IA",
             "generating": "Génération en cours...",
+            "overlayTitle": "Génération de vos recettes en cours",
             "prompt": {
                 "label": "Description de la recette",
                 "placeholder": "Décrivez la recette que vous voulez créer, ex: 'Un plat méditerranéen sain au poulet avec des légumes'"
+            },
+            "mealTime": {
+                "label": "Moment du repas"
+            },
+            "count": {
+                "label": "Nombre de recettes"
+            },
+            "presets": {
+                "label": "Type de recettes",
+                "quick": {
+                    "label": "Rapide & facile",
+                    "prompt": "Des recettes rapides et faciles, prêtes en moins de 20 minutes"
+                },
+                "vegetarian": {
+                    "label": "Végétarien",
+                    "prompt": "Des recettes végétariennes savoureuses et équilibrées"
+                },
+                "healthy": {
+                    "label": "Healthy",
+                    "prompt": "Des recettes saines, légères et équilibrées"
+                },
+                "comfort": {
+                    "label": "Réconfortant",
+                    "prompt": "Des plats réconfortants et gourmands"
+                },
+                "world": {
+                    "label": "Cuisine du monde",
+                    "prompt": "Des recettes du monde, variées et dépaysantes"
+                },
+                "budget": {
+                    "label": "Anti-gaspi",
+                    "prompt": "Des recettes économiques et anti-gaspillage"
+                }
             },
             "imageGeneration": {
                 "label": "Générer une image",
@@ -112,8 +149,8 @@
         "table": {
             "name": "Nom",
             "description": "Description",
-            "preparationTime": "Temps de préparation",
-            "cookingTime": "Temps de cuisson",
+            "preparationTime": "Préparation",
+            "cookingTime": "Cuisson",
             "actions": "Actions"
         },
         "form": {

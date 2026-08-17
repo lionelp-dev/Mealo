@@ -47,12 +47,17 @@ export type Flash = {
   new_workspace_id: number | null;
 };
 
+export type StarterRecipes = {
+  generating: boolean;
+};
+
 export type SharedData = {
   name: string;
   quote: { message: string; author: string };
   auth: Auth;
   sidebarOpen: boolean;
   flash: Flash;
+  starterRecipes: StarterRecipes | null;
   [key: string]: unknown;
 };
 

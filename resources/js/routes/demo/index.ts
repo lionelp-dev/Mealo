@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../wayfinder'
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 export const enter = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ enter.definition = {
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 enter.url = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -43,7 +43,7 @@ enter.url = (args: { token: string | number } | [token: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 enter.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -53,7 +53,7 @@ enter.get = (args: { token: string | number } | [token: string | number ] | stri
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 enter.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -63,7 +63,7 @@ enter.head = (args: { token: string | number } | [token: string | number ] | str
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 const enterForm = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -73,7 +73,7 @@ const enterForm = (args: { token: string | number } | [token: string | number ] 
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 enterForm.get = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -83,7 +83,7 @@ enterForm.get = (args: { token: string | number } | [token: string | number ] | 
 
 /**
 * @see \App\Http\Controllers\DemoController::enter
-* @see app/Http/Controllers/DemoController.php:18
+* @see app/Http/Controllers/DemoController.php:31
 * @route '/demo/{token}'
 */
 enterForm.head = (args: { token: string | number } | [token: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -100,7 +100,7 @@ enter.form = enterForm
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 export const reconnect = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -115,7 +115,7 @@ reconnect.definition = {
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 reconnect.url = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -142,7 +142,7 @@ reconnect.url = (args: { demoToken: string | number } | [demoToken: string | num
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 reconnect.get = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -152,7 +152,7 @@ reconnect.get = (args: { demoToken: string | number } | [demoToken: string | num
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 reconnect.head = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -162,7 +162,7 @@ reconnect.head = (args: { demoToken: string | number } | [demoToken: string | nu
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 const reconnectForm = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -172,7 +172,7 @@ const reconnectForm = (args: { demoToken: string | number } | [demoToken: string
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 reconnectForm.get = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -182,7 +182,7 @@ reconnectForm.get = (args: { demoToken: string | number } | [demoToken: string |
 
 /**
 * @see \App\Http\Controllers\DemoController::reconnect
-* @see app/Http/Controllers/DemoController.php:44
+* @see app/Http/Controllers/DemoController.php:68
 * @route '/demo/session/{demoToken}'
 */
 reconnectForm.head = (args: { demoToken: string | number } | [demoToken: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

@@ -113,13 +113,13 @@ export function ImageUploadField({
   }, [value]);
 
   return (
-    <div className={`flex flex-col gap-4 ${className}`}>
+    <div className={`flex flex-col gap-4 ${className} z-2`}>
       <label className="text-base-content">
         {t('recipes.form.imageLabel', 'Image')}
       </label>
 
       <div
-        className={`relative flex h-[14.5lh] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
+        className={`relative flex h-[14.5lh] cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -134,12 +134,22 @@ export function ImageUploadField({
           className="hidden"
         />
 
+        {displayImage && (
+          <div className="absolute top-0 right-0 bottom-0 left-0 backdrop-blur-xs">
+            <img
+              src={displayImage}
+              alt="Preview"
+              className="h-full w-full rounded-lg object-cover object-center blur-xl"
+            />
+          </div>
+        )}
+
         {displayImage ? (
           <div className="relative flex h-full">
             <img
               src={displayImage}
               alt="Preview"
-              className="rounded-lg object-cover"
+              className="h-full w-full object-cover object-center"
             />
             {!disabled && (
               <button

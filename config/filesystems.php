@@ -48,9 +48,26 @@ return [
         ],
 
         'recipe_images' => [
-            'driver' => 'local',
-            'root' => storage_path('app/private/recipe_images'),
-            'serve' => true,
+            // Local driver in development/tests; "s3" (DigitalOcean Spaces) in production.
+            // App Platform's local filesystem is ephemeral and per-container, so the web and
+            // queue-worker components must share object storage to serve generated images.
+            'driver' => env('APP_ENV') === 'production' ? 's3' : 'local',
+
+            // Local driver (served via RecipeController::image(), not the auto /storage route,
+            // so no "serve" key — it would break on the pathless Spaces "url" in production).
+            // "root" is only a local dir; for s3 it becomes a key prefix, so keep it null there.
+            'root' => env('APP_ENV') === 'production' ? null : storage_path('app/private/recipe_images'),
+
+            // S3 / DigitalOcean Spaces driver
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'url' => env('AWS_URL'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'visibility' => 'private',
+
             'throw' => false,
             'report' => false,
         ],

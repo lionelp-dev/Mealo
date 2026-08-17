@@ -3,10 +3,15 @@
 namespace Tests\Integration\Actions\Demo;
 
 use App\Actions\Demo\DemoAccountCreateAction;
+use App\Jobs\RecipeAIGenerationJob;
+use App\Models\MealTime;
+use Illuminate\Support\Facades\Bus;
 
 use function Pest\Laravel\assertDatabaseHas;
 
 describe('DemoAccountCreateAction', function () {
+    beforeEach(fn () => Bus::fake());
+
     test('creates an isolated, expiring demo account with a personal workspace', function () {
         /** @var \Tests\TestCase $this */
         config()->set('demo.account_days', 30);
@@ -35,5 +40,14 @@ describe('DemoAccountCreateAction', function () {
         expect($first->id)->not->toBe($second->id)
             ->and($first->demoAccount->token)->not->toBe($second->demoAccount->token)
             ->and($first->email)->not->toBe($second->email);
+    });
+
+    test('dispatches a starter pack of AI recipe generation jobs for the demo user', function () {
+        /** @var \Tests\TestCase $this */
+        app(DemoAccountCreateAction::class)->execute();
+
+        Bus::assertChained(
+            array_fill(0, MealTime::query()->count(), RecipeAIGenerationJob::class),
+        );
     });
 });

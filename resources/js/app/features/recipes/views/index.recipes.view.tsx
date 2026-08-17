@@ -1,3 +1,4 @@
+import { RecipeAIGenerationPopover } from '../components/recipe-ai-generation-popover';
 import { RecipeCard } from '../components/recipe-card';
 import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-toolbar';
 import { useRecipesContextValue } from '../inertia.adapter';
@@ -5,6 +6,7 @@ import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-s
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
+import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -17,7 +19,8 @@ import { useTranslation } from 'react-i18next';
 export function IndexRecipesView() {
   const { t } = useTranslation();
 
-  const { recipes, url } = useRecipesContextValue();
+  const { recipes, url, meal_times, starterRecipes } = useRecipesContextValue();
+  const isGeneratingStarterRecipes = !!starterRecipes?.generating;
 
   const { activeFilters } = useRecipesFiltersStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
@@ -58,10 +61,13 @@ export function IndexRecipesView() {
 
   const { tags } = useRecipesContextValue();
 
+  if (!recipes) return null;
+
   return AppLayout({
     headerLeftContent: <RecipesSearch />,
     headerRightContent: (
-      <div className="flex items-center gap-7">
+      <div className="flex items-center gap-3">
+        <RecipeAIGenerationPopover meal_times={meal_times ?? []} />
         <button
           className="btn gap-2 pl-5.5 btn-secondary"
           onClick={handleNavigateToCreateRecipe}
@@ -82,7 +88,7 @@ export function IndexRecipesView() {
           >
             <RecipesFilters />
             <div className="flex h-fit flex-wrap items-start gap-2.5 md:justify-end">
-              <RecipesFiltersPopover tags={tags} />
+              <RecipesFiltersPopover tags={tags ?? []} />
               <button
                 className={`btn col-start-4 row-start-1 gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary ${
                   isMultiSelectMode ? 'btn-active' : ''
@@ -100,16 +106,22 @@ export function IndexRecipesView() {
           {/* Empty State */}
           {recipes.data.length === 0 && (
             <div className="flex flex-col items-center justify-center pt-44">
-              <CookingPot className="mb-4 h-12 w-12 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
-                {t('recipes.empty.title', 'Aucune recette')}
-              </h3>
-              <p className="mb-4 max-w-md text-center text-muted-foreground">
-                {t(
-                  'recipes.empty.description',
-                  "Commencez par créer votre première recette ou utilisez l'IA pour générer des idées de repas.",
-                )}
-              </p>
+              {isGeneratingStarterRecipes ? (
+                <StarterRecipesNotice />
+              ) : (
+                <>
+                  <CookingPot className="mb-4 h-12 w-12 text-muted-foreground" />
+                  <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
+                    {t('recipes.empty.title', 'Aucune recette')}
+                  </h3>
+                  <p className="mb-4 max-w-md text-center text-muted-foreground">
+                    {t(
+                      'recipes.empty.description',
+                      "Commencez par créer votre première recette ou utilisez l'IA pour générer des idées de repas.",
+                    )}
+                  </p>
+                </>
+              )}
             </div>
           )}
 

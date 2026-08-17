@@ -3,6 +3,7 @@
 use App\Actions\Demo\DemoAccountCreateAction;
 use App\Models\DemoInvite;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -118,6 +119,7 @@ it('deletes a demo link but keeps its demo accounts', function () {
         'max_uses' => 5,
         'is_active' => true,
     ]);
+    Bus::fake();
     $demoUser = app(DemoAccountCreateAction::class)->execute($invite);
 
     actingAs($this->admin)->delete(route('admin.demo-invites.destroy', $invite))

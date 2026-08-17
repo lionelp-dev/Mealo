@@ -87,11 +87,48 @@
         },
         "generate": {
             "button": "Generate recipe",
+            "triggerButton": "Generate with AI",
+            "title": "Generate recipes",
+            "submit": "Generate",
             "modalTitle": "Generate Recipe with AI",
             "generating": "Generating...",
+            "overlayTitle": "Generating your recipes",
             "prompt": {
                 "label": "Recipe Description",
                 "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
+            },
+            "mealTime": {
+                "label": "Meal time"
+            },
+            "count": {
+                "label": "Number of recipes"
+            },
+            "presets": {
+                "label": "Recipe type",
+                "quick": {
+                    "label": "Quick & easy",
+                    "prompt": "Quick and easy recipes, ready in under 20 minutes"
+                },
+                "vegetarian": {
+                    "label": "Vegetarian",
+                    "prompt": "Tasty and balanced vegetarian recipes"
+                },
+                "healthy": {
+                    "label": "Healthy",
+                    "prompt": "Healthy, light and balanced recipes"
+                },
+                "comfort": {
+                    "label": "Comfort food",
+                    "prompt": "Comforting and indulgent dishes"
+                },
+                "world": {
+                    "label": "World cuisine",
+                    "prompt": "Varied recipes from around the world"
+                },
+                "budget": {
+                    "label": "Budget-friendly",
+                    "prompt": "Budget-friendly, zero-waste recipes"
+                }
             },
             "imageGeneration": {
                 "label": "Generate image",

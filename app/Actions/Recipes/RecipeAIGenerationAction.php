@@ -2,35 +2,35 @@
 
 namespace App\Actions\Recipes;
 
-use App\Ai\Agents\RecipeGenerator;
+use App\Clients\Ai\RecipeAIClient;
 use App\Data\Requests\Recipe\RecipeAIGenerationRequestData;
 use App\Data\Requests\Recipe\RecipeStoreRequestData;
 use Exception;
-use Laravel\Ai\Responses\StructuredAgentResponse;
 
 class RecipeAIGenerationAction
 {
-    public function __construct(private readonly RecipeGenerator $recipeGenerator) {}
+    public function __construct(private readonly RecipeAIClient $recipeAIClient) {}
 
     /**
-     * Generate a recipe using Laravel AI structured output.
+     * @return array<int, RecipeStoreRequestData>
      */
-    public function execute(RecipeAIGenerationRequestData $promptData): RecipeStoreRequestData
+    public function generate(RecipeAIGenerationRequestData $requestData): array
     {
         try {
-            $response = $this->recipeGenerator->prompt(
-                $promptData->prompt,
-                provider: 'openrouter',
-                model: 'openai/gpt-4o-mini'
+            return array_map(
+                fn (array $recipe): RecipeStoreRequestData => RecipeStoreRequestData::validateAndCreate($recipe),
+                $this->recipeAIClient->generate($requestData)
             );
-
-            if (! $response instanceof StructuredAgentResponse) {
-                throw new Exception('No valid recipe generated from AI response');
-            }
-
-            return RecipeStoreRequestData::validateAndCreate($response->toArray());
         } catch (Exception $e) {
-            throw new Exception('Failed to generate recipe: '.$e->getMessage());
+            throw new Exception('Failed to generate recipes: '.$e->getMessage());
         }
+    }
+
+    /**
+     * @return array<int, RecipeStoreRequestData>
+     */
+    public function execute(RecipeAIGenerationRequestData $requestData): array
+    {
+        return $this->generate($requestData);
     }
 }

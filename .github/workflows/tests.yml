@@ -38,6 +38,8 @@ jobs:
         run: pnpm install
 
       - name: Install Dependencies
+        env:
+          COMPOSER_AUTH: '{"github-oauth": {"github.com": "${{ secrets.GITHUB_TOKEN }}"}}'
         run: composer install --no-interaction --prefer-dist --optimize-autoloader
 
       - name: Generate Wayfinder Routes

@@ -8,7 +8,7 @@ import MealPlanSlots from './meal-plan-slots';
 import { RecipeResourceData } from '@/types/generated';
 import { InfiniteScroll } from '@inertiajs/react';
 import { DateTime } from 'luxon';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export default function MealPlanCalendar() {
   const { weekPlannedMeals } = useWeekPlannedMeals();
@@ -16,32 +16,58 @@ export default function MealPlanCalendar() {
   const [selectedRecipe, setSelectedRecipe] =
     useState<RecipeResourceData | null>(null);
 
+  const handleCloseRecipeDetail = useCallback(
+    () => setSelectedRecipe(null),
+    [],
+  );
+
+  // Keep the last recipe mounted so its content stays visible while the panel
+  // animates closed (width 36vw -> 0).
+  const lastRecipeRef = useRef<RecipeResourceData | null>(null);
+  if (selectedRecipe) {
+    lastRecipeRef.current = selectedRecipe;
+  }
+  const displayedRecipe = selectedRecipe ?? lastRecipeRef.current;
+
   return (
-    <div
-      className={`grid w-full gap-x-4 gap-y-5 ${
-        selectedRecipe
-          ? 'grid-cols-[repeat(auto-fit,minmax(19rem,1fr))_25.5vw]'
-          : 'grid-cols-[repeat(auto-fit,minmax(19rem,1fr))]'
-      }`}
-    >
-      {weekPlannedMeals.map((dayPlannedMeals) => {
-        const { date } = dayPlannedMeals;
-        const isToday = date.hasSame(DateTime.now(), 'day');
-        return (
-          <div
-            key={date.toISODate()}
-            id={isToday ? 'today' : ''}
-            className="flex w-full min-w-0 [scroll-margin-top:28px] flex-col gap-5"
-          >
-            <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
-            <MealPlanSlots
-              dayPlannedMeals={dayPlannedMeals}
-              onSelectRecipe={setSelectedRecipe}
-            />
-          </div>
-        );
-      })}
-      {selectedRecipe && <MealPlanRecipeDetail recipe={selectedRecipe} />}
+    <div className="flex gap-3">
+      <div
+        className={`grid w-full gap-x-4 gap-y-5 ${
+          selectedRecipe
+            ? 'grid-cols-[repeat(auto-fit,minmax(18rem,1fr))]'
+            : 'grid-cols-[repeat(auto-fit,minmax(18rem,1fr))]'
+        }`}
+      >
+        {weekPlannedMeals.map((dayPlannedMeals) => {
+          const { date } = dayPlannedMeals;
+          const isToday = date.hasSame(DateTime.now(), 'day');
+          return (
+            <div
+              key={date.toISODate()}
+              id={isToday ? 'today' : ''}
+              className="flex w-full min-w-0 [scroll-margin-top:28px] flex-col gap-5"
+            >
+              <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
+              <MealPlanSlots
+                dayPlannedMeals={dayPlannedMeals}
+                onSelectRecipe={setSelectedRecipe}
+              />
+            </div>
+          );
+        })}
+      </div>
+      <div
+        className={`sticky top-0 h-[90.45vh] shrink-0 overflow-hidden transition-[width] duration-500 ease-in-out ${
+          selectedRecipe ? 'w-[22vw]' : 'w-0'
+        }`}
+      >
+        {displayedRecipe && (
+          <MealPlanRecipeDetail
+            recipe={displayedRecipe}
+            onClose={handleCloseRecipeDetail}
+          />
+        )}
+      </div>
       <MealPlanDialog>
         <div className="overflow-y-scroll">
           <InfiniteScroll data="recipes">

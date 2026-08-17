@@ -101,6 +101,7 @@ export default function MealPlanningPopover({
           alignOffset={-4}
           onPointerLeave={() => {
             setIsMealPlanningPopoverOpen(false);
+            form.reset();
           }}
         >
           <form

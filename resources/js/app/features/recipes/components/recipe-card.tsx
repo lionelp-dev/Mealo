@@ -20,6 +20,7 @@ type Props = {
 export function RecipeCard({ recipe }: Props) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { deleteRecipes, processing } = useDeleteRecipes();
   const { isFilterActive } = useRecipesFiltersStore();
@@ -103,11 +104,20 @@ export function RecipeCard({ recipe }: Props) {
         </div>
 
         {recipe.image_url ? (
-          <figure className="h-42">
+          <figure className="relative h-42">
+            {!imageLoaded && (
+              <div className="absolute inset-0 h-full w-full skeleton rounded-none" />
+            )}
             <img
               src={recipe.image_url}
               alt={recipe.name}
-              className="h-full w-full object-cover"
+              onLoad={() => setImageLoaded(true)}
+              onError={() => setImageLoaded(true)}
+              className={`h-full w-full object-cover transition-opacity duration-300 ${
+                imageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              loading="lazy"
+              decoding="async"
             />
           </figure>
         ) : (

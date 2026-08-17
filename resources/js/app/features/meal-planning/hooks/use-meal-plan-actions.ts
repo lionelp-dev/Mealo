@@ -20,7 +20,7 @@ export function useMealPlanActions() {
         preserveState: true,
         preserveUrl: true,
         preserveScroll: true,
-        only: ['plannedMeals', 'flash'],
+        only: ['plannedMeals', 'plannedMealImages', 'flash'],
         onSuccess: () => {
           onSuccess?.();
         },
