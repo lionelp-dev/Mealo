@@ -4,6 +4,7 @@ import mealPlanning from '@/routes/meal-planning';
 import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import 'cally';
+import clsx, { ClassValue } from 'clsx';
 import { Bot, CalendarRange, Minus, Plus } from 'lucide-react';
 import { DateTime, Interval } from 'luxon';
 import { useState } from 'react';
@@ -17,7 +18,11 @@ type MealPlanGenerationForm = {
   serving_size: number;
 };
 
-export function MealPlanGenerationPopover() {
+type Props = {
+  className?: ClassValue;
+};
+
+export function MealPlanGenerationPopover({ className }: Props) {
   const { t } = useTranslation();
 
   const { weekStart } = usePage<{ weekStart: string }>().props;
@@ -66,8 +71,18 @@ export function MealPlanGenerationPopover() {
     <>
       <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild>
-          <button className="btn gap-2 border border-secondary/40 pl-5 btn-outline btn-soft btn-secondary">
-            {t('mealPlanning.generatePlan', 'Generate Plan')}
+          <button
+            className={clsx([
+              'btn gap-2 border border-secondary/40 pl-5 btn-outline btn-soft btn-secondary max-md:btn-sm',
+              className,
+            ])}
+          >
+            <span className="max-sm:hidden">
+              {t('mealPlanning.generatePlan', 'Generate Plan')}
+            </span>
+            <span className="min-sm:hidden">
+              {t('mealPlanning.generate', 'Generate')}
+            </span>
             {isGenerating ? (
               <span className="loading loading-sm loading-spinner"></span>
             ) : (
@@ -80,6 +95,11 @@ export function MealPlanGenerationPopover() {
             className="z-10 flex w-90 rounded-md border border-base-300 bg-base-100 p-4 text-secondary"
             align="end"
             sideOffset={7}
+            onPointerLeave={() => {
+              if (isCalendarRangeIsOpen) return;
+              setIsOpen(false);
+              form.reset();
+            }}
           >
             <div className="flex w-full flex-col gap-4">
               <h4 className="text-lg leading-none font-medium">
@@ -91,7 +111,6 @@ export function MealPlanGenerationPopover() {
                   'Automatically create a balanced meal plan with your existing recipes.',
                 )}
               </p>
-
               <form.AppField
                 name="serving_size"
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any

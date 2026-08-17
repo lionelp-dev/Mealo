@@ -163,7 +163,7 @@ export function CreateRecipesView() {
                 onBlur: recipeStoreRequestSchema.shape.meal_times,
               }}
               children={(field) => {
-                const options = meal_times.map((mt) => ({
+                const options = (meal_times ?? []).map((mt) => ({
                   value: mt.id,
                   label: mt.name,
                 }));

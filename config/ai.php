@@ -126,8 +126,8 @@ return [
 
         'openrouter' => [
             'driver' => 'openrouter',
-            'key' => env('OPENROUTER_API_KEY', env('OPEN_ROUTER_API_KEY')),
-            'url' => env('OPENROUTER_BASE_URI', env('OPEN_ROUTER_BASE_URI', 'https://openrouter.ai/api/v1')),
+            'key' => env('OPENROUTER_API_KEY'),
+            'url' => env('OPENROUTER_BASE_URI', 'https://openrouter.ai/api/v1'),
             'http_referer' => env('APP_URL'),
             'x_title' => env('APP_NAME'),
             'models' => [
@@ -135,7 +135,7 @@ return [
                     'default' => 'openai/gpt-4o-mini',
                 ],
                 'image' => [
-                    'default' => env('OPENROUTER_IMAGE_MODEL', 'google/gemini-2.5-flash-image'),
+                    'default' => env('OPENROUTER_IMAGE_MODEL', 'black-forest-labs/flux.2-klein-4b'),
                 ],
             ],
         ],

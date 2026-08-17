@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DemoController;
 use App\Http\Middleware\EnsureGlobalPermissionContext;
 use App\Http\Middleware\HandleAppearance;
 use App\Http\Middleware\HandleInertiaRequests;
@@ -20,7 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'global.permissions' => EnsureGlobalPermissionContext::class,
         ]);
 
-        $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
+        $middleware->encryptCookies(except: ['appearance', 'sidebar_state', DemoController::SESSION_COOKIE]);
 
         $middleware->web(append: [
             SetLocale::class,

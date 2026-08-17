@@ -1,19 +1,29 @@
 import { RecipeResourceData } from '@/types/generated';
-import { Clock3Icon, CookingPotIcon, UsersIcon } from 'lucide-react';
+import { Clock3Icon, CookingPotIcon, UsersIcon, XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type MealPlanRecipeDetailProps = {
   recipe: RecipeResourceData;
+  onClose: () => void;
 };
 
 export default function MealPlanRecipeDetail({
   recipe,
+  onClose,
 }: MealPlanRecipeDetailProps) {
   const { t } = useTranslation();
   const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="sticky top-0 -col-end-1 row-start-1 row-end-3 h-[88.5vh] overflow-hidden rounded-xl border border-base-300/40 bg-base-100 shadow-xs">
+    <div className="h-full w-[22vw] overflow-hidden rounded-xl border border-base-300/40 bg-base-100 shadow-xs">
+      <button
+        type="button"
+        onClick={onClose}
+        aria-label={t('common.buttons.close', 'Close')}
+        className="absolute top-3 left-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-base-100/90 text-base-content/70 shadow-xs backdrop-blur-sm transition hover:bg-base-200 hover:text-base-content"
+      >
+        <XIcon size={18} />
+      </button>
       <div className="flex h-full flex-col overflow-y-auto">
         <div className="flex flex-col gap-4">
           <div className="sticky top-0 z-10 flex flex-col gap-2 bg-white">
@@ -37,16 +47,7 @@ export default function MealPlanRecipeDetail({
           </div>
 
           <div className="grid grid-cols-3 gap-3 px-4">
-            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 p-2">
-              <UsersIcon size={15} className="text-base-content/60" />
-              <span className="text-xs text-base-content/60">
-                {t('recipes.show.servingSize', 'Portions')}
-              </span>
-              <span className="text-sm font-semibold text-base-content">
-                {recipe.serving_size}
-              </span>
-            </div>
-            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 p-2">
+            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
               <Clock3Icon size={15} className="text-base-content/60" />
               <span className="text-xs text-base-content/60">
                 {t('recipes.table.preparationTime', 'Preparation time')}
@@ -55,13 +56,24 @@ export default function MealPlanRecipeDetail({
                 {recipe.preparation_time} min
               </span>
             </div>
-            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 p-2">
+
+            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
               <CookingPotIcon size={15} className="text-base-content/60" />
               <span className="text-xs text-base-content/60">
                 {t('recipes.table.cookingTime', 'Cooking time')}
               </span>
               <span className="text-sm font-semibold text-base-content">
                 {recipe.cooking_time} min
+              </span>
+            </div>
+
+            <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
+              <UsersIcon size={15} className="text-base-content/60" />
+              <span className="text-xs text-base-content/60">
+                {t('recipes.show.servingSize', 'Portions')}
+              </span>
+              <span className="text-sm font-semibold text-base-content">
+                {recipe.serving_size}
               </span>
             </div>
           </div>

@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\User;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -61,6 +62,36 @@ class HandleInertiaRequests extends Middleware
                 ) : null,
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'starterRecipes' => function () use ($request, $user): ?array {
+                if (! $user instanceof User) {
+                    return null;
+                }
+
+                $requestedAtRaw = $request->session()->get('starter_recipes_requested_at');
+
+                if (! is_string($requestedAtRaw)) {
+                    return null;
+                }
+
+                // Once the first recipe lands, clear the flag and emit a final
+                // `generating: false` so the front can drop the "arriving" state.
+                if ($user->recipes()->exists()) {
+                    $request->session()->forget('starter_recipes_requested_at');
+
+                    return ['generating' => false];
+                }
+
+                // Generation is taking too long (the job likely failed): stop
+                // telling the user their recipes are on the way and fall back to
+                // the usual empty state instead of showing a false message forever.
+                if (CarbonImmutable::parse($requestedAtRaw)->addMinutes(5)->isPast()) {
+                    $request->session()->forget('starter_recipes_requested_at');
+
+                    return null;
+                }
+
+                return ['generating' => true];
+            },
             'generated_image_data_url' => fn () => $request->session()->get('generated_image_data_url'),
             'show_recipe_ai_generation_modal' => fn () => $request->session()->get('show_recipe_ai_generation_modal'),
             'flash' => [

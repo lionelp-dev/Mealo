@@ -5,6 +5,7 @@ return [
         'created' => 'Recipe successfully created',
         'updated' => 'Recipe successfully updated',
         'deleted' => 'Recipe successfully deleted',
+        'generated' => 'Recipes successfully generated',
         'image_generation_failed' => 'Unable to generate the recipe image right now.',
     ],
     'planned_meal' => [

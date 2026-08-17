@@ -2,9 +2,12 @@
 
 namespace App\Providers;
 
+use App\Listeners\GenerateStarterRecipesForNewUser;
 use App\Models\Recipe;
 use App\Models\User;
 use App\Policies\RecipePolicy;
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 
@@ -29,5 +32,9 @@ class AppServiceProvider extends ServiceProvider
         // resolved via the team-agnostic User::isAdmin() rather than a
         // team-scoped Spatie permission check.
         Gate::define('access-admin-panel', fn (User $user): bool => $user->isAdmin());
+
+        // Seed a brand-new (self-registered) account with a starter pack of
+        // AI-generated recipes so meal-plan generation works from day one.
+        Event::listen(Registered::class, GenerateStarterRecipesForNewUser::class);
     }
 }

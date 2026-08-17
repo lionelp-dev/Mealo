@@ -1,7 +1,7 @@
 import { useClipboard } from '@/app/hooks/use-clipboard';
 import { PageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
-import { AlertCircle, Check, Copy, X } from 'lucide-react';
+import { Check, Copy, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function DemoWarningBanner() {

@@ -1,5 +1,9 @@
 parameters:
   level: 10
+  # Typed class constants require PHP 8.3+, but the project targets php ^8.2,
+  # so constants stay untyped — disable the constant type-coverage requirement.
+  type_coverage:
+    constant_type: 0
   paths:
     - app
   bootstrapFiles:

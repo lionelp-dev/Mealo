@@ -23,6 +23,7 @@ export function RecipesMultiSelectToolbar() {
   } = useRecipesMultiSelectStore();
 
   const hasSelectedRecipesId = selectedRecipeIds.length !== 0;
+  const recipesData = recipes?.data ?? [];
 
   const handleCancelMultiSelect = () => {
     clearSelectedRecipes();
@@ -34,7 +35,7 @@ export function RecipesMultiSelectToolbar() {
   };
 
   const handleDeleteRecipes = () => {
-    const selectedRecipes = recipes.data.filter((recipe) =>
+    const selectedRecipes = recipesData.filter((recipe) =>
       selectedRecipeIds.includes(recipe.id),
     );
     confirm({
@@ -58,7 +59,7 @@ export function RecipesMultiSelectToolbar() {
           }),
       submitBtnLabel: t('recipes.delete.confirmButton', 'Delete'),
       onConfirm: () => {
-        deleteRecipes({ ids: selectedRecipes.map((r) => r.id) });
+        deleteRecipes({ ids: selectedRecipeIds });
         clearSelectedRecipes();
         setIsMultiSelectMode(false);
       },

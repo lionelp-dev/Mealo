@@ -11,7 +11,7 @@ import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
 import { RecipeResourceData } from '@/types/generated';
 import { router } from '@inertiajs/react';
-import { Ellipsis, EyeIcon, Trash2Icon } from 'lucide-react';
+import { Ellipsis, EyeIcon, Trash2Icon, UsersIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -28,6 +28,7 @@ export default function MealPlanMealCard({
   const { id, recipe, serving_size } = plannedMeal;
   const imageUrl = plannedMealImages[recipe.id] ?? null;
   const [isOpen, setIsOpen] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const { unplanMeals } = useMealPlanActions();
 
@@ -41,29 +42,37 @@ export default function MealPlanMealCard({
   return (
     <div
       key={id}
-      className="card w-full cursor-pointer flex-row items-center overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
+      className="card w-full cursor-pointer overflow-hidden rounded-md border-l-2 border-l-secondary/40 bg-base-100 !p-0 shadow-xs outline outline-offset-0 outline-base-300/50 card-xs hover:shadow-md hover:[&_.meal-card-actions-btn]:visible"
       onClick={() => onSelectRecipe(recipe)}
     >
-      <div className="card-body flex-row overflow-hidden p-0 pr-2">
-        {imageUrl && (
-          <figure className="aspect-square h-17">
-            <img
-              src={imageUrl}
-              alt={recipe.name}
-              className="h-full w-full object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-        )}
-        <div className="flex min-w-0 flex-1 items-center justify-between gap-2 pl-3">
+      {imageUrl && (
+        <figure className="relative h-19">
+          {!imageLoaded && (
+            <div className="absolute inset-0 h-full w-full skeleton rounded-none" />
+          )}
+          <img
+            src={imageUrl}
+            alt={recipe.name}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(true)}
+            className={`h-full w-full object-cover transition-opacity duration-300 ${
+              imageLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
+      )}
+      <div className="card-body overflow-hidden py-[0.45rem] pr-2 pl-4.5">
+        <div className="flex min-w-0 items-center justify-between gap-2">
           <span className="flex w-full min-w-0 items-center text-sm">
             <span className="-ml-1 w-full truncate text-sm text-base-content">
               {recipe.name}
             </span>
-            {serving_size > 1 && (
-              <span className="shrink-0">(x{serving_size})</span>
-            )}
+          </span>
+          <span className="flex shrink-0 items-center gap-1 text-xs text-base-content/60">
+            <UsersIcon size={12} />
+            {serving_size}
           </span>
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>

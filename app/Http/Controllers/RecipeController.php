@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Recipes\RecipeAIGenerateAndStoreAction;
 use App\Actions\Recipes\RecipeAIGenerationAction;
 use App\Actions\Recipes\RecipeDestroyAction;
 use App\Actions\Recipes\RecipeFiltersAction;
@@ -27,6 +28,7 @@ use App\Data\Resources\Recipe\Entities\TagResourceData;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Messages\Recipe\RecipeCreatedMessage;
 use App\Messages\Recipe\RecipeDeletedMessage;
+use App\Messages\Recipe\RecipesGeneratedMessage;
 use App\Messages\Recipe\RecipeUpdatedMessage;
 use App\Models\MealTime;
 use App\Models\Recipe;
@@ -63,6 +65,7 @@ class RecipeController extends Controller
         return Inertia::render('recipe/index', [
             'recipes' => Inertia::scroll(RecipeResourceData::collect($recipeQuery->paginate(15))),
             'tags' => TagResourceData::collect($tags),
+            'meal_times' => MealTimeResourceData::collect(MealTime::all()),
         ]);
     }
 
@@ -176,20 +179,29 @@ class RecipeController extends Controller
 
     public function image(
         Recipe $recipe
-    ): HttpResponse {
+    ): HttpResponse|RedirectResponse {
         Gate::authorize('view', $recipe);
 
         if (! $recipe->image_path) {
             abort(404, 'Image not found');
         }
 
-        if (! Storage::disk('recipe_images')->exists($recipe->image_path)) {
+        $disk = Storage::disk('recipe_images');
+
+        // On object storage (DigitalOcean Spaces / S3), offload serving to a short-lived signed
+        // URL. We skip an exists() check because HeadObject on a missing key can return 403 (not
+        // 404) with limited-scope keys; a missing object simply 404s from Spaces on the redirect.
+        if (config('filesystems.disks.recipe_images.driver') === 's3') {
+            return redirect($disk->temporaryUrl($recipe->image_path, now()->addMinutes(30)));
+        }
+
+        if (! $disk->exists($recipe->image_path)) {
             abort(404, 'Image not found');
         }
 
-        $file = Storage::disk('recipe_images')->get($recipe->image_path);
+        $file = $disk->get($recipe->image_path);
 
-        $fullPath = Storage::disk('recipe_images')->path($recipe->image_path);
+        $fullPath = $disk->path($recipe->image_path);
 
         $mimeType = mime_content_type($fullPath);
 
@@ -215,7 +227,8 @@ class RecipeController extends Controller
         try {
             Gate::authorize('create', Recipe::class);
 
-            $recipe = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData);
+            $recipes = $recipeAIGenerationAction->generate($recipeAIGenerationRequestData);
+            $recipe = $recipes[0] ?? throw new \Exception('No recipe generated from AI response.');
 
             if ($recipeAIGenerationRequestData->image_generation) {
                 $prompt = $recipe->name
@@ -233,6 +246,24 @@ class RecipeController extends Controller
                     'show_recipe_ai_generation_modal' => false,
                 ]
             );
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function aiGenerate(
+        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
+        RecipeAIGenerateAndStoreAction $recipeAIGenerateAndStoreAction,
+    ): RedirectResponse {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $recipeAIGenerateAndStoreAction->execute(
+                $this->authenticatedUser(),
+                $recipeAIGenerationRequestData
+            );
+
+            return back()->with('success', RecipesGeneratedMessage::message());
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

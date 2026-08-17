@@ -27,16 +27,16 @@ export function EditRecipesView() {
   const { updateRecipe } = useUpdateRecipe();
 
   const defaultValues: RecipeUpdateRequest = {
-    id: recipe.id,
-    name: recipe.name ?? '',
-    description: recipe.description ?? '',
-    serving_size: recipe.serving_size ?? 1,
-    preparation_time: recipe.preparation_time ?? 0,
-    cooking_time: recipe.cooking_time ?? 0,
-    ingredients: recipe.ingredients ?? [],
-    steps: recipe.steps ?? [],
-    tags: recipe.tags ?? [],
-    meal_times: recipe.meal_times ?? [],
+    id: recipe?.id ?? '',
+    name: recipe?.name ?? '',
+    description: recipe?.description ?? '',
+    serving_size: recipe?.serving_size ?? 1,
+    preparation_time: recipe?.preparation_time ?? 0,
+    cooking_time: recipe?.cooking_time ?? 0,
+    ingredients: recipe?.ingredients ?? [],
+    steps: recipe?.steps ?? [],
+    tags: recipe?.tags ?? [],
+    meal_times: recipe?.meal_times ?? [],
     image: generated_image_data_url
       ? base64ToFile(generated_image_data_url, 'image')
       : null,
@@ -49,7 +49,7 @@ export function EditRecipesView() {
       onChange: recipeUpdateRequestSchema,
     },
     onSubmit: ({ value }) => {
-      updateRecipe(value, recipe.id);
+      updateRecipe(value, value.id);
     },
   });
 
@@ -92,7 +92,7 @@ export function EditRecipesView() {
             <button
               type="reset"
               className="btn"
-              onClick={() => viewRecipe(recipe.id)}
+              onClick={() => recipe && viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>
@@ -104,7 +104,7 @@ export function EditRecipesView() {
     >
       <Head title={t('recipes.edit.pageTitle', 'Edit recipe')}></Head>
       <AppMainContent>
-        <h1 className="mb-6 text-2xl font-bold">
+        <h1 className="mb-6 text-2xl font-bold text-secondary">
           {t('recipes.edit.title', 'Edit recipe')}
         </h1>
         <form
@@ -150,7 +150,7 @@ export function EditRecipesView() {
                 onBlur: recipeUpdateRequestSchema.shape.meal_times,
               }}
               children={(field) => {
-                const options = meal_times.map((mt) => ({
+                const options = (meal_times ?? []).map((mt) => ({
                   value: mt.id,
                   label: mt.name,
                 }));
@@ -219,7 +219,9 @@ export function EditRecipesView() {
                 children={(field) => (
                   <field.ImageUploadField
                     previewUrl={
-                      generated_image_data_url ? null : recipe.image_url
+                      generated_image_data_url
+                        ? null
+                        : (recipe?.image_url ?? null)
                     }
                     value={field.state.value}
                     onChange={(file) => {
@@ -299,7 +301,7 @@ export function EditRecipesView() {
             <button
               type="reset"
               className="btn"
-              onClick={() => viewRecipe(recipe.id)}
+              onClick={() => recipe && viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>

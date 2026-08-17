@@ -31,7 +31,7 @@ export function MealPlanningInertiaAdapter({ children }: PropsWithChildren) {
   const data = useMemo(() => ({ ...pageProps, url }), [pageProps]);
 
   usePoll(3000, {
-    only: ['plannedMeals'],
+    only: ['plannedMeals', 'plannedMealImages'],
   });
 
   return <PlannedMealsProvider data={data}>{children}</PlannedMealsProvider>;

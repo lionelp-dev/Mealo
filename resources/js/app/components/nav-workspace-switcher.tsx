@@ -8,6 +8,7 @@ import { capitalize, pluralize } from '@/app/utils/';
 import { WorkspaceData } from '@/types';
 import { router } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
+import clsx, { ClassValue } from 'clsx';
 import {
   CheckIcon,
   ChevronDown,
@@ -20,11 +21,12 @@ import { DateTime } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-export function NavWorkspaceSwitcher({
-  workspace_data,
-}: {
+type Props = {
+  className?: ClassValue;
   workspace_data: WorkspaceData;
-}) {
+};
+
+export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
   const { t, i18n } = useTranslation();
   const [isWorkspaceSwitcherPopoverOpen, setWorkspaceSwitcherPopoverOpen] =
     useState(false);
@@ -63,7 +65,10 @@ export function NavWorkspaceSwitcher({
       >
         <Popover.Trigger asChild>
           <button
-            className="btn items-center gap-2 border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10"
+            className={clsx([
+              'btn items-center gap-2 border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10 max-md:btn-sm',
+              className,
+            ])}
             disabled={isLoading}
           >
             <ChevronDown

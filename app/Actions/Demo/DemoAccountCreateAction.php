@@ -2,12 +2,17 @@
 
 namespace App\Actions\Demo;
 
+use App\Actions\Recipes\RecipeGenerateStarterPackAction;
 use App\Models\DemoInvite;
 use App\Models\User;
 use Illuminate\Support\Str;
 
 class DemoAccountCreateAction
 {
+    public function __construct(
+        private readonly RecipeGenerateStarterPackAction $generateStarterPack,
+    ) {}
+
     /**
      * Create a fresh, isolated demo account.
      *
@@ -32,6 +37,14 @@ class DemoAccountCreateAction
             'token' => (string) Str::uuid(),
             'expires_at' => now()->addDays($accountDays),
         ]);
+
+        // Populate the demo account so it has recipes (and images) to show off
+        // and so meal-plan generation works immediately.
+        $this->generateStarterPack->execute(
+            $user,
+            RecipeGenerateStarterPackAction::SIGNUP_RECIPES_PER_MEAL_TIME,
+            imageGeneration: true,
+        );
 
         return $user;
     }

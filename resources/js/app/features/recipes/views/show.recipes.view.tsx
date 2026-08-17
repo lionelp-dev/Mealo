@@ -13,6 +13,8 @@ export function ShowRecipesView() {
 
   const { canEditRecipe } = usePermissions();
 
+  if (!recipe) return null;
+
   return (
     <AppLayout
       headerRightContent={

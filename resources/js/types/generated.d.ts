@@ -42,6 +42,13 @@ export type IngredientResourceData = {
   id: string;
   name: string;
 };
+export type MealTimeConfigData = {
+  name: string;
+  distribution: Array<any>;
+};
+export type MealTimeData = {
+  value: MealTimeEnum;
+};
 export type MealTimeEnum = 'breakfast' | 'lunch' | 'diner' | 'snack';
 export type MealTimeRequestData = {
   name: string;
@@ -57,6 +64,9 @@ export type PlannedMealGeneratePlanRequestData = {
   startDate: string;
   endDate: string;
   serving_size: number;
+  meal_times: Array<any>;
+  variant: number | null;
+  maxSimilarity: number;
 };
 export type PlannedMealIndexRequestData = {
   week?: string;
@@ -90,7 +100,9 @@ export type PlannedMealUpdateRequestData = {
   serving_size?: number;
 };
 export type RecipeAIGenerationRequestData = {
-  prompt: string;
+  prompt?: string;
+  message?: Array<any>;
+  context?: Array<any>;
   image_generation?: boolean;
 };
 export type RecipeAIPromptResourceData = {
@@ -220,9 +232,40 @@ export type TagResourceData = {
   id: string;
   name: string;
 };
-export type Unit = {
-  name: string;
-  value: string;
+export type Unit =
+  | 'ml'
+  | 'cl'
+  | 'dl'
+  | 'l'
+  | 'tsp'
+  | 'tbsp'
+  | 'fl oz'
+  | 'cup'
+  | 'pint'
+  | 'quart'
+  | 'gallon'
+  | 'mg'
+  | 'g'
+  | 'kg'
+  | 'oz'
+  | 'lb'
+  | 'piece'
+  | 'pinch'
+  | 'dash'
+  | 'handful'
+  | 'slice'
+  | 'clove'
+  | 'bunch'
+  | 'package'
+  | 'can'
+  | 'jar'
+  | 'bottle'
+  | 'box'
+  | 'bag'
+  | 'to taste'
+  | 'as needed';
+export type UnitData = {
+  value: Unit;
 };
 export type UserResource = {
   id: number;

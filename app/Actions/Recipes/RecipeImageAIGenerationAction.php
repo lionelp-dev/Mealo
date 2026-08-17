@@ -3,6 +3,9 @@
 namespace App\Actions\Recipes;
 
 use App\Exceptions\Recipe\RecipeImageGenerationException;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\Encoders\JpegEncoder;
+use Intervention\Image\ImageManager;
 use Laravel\Ai\Image;
 use RuntimeException;
 use Throwable;
@@ -15,8 +18,9 @@ class RecipeImageAIGenerationAction
     public function instructions(string $prompt): string
     {
         return "A professional food photography of {$prompt}, appetizing presentation, "
-               .'high quality, well-lit, centered on a clean white plate, neutral background, '
-               .'culinary magazine style, realistic, detailed';
+        .'high quality, well-lit, centered on a clean white plate, neutral background, '
+        .'culinary magazine style, realistic, detailed, '
+        .'no text, no typography, no letters, no words, no labels, no logos, no watermark';
     }
 
     /**
@@ -49,21 +53,30 @@ class RecipeImageAIGenerationAction
             );
         }
 
-        if (base64_decode($base64Data, true) === false) {
+        $binary = base64_decode($base64Data, true);
+
+        if ($binary === false) {
             throw new RecipeImageGenerationException(
                 previous: new RuntimeException('Invalid base64 image data returned by provider')
             );
         }
 
-        $decodedSize = strlen((string) base64_decode($base64Data, true));
-        if ($decodedSize > 5 * 1024 * 1024) {
+        // Re-encode to JPEG to keep stored images lightweight. Providers such as
+        // FLUX return large PNGs (~5MB) that would otherwise hit the 5MB limit.
+        try {
+            $jpeg = (string) (new ImageManager(Driver::class))
+                ->decodeBinary($binary)
+                ->encode(new JpegEncoder(quality: 85));
+        } catch (Throwable $e) {
+            throw new RecipeImageGenerationException(previous: $e);
+        }
+
+        if (strlen($jpeg) > 5 * 1024 * 1024) {
             throw new RecipeImageGenerationException(
                 previous: new RuntimeException('Generated image exceeds 5MB limit')
             );
         }
 
-        $mime = $image->mime ?: 'image/png';
-
-        return "data:{$mime};base64,{$base64Data}";
+        return 'data:image/jpeg;base64,'.base64_encode($jpeg);
     }
 }

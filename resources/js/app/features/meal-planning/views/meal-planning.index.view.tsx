@@ -33,9 +33,9 @@ export function MealPlanningIndexView() {
       </div>
     ),
     headerRightContent: (
-      <div className="flex items-center gap-4">
-        {canGenerateMealPlan && <MealPlanGenerationPopover />}
+      <div className="flex items-center gap-4 min-sm:flex-row-reverse min-lg:order-2">
         <NavWorkspaceSwitcher workspace_data={workspace_data} />
+        {canGenerateMealPlan && <MealPlanGenerationPopover />}
       </div>
     ),
   });

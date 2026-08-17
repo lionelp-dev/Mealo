@@ -34,6 +34,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('recipes/show-ai-generation-modal', [RecipeController::class, 'showAIGenerationModal'])->name('recipes.show-ai-generation-modal');
     Route::post('recipes/ai-generation', [RecipeController::class, 'aiGeneration'])->name('recipes.ai-generation');
+    Route::post('recipes/ai-generate', [RecipeController::class, 'aiGenerate'])->name('recipes.ai-generate');
     Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');

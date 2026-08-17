@@ -2,6 +2,7 @@
 
 use App\Actions\Demo\DemoAccountCreateAction;
 use App\Models\User;
+use Illuminate\Support\Facades\Bus;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -87,6 +88,7 @@ it('prevents deleting another admin', function () {
 it('extends a demo account expiration', function () {
     /** @var \Tests\TestCase $this */
     config()->set('demo.account_days', 30);
+    Bus::fake();
     $demoUser = app(DemoAccountCreateAction::class)->execute();
     $demoUser->demoAccount()->update(['expires_at' => now()->addDay()]);
 
@@ -98,6 +100,7 @@ it('extends a demo account expiration', function () {
 
 it('revokes a demo account expiration', function () {
     /** @var \Tests\TestCase $this */
+    Bus::fake();
     $demoUser = app(DemoAccountCreateAction::class)->execute();
 
     actingAs($this->admin)->post(route('admin.users.demo.revoke', $demoUser))

@@ -4,12 +4,14 @@ import MultiSelectMealPlanningPopover from './multi-select-meal-planning-popover
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
+import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
 import { useMultiSelectRecipe } from '@/app/hooks/use-multi-select-recipe';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import { useUrlFilterSync } from '@/app/hooks/use-url-filter-sync';
 import i18n from '@/app/lib/i18n';
 import { useRecipeSearchStore } from '@/app/stores/recipe-search';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
+import { usePoll } from '@inertiajs/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { X } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
@@ -22,11 +24,24 @@ type MealPlanDialogProps = {
 export default function MealPlanDialog({ children }: MealPlanDialogProps) {
   const { t } = useTranslation();
 
-  const { recipes, tags } = usePlannedMealsContextValue();
+  const { recipes, tags, starterRecipes } = usePlannedMealsContextValue();
 
   const { isOpen, setIsOpen, selectedDate } = useMealPlanDialogStore();
 
   const { searchTerm } = useRecipeSearchStore();
+
+  // While the new user's starter pack is still generating, keep the dialog's
+  // recipe list fresh so recipes appear as they are created.
+  const isGeneratingStarterRecipes = !!starterRecipes?.generating;
+  const { start: startStarterPoll, stop: stopStarterPoll } = usePoll(
+    3000,
+    { only: ['recipes', 'starterRecipes'] },
+    { autoStart: false },
+  );
+  useEffect(() => {
+    if (isOpen && isGeneratingStarterRecipes) startStarterPoll();
+    else stopStarterPoll();
+  }, [isOpen, isGeneratingStarterRecipes, startStarterPoll, stopStarterPoll]);
 
   const { activeFilters, clearAllFilters } = useRecipesFiltersStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
@@ -93,18 +108,23 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
           </Dialog.Title>
 
           <div className="flex flex-1 flex-col gap-2.5 overflow-hidden">
-            {(!recipes || !recipes.data || recipes.data.length === 0) && (
-              <div className="flex items-center justify-center py-8">
-                <div className="text-center text-base-content">
-                  <p className="mb-2">No recipes found</p>
-                  {(searchTerm || activeFilters.length > 0) && (
-                    <p className="text-sm">
-                      Try adjusting your search or filters
-                    </p>
-                  )}
+            {(!recipes || !recipes.data || recipes.data.length === 0) &&
+              (isGeneratingStarterRecipes &&
+              !searchTerm &&
+              activeFilters.length === 0 ? (
+                <StarterRecipesNotice />
+              ) : (
+                <div className="flex items-center justify-center py-8">
+                  <div className="text-center text-base-content">
+                    <p className="mb-2">No recipes found</p>
+                    {(searchTerm || activeFilters.length > 0) && (
+                      <p className="text-sm">
+                        Try adjusting your search or filters
+                      </p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            )}
+              ))}
 
             {children}
           </div>

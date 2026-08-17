@@ -47,6 +47,21 @@ describe('PlannedMealStore', function () {
                 ->assertSessionHas('success', PlannedMealStoredMessage::message());
         });
 
+        test('synchronizes the shopping list when a meal is planned', function () {
+            /** @var \Tests\TestCase $this */
+            $this->actingAs($this->user)
+                ->post(route('meal-planning.store'), $this->userPlannedMealStoreRequestData->transform())
+                ->assertSessionHas('success', PlannedMealStoredMessage::message());
+
+            $shoppingList = $this->findShoppingListForWorkspaceAndDate(
+                $this->user->defaultWorkspace(),
+                $this->userPlannedMealRequestData->planned_date,
+            );
+
+            expect($shoppingList->plannedMealIngredients)
+                ->toHaveCount($this->recipe->ingredients()->count());
+        });
+
         test('when multiple meals are valid', function () {
             /** @var \Tests\TestCase $this */
             $this->actingAs($this->user)

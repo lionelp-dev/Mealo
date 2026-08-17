@@ -26,7 +26,9 @@ class RecipeStoreAction
 
             $recipe = Recipe::query()->create([
                 'user_id' => $user->id,
-                ...$recipeData->except('image')->transform(),
+                ...$recipeData
+                    ->except('meal_times', 'ingredients', 'steps', 'tags', 'image')
+                    ->transform(),
             ]);
 
             ($this->syncIngredients)($recipe, $recipeData->ingredients);

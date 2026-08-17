@@ -19,33 +19,22 @@ class RecipeGenerator implements Agent, Conversational, HasStructuredOutput, Has
 {
     use Promptable;
 
-    private string $mealTimes;
+    /**
+     * Comma-separated list of the available meal-time names, injected into the
+     * prompt so the model can only pick from valid values.
+     */
+    protected string $mealTimes;
 
-    private string $units;
+    /**
+     * Comma-separated list of the allowed ingredient units.
+     */
+    protected string $units;
 
     public function __construct()
     {
-        try {
-            $mealTimes = MealTime::all();
-            $this->mealTimes = json_encode(
-                $mealTimes->map(fn (MealTime $mt) => [
-                    'id' => $mt->id,
-                    'name' => $mt->name,
-                ])->toArray(),
-                JSON_THROW_ON_ERROR
-            );
-        } catch (\JsonException) {
-            $this->mealTimes = '';
-        }
-
-        try {
-            $this->units = json_encode(
-                Unit::values(),
-                JSON_THROW_ON_ERROR
-            );
-        } catch (\JsonException) {
-            $this->units = '';
-        }
+        $this->mealTimes = MealTime::query()->orderBy('id')
+            ->pluck('name')->implode(', ');
+        $this->units = implode(', ', Unit::values());
     }
 
     /**

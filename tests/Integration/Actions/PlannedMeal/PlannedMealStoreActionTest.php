@@ -38,6 +38,23 @@ describe('PlannedMealStoreAction', function () {
         ]);
     });
 
+    test('synchronizes the shopping list when storing a planned meal', function () {
+        /** @var \Tests\TestCase $this */
+        $plannedMeals = (app(PlannedMealStoreAction::class))->execute(
+            $this->user,
+            $this->user->defaultWorkspace(),
+            $this->userPlannedMealStoreRequestData
+        );
+
+        $shoppingList = $this->findShoppingListForWorkspaceAndDate(
+            $this->user->defaultWorkspace(),
+            $plannedMeals[0]->planned_date,
+        );
+
+        expect($shoppingList->plannedMealIngredients)
+            ->toHaveCount($this->recipe->ingredients()->count());
+    });
+
     test('successfully stores planned meal using recipe from other workspace member', function () {
         /** @var \Tests\TestCase $this */
         (app(PlannedMealStoreAction::class))->execute(

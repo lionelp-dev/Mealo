@@ -3,12 +3,12 @@ import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFo
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-export const recipe_images = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: recipe_images.url(args, options),
+export const local = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: local.url(args, options),
     method: 'get',
 })
 
-recipe_images.definition = {
+local.definition = {
     methods: ["get","head"],
     url: '/storage/{path}',
 } satisfies RouteDefinition<["get","head"]>
@@ -17,7 +17,7 @@ recipe_images.definition = {
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-recipe_images.url = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions) => {
+local.url = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { path: args }
     }
@@ -34,7 +34,7 @@ recipe_images.url = (args: { path: string | number } | [path: string | number ] 
         path: args.path,
     }
 
-    return recipe_images.definition.url
+    return local.definition.url
             .replace('{path}', parsedArgs.path.toString())
             .replace(/\/+$/, '') + queryParams(options)
 }
@@ -43,8 +43,8 @@ recipe_images.url = (args: { path: string | number } | [path: string | number ] 
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-recipe_images.get = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
-    url: recipe_images.url(args, options),
+local.get = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+    url: local.url(args, options),
     method: 'get',
 })
 
@@ -52,8 +52,8 @@ recipe_images.get = (args: { path: string | number } | [path: string | number ] 
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-recipe_images.head = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
-    url: recipe_images.url(args, options),
+local.head = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+    url: local.url(args, options),
     method: 'head',
 })
 
@@ -61,8 +61,8 @@ recipe_images.head = (args: { path: string | number } | [path: string | number ]
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-const recipe_imagesForm = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: recipe_images.url(args, options),
+const localForm = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: local.url(args, options),
     method: 'get',
 })
 
@@ -70,8 +70,8 @@ const recipe_imagesForm = (args: { path: string | number } | [path: string | num
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-recipe_imagesForm.get = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: recipe_images.url(args, options),
+localForm.get = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: local.url(args, options),
     method: 'get',
 })
 
@@ -79,8 +79,8 @@ recipe_imagesForm.get = (args: { path: string | number } | [path: string | numbe
 * @see vendor/laravel/framework/src/Illuminate/Filesystem/FilesystemServiceProvider.php:98
 * @route '/storage/{path}'
 */
-recipe_imagesForm.head = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
-    action: recipe_images.url(args, {
+localForm.head = (args: { path: string | number } | [path: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    action: local.url(args, {
         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
             _method: 'HEAD',
             ...(options?.query ?? options?.mergeQuery ?? {}),
@@ -89,10 +89,10 @@ recipe_imagesForm.head = (args: { path: string | number } | [path: string | numb
     method: 'get',
 })
 
-recipe_images.form = recipe_imagesForm
+local.form = localForm
 
 const storage = {
-    recipe_images: Object.assign(recipe_images, recipe_images),
+    local: Object.assign(local, local),
 }
 
 export default storage

@@ -47,6 +47,10 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Flag the freshly-triggered starter pack so the UI can tell the user
+        // their recipes are being generated (session-scoped, see HandleInertiaRequests).
+        $request->session()->put('starter_recipes_requested_at', now()->toISOString());
+
         return redirect()->intended(route('dashboard', absolute: false));
     }
 }
