@@ -24,7 +24,7 @@ class DemoInviteSeeder extends Seeder
             ['token' => $token],
             [
                 'label' => 'CV share link',
-                'max_uses' => (int) config('demo.max_uses', 50),
+                'max_uses' => config('demo.max_uses', 50),
                 'expires_at' => is_string($expiresAt) && $expiresAt !== '' ? $expiresAt : null,
                 'is_active' => true,
             ]
