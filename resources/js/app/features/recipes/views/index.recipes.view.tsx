@@ -1,5 +1,6 @@
 import { RecipeAIGenerationPopover } from '../components/recipe-ai-generation-popover';
 import { RecipeCard } from '../components/recipe-card';
+import { RecipeCardSkeleton } from '../components/recipe-card-skeleton';
 import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-toolbar';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
@@ -11,7 +12,7 @@ import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-c
 import AppLayout from '@/app/layouts/app-layout';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import recipesRoute from '@/routes/recipes';
-import { Head, InfiniteScroll, router } from '@inertiajs/react';
+import { Head, InfiniteScroll, router, usePoll } from '@inertiajs/react';
 import { ChefHatIcon, CookingPot, Copy } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -19,12 +20,42 @@ import { useTranslation } from 'react-i18next';
 export function IndexRecipesView() {
   const { t } = useTranslation();
 
-  const { recipes, url, meal_times, starterRecipes } = useRecipesContextValue();
+  const { recipes, url, meal_times, starterRecipes, recipeGeneration } =
+    useRecipesContextValue();
   const isGeneratingStarterRecipes = !!starterRecipes?.generating;
+  const isGeneratingRecipes = !!recipeGeneration?.generating;
+  const pendingStarterRecipeSkeletonCount =
+    recipes && recipes.data.length > 0 ? (starterRecipes?.count ?? 0) : 0;
+  const pendingRecipeSkeletonCount =
+    (recipeGeneration?.count ?? 0) + pendingStarterRecipeSkeletonCount;
+  const hasPendingRecipeSkeletons = pendingRecipeSkeletonCount > 0;
 
   const { activeFilters } = useRecipesFiltersStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
   const isInitialRender = useRef(true);
+
+  // Keep this page fresh while recipes are generated in the background.
+  const { start: startRecipeGenerationPoll, stop: stopRecipeGenerationPoll } =
+    usePoll(
+      3000,
+      {
+        only: ['recipes', 'starterRecipes', 'recipeGeneration'],
+        reset: ['recipes'],
+      },
+      { autoStart: false },
+    );
+  useEffect(() => {
+    if (isGeneratingStarterRecipes || isGeneratingRecipes) {
+      startRecipeGenerationPoll();
+    } else {
+      stopRecipeGenerationPoll();
+    }
+  }, [
+    isGeneratingStarterRecipes,
+    isGeneratingRecipes,
+    startRecipeGenerationPoll,
+    stopRecipeGenerationPoll,
+  ]);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -53,8 +84,10 @@ export function IndexRecipesView() {
   };
 
   const handleToggleMultiSelect = () => {
-    setIsMultiSelectMode(!isMultiSelectMode);
-    if (!isMultiSelectMode) {
+    const nextIsMultiSelectMode = !isMultiSelectMode;
+
+    setIsMultiSelectMode(nextIsMultiSelectMode);
+    if (!nextIsMultiSelectMode) {
       clearSelectedRecipes();
     }
   };
@@ -104,7 +137,7 @@ export function IndexRecipesView() {
           </div>
 
           {/* Empty State */}
-          {recipes.data.length === 0 && (
+          {recipes.data.length === 0 && !isGeneratingRecipes && (
             <div className="flex flex-col items-center justify-center pt-44">
               {isGeneratingStarterRecipes ? (
                 <StarterRecipesNotice />
@@ -125,10 +158,14 @@ export function IndexRecipesView() {
             </div>
           )}
 
-          {recipes.data.length > 0 && (
+          {(recipes.data.length > 0 || isGeneratingRecipes) && (
             <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto pr-6 pl-7.5">
               <InfiniteScroll data="recipes">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(22rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
+                  {hasPendingRecipeSkeletons &&
+                    Array.from({ length: pendingRecipeSkeletonCount }).map(
+                      (_, index) => <RecipeCardSkeleton key={index} />,
+                    )}
                   {recipes.data.map((recipe) => (
                     <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}

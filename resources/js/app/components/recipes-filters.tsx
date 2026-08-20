@@ -50,7 +50,7 @@ export function RecipesFilters() {
   } = useRecipesFiltersStore();
 
   return (
-    <div className="flex h-fit flex-1 flex-wrap gap-2.5 max-lg:self-center">
+    <div className="join flex h-fit flex-1 flex-wrap gap-2.5 max-lg:self-center">
       {FILTERS_SECTIONS.map((section) => (
         <Fragment key={section.type}>
           {section.options.map((option, key) => {
@@ -63,7 +63,8 @@ export function RecipesFilters() {
             return (
               <label
                 className={cn(
-                  `group/item btn flex min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-outline btn-sm btn-secondary select-none`,
+                  `group/item btn join-item flex min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-outline btn-sm btn-secondary select-none`,
+                  `join-item`,
                   isActive && 'bg-secondary text-secondary-content',
                 )}
                 htmlFor={key.toString()}

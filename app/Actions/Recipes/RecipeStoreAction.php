@@ -2,6 +2,7 @@
 
 namespace App\Actions\Recipes;
 
+use App\Data\Requests\Recipe\RecipeAIGeneratedStoreRequestData;
 use App\Data\Requests\Recipe\RecipeStoreRequestData;
 use App\Models\Recipe;
 use App\Models\User;
@@ -20,14 +21,15 @@ class RecipeStoreAction
     /**
      * Create a new recipe with all relations.
      */
-    public function execute(User $user, RecipeStoreRequestData $recipeData): Recipe
-    {
+    public function execute(
+        User $user,
+        RecipeStoreRequestData $recipeData,
+    ): Recipe {
         return DB::transaction(function () use ($user, $recipeData): Recipe {
-
             $recipe = Recipe::query()->create([
                 'user_id' => $user->id,
                 ...$recipeData
-                    ->except('meal_times', 'ingredients', 'steps', 'tags', 'image')
+                    ->except('meal_times', 'ingredients', 'steps', 'tags', 'image', 'image_data_url')
                     ->transform(),
             ]);
 
@@ -42,10 +44,12 @@ class RecipeStoreAction
             if ($recipeData->image) {
                 ($this->uploadImage)($recipe, $recipeData->image);
                 $recipe->refresh();
+            } elseif ($recipeData instanceof RecipeAIGeneratedStoreRequestData && $recipeData->image_data_url !== null) {
+                ($this->uploadImage)->fromDataUrl($recipe, $recipeData->image_data_url);
+                $recipe->refresh();
             }
 
             return $recipe;
         });
-
     }
 }

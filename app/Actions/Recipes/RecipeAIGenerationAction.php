@@ -3,8 +3,8 @@
 namespace App\Actions\Recipes;
 
 use App\Clients\Ai\RecipeAIClient;
+use App\Data\Requests\Recipe\RecipeAIGeneratedStoreRequestData;
 use App\Data\Requests\Recipe\RecipeAIGenerationRequestData;
-use App\Data\Requests\Recipe\RecipeStoreRequestData;
 use Exception;
 
 class RecipeAIGenerationAction
@@ -12,25 +12,19 @@ class RecipeAIGenerationAction
     public function __construct(private readonly RecipeAIClient $recipeAIClient) {}
 
     /**
-     * @return array<int, RecipeStoreRequestData>
+     * @return array<int, RecipeAIGeneratedStoreRequestData>
      */
-    public function generate(RecipeAIGenerationRequestData $requestData): array
+    public function execute(RecipeAIGenerationRequestData $requestData, bool $generateImages = false): array
     {
         try {
             return array_map(
-                fn (array $recipe): RecipeStoreRequestData => RecipeStoreRequestData::validateAndCreate($recipe),
-                $this->recipeAIClient->generate($requestData)
+                function (array $recipe): RecipeAIGeneratedStoreRequestData {
+                    return RecipeAIGeneratedStoreRequestData::validateAndCreate($recipe);
+                },
+                $this->recipeAIClient->generate($requestData, $generateImages)
             );
         } catch (Exception $e) {
-            throw new Exception('Failed to generate recipes: '.$e->getMessage());
+            throw new Exception('Failed to generate recipes: ' . $e->getMessage());
         }
-    }
-
-    /**
-     * @return array<int, RecipeStoreRequestData>
-     */
-    public function execute(RecipeAIGenerationRequestData $requestData): array
-    {
-        return $this->generate($requestData);
     }
 }

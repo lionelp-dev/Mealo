@@ -2,6 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Actions\Recipes\RecipeGenerationSessionState;
+use App\Actions\Recipes\RecipeGenerateStarterPackAction;
+use App\Models\MealTime;
 use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Inspiring;
@@ -45,6 +48,7 @@ class HandleInertiaRequests extends Middleware
         $author = is_string($author) ? $author : '';
 
         $user = $request->user();
+        $recipeGenerationSessionState = app(RecipeGenerationSessionState::class);
 
         return [
             ...parent::share($request),
@@ -73,12 +77,15 @@ class HandleInertiaRequests extends Middleware
                     return null;
                 }
 
-                // Once the first recipe lands, clear the flag and emit a final
-                // `generating: false` so the front can drop the "arriving" state.
-                if ($user->recipes()->exists()) {
+                $expectedStarterRecipesCount = MealTime::query()->count()
+                    * RecipeGenerateStarterPackAction::SIGNUP_RECIPES_PER_MEAL_TIME;
+                $currentRecipeCount = $user->recipes()->count();
+                $remainingStarterRecipesCount = max(0, $expectedStarterRecipesCount - $currentRecipeCount);
+
+                if ($remainingStarterRecipesCount === 0) {
                     $request->session()->forget('starter_recipes_requested_at');
 
-                    return ['generating' => false];
+                    return ['generating' => false, 'count' => 0];
                 }
 
                 // Generation is taking too long (the job likely failed): stop
@@ -90,8 +97,12 @@ class HandleInertiaRequests extends Middleware
                     return null;
                 }
 
-                return ['generating' => true];
+                return ['generating' => true, 'count' => $remainingStarterRecipesCount];
             },
+            'recipeGeneration' => fn (): ?array => $recipeGenerationSessionState->toInertiaProp(
+                $request,
+                $user instanceof User ? $user : null,
+            ),
             'generated_image_data_url' => fn () => $request->session()->get('generated_image_data_url'),
             'show_recipe_ai_generation_modal' => fn () => $request->session()->get('show_recipe_ai_generation_modal'),
             'flash' => [

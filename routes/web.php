@@ -10,12 +10,6 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('/', function () {
-    $user = auth()->user();
-
-    if ($user instanceof \App\Models\User && $user->isAdmin()) {
-        return to_route('admin.dashboard');
-    }
-
     return Inertia::render('landing/index');
 })->name('home');
 
@@ -33,8 +27,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('dashboard');
 
     Route::get('recipes/show-ai-generation-modal', [RecipeController::class, 'showAIGenerationModal'])->name('recipes.show-ai-generation-modal');
+    Route::post('recipes/ai-generation-preview', [RecipeController::class, 'aiGenerationPreview'])->name('recipes.ai-generation-preview');
     Route::post('recipes/ai-generation', [RecipeController::class, 'aiGeneration'])->name('recipes.ai-generation');
-    Route::post('recipes/ai-generate', [RecipeController::class, 'aiGenerate'])->name('recipes.ai-generate');
     Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
@@ -72,6 +66,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('workspace-invitations/{token}/accept', [WorkspaceInvitationController::class, 'acceptFromEmail'])
     ->name('workspace-invitations.acceptFromEmail');
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/admin.php';
+require __DIR__ . '/settings.php';
+require __DIR__ . '/auth.php';
+require __DIR__ . '/admin.php';

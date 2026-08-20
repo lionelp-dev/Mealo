@@ -27,7 +27,7 @@ class DemoAccountCreateAction
 
         $user = User::create([
             'name' => 'Invité démo',
-            'email' => 'demo-'.Str::uuid().'@demo.local',
+            'email' => 'demo-' . Str::uuid() . '@demo.local',
             'password' => Str::random(40),
             'email_verified_at' => now(),
         ]);

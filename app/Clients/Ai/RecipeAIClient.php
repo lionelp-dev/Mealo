@@ -15,14 +15,11 @@ final class RecipeAIClient
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function generate(RecipeAIGenerationRequestData $payload): array
+    public function generate(RecipeAIGenerationRequestData $payload, bool $generateImages = false): array
     {
-        // Keep the HTTP timeout strictly below the worker timeout so a slow AI
-        // service raises a catchable ConnectionException instead of the worker
-        // killing the job (which surfaces as MaxAttemptsExceededException).
         $response = $this->http->post(
             '/internal/recipes/generate',
-            $payload->aiPayload(),
+            $payload->aiPayload($generateImages),
             90,
         );
 

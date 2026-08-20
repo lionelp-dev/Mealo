@@ -12,6 +12,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
+        /*
         $owner = User::query()->firstOrCreate(
             ['email' => 'owner@mail.com'],
             [
@@ -69,17 +70,10 @@ class UserSeeder extends Seeder
 
         $sharedWorkspace->giveViewerPermissions($viewer);
 
-        $tester = User::query()->firstOrCreate(
-            ['email' => 'test@mail.com'],
-            [
-                'name' => 'user',
-                'password' => Hash::make(config('app.users_test_password')),
-                'email_verified_at' => Carbon::now(),
-            ]
-        );
+        new RecipeAIGenerationSeeder($owner)->run();
 
-        new AIRecipeSeeder($owner)->run();
+        new RecipeAIGenerationSeeder($editor)->run();
 
-        new AIRecipeSeeder($editor)->run();
+        */
     }
 }

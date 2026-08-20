@@ -25,6 +25,7 @@ export default await Env.create(new URL('../', import.meta.url), {
   OPENROUTER_API_KEY: Env.schema.string.optional(),
   OPENROUTER_BASE_URL: Env.schema.string.optional(),
   OPENROUTER_MODEL: Env.schema.string.optional(),
+  OPENROUTER_IMAGE_MODEL: Env.schema.string.optional(),
 
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),

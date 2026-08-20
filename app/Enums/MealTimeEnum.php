@@ -2,11 +2,6 @@
 
 namespace App\Enums;
 
-use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
-
-#[TypeScript]
-#[LiteralTypeScriptType("'breakfast' | 'lunch' | 'diner' | 'snack'")]
 enum MealTimeEnum: string
 {
     case Breakfast = 'breakfast';

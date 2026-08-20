@@ -42,7 +42,7 @@ export function RecipeCard({ recipe }: Props) {
       <div className="relative">
         {isMultiSelectMode && (
           <input
-            className="radio absolute top-4 right-4 border-base-300 bg-base-100/85 radio-sm checked:border-secondary checked:text-secondary"
+            className="radio absolute top-4 right-4 z-10 border-base-300 bg-base-100/85 radio-sm checked:border-secondary checked:text-secondary"
             type="checkbox"
             checked={selectedRecipeIds.includes(recipe.id)}
             onChange={() => {
@@ -53,7 +53,11 @@ export function RecipeCard({ recipe }: Props) {
             }}
           />
         )}
-        <div className="absolute top-0 right-0 left-0 flex justify-end gap-2 p-4">
+        <div
+          className={`absolute top-0 right-0 left-0 flex justify-end gap-2 p-4 ${
+            isMultiSelectMode ? 'pointer-events-none' : ''
+          }`}
+        >
           <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
             <DropdownMenuTrigger asChild>
               <button

@@ -33,7 +33,6 @@ export function RecipeAIGenerationPopover({ meal_times }: Props) {
       onSubmit: recipeAIGenerateRequestSchema,
     },
     onSubmit: ({ value }) => {
-      // `value` is read synchronously into the payload before we reset.
       generateRecipes(value);
       setIsOpen(false);
       form.reset();

@@ -27,9 +27,12 @@ class RecipeAIGenerationRequestData extends Data
     ) {}
 
     /**
-     * @return array{message: array{role: string, content: string}, context: array{meal_time: string|null, count: int|null}}
+     * @param  bool  $generateImages  Ask the AI service to also generate an image per recipe
+     *                                (inline base64). Only the synchronous generate-and-store
+     *                                flow opts in; other flows handle images on the Laravel side.
+     * @return array{message: array{role: string, content: string}, context: array{meal_time: string|null, count: int|null, generate_images: bool}}
      */
-    public function aiPayload(): array
+    public function aiPayload(bool $generateImages = false): array
     {
         $messageContent = $this->message['content'] ?? $this->prompt;
 
@@ -45,6 +48,7 @@ class RecipeAIGenerationRequestData extends Data
             'context' => [
                 'meal_time' => $this->context['meal_time'] ?? null,
                 'count' => $this->context['count'] ?? null,
+                'generate_images' => $generateImages,
             ],
         ];
     }

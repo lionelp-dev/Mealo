@@ -49,6 +49,12 @@ export type Flash = {
 
 export type StarterRecipes = {
   generating: boolean;
+  count: number;
+};
+
+export type RecipeGeneration = {
+  generating: boolean;
+  count: number;
 };
 
 export type SharedData = {
@@ -58,6 +64,7 @@ export type SharedData = {
   sidebarOpen: boolean;
   flash: Flash;
   starterRecipes: StarterRecipes | null;
+  recipeGeneration: RecipeGeneration | null;
   [key: string]: unknown;
 };
 

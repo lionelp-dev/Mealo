@@ -99,6 +99,19 @@ export type PlannedMealUpdateRequestData = {
   planned_date: string;
   serving_size?: number;
 };
+export type RecipeAIGeneratedStoreRequestData = {
+  image_data_url: string | null;
+  name: string;
+  description: string;
+  serving_size: number;
+  preparation_time: number;
+  cooking_time: number;
+  meal_times: Array<MealTimeRequestData>;
+  ingredients: Array<IngredientRequestData>;
+  steps: Array<StepRequestData>;
+  tags: Array<TagRequestData>;
+  image: File | null;
+};
 export type RecipeAIGenerationRequestData = {
   prompt?: string;
   message?: Array<any>;

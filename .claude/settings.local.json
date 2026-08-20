@@ -1,11 +1,13 @@
 {
-  "enabledMcpjsonServers": [
-    "laravel-boost"
-  ],
   "permissions": {
     "allow": [
       "Bash(git --no-pager diff composer.json)",
-      "Bash(git --no-pager diff composer.lock)"
+      "Bash(git --no-pager diff composer.lock)",
+      "Bash(git check-ignore *)",
+      "Bash(php -v)"
     ]
-  }
+  },
+  "enabledMcpjsonServers": [
+    "laravel-boost"
+  ]
 }

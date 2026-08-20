@@ -36,6 +36,6 @@ export default [js.configs.recommended, ...typescript.configs.recommended, {
         'react-hooks/exhaustive-deps': 'warn',
     },
 }, {
-    ignores: ['vendor', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'api', 'resources/js/types/generated.d.ts'],
+    ignores: ['vendor', 'worktrees', 'node_modules', 'public', 'bootstrap/ssr', 'tailwind.config.js', 'api', 'resources/js/types/generated.d.ts'],
 }, // Turn off all rules that might conflict with Prettier
 prettier, ...storybook.configs["flat/recommended"]];
