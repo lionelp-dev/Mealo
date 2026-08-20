@@ -40,7 +40,7 @@ class RecipeUploadImageAction
 
     public function fromDataUrl(Recipe $recipe, string $dataUrl): string
     {
-        if (! preg_match('/^data:(?<mime>image\/(?:jpeg|jpg|png));base64,(?<data>.+)$/s', $dataUrl, $matches)) {
+        if (! preg_match('/^data:(?<mime>image\/(?:jpeg|jpg|png|webp));base64,(?<data>.+)$/s', $dataUrl, $matches)) {
             throw new RuntimeException('Generated image data URL is invalid.');
         }
 
@@ -48,6 +48,10 @@ class RecipeUploadImageAction
 
         if ($contents === false) {
             throw new RuntimeException('Generated image data URL contains invalid base64.');
+        }
+
+        if (strlen($contents) > 5 * 1024 * 1024) {
+            throw new RuntimeException('Generated image exceeds 5MB limit.');
         }
 
         ($this->recipeImageDeleteAction)($recipe);
@@ -60,6 +64,7 @@ class RecipeUploadImageAction
         $extension = match ($mime) {
             'image/jpeg', 'image/jpg' => 'jpg',
             'image/png' => 'png',
+            'image/webp' => 'webp',
             default => throw new RuntimeException('Generated image has an unsupported mime type.'),
         };
 

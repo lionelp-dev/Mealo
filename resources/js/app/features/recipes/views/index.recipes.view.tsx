@@ -128,7 +128,7 @@ export function IndexRecipesView() {
           {recipes.data.length > 0 && (
             <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto pr-6 pl-7.5">
               <InfiniteScroll data="recipes">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(22rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
+                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
                   {recipes.data.map((recipe) => (
                     <RecipeCard key={recipe.id} recipe={recipe} />
                   ))}

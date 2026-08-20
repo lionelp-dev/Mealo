@@ -10,21 +10,21 @@ import { generateSeed } from '../utils/generate_seed.ts'
 const RECIPES_PER_BATCH = 5
 const MAX_CONCURRENT_RECIPE_GENERATIONS = 5
 
-export const nodeGenerateRecipesByBatch: GraphNode<typeof GraphState> = async (state) => {
-  const model = new ChatOpenRouter({
-    model: 'openai/gpt-4o-mini',
-    seed: generateSeed(),
-    temperature: 0.8,
-  }).withStructuredOutput(
-    z.object({
-      recipes: z.array(recipeStoreRequestSchema),
-    }),
-    {
-      method: 'jsonSchema',
-      strict: true,
-    }
-  )
+const model = new ChatOpenRouter({
+  model: 'openai/gpt-4o-mini',
+  seed: generateSeed(),
+  temperature: 0.8,
+}).withStructuredOutput(
+  z.object({
+    recipes: z.array(recipeStoreRequestSchema),
+  }),
+  {
+    method: 'jsonSchema',
+    strict: true,
+  }
+)
 
+export const nodeGenerateRecipesByBatch: GraphNode<typeof GraphState> = async (state) => {
   const { recipeNames, context } = state
 
   const { meal_time: mealTime } = context
@@ -59,6 +59,7 @@ export const nodeGenerateRecipesByBatch: GraphNode<typeof GraphState> = async (s
 
           Contraintes de format :
           - image doit toujours être null ;
+          - image_data_url doit toujours être null ;
           ${
             mealTime
               ? `- meal_times.name doit valoir ${mealTime} ;`

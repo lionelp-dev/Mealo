@@ -15,7 +15,7 @@ class RecipeGenerateStarterPackAction
     public function execute(
         User $user,
         int $recipesPerMealTime = 5,
-        bool $imageGeneration = true,
+        bool $imageGeneration = false,
     ): void {
         $mealTimes = MealTime::query()->orderBy('id')->get(['name']);
 
@@ -24,21 +24,20 @@ class RecipeGenerateStarterPackAction
         }
 
         $jobs = $mealTimes->map(
-            fn(MealTime $mealTime): RecipeAIGenerationJob
-                => new RecipeAIGenerationJob(
-                    $user->id,
-                    RecipeAIGenerationRequestData::validateAndCreate([
-                        'message' => [
-                            'role' => 'user',
-                            'content' => RecipeAIGenerationRequestData::DEFAULT_MESSAGE_CONTENT,
-                        ],
-                        'context' => [
-                            'meal_time' => $mealTime->name,
-                            'count' => $recipesPerMealTime,
-                        ],
-                        'image_generation' => $imageGeneration,
-                    ]),
-                )->onQueue(RecipeAIGenerationJob::QUEUE),
+            fn (MealTime $mealTime): RecipeAIGenerationJob => new RecipeAIGenerationJob(
+                $user->id,
+                RecipeAIGenerationRequestData::validateAndCreate([
+                    'message' => [
+                        'role' => 'user',
+                        'content' => RecipeAIGenerationRequestData::DEFAULT_MESSAGE_CONTENT,
+                    ],
+                    'context' => [
+                        'meal_time' => $mealTime->name,
+                        'count' => $recipesPerMealTime,
+                    ],
+                    'image_generation' => $imageGeneration,
+                ]),
+            )->onQueue(RecipeAIGenerationJob::QUEUE),
         )->all();
 
         Bus::chain($jobs)

@@ -9,7 +9,7 @@ export function useGenerateRecipe() {
   const [wasSuccessful, setWasSuccessful] = useState(false);
 
   const generateRecipe = (data: RecipeAIGenerationRequest) => {
-    router.post(recipes.aiGeneration.url(), data, {
+    router.post(recipes.aiGenerationPreview.url(), data, {
       only: ['generated_recipe', 'generated_image_data_url', 'flash'],
       preserveUrl: true,
       onBefore: () => {

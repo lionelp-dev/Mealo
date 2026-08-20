@@ -219,7 +219,7 @@ class RecipeController extends Controller
             ]);
     }
 
-    public function aiGeneration(
+    public function aiGenerationPreview(
         RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
         RecipeAIGenerationAction $recipeAIGenerationAction,
         RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
@@ -227,8 +227,8 @@ class RecipeController extends Controller
         try {
             Gate::authorize('create', Recipe::class);
 
-            $recipes = $recipeAIGenerationAction->generate($recipeAIGenerationRequestData);
-            $recipe = $recipes[0] ?? throw new \Exception('No recipe generated from AI response.');
+            $generated = $recipeAIGenerationAction->generate($recipeAIGenerationRequestData);
+            $recipe = ($generated[0] ?? throw new \Exception('No recipe generated from AI response.'))->data;
 
             if ($recipeAIGenerationRequestData->image_generation) {
                 $prompt = $recipe->name
@@ -251,7 +251,7 @@ class RecipeController extends Controller
         }
     }
 
-    public function aiGenerate(
+    public function aiGeneration(
         RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
         RecipeAIGenerateAndStoreAction $recipeAIGenerateAndStoreAction,
     ): RedirectResponse {

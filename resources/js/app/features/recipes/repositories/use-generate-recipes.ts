@@ -9,8 +9,6 @@ export function useGenerateRecipes() {
   const [wasSuccessful, setWasSuccessful] = useState(false);
 
   const generateRecipes = (data: RecipeAIGenerateRequest) => {
-    // Only send a prompt when one is actually set: an empty string would trip
-    // the backend `sometimes|min:5` rule and fail validation.
     const hasPrompt = !!data.prompt && data.prompt.trim() !== '';
     const payload = {
       context: data.context,
@@ -18,10 +16,7 @@ export function useGenerateRecipes() {
       ...(hasPrompt ? { prompt: data.prompt } : {}),
     };
 
-    // Full Inertia visit (not a partial reload): the recipes list is an
-    // `Inertia::scroll` merge prop, so a full re-render is required for newly
-    // generated recipes to appear at the top of the list.
-    router.post(recipes.aiGenerate.url(), payload, {
+    router.post(recipes.aiGeneration.url(), payload, {
       preserveScroll: true,
       onBefore: () => {
         setProcessing(true);

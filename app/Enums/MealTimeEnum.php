@@ -2,9 +2,6 @@
 
 namespace App\Enums;
 
-use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
-use Spatie\TypeScriptTransformer\Attributes\TypeScript;
-
 enum MealTimeEnum: string
 {
     case Breakfast = 'breakfast';
@@ -17,6 +14,6 @@ enum MealTimeEnum: string
      */
     public static function values(): array
     {
-        return array_map(fn(self $case) => $case->value, self::cases());
+        return array_map(fn (self $case) => $case->value, self::cases());
     }
 }

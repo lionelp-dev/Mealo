@@ -19,11 +19,14 @@ class RecipeStoreAction
 
     /**
      * Create a new recipe with all relations.
+     *
+     * @param  string|null  $imageDataUrl  Trusted base64 data URL (e.g. AI-generated image
+     *                                     from the internal service). Never sourced from a
+     *                                     user request DTO — user uploads use $recipeData->image.
      */
-    public function execute(User $user, RecipeStoreRequestData $recipeData): Recipe
+    public function execute(User $user, RecipeStoreRequestData $recipeData, ?string $imageDataUrl = null): Recipe
     {
-        return DB::transaction(function () use ($user, $recipeData): Recipe {
-
+        return DB::transaction(function () use ($user, $recipeData, $imageDataUrl): Recipe {
             $recipe = Recipe::query()->create([
                 'user_id' => $user->id,
                 ...$recipeData
@@ -42,10 +45,12 @@ class RecipeStoreAction
             if ($recipeData->image) {
                 ($this->uploadImage)($recipe, $recipeData->image);
                 $recipe->refresh();
+            } elseif ($imageDataUrl !== null) {
+                ($this->uploadImage)->fromDataUrl($recipe, $imageDataUrl);
+                $recipe->refresh();
             }
 
             return $recipe;
         });
-
     }
 }

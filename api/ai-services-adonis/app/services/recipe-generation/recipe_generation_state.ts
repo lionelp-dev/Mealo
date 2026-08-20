@@ -11,6 +11,7 @@ export const GraphState = new StateSchema({
   context: z.object({
     meal_time: z.string().nullable(),
     count: z.number().int().positive().nullable(),
+    generate_images: z.boolean().default(false),
   }),
   recipeNames: z.array(z.string()).default(() => []),
   recipes: z.array(recipeStoreRequestSchema),

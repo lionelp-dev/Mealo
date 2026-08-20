@@ -2,7 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Recipe;
 use App\Models\User;
 use App\Models\Workspace;
 use Illuminate\Database\Seeder;
@@ -52,10 +51,7 @@ class AdminSeeder extends Seeder
 
         $admin->assignRole('admin');
 
-        $recipe = Recipe::query()->first();
+        new RecipeAIGenerationSeeder($admin, true)->run();
 
-        if (!$recipe) {
-            new RecipeAIGenerationSeeder($admin, false)->run();
-        }
     }
 }

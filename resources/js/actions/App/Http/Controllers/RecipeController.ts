@@ -81,8 +81,64 @@ showAIGenerationModalForm.head = (options?: RouteQueryOptions): RouteFormDefinit
 showAIGenerationModal.form = showAIGenerationModalForm
 
 /**
-* @see \App\Http\Controllers\RecipeController::aiGeneration
+* @see \App\Http\Controllers\RecipeController::aiGenerationPreview
 * @see app/Http/Controllers/RecipeController.php:222
+* @route '/recipes/ai-generation-preview'
+*/
+export const aiGenerationPreview = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: aiGenerationPreview.url(options),
+    method: 'post',
+})
+
+aiGenerationPreview.definition = {
+    methods: ["post"],
+    url: '/recipes/ai-generation-preview',
+} satisfies RouteDefinition<["post"]>
+
+/**
+* @see \App\Http\Controllers\RecipeController::aiGenerationPreview
+* @see app/Http/Controllers/RecipeController.php:222
+* @route '/recipes/ai-generation-preview'
+*/
+aiGenerationPreview.url = (options?: RouteQueryOptions) => {
+    return aiGenerationPreview.definition.url + queryParams(options)
+}
+
+/**
+* @see \App\Http\Controllers\RecipeController::aiGenerationPreview
+* @see app/Http/Controllers/RecipeController.php:222
+* @route '/recipes/ai-generation-preview'
+*/
+aiGenerationPreview.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
+    url: aiGenerationPreview.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\RecipeController::aiGenerationPreview
+* @see app/Http/Controllers/RecipeController.php:222
+* @route '/recipes/ai-generation-preview'
+*/
+const aiGenerationPreviewForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: aiGenerationPreview.url(options),
+    method: 'post',
+})
+
+/**
+* @see \App\Http\Controllers\RecipeController::aiGenerationPreview
+* @see app/Http/Controllers/RecipeController.php:222
+* @route '/recipes/ai-generation-preview'
+*/
+aiGenerationPreviewForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    action: aiGenerationPreview.url(options),
+    method: 'post',
+})
+
+aiGenerationPreview.form = aiGenerationPreviewForm
+
+/**
+* @see \App\Http\Controllers\RecipeController::aiGeneration
+* @see app/Http/Controllers/RecipeController.php:254
 * @route '/recipes/ai-generation'
 */
 export const aiGeneration = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -97,7 +153,7 @@ aiGeneration.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiGeneration
-* @see app/Http/Controllers/RecipeController.php:222
+* @see app/Http/Controllers/RecipeController.php:254
 * @route '/recipes/ai-generation'
 */
 aiGeneration.url = (options?: RouteQueryOptions) => {
@@ -106,7 +162,7 @@ aiGeneration.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiGeneration
-* @see app/Http/Controllers/RecipeController.php:222
+* @see app/Http/Controllers/RecipeController.php:254
 * @route '/recipes/ai-generation'
 */
 aiGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -116,7 +172,7 @@ aiGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiGeneration
-* @see app/Http/Controllers/RecipeController.php:222
+* @see app/Http/Controllers/RecipeController.php:254
 * @route '/recipes/ai-generation'
 */
 const aiGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -126,7 +182,7 @@ const aiGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition<'pos
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiGeneration
-* @see app/Http/Controllers/RecipeController.php:222
+* @see app/Http/Controllers/RecipeController.php:254
 * @route '/recipes/ai-generation'
 */
 aiGenerationForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -135,62 +191,6 @@ aiGenerationForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post
 })
 
 aiGeneration.form = aiGenerationForm
-
-/**
-* @see \App\Http\Controllers\RecipeController::aiGenerate
-* @see app/Http/Controllers/RecipeController.php:254
-* @route '/recipes/ai-generate'
-*/
-export const aiGenerate = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: aiGenerate.url(options),
-    method: 'post',
-})
-
-aiGenerate.definition = {
-    methods: ["post"],
-    url: '/recipes/ai-generate',
-} satisfies RouteDefinition<["post"]>
-
-/**
-* @see \App\Http\Controllers\RecipeController::aiGenerate
-* @see app/Http/Controllers/RecipeController.php:254
-* @route '/recipes/ai-generate'
-*/
-aiGenerate.url = (options?: RouteQueryOptions) => {
-    return aiGenerate.definition.url + queryParams(options)
-}
-
-/**
-* @see \App\Http\Controllers\RecipeController::aiGenerate
-* @see app/Http/Controllers/RecipeController.php:254
-* @route '/recipes/ai-generate'
-*/
-aiGenerate.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
-    url: aiGenerate.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\RecipeController::aiGenerate
-* @see app/Http/Controllers/RecipeController.php:254
-* @route '/recipes/ai-generate'
-*/
-const aiGenerateForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: aiGenerate.url(options),
-    method: 'post',
-})
-
-/**
-* @see \App\Http\Controllers\RecipeController::aiGenerate
-* @see app/Http/Controllers/RecipeController.php:254
-* @route '/recipes/ai-generate'
-*/
-aiGenerateForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
-    action: aiGenerate.url(options),
-    method: 'post',
-})
-
-aiGenerate.form = aiGenerateForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
@@ -962,6 +962,6 @@ updateForm.patch = (args: { recipe: string | { id: string } } | [recipe: string 
 
 update.form = updateForm
 
-const RecipeController = { showAIGenerationModal, aiGeneration, aiGenerate, aiImageGeneration, image, destroy, index, create, store, show, edit, update }
+const RecipeController = { showAIGenerationModal, aiGenerationPreview, aiGeneration, aiImageGeneration, image, destroy, index, create, store, show, edit, update }
 
 export default RecipeController

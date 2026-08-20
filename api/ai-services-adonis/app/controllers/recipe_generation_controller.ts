@@ -10,6 +10,7 @@ const RecipesAIGenerationRequest = z.object({
   context: z.object({
     meal_time: z.string().trim().min(1).max(50).nullable().optional().default(null),
     count: z.number().int().min(1).max(10).nullable().optional().default(null),
+    generate_images: z.boolean().optional().default(false),
   }),
 })
 

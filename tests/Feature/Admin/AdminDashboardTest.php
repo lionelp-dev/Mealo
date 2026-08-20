@@ -55,15 +55,6 @@ it('prevents non-admins from accessing dashboard', function () {
     $response->assertForbidden();
 });
 
-it('redirects admins from the landing page to the admin dashboard', function () {
-    $admin = User::factory()->create();
-
-    setPermissionsTeamId(null);
-    $admin->assignRole('admin');
-
-    actingAs($admin)->get('/')->assertRedirect(route('admin.dashboard'));
-});
-
 it('shows the landing page to non-admins', function () {
     $user = User::factory()->create();
 

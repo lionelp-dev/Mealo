@@ -12,7 +12,7 @@ class RecipeAIGenerationSeeder extends Seeder
 
     public function __construct(
         private User $user,
-        private bool $imageGeneration = true,
+        private bool $imageGeneration = false,
     ) {}
 
     public function run(): void

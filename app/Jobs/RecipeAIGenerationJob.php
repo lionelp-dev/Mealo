@@ -19,6 +19,7 @@ class RecipeAIGenerationJob implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
+
     public const QUEUE = 'recipes-ai-generation';
 
     public function __construct(
@@ -36,8 +37,8 @@ class RecipeAIGenerationJob implements ShouldQueue
             $mealTime = $payload['context']['meal_time'];
 
             echo 'Generating recipe for '
-                . ($mealTime ?? 'unspecified meal time')
-                . ": {$prompt}\n";
+                .($mealTime ?? 'unspecified meal time')
+                .": {$prompt}\n";
 
             $user = User::query()->find($this->userId);
 
@@ -45,7 +46,7 @@ class RecipeAIGenerationJob implements ShouldQueue
                 throw new \Exception('User not found');
             }
 
-            $recipes = $recipeAIGenerationAction->generate($this->recipeAIGenerationRequestData);
+            $recipes = $recipeAIGenerationAction->generate($this->recipeAIGenerationRequestData, true);
 
             if ($recipes === []) {
                 throw new \Exception('No recipe generated from AI response.');
@@ -53,17 +54,14 @@ class RecipeAIGenerationJob implements ShouldQueue
 
             $createdRecipeIds = [];
 
-            foreach ($recipes as $recipeStoreRequestData) {
-                $recipe = $recipeStoreAction->execute($user, $recipeStoreRequestData);
+            foreach ($recipes as $generatedRecipe) {
+                $recipe = $recipeStoreAction->execute(
+                    $user,
+                    $generatedRecipe->data,
+                    $generatedRecipe->imageDataUrl,
+                );
 
                 $createdRecipeIds[] = $recipe->id;
-            }
-
-            if ($this->recipeAIGenerationRequestData->image_generation) {
-                $this->prependToChain(
-                    (new RecipeImageAIGenerationJob($user->id, $createdRecipeIds))
-                        ->onQueue(RecipeImageAIGenerationJob::QUEUE)
-                );
             }
 
             Log::info('Recipes generated via queue.', [

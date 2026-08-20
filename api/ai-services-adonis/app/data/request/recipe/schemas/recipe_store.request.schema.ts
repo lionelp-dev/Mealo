@@ -43,4 +43,5 @@ export const recipeStoreRequestSchema = z.object({
     .min(1, 'Au moins un moment de repas est requis')
     .max(4, 'La recette ne doit pas dépasser 4 moments de repas'),
   image: z.null(),
+  image_data_url: z.string().nullable().default(null),
 })
