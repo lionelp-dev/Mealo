@@ -72,7 +72,9 @@ export function AppSidebar() {
       </SidebarContent>
 
       <SidebarFooter>
-        <DemoWarningBanner />
+        <div className="group-data-[collapsible=icon]:hidden">
+          <DemoWarningBanner />
+        </div>
         <NavUser />
       </SidebarFooter>
     </Sidebar>
