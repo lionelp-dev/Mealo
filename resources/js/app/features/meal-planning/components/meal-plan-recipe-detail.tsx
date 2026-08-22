@@ -15,7 +15,7 @@ export default function MealPlanRecipeDetail({
   const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order);
 
   return (
-    <div className="h-full w-[22vw] overflow-hidden rounded-xl border border-base-300/40 bg-base-100 shadow-xs">
+    <div className="h-full w-full overflow-hidden rounded-xl border border-base-300/40 bg-base-100 shadow-xs">
       <button
         type="button"
         onClick={onClose}
