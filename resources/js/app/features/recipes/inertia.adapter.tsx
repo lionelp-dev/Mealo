@@ -14,6 +14,7 @@ import { PropsWithChildren, useMemo } from 'react';
 type PageProps = SharedData &
   Partial<{
     recipe: RecipeResource;
+    selected_recipe: RecipeResource | null;
     recipes: PaginatedCollection<RecipeResource>;
     tags: TagResource[];
     meal_times: MealTimeResource[];

@@ -7,10 +7,8 @@ import {
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
-import recipes from '@/routes/recipes';
 import { PlannedMeal } from '@/types';
 import { RecipeResourceData } from '@/types/generated';
-import { router } from '@inertiajs/react';
 import { Ellipsis, EyeIcon, Trash2Icon, UsersIcon } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -33,8 +31,7 @@ export default function MealPlanMealCard({
   const { unplanMeals } = useMealPlanActions();
 
   const handleView = () => {
-    router.reload({ reset: ['flash'] });
-    router.visit(recipes.show.url({ recipe: recipe.id }));
+    onSelectRecipe(recipe);
   };
 
   const { canEditMealPlan } = useWorkspacePermissions();

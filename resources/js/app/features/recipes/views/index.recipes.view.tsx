@@ -1,13 +1,17 @@
 import { RecipeAIGenerationPopover } from '../components/recipe-ai-generation-popover';
 import { RecipeCard } from '../components/recipe-card';
 import { RecipeCardSkeleton } from '../components/recipe-card-skeleton';
+import RecipeDetailPanel from '../components/recipe-detail-panel';
 import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-toolbar';
+import { useRecipeDetailPanel } from '../hooks/use-recipe-detail-panel';
 import { useRecipesContextValue } from '../inertia.adapter';
+import { editRecipe } from '../repositories/recipes.repository';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
 import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
+import { usePermissions } from '@/app/hooks/use-permissions';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -20,8 +24,14 @@ import { useTranslation } from 'react-i18next';
 export function IndexRecipesView() {
   const { t } = useTranslation();
 
-  const { recipes, url, meal_times, starterRecipes, recipeGeneration } =
-    useRecipesContextValue();
+  const {
+    recipes,
+    selected_recipe,
+    url,
+    meal_times,
+    starterRecipes,
+    recipeGeneration,
+  } = useRecipesContextValue();
   const isGeneratingStarterRecipes = !!starterRecipes?.generating;
   const isGeneratingRecipes = !!recipeGeneration?.generating;
   const pendingStarterRecipeSkeletonCount =
@@ -32,7 +42,15 @@ export function IndexRecipesView() {
 
   const { activeFilters } = useRecipesFiltersStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
+  const { canEditRecipe } = usePermissions();
   const isInitialRender = useRef(true);
+  const {
+    setSelectedRecipe,
+    displayedRecipe,
+    isRecipeDetailMounted,
+    isRecipeDetailVisible,
+    closeRecipeDetail,
+  } = useRecipeDetailPanel(selected_recipe);
 
   // Keep this page fresh while recipes are generated in the background.
   const { start: startRecipeGenerationPoll, stop: stopRecipeGenerationPoll } =
@@ -159,18 +177,47 @@ export function IndexRecipesView() {
           )}
 
           {(recipes.data.length > 0 || isGeneratingRecipes) && (
-            <div className="mx-auto min-h-0 w-full flex-1 overflow-y-auto pr-6 pl-7.5">
-              <InfiniteScroll data="recipes">
-                <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
-                  {hasPendingRecipeSkeletons &&
-                    Array.from({ length: pendingRecipeSkeletonCount }).map(
-                      (_, index) => <RecipeCardSkeleton key={index} />,
+            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden pr-6 pl-7.5">
+              <div className="min-h-0 w-full min-w-0 overflow-y-auto">
+                <InfiniteScroll data="recipes">
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
+                    {hasPendingRecipeSkeletons &&
+                      Array.from({ length: pendingRecipeSkeletonCount }).map(
+                        (_, index) => <RecipeCardSkeleton key={index} />,
+                      )}
+                    {recipes.data.map((recipe) => (
+                      <RecipeCard
+                        key={recipe.id}
+                        recipe={recipe}
+                        onViewRecipe={setSelectedRecipe}
+                      />
+                    ))}
+                  </div>
+                </InfiniteScroll>
+              </div>
+              {isRecipeDetailMounted && (
+                <div className="h-full w-[22vw] shrink-0 overflow-hidden">
+                  <div
+                    className={`h-full transition-[opacity,transform] duration-300 ease-in-out ${
+                      isRecipeDetailVisible
+                        ? 'translate-x-0 opacity-100'
+                        : 'pointer-events-none translate-x-4 opacity-0'
+                    }`}
+                  >
+                    {displayedRecipe && (
+                      <RecipeDetailPanel
+                        recipe={displayedRecipe}
+                        onClose={closeRecipeDetail}
+                        onEdit={
+                          canEditRecipe(displayedRecipe.user_id)
+                            ? () => editRecipe(displayedRecipe.id)
+                            : undefined
+                        }
+                      />
                     )}
-                  {recipes.data.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
-                  ))}
+                  </div>
                 </div>
-              </InfiniteScroll>
+              )}
             </div>
           )}
         </div>

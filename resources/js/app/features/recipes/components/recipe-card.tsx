@@ -1,4 +1,4 @@
-import { viewRecipe, editRecipe } from '../repositories/recipes.repository';
+import { editRecipe } from '../repositories/recipes.repository';
 import { useDeleteRecipes } from '../repositories/use-delete-recipes';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import {
@@ -15,9 +15,10 @@ import { useTranslation } from 'react-i18next';
 
 type Props = {
   recipe: RecipeResource;
+  onViewRecipe: (recipe: RecipeResource) => void;
 };
 
-export function RecipeCard({ recipe }: Props) {
+export function RecipeCard({ recipe, onViewRecipe }: Props) {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -34,7 +35,7 @@ export function RecipeCard({ recipe }: Props) {
           ? () => toggleRecipeSelection(recipe.id)
           : (e) => {
               e.stopPropagation();
-              viewRecipe(recipe.id);
+              onViewRecipe(recipe);
             }
       }
       className={`card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl ${!isMultiSelectMode && 'hover:[&_.recipe-card-actions-btn]:visible'}`}
@@ -77,7 +78,7 @@ export function RecipeCard({ recipe }: Props) {
               <DropdownMenuItem
                 onClick={(e) => {
                   e.stopPropagation();
-                  viewRecipe(recipe.id);
+                  onViewRecipe(recipe);
                 }}
               >
                 <EyeIcon size={14} />

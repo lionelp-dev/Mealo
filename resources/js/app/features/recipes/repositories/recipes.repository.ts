@@ -8,7 +8,7 @@ export const viewRecipes = () => {
 
 export const viewRecipe = (id: string) => {
   router.reload({ reset: ['flash'] });
-  router.visit(recipes.show.url({ id }));
+  router.visit(recipes.index.url({ query: { recipe: id } }));
 };
 
 export const editRecipe = (id: string) => {

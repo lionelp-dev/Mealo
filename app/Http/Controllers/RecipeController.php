@@ -52,7 +52,8 @@ class RecipeController extends Controller
         RecipeFiltersRequestData $recipeFiltersRequestData,
         RecipeFiltersAction $recipeFiltersAction,
         RecipeSearchRequestData $recipeSearchRequestData,
-        RecipeSearchAction $recipeSearchAction
+        RecipeSearchAction $recipeSearchAction,
+        Request $request,
     ): Response {
         Gate::authorize('viewAny', Recipe::class);
 
@@ -64,9 +65,23 @@ class RecipeController extends Controller
         $recipeQuery = $recipeSearchAction($this->authenticatedUser(), $recipeQuery, $recipeSearchRequestData);
 
         $tags = Tag::query()->where('user_id', $this->authenticatedUser()->id)->get();
+        $selectedRecipeId = $request->query('recipe');
+        $selectedRecipe = null;
+
+        if (is_string($selectedRecipeId) && $selectedRecipeId !== '') {
+            $selectedRecipe = Recipe::query()
+                ->whereKey($selectedRecipeId)
+                ->with(['mealTimes', 'ingredients', 'steps', 'tags'])
+                ->first();
+
+            if ($selectedRecipe && Gate::denies('view', $selectedRecipe)) {
+                $selectedRecipe = null;
+            }
+        }
 
         return Inertia::render('recipe/index', [
             'recipes' => Inertia::scroll(RecipeResourceData::collect($recipeQuery->paginate(15))),
+            'selected_recipe' => $selectedRecipe ? RecipeResourceData::from($selectedRecipe) : null,
             'tags' => TagResourceData::collect($tags),
             'meal_times' => MealTimeResourceData::collect(MealTime::all()),
         ]);
@@ -101,22 +116,11 @@ class RecipeController extends Controller
 
             $recipe = $recipeStoreAction->execute($this->authenticatedUser(), $recipeStoreRequestData);
 
-            return to_route('recipes.show', ['recipe' => $recipe->id])
+            return to_route('recipes.index', ['recipe' => $recipe->id])
                 ->with('success', RecipeCreatedMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());
         }
-    }
-
-    public function show(Recipe $recipe): Response
-    {
-        Gate::authorize('view', $recipe);
-
-        $recipe->load(['mealTimes', 'ingredients', 'steps', 'tags']);
-
-        return Inertia::render('recipe/show', [
-            'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
-        ]);
     }
 
     public function edit(
@@ -159,7 +163,7 @@ class RecipeController extends Controller
                 $recipeUpdateRequestData,
             );
 
-            return to_route('recipes.show', ['recipe' => $recipe])
+            return to_route('recipes.index', ['recipe' => $recipe->id])
                 ->with('success', RecipeUpdatedMessage::message());
         } catch (AuthorizationException $e) {
             return back()->with('error', $e->getMessage());

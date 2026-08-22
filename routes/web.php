@@ -32,7 +32,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');
-    Route::resource('recipes', RecipeController::class)->except(['destroy']);
+    Route::resource('recipes', RecipeController::class)->except(['destroy', 'show']);
 
     Route::resource('meal-planning', PlannedMealController::class)
         ->parameters(['meal-planning' => 'planned_meal'])

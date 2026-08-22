@@ -3,56 +3,22 @@ import { usePlannedMealsContextValue } from '../inertia.adapter';
 import MealPlanDayHeader from './meal-plan-day-header';
 import MealPlanDialog from './meal-plan-dialog';
 import { MealPlanRecipeCard } from './meal-plan-dialog-recipe-card';
-import MealPlanRecipeDetail from './meal-plan-recipe-detail';
 import MealPlanSlots from './meal-plan-slots';
-import { RecipeResourceData } from '@/types/generated';
+import RecipeDetailPanel from '@/app/features/recipes/components/recipe-detail-panel';
+import { useRecipeDetailPanel } from '@/app/features/recipes/hooks/use-recipe-detail-panel';
 import { InfiniteScroll } from '@inertiajs/react';
 import { DateTime } from 'luxon';
-import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function MealPlanCalendar() {
   const { weekPlannedMeals } = useWeekPlannedMeals();
   const { recipes } = usePlannedMealsContextValue();
-  const [selectedRecipe, setSelectedRecipe] =
-    useState<RecipeResourceData | null>(null);
-  const [isRecipeDetailMounted, setIsRecipeDetailMounted] = useState(false);
-  const [isRecipeDetailVisible, setIsRecipeDetailVisible] = useState(false);
-
-  const handleCloseRecipeDetail = useCallback(
-    () => setSelectedRecipe(null),
-    [],
-  );
-
-  // Keep the last recipe mounted so its content stays visible while the panel
-  // animates closed.
-  const lastRecipeRef = useRef<RecipeResourceData | null>(null);
-  if (selectedRecipe) {
-    lastRecipeRef.current = selectedRecipe;
-  }
-  const displayedRecipe = selectedRecipe ?? lastRecipeRef.current;
-
-  useEffect(() => {
-    if (selectedRecipe) {
-      setIsRecipeDetailMounted(true);
-      const animationFrameId = window.requestAnimationFrame(() => {
-        setIsRecipeDetailVisible(true);
-      });
-
-      return () => window.cancelAnimationFrame(animationFrameId);
-    }
-
-    setIsRecipeDetailVisible(false);
-
-    if (!isRecipeDetailMounted) {
-      return;
-    }
-
-    const timeoutId = window.setTimeout(() => {
-      setIsRecipeDetailMounted(false);
-    }, 300);
-
-    return () => window.clearTimeout(timeoutId);
-  }, [isRecipeDetailMounted, selectedRecipe]);
+  const {
+    setSelectedRecipe,
+    displayedRecipe,
+    isRecipeDetailMounted,
+    isRecipeDetailVisible,
+    closeRecipeDetail,
+  } = useRecipeDetailPanel();
 
   return (
     <div className="flex gap-3">
@@ -85,9 +51,9 @@ export default function MealPlanCalendar() {
             }`}
           >
             {displayedRecipe && (
-              <MealPlanRecipeDetail
+              <RecipeDetailPanel
                 recipe={displayedRecipe}
-                onClose={handleCloseRecipeDetail}
+                onClose={closeRecipeDetail}
               />
             )}
           </div>

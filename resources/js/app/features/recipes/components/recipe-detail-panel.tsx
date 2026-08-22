@@ -1,16 +1,24 @@
 import { RecipeResourceData } from '@/types/generated';
-import { Clock3Icon, CookingPotIcon, UsersIcon, XIcon } from 'lucide-react';
+import {
+  Clock3Icon,
+  CookingPotIcon,
+  Edit2Icon,
+  UsersIcon,
+  XIcon,
+} from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-type MealPlanRecipeDetailProps = {
+type RecipeDetailPanelProps = {
   recipe: RecipeResourceData;
   onClose: () => void;
+  onEdit?: () => void;
 };
 
-export default function MealPlanRecipeDetail({
+export default function RecipeDetailPanel({
   recipe,
   onClose,
-}: MealPlanRecipeDetailProps) {
+  onEdit,
+}: RecipeDetailPanelProps) {
   const { t } = useTranslation();
   const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order);
 
@@ -24,6 +32,16 @@ export default function MealPlanRecipeDetail({
       >
         <XIcon size={18} />
       </button>
+      {onEdit && (
+        <button
+          type="button"
+          onClick={onEdit}
+          aria-label={t('common.buttons.edit', 'Edit')}
+          className="absolute top-3 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-base-100/90 text-base-content/70 shadow-xs backdrop-blur-sm transition hover:bg-base-200 hover:text-base-content"
+        >
+          <Edit2Icon size={16} />
+        </button>
+      )}
       <div className="flex h-full flex-col overflow-y-auto">
         <div className="flex flex-col gap-4">
           <div className="sticky top-0 z-10 flex flex-col gap-2 bg-white">
@@ -31,7 +49,7 @@ export default function MealPlanRecipeDetail({
               <img
                 src={recipe.image_url}
                 alt={recipe.name}
-                className="h-40 w-full object-cover"
+                className="h-55 w-full object-cover"
                 loading="lazy"
                 decoding="async"
               />
@@ -130,13 +148,13 @@ export default function MealPlanRecipeDetail({
               <h3 className="text-sm font-semibold text-base-content">
                 {t('recipes.form.stepsTitle', 'Steps')}
               </h3>
-              <div className="flex flex-col gap-2">
+              <div className="grid gap-4">
                 {sortedSteps.map((step) => (
                   <div
                     key={step.id}
                     className="flex items-center gap-4 text-sm"
                   >
-                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-content">
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-primary-content">
                       {step.order}
                     </span>
                     <p className="leading-6 text-base-content/75">

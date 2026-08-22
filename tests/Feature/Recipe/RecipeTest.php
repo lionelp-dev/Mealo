@@ -4,6 +4,7 @@ namespace Tests\Feature\Recipe;
 
 use App\Actions\PlannedMeal\PlannedMealStoreAction;
 use App\Exceptions\Recipe\RecipeUpdateAuthorizationException;
+use Inertia\Testing\AssertableInertia as Assert;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -28,11 +29,15 @@ test('create recipe screen can be rendered', function () {
         ->assertOk();
 });
 
-test('show recipe screen can be rendered', function () {
+test('recipe detail panel data can be rendered on recipes screen', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
-        ->get(route('recipes.show', $this->recipe))
-        ->assertOk();
+        ->get(route('recipes.index', ['recipe' => $this->recipe->id]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/index')
+            ->where('selected_recipe.id', $this->recipe->id)
+        );
 });
 
 test('edit recipe screen can be rendered', function () {
@@ -45,8 +50,12 @@ test('edit recipe screen can be rendered', function () {
 test('user cannot access other users recipes', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
-        ->get(route('recipes.show', $this->otherUserRecipe))
-        ->assertForbidden();
+        ->get(route('recipes.index', ['recipe' => $this->otherUserRecipe->id]))
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/index')
+            ->where('selected_recipe', null)
+        );
 
     $this->actingAs($this->user)
         ->get(route('recipes.edit', $this->otherUserRecipe))
@@ -65,22 +74,31 @@ test('workspace members can view planned recipes from other members', function (
 
     $response = $this->actingAs($this->editorUser)
         ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
-        ->get(route('recipes.show', ['recipe' => $this->recipe->id]));
+        ->get(route('recipes.index', ['recipe' => $this->recipe->id]));
 
-    $response->assertStatus(200);
+    $response
+        ->assertStatus(200)
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/index')
+            ->where('selected_recipe.id', $this->recipe->id)
+        );
 
     $response = $this->actingAs($this->viewerUser)
         ->withSession(['current_workspace_id' => $this->sharedWorkspace->id])
-        ->get(route('recipes.show', ['recipe' => $this->recipe->id]));
+        ->get(route('recipes.index', ['recipe' => $this->recipe->id]));
 
-    $response->assertStatus(200);
+    $response
+        ->assertStatus(200)
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/index')
+            ->where('selected_recipe.id', $this->recipe->id)
+        );
 });
 
 test('guest cannot access recipe routes', function () {
     /** @var \Tests\TestCase $this */
     $this->get(route('recipes.index'))->assertRedirect(route('login'));
     $this->get(route('recipes.create'))->assertRedirect(route('login'));
-    $this->get(route('recipes.show', $this->recipe))->assertRedirect(route('login'));
     $this->get(route('recipes.edit', $this->recipe))->assertRedirect(route('login'));
     $this->post(route('recipes.store'), $this->recipeStoreRequestData->transform())->assertRedirect(route('login'));
     $this->put(route('recipes.update', $this->recipe), $this->recipeUpdateRequestData->transform())->assertRedirect(route('login'));
