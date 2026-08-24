@@ -27,9 +27,10 @@ type Story = StoryObj<typeof AppSidebarHeader>;
 
 export const MealPlanSideBarHeader: Story = {
   args: {
-    headerLeftContent: (
+    renderHeaderLeftContent: ({ mobileSidebarTrigger }) => (
       <WeekSelector
         currentWeek={DateTime.fromISO('2025-12-15')}
+        leadingContent={mobileSidebarTrigger}
         url="/meal-planning"
       />
     ),

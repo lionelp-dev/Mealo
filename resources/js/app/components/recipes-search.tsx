@@ -1,15 +1,25 @@
 import { useRecipesSearch } from '@/app/hooks/use-recipes-search';
 import { cn } from '@/app/lib/';
+import { ClassValue } from 'clsx';
 import { Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
-export default function RecipesSearch() {
+type Props = {
+  className?: ClassValue;
+};
+
+export default function RecipesSearch({ className }: Props) {
   const { t } = useTranslation();
 
   const { searchTerm, setSearchTerm, isSearching } = useRecipesSearch();
 
   return (
-    <label className="input input-md flex w-full gap-3 rounded-xl border-secondary input-secondary">
+    <label
+      className={cn(
+        'input input-md flex w-full gap-3 rounded-xl border-secondary input-secondary',
+        className,
+      )}
+    >
       <Search
         className={`text-secondary transition-transform duration-300`}
         size={16}

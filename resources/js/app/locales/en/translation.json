@@ -202,6 +202,9 @@
             "confirmTitle": "Are you sure you want to delete the recipe?",
             "confirmButton": "Delete",
             "cancelButton": "Cancel"
+        },
+        "filters": {
+            "advanced": "Advanced filters"
         }
     },
     "mealPlanning": {
@@ -236,6 +239,12 @@
                 "preparationTime": "Preparation Time",
                 "cookingTime": "Cooking Time",
                 "tags": "Tags",
+                "all": "All",
+                "allCompact": "All",
+                "breakfastCompact": "Breakfast",
+                "lunchCompact": "Lunch",
+                "dinnerCompact": "Dinner",
+                "snackCompact": "Snack",
                 "breakfast": "Breakfast",
                 "lunch": "Lunch",
                 "diner": "Dinner",

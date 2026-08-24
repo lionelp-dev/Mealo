@@ -209,6 +209,9 @@
         "selected": {
             "singular": "recette sélectionnée",
             "plural": "recettes sélectionnées"
+        },
+        "filters": {
+            "advanced": "Filtres avancés"
         }
     },
     "mealPlanning": {
@@ -247,12 +250,18 @@
                 "preparationTime": "Temps de préparation",
                 "cookingTime": "Temps de cuisson",
                 "tags": "Tags",
+                "all": "Tous",
+                "allCompact": "Tous",
+                "breakfastCompact": "Petit-déj.",
+                "lunchCompact": "Déjeuner",
+                "dinnerCompact": "Dîner",
+                "snackCompact": "Collation",
                 "breakfast": "Petit-déjeuner",
                 "lunch": "Déjeuner",
                 "dinner": "Dîner",
                 "diner": "Dîner",
                 "snack": "Collation",
-                "clearAllFilters": "Effacer tout",
+                "clearAllFilters": "Réinitialiser",
                 "prep": "Prép: ",
                 "cook": "Cuiss: ",
                 "filter": "filtre",

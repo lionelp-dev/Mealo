@@ -24,12 +24,13 @@ export default function ShoppingListsView() {
 
   return (
     <AppLayout
-      headerLeftContent={
+      renderHeaderLeftContent={({ mobileSidebarTrigger }) => (
         <WeekSelector
           currentWeek={DateTime.fromISO(weekStart)}
+          leadingContent={mobileSidebarTrigger}
           url={shoppingLists.index.url()}
         />
-      }
+      )}
       headerRightContent={
         <div className="flex items-center gap-4">
           <NavWorkspaceSwitcher workspace_data={workspace_data} />

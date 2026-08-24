@@ -79,12 +79,12 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
     >
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black/50" />
-        <Dialog.Content className="fixed top-1/2 left-1/2 z-20 flex h-[91vh] w-[65vw] flex-1 -translate-x-1/2 -translate-y-1/2 transform flex-col gap-3 rounded-xl bg-base-100 p-7 pb-6">
+        <Dialog.Content className="fixed left-1/2 z-20 flex h-[91vh] w-full flex-1 -translate-x-1/2 transform flex-col gap-3 rounded-xl bg-base-100 p-7 pb-6 max-lg:bottom-0 min-lg:top-1/2 min-lg:w-[65vw] min-lg:-translate-y-1/2">
           <Dialog.Title className="flex flex-col gap-3.5 pb-0.5">
             <span className="-mb-1.5 flex flex-col gap-0.5">
               <span className="flex flex-1 justify-between">
                 <span className="text-3xl font-bold text-secondary">
-                  Plannifier des repas
+                  Plannifier un repas
                 </span>
                 <Dialog.Close asChild>
                   <button className="btn btn-circle text-base-content btn-ghost btn-sm">
@@ -101,9 +101,9 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
               </span>
             </span>
             <RecipesSearch />
-            <div className="flex justify-between">
+            <div className="flex min-w-0 flex-col gap-2.5 lg:flex-row lg:items-start lg:justify-between">
               <RecipesFilters />
-              <RecipesFiltersPopover tags={tags} />
+              <RecipesFiltersPopover tags={tags} className="w-full lg:w-auto" />
             </div>
           </Dialog.Title>
 

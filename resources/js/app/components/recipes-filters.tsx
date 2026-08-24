@@ -1,9 +1,8 @@
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';
-import { Filter, FilterSection, Option } from '@/types';
+import { Filter, FilterSection } from '@/types';
 import { TrashIcon, X } from 'lucide-react';
-import { Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 
 enum MealTimeEnum {
@@ -18,6 +17,10 @@ const FILTERS_SECTIONS: FilterSection[] = [
     title: 'mealTime',
     type: 'meal_time',
     options: [
+      {
+        label: 'all',
+        value: 'all',
+      },
       {
         label: 'breakfast',
         value: MealTimeEnum.BREAKFAST,
@@ -34,7 +37,7 @@ const FILTERS_SECTIONS: FilterSection[] = [
         label: 'snack',
         value: MealTimeEnum.SNACK,
       },
-    ] as Option[],
+    ],
   },
 ];
 
@@ -43,96 +46,120 @@ export function RecipesFilters() {
 
   const {
     activeFilters,
+    mealTimeFilter,
     isFilterActive,
-    toggleFilter,
+    selectSingleFilter,
+    clearFilterType,
     removeFilter,
     clearAllFilters,
   } = useRecipesFiltersStore();
 
   return (
-    <div className="join flex h-fit flex-1 flex-wrap gap-2.5 max-lg:self-center">
+    <div className="flex h-fit min-w-0 flex-1 items-center gap-2.5 max-lg:w-full max-lg:flex-col max-lg:items-stretch min-md:max-w-fit">
       {FILTERS_SECTIONS.map((section) => (
-        <Fragment key={section.type}>
-          {section.options.map((option, key) => {
-            const filter: Filter = {
-              type: section.type,
-              value: option.value,
-              label: option.label,
-            };
-            const isActive = isFilterActive(filter);
-            return (
-              <label
-                className={cn(
-                  `group/item btn join-item flex min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-outline btn-sm btn-secondary select-none`,
-                  `join-item`,
-                  isActive && 'bg-secondary text-secondary-content',
-                )}
-                htmlFor={key.toString()}
-                key={key}
-              >
-                <span className="pb-[2px]">
-                  {capitalize(
-                    t(
-                      `mealPlanning.dialog.filters.${filter.label}`,
-                      filter.label,
-                    ),
-                  )}
-                </span>
-                <input
-                  id={key.toString()}
-                  type="checkbox"
-                  checked={isActive}
-                  onChange={() => toggleFilter(filter)}
-                  className="radio flex-shrink-0 rounded-full checkbox-xs radio-secondary group-hover/item:border-2 group-hover/item:border-white"
-                />
-              </label>
-            );
-          })}
-        </Fragment>
-      ))}
-      {activeFilters.length > 0 &&
-        activeFilters.map(
-          (filter) =>
-            filter.type !== 'meal_time' && (
-              <label
-                className={cn(
-                  `btn flex shrink-0 cursor-pointer items-center gap-1.5 rounded-lg text-sm font-normal whitespace-nowrap transition-colors btn-sm btn-secondary select-none`,
-                )}
-                htmlFor={`${filter.type}-${filter.value}`}
-                key={`${filter.type}-${filter.value}`}
-                onClick={() => removeFilter(filter)}
-              >
-                <input
-                  id={`${filter.type}-${filter.value}`}
-                  type="checkbox"
-                  onChange={() => removeFilter(filter)}
-                  className="h-0 w-0 flex-shrink-0 opacity-0"
-                />
-                <span className="pb-[2px]">
-                  {filter.type === 'preparation_time' &&
-                    t('mealPlanning.dialog.filters.prep', 'Prep: ')}
-                  {filter.type === 'cooking_time' &&
-                    t('mealPlanning.dialog.filters.cook', 'Cook: ')}
-                  {capitalize(filter.label)}
-                </span>
-                <X size={15} />
-              </label>
-            ),
-        )}
-      {activeFilters.length > 0 && (
-        <button
-          onClick={clearAllFilters}
-          className={`btn h-fit w-fit shrink-0 items-center gap-1.5 self-start p-0 pt-1 pl-1 text-secondary btn-link`}
+        <div
+          className="max-w-full min-w-0 rounded-lg bg-base-200"
+          key={section.type}
         >
-          <span className="">
-            {t(
-              'mealPlanning.dialog.filters.clearAllFilters',
-              'Clear all filters',
-            )}
-          </span>
-          <TrashIcon className="h-4 w-auto" />
-        </button>
-      )}
+          <div className="join w-full">
+            {section.options.map((option) => {
+              const isAllOption = option.value === 'all';
+              const filter: Filter | null = isAllOption
+                ? null
+                : {
+                    type: section.type,
+                    value: option.value,
+                    label: option.label,
+                  };
+              const isActive = filter
+                ? isFilterActive(filter)
+                : !mealTimeFilter;
+
+              return (
+                <label
+                  className={cn(
+                    'btn join-item flex-1 border-0 px-3 text-xs whitespace-nowrap min-md:px-4',
+                    isActive
+                      ? 'btn-active btn-secondary'
+                      : 'text-base-content btn-ghost',
+                  )}
+                  key={`${section.type}-${option.value}`}
+                >
+                  <span className="min-w-0 truncate pb-[2px]">
+                    {capitalize(
+                      isAllOption
+                        ? t('mealPlanning.dialog.filters.allCompact', 'Tous')
+                        : t(
+                            `mealPlanning.dialog.filters.${option.label}Compact`,
+                            option.label,
+                          ),
+                    )}
+                  </span>
+                  <input
+                    type="radio"
+                    name="meal-time-filter"
+                    checked={isActive}
+                    onChange={() => {
+                      if (!filter) {
+                        clearFilterType('meal_time');
+                        return;
+                      }
+
+                      selectSingleFilter(filter);
+                    }}
+                    className="sr-only"
+                  />
+                </label>
+              );
+            })}
+          </div>
+        </div>
+      ))}
+      <div className="flex min-w-0 flex-wrap items-center gap-2.5 max-lg:hidden">
+        {activeFilters.length > 0 &&
+          activeFilters.map(
+            (filter) =>
+              filter.type !== 'meal_time' && (
+                <label
+                  className={cn(
+                    `btn flex max-w-40 min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-full text-sm font-normal whitespace-nowrap transition-colors btn-sm btn-secondary select-none`,
+                  )}
+                  htmlFor={`${filter.type}-${filter.value}`}
+                  key={`${filter.type}-${filter.value}`}
+                  onClick={() => removeFilter(filter)}
+                >
+                  <input
+                    id={`${filter.type}-${filter.value}`}
+                    type="checkbox"
+                    onChange={() => removeFilter(filter)}
+                    className="h-0 w-0 flex-shrink-0 opacity-0"
+                  />
+                  <span className="min-w-0 truncate pb-[2px]">
+                    {filter.type === 'preparation_time' &&
+                      t('mealPlanning.dialog.filters.prep', 'Prep: ')}
+                    {filter.type === 'cooking_time' &&
+                      t('mealPlanning.dialog.filters.cook', 'Cook: ')}
+                    {capitalize(filter.label)}
+                  </span>
+                  <X className="h-[15px] w-[15px] shrink-0" />
+                </label>
+              ),
+          )}
+        {activeFilters.length > 0 && (
+          <button
+            onClick={clearAllFilters}
+            className={`btn h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-start p-0 pt-1 pl-1 text-secondary btn-link`}
+          >
+            <span className="min-w-0 truncate">
+              {t(
+                'mealPlanning.dialog.filters.clearAllFilters',
+                'Clear all filters',
+              )}
+            </span>
+            <TrashIcon className="h-4 w-auto shrink-0" />
+          </button>
+        )}
+      </div>
     </div>
   );
 }

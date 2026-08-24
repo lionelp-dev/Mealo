@@ -5,6 +5,7 @@ import MealPlanDialog from './meal-plan-dialog';
 import { MealPlanRecipeCard } from './meal-plan-dialog-recipe-card';
 import MealPlanSlots from './meal-plan-slots';
 import RecipeDetailPanel from '@/app/features/recipes/components/recipe-detail-panel';
+import RecipeDetailPanelContainer from '@/app/features/recipes/components/recipe-detail-panel-container';
 import { useRecipeDetailPanel } from '@/app/features/recipes/hooks/use-recipe-detail-panel';
 import { InfiniteScroll } from '@inertiajs/react';
 import { DateTime } from 'luxon';
@@ -21,7 +22,7 @@ export default function MealPlanCalendar() {
   } = useRecipeDetailPanel();
 
   return (
-    <div className="flex gap-3">
+    <div className="flex min-w-0 gap-3 overflow-x-clip">
       <div className="grid w-full min-w-0 grid-cols-[repeat(auto-fit,minmax(18rem,1fr))] gap-x-4 gap-y-5">
         {weekPlannedMeals.map((dayPlannedMeals) => {
           const { date } = dayPlannedMeals;
@@ -41,24 +42,17 @@ export default function MealPlanCalendar() {
           );
         })}
       </div>
-      {isRecipeDetailMounted && (
-        <div className="sticky top-0 h-[90.45vh] w-[22vw] shrink-0 overflow-hidden">
-          <div
-            className={`h-full transition-[opacity,transform] duration-300 ease-in-out ${
-              isRecipeDetailVisible
-                ? 'translate-x-0 opacity-100'
-                : 'pointer-events-none translate-x-4 opacity-0'
-            }`}
-          >
-            {displayedRecipe && (
-              <RecipeDetailPanel
-                recipe={displayedRecipe}
-                onClose={closeRecipeDetail}
-              />
-            )}
-          </div>
-        </div>
-      )}
+      <RecipeDetailPanelContainer
+        isMounted={isRecipeDetailMounted}
+        isVisible={isRecipeDetailVisible}
+      >
+        {displayedRecipe && (
+          <RecipeDetailPanel
+            recipe={displayedRecipe}
+            onClose={closeRecipeDetail}
+          />
+        )}
+      </RecipeDetailPanelContainer>
       <MealPlanDialog>
         <div className="overflow-y-scroll">
           <InfiniteScroll data="recipes">

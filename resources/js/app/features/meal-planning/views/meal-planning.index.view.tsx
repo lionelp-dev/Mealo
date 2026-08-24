@@ -24,16 +24,15 @@ export function MealPlanningIndexView() {
         <MealPlanCalendar />
       </div>
     ),
-    headerLeftContent: (
-      <div className="flex items-center gap-4">
-        <WeekSelector
-          currentWeek={DateTime.fromISO(weekStart)}
-          url={mealPlanningRoute.index.url()}
-        />
-      </div>
+    renderHeaderLeftContent: ({ mobileSidebarTrigger }) => (
+      <WeekSelector
+        currentWeek={DateTime.fromISO(weekStart)}
+        leadingContent={mobileSidebarTrigger}
+        url={mealPlanningRoute.index.url()}
+      />
     ),
     headerRightContent: (
-      <div className="flex items-center gap-4 min-sm:flex-row-reverse min-lg:order-2">
+      <div className="flex items-end gap-2.5 max-lg:flex-col min-lg:flex-row-reverse">
         <NavWorkspaceSwitcher workspace_data={workspace_data} />
         {canGenerateMealPlan && <MealPlanGenerationPopover />}
       </div>

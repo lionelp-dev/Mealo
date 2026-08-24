@@ -127,18 +127,17 @@ test('recipe creation with image uploads and stores image', function () {
     /** @var string $redirectUrl */
     $redirectUrl = $response->headers->get('Location');
 
-    /** @var string $path */
-    $path = parse_url($redirectUrl, PHP_URL_PATH);
+    /** @var string $query */
+    $query = parse_url($redirectUrl, PHP_URL_QUERY);
+    parse_str($query, $queryParameters);
 
-    $request = \Illuminate\Http\Request::create($path, 'GET');
-    $route = app('router')->getRoutes()->match($request);
-
-    /** @var string $recipeId */
-    $recipeId = $route->parameter('recipe');
+    $recipeId = $queryParameters['recipe'] ?? null;
+    expect($recipeId)->not->toBeNull();
 
     /** @var Recipe $recipe */
     $recipe = Recipe::query()->where('id', $recipeId)->first();
 
+    expect($recipe)->not->toBeNull();
     expect($recipe->image_path)->not->toBeNull();
 
     Storage::disk('recipe_images')->assertExists($recipe->image_path ?? '');

@@ -73,21 +73,18 @@ export function MealPlanGenerationPopover({ className }: Props) {
         <Popover.Trigger asChild>
           <button
             className={clsx([
-              'btn gap-2 border border-secondary/40 pl-5 btn-outline btn-soft btn-secondary max-md:btn-sm',
+              'btn gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary max-md:btn-sm min-md:pl-5',
               className,
             ])}
           >
-            <span className="max-sm:hidden">
-              {t('mealPlanning.generatePlan', 'Generate Plan')}
+            <span className="">
+              {isGenerating ? (
+                <span className="loading loading-sm loading-spinner"></span>
+              ) : (
+                <Bot className="h-4.5 w-4.5" />
+              )}
             </span>
-            <span className="min-sm:hidden">
-              {t('mealPlanning.generate', 'Generate')}
-            </span>
-            {isGenerating ? (
-              <span className="loading loading-sm loading-spinner"></span>
-            ) : (
-              <Bot className="h-4.5 w-4.5" />
-            )}
+            <span>{t('mealPlanning.generatePlan', 'Generate Plan')}</span>
           </button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -95,8 +92,10 @@ export function MealPlanGenerationPopover({ className }: Props) {
             className="z-10 flex w-90 rounded-md border border-base-300 bg-base-100 p-4 text-secondary"
             align="end"
             sideOffset={7}
-            onPointerLeave={() => {
+            onPointerLeave={(event) => {
+              if (event.pointerType !== 'mouse') return;
               if (isCalendarRangeIsOpen) return;
+
               setIsOpen(false);
               form.reset();
             }}

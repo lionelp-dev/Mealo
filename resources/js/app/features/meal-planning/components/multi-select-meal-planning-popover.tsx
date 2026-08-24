@@ -100,7 +100,9 @@ export default function MultiSelectMealPlanningPopover({
           align="end"
           sideOffset={8}
           alignOffset={-4}
-          onPointerLeave={() => {
+          onPointerLeave={(event) => {
+            if (event.pointerType !== 'mouse') return;
+
             setIsMultiSelectMealPlanningPopoverOpen(false);
           }}
         >

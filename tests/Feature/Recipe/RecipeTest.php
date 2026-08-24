@@ -31,12 +31,16 @@ test('create recipe screen can be rendered', function () {
 
 test('recipe detail panel data can be rendered on recipes screen', function () {
     /** @var \Tests\TestCase $this */
+    $ingredientsCount = $this->recipe->ingredients()->count();
+
     $this->actingAs($this->user)
         ->get(route('recipes.index', ['recipe' => $this->recipe->id]))
         ->assertOk()
         ->assertInertia(fn (Assert $page) => $page
             ->component('recipe/index')
             ->where('selected_recipe.id', $this->recipe->id)
+            ->has('selected_recipe.ingredients', $ingredientsCount)
+            ->has('recipes.data.0.ingredients')
         );
 });
 

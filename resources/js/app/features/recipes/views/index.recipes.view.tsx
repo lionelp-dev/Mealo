@@ -2,6 +2,7 @@ import { RecipeAIGenerationPopover } from '../components/recipe-ai-generation-po
 import { RecipeCard } from '../components/recipe-card';
 import { RecipeCardSkeleton } from '../components/recipe-card-skeleton';
 import RecipeDetailPanel from '../components/recipe-detail-panel';
+import RecipeDetailPanelContainer from '../components/recipe-detail-panel-container';
 import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-toolbar';
 import { useRecipeDetailPanel } from '../hooks/use-recipe-detail-panel';
 import { useRecipesContextValue } from '../inertia.adapter';
@@ -14,6 +15,7 @@ import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
 import { usePermissions } from '@/app/hooks/use-permissions';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
+import { cn } from '@/app/lib';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import recipesRoute from '@/routes/recipes';
 import { Head, InfiniteScroll, router, usePoll } from '@inertiajs/react';
@@ -32,6 +34,7 @@ export function IndexRecipesView() {
     starterRecipes,
     recipeGeneration,
   } = useRecipesContextValue();
+
   const isGeneratingStarterRecipes = !!starterRecipes?.generating;
   const isGeneratingRecipes = !!recipeGeneration?.generating;
   const pendingStarterRecipeSkeletonCount =
@@ -40,7 +43,7 @@ export function IndexRecipesView() {
     (recipeGeneration?.count ?? 0) + pendingStarterRecipeSkeletonCount;
   const hasPendingRecipeSkeletons = pendingRecipeSkeletonCount > 0;
 
-  const { activeFilters } = useRecipesFiltersStore();
+  const { activeFilters, clearAllFilters } = useRecipesFiltersStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
   const { canEditRecipe } = usePermissions();
   const isInitialRender = useRef(true);
@@ -115,10 +118,13 @@ export function IndexRecipesView() {
   if (!recipes) return null;
 
   return AppLayout({
-    headerLeftContent: <RecipesSearch />,
+    headerLeftContent: <RecipesSearch className="max-lg:hidden" />,
     headerRightContent: (
-      <div className="flex items-center gap-3">
-        <RecipeAIGenerationPopover meal_times={meal_times ?? []} />
+      <div className="flex flex-1 items-center justify-end gap-3">
+        <RecipeAIGenerationPopover
+          className="max-md:hidden"
+          meal_times={meal_times ?? []}
+        />
         <button
           className="btn gap-2 pl-5.5 btn-secondary"
           onClick={handleNavigateToCreateRecipe}
@@ -131,25 +137,44 @@ export function IndexRecipesView() {
     children: (
       <>
         <Head title={t('recipes.pageTitle', 'My recipes')}></Head>
-        <div className="flex h-full min-h-0 flex-col overflow-hidden">
+        <div className="flex h-full min-h-0 w-full max-w-full min-w-0 flex-col overflow-x-clip overflow-y-hidden">
           <div
             className={
-              'z-10 mx-auto grid h-fit w-full justify-between gap-4 px-6 py-3 pb-2.5 pl-7.5 md:grid-cols-2'
+              'z-10 mx-auto grid h-fit w-full min-w-0 gap-3 px-6 py-3 pb-2.5 pl-7.5 lg:grid-cols-[minmax(0,1fr)_auto]'
             }
           >
+            <RecipesSearch className="min-lg:hidden" />
             <RecipesFilters />
-            <div className="flex h-fit flex-wrap items-start gap-2.5 md:justify-end">
-              <RecipesFiltersPopover tags={tags ?? []} />
+            <div className="flex h-fit min-w-0 items-start gap-2.5 lg:justify-end">
+              <RecipesFiltersPopover
+                tags={tags ?? []}
+                className="min-w-0 flex-1 lg:flex-none"
+              />
+              {activeFilters.length > 0 && (
+                <button
+                  onClick={clearAllFilters}
+                  className={`btn ml-auto h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link lg:hidden`}
+                >
+                  <span className="min-w-0 truncate">
+                    {t(
+                      'mealPlanning.dialog.filters.clearAllFilters',
+                      'Clear all filters',
+                    )}
+                  </span>
+                </button>
+              )}
+
               <button
-                className={`btn col-start-4 row-start-1 gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary ${
-                  isMultiSelectMode ? 'btn-active' : ''
-                }`}
+                className={cn(
+                  `btn min-w-0 flex-1 gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary max-md:hidden lg:flex-none`,
+                  isMultiSelectMode ? 'btn-active' : '',
+                )}
                 onClick={handleToggleMultiSelect}
               >
-                <span>
+                <span className="min-w-0 truncate">
                   {t('recipes.multiSelect.toggle', 'Multiple selection')}
                 </span>
-                <Copy size={14} className="mb-[1px]" />
+                <Copy size={14} className="mb-[1px] shrink-0" />
               </button>
             </div>
           </div>
@@ -180,7 +205,7 @@ export function IndexRecipesView() {
             <div className="flex min-h-0 flex-1 gap-3 overflow-hidden pr-6 pl-7.5">
               <div className="min-h-0 w-full min-w-0 overflow-y-auto">
                 <InfiniteScroll data="recipes">
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pb-10">
+                  <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pt-1 pb-10">
                     {hasPendingRecipeSkeletons &&
                       Array.from({ length: pendingRecipeSkeletonCount }).map(
                         (_, index) => <RecipeCardSkeleton key={index} />,
@@ -195,29 +220,22 @@ export function IndexRecipesView() {
                   </div>
                 </InfiniteScroll>
               </div>
-              {isRecipeDetailMounted && (
-                <div className="h-full w-[22vw] shrink-0 overflow-hidden">
-                  <div
-                    className={`h-full transition-[opacity,transform] duration-300 ease-in-out ${
-                      isRecipeDetailVisible
-                        ? 'translate-x-0 opacity-100'
-                        : 'pointer-events-none translate-x-4 opacity-0'
-                    }`}
-                  >
-                    {displayedRecipe && (
-                      <RecipeDetailPanel
-                        recipe={displayedRecipe}
-                        onClose={closeRecipeDetail}
-                        onEdit={
-                          canEditRecipe(displayedRecipe.user_id)
-                            ? () => editRecipe(displayedRecipe.id)
-                            : undefined
-                        }
-                      />
-                    )}
-                  </div>
-                </div>
-              )}
+              <RecipeDetailPanelContainer
+                isMounted={isRecipeDetailMounted}
+                isVisible={isRecipeDetailVisible}
+              >
+                {displayedRecipe && (
+                  <RecipeDetailPanel
+                    recipe={displayedRecipe}
+                    onClose={closeRecipeDetail}
+                    onEdit={
+                      canEditRecipe(displayedRecipe.user_id)
+                        ? () => editRecipe(displayedRecipe.id)
+                        : undefined
+                    }
+                  />
+                )}
+              </RecipeDetailPanelContainer>
             </div>
           )}
         </div>

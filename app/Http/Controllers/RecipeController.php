@@ -80,8 +80,10 @@ class RecipeController extends Controller
         }
 
         return Inertia::render('recipe/index', [
-            'recipes' => Inertia::scroll(RecipeResourceData::collect($recipeQuery->paginate(15))),
-            'selected_recipe' => $selectedRecipe ? RecipeResourceData::from($selectedRecipe) : null,
+            'recipes' => Inertia::scroll($recipeQuery->paginate(15)->through(
+                fn (Recipe $recipe) => RecipeResourceData::from($recipe)->include('ingredients')
+            )),
+            'selected_recipe' => $selectedRecipe ? RecipeResourceData::from($selectedRecipe)->include('ingredients') : null,
             'tags' => TagResourceData::collect($tags),
             'meal_times' => MealTimeResourceData::collect(MealTime::all()),
         ]);

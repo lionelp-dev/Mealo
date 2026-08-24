@@ -18,10 +18,10 @@ export function RecipesFilterOption({
   const key = `${filter.type}-${filter.value}`;
   return (
     <label
-      className={`flex cursor-pointer items-center justify-between gap-4 px-4 py-[4px] text-sm text-base-content transition-colors select-none first:border-t-0 last:border-b last:border-base-300/40 hover:bg-base-300/30`}
+      className={`flex min-w-0 cursor-pointer items-center justify-between gap-4 px-4 py-[4px] text-sm text-base-content transition-colors select-none first:border-t-0 last:border-b last:border-base-300/40 hover:bg-base-300/30`}
       htmlFor={key}
     >
-      <span>
+      <span className="min-w-0 truncate">
         {capitalize(
           t(`mealPlanning.dialog.filters.${filter.label}`, filter.label),
         )}

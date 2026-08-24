@@ -99,7 +99,9 @@ export default function MealPlanningPopover({
           align="end"
           sideOffset={8}
           alignOffset={-4}
-          onPointerLeave={() => {
+          onPointerLeave={(event) => {
+            if (event.pointerType !== 'mouse') return;
+
             setIsMealPlanningPopoverOpen(false);
             form.reset();
           }}

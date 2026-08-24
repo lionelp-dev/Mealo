@@ -1,30 +1,28 @@
+import { type HeaderLeftContentProps } from '@/app/components/app-sidebar-header';
 import Toast from '@/app/components/ui/toast';
 import AppLayoutTemplate from '@/app/layouts/app/app-sidebar-layout';
 import { FlashMessage, type BreadcrumbItem } from '@/types';
 import { usePage } from '@inertiajs/react';
 import { type ReactNode } from 'react';
 
-interface AppLayoutProps {
+type AppLayoutProps = {
   children: ReactNode;
   breadcrumbs?: BreadcrumbItem[];
-  headerLeftContent?: ReactNode;
   headerRightContent?: ReactNode;
-}
+} & HeaderLeftContentProps;
 
 export default ({
   children,
   breadcrumbs,
-  headerLeftContent,
   headerRightContent,
-  ...props
+  ...headerLeftContentProps
 }: AppLayoutProps) => {
   const { flash } = usePage<{ flash: FlashMessage }>().props;
   return (
     <AppLayoutTemplate
       breadcrumbs={breadcrumbs}
-      headerLeftContent={headerLeftContent}
       headerRightContent={headerRightContent}
-      {...props}
+      {...headerLeftContentProps}
     >
       {children}
       <Toast.Portal>

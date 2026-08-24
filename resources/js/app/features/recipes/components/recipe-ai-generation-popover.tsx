@@ -5,17 +5,20 @@ import {
   recipeAIGenerateRequestSchema,
 } from '@/app/data/requests/recipe/schemas/recipe-ai-generate.request.schema';
 import { MealTimeResource } from '@/app/data/resources/recipe/types';
+import { cn } from '@/app/lib';
 import * as Popover from '@radix-ui/react-popover';
 import { useForm } from '@tanstack/react-form';
+import { ClassValue } from 'clsx';
 import { Wand2 } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
   meal_times: MealTimeResource[];
+  className?: ClassValue;
 };
 
-export function RecipeAIGenerationPopover({ meal_times }: Props) {
+export function RecipeAIGenerationPopover({ meal_times, className }: Props) {
   const { t } = useTranslation();
   const { generateRecipes, processing } = useGenerateRecipes();
   const [isOpen, setIsOpen] = useState(false);
@@ -43,7 +46,12 @@ export function RecipeAIGenerationPopover({ meal_times }: Props) {
     <>
       <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
         <Popover.Trigger asChild>
-          <button className="btn gap-2 pl-5.5 btn-outline btn-secondary">
+          <button
+            className={cn(
+              'btn gap-2 pl-5.5 btn-outline btn-secondary',
+              className,
+            )}
+          >
             {t('recipes.generate.triggerButton', 'Générer avec l’IA')}
             <Wand2 size={15} />
           </button>
@@ -54,8 +62,10 @@ export function RecipeAIGenerationPopover({ meal_times }: Props) {
             className="z-50 w-[22rem] rounded-xl border border-base-300 bg-base-100 p-4 shadow-lg"
             align="end"
             sideOffset={8}
-            onPointerLeave={() => {
+            onPointerLeave={(event) => {
+              if (event.pointerType !== 'mouse') return;
               if (processing) return;
+
               setIsOpen(false);
               form.reset();
             }}

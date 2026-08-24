@@ -66,7 +66,7 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
         <Popover.Trigger asChild>
           <button
             className={clsx([
-              'btn items-center gap-2 border-secondary/40 bg-secondary/10 px-3 pl-4 text-sm text-secondary btn-soft hover:bg-secondary/10 max-md:btn-sm',
+              'btn items-center gap-2 border-secondary/40 bg-secondary/10 text-secondary btn-soft hover:bg-secondary/10 max-lg:rounded-full max-md:flex-row-reverse max-md:btn-sm',
               className,
             ])}
             disabled={isLoading}
@@ -80,8 +80,8 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
             <span className="truncate">
               {capitalize(current_workspace.name)}
             </span>
-            <span className="text-xs font-normal">-</span>
-            <span className="text-xs font-normal">
+            <span className="text-xs font-normal max-md:hidden">-</span>
+            <span className="text-xs font-normal max-md:hidden">
               {current_workspace.is_personal
                 ? t('workspace.type.personal', 'Espace personnel')
                 : t('workspace.type.shared', 'Espace partagé')}

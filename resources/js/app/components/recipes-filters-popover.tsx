@@ -1,6 +1,7 @@
 import { TagResource } from '../data/resources/recipe/types';
 import { RecipesFilterOption } from './recipes-filter-option';
 import { useRecipesMultiSelectStore } from '@/app/features/recipes/stores/use-recipes-multi-select-store';
+import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { Filter, FilterSection, Option } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
@@ -26,13 +27,15 @@ type Props = {
 
 export function RecipesFiltersPopover({
   tags,
+  className,
   side = 'bottom',
   align = 'end',
   sideOffset = 6,
 }: Props) {
   const { t } = useTranslation();
 
-  const { isFilterActive, toggleFilter } = useRecipesFiltersStore();
+  const { activeFilters, isFilterActive, selectSingleFilter, toggleTagFilter } =
+    useRecipesFiltersStore();
 
   const { setIsMultiSelectMode, clearSelectedRecipes } =
     useRecipesMultiSelectStore();
@@ -67,14 +70,23 @@ export function RecipesFiltersPopover({
     <Popover.Root open={isOpen} onOpenChange={setIsOpen}>
       <Popover.Trigger asChild>
         <button
-          className={`btn col-start-4 row-start-1 items-center gap-1.5 self-start border border-secondary/40 pr-3.5 pl-5 whitespace-nowrap text-secondary btn-outline btn-soft btn-secondary hover:text-secondary-content`}
+          className={cn(
+            'flex items-center gap-1.5 whitespace-nowrap text-secondary hover:text-secondary-content max-md:max-w-fit',
+            'btn border border-secondary/40 pr-3.5 pl-5 btn-outline btn-soft btn-secondary',
+            className,
+          )}
           onClick={() => {
             setIsMultiSelectMode(false);
             clearSelectedRecipes();
           }}
         >
+          <FilterIcon className={'h-4 w-auto pt-[1.5px]'} />
           <span>{t('recipes.filters.advanced', 'Filtres avancés')}</span>
-          <FilterIcon className={'h-4 w-auto pt-[2px]'} />
+          {activeFilters.length > 0 && (
+            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-xs leading-none font-semibold text-secondary-content min-lg:hidden">
+              {activeFilters.length}
+            </span>
+          )}
         </button>
       </Popover.Trigger>
 
@@ -113,7 +125,12 @@ export function RecipesFiltersPopover({
                         key={`${filter.type}-${filter.value}`}
                         filter={filter}
                         handleCheckedChange={() => {
-                          toggleFilter(filter);
+                          if (filter.type === 'tag') {
+                            toggleTagFilter(filter);
+                          } else {
+                            selectSingleFilter(filter);
+                          }
+
                           setIsOpen(false);
                         }}
                         isActive={isFilterActive(filter)}

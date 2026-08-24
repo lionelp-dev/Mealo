@@ -54,7 +54,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
         />
 
         {recipe.image_url ? (
-          <figure className="h-42">
+          <figure className="h-38">
             <img
               src={recipe.image_url}
               alt={recipe.name}
@@ -91,8 +91,10 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
       </div>
 
       <div className="card-body">
-        <div className="flex flex-col gap-2">
-          <h2 className="card-title text-base-content">{recipe.name}</h2>
+        <div className="flex min-w-0 flex-col gap-2">
+          <h2 className="card-title text-base-content">
+            <span className="min-w-0 truncate">{recipe.name}</span>
+          </h2>
           <p className="line-clamp-2 text-base-content/70">
             {recipe.description}
           </p>
