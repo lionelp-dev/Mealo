@@ -153,6 +153,7 @@ export function EditRecipesView() {
                 const options = (meal_times ?? []).map((mt) => ({
                   value: mt.id,
                   label: mt.name,
+                  slug: mt.slug,
                 }));
 
                 return (

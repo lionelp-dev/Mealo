@@ -174,10 +174,10 @@ export default function MultiSelectMealPlanningPopover({
                               }}
                             >
                               <div className="flex gap-3.5">
-                                {getMealTimeIcon(mealTime.name)}
+                                {getMealTimeIcon(mealTime.slug)}
                                 <span className="pt-[1px]">
                                   {t(
-                                    `mealPlanning.dialog.filters.${mealTime.name}`,
+                                    `mealPlanning.dialog.filters.${mealTime.slug}`,
                                     mealTime.name,
                                   )}
                                 </span>

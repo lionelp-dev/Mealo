@@ -18,7 +18,7 @@ php artisan test tests/Feature/PlannedMeal/PlannedMealStoreTest.php
 php artisan test --filter "stores a planned meal"
 
 # Frontend checks
-pnpm types        # TypeScript type check
+pnpm types        # TypeScript type check (root + api/ai-services-adonis)
 pnpm lint         # ESLint with auto-fix
 pnpm format       # Prettier
 

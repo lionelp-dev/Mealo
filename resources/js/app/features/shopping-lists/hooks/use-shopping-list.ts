@@ -1,9 +1,10 @@
 import { useShoppingListsContextValue } from '../inertia.adapter';
+import { useShoppingListViewModeStore } from '../stores/shopping-list-view-mode-store';
 import { ShoppingList } from '@/types';
-import { useState } from 'react';
 
 export function useShoppingList() {
   const { shopping_list_data } = useShoppingListsContextValue();
+  const { viewMode, setViewMode } = useShoppingListViewModeStore();
   const shoppingList: ShoppingList = shopping_list_data;
   const shopping_list_by_ingredients = shoppingList.by_ingredients ?? {
     checked: [],
@@ -15,10 +16,6 @@ export function useShoppingList() {
   const uncheckedIngredients = shopping_list_by_ingredients.unchecked;
   const checkedIngredients = shopping_list_by_ingredients.checked;
   const total = uncheckedCount + checkedCount;
-
-  const [viewMode, setViewMode] = useState<'ingredients' | 'recipes'>(
-    'ingredients',
-  );
 
   return {
     shoppingList,

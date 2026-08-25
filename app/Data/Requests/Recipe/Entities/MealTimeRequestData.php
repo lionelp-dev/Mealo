@@ -9,7 +9,8 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class MealTimeRequestData extends Data
 {
     public function __construct(
-        public string $name,
+        public int $id,
+        public string $slug,
     ) {}
 
     /**
@@ -18,8 +19,8 @@ class MealTimeRequestData extends Data
     public static function rules(): array
     {
         return [
-            'id' => 'sometimes|required|integer|min:1',
-            'name' => 'required|string|min:1|max:255',
+            'id' => 'required|integer|exists:meal_times,id',
+            'slug' => 'required|string|exists:meal_times,slug',
         ];
     }
 }

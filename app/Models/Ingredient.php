@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property string $id
+ * @property int $category_id
  * @property RecipeIngredient $pivot
  */
 class Ingredient extends Model
@@ -21,6 +22,7 @@ class Ingredient extends Model
 
     protected $fillable = [
         'name',
+        'category_id',
         'user_id',
     ];
 
@@ -30,6 +32,14 @@ class Ingredient extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * @return BelongsTo<IngredientCategory, $this>
+     */
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(IngredientCategory::class, 'category_id');
     }
 
     /**

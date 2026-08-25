@@ -6,4 +6,5 @@ export const recipeIngredientResourceSchema = z.object({
   name: z.string(),
   quantity: z.number(),
   unit: z.string(),
+  category_id: z.number(),
 }) satisfies z.ZodType<RecipeIngredientResourceData>;

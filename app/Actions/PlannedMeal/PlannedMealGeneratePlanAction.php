@@ -67,7 +67,7 @@ class PlannedMealGeneratePlanAction
         }
 
         /** @var array<string, int> $mealTimeIds */
-        $mealTimeIds = MealTime::query()->pluck('id', 'name')->all();
+        $mealTimeIds = MealTime::query()->pluck('id', 'slug')->all();
 
         $mealPlans = [];
         foreach ($this->resolveMealTimes($requestData) as $meal) {

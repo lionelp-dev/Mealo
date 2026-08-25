@@ -20,6 +20,7 @@ class MealTimeResource extends JsonResource
 
         return [
             'id' => $mealTime->id,
+            'slug' => $mealTime->slug,
             'name' => $mealTime->name,
         ];
     }

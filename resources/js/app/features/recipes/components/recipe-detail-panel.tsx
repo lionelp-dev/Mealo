@@ -104,7 +104,7 @@ export default function RecipeDetailPanel({
                     className="badge rounded-full badge-soft badge-outline border-secondary/15 badge-sm badge-secondary"
                   >
                     {t(
-                      `mealPlanning.dialog.filters.${mealTime.name}`,
+                      `mealPlanning.dialog.filters.${mealTime.slug}`,
                       mealTime.name,
                     )}
                   </span>

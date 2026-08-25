@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\IngredientCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,6 +19,7 @@ class IngredientFactory extends Factory
     {
         return [
             'user_id' => \App\Models\User::factory(),
+            'category_id' => IngredientCategory::query()->inRandomOrder()->value('id') ?? IngredientCategory::factory(),
             'name' => fake()->words(3, true),
         ];
     }

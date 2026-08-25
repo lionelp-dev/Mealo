@@ -1,78 +1,114 @@
 import { useShoppingList } from '../hooks/use-shopping-list';
-import ShoppingListByRecipesIngredientItem from './shopping-list-by-recipes-ingredient-item';
-import React from 'react';
+import ShoppingListCard from './shopping-list-card';
+import ShoppingListIngredientRow from './shopping-list-ingredient-row';
+import { ShoppingList } from '@/types';
+import { useTranslation } from 'react-i18next';
+
+type ShoppingListRecipe = ShoppingList['by_recipes'][number];
+
+function ShoppingListRecipeCard({ recipe }: { recipe: ShoppingListRecipe }) {
+  const { t } = useTranslation();
+  const totalIngredients =
+    recipe.ingredients.unchecked.length + recipe.ingredients.checked.length;
+  const isRecipeCompleted =
+    totalIngredients > 0 &&
+    recipe.ingredients.checked.length === totalIngredients;
+  const subtitle = t('shoppingLists.listProgress', {
+    checked: recipe.ingredients.checked.length,
+    defaultValue: '{{checked}} sur {{total}}',
+    total: totalIngredients,
+  });
+
+  return (
+    <ShoppingListCard
+      subtitle={subtitle}
+      title={recipe.recipe_name}
+      isComplete={isRecipeCompleted}
+    >
+      {recipe.ingredients.unchecked.map((ingredient) => (
+        <ShoppingListIngredientRow
+          key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
+          checked={ingredient.is_checked}
+          name={ingredient.name}
+          onTogglePayload={() =>
+            ingredient.from_planned_meals.map((planned_meal) => {
+              return {
+                shopping_list_id: ingredient.shopping_list_id,
+                planned_meal_id: planned_meal.planned_meal_id,
+                ingredient_id: ingredient.ingredient_id,
+                is_checked: !planned_meal.is_checked,
+              };
+            })
+          }
+          quantity={ingredient.total_quantity}
+          unit={ingredient.unit}
+        />
+      ))}
+
+      {recipe.ingredients.checked.map((ingredient) => (
+        <ShoppingListIngredientRow
+          key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
+          checked={ingredient.is_checked}
+          name={ingredient.name}
+          onTogglePayload={() =>
+            ingredient.from_planned_meals.map((planned_meal) => {
+              return {
+                shopping_list_id: ingredient.shopping_list_id,
+                planned_meal_id: planned_meal.planned_meal_id,
+                ingredient_id: ingredient.ingredient_id,
+                is_checked: !planned_meal.is_checked,
+              };
+            })
+          }
+          quantity={ingredient.total_quantity}
+          unit={ingredient.unit}
+        />
+      ))}
+    </ShoppingListCard>
+  );
+}
 
 export default function ShoppingListByRecipes() {
   const { shopping_list_by_recipes } = useShoppingList();
 
+  const recipesWithIngredients = shopping_list_by_recipes
+    .filter(
+      (recipe) =>
+        recipe.ingredients.unchecked.length +
+          recipe.ingredients.checked.length >
+        0,
+    )
+    .sort((left, right) => {
+      const leftCount =
+        left.ingredients.unchecked.length + left.ingredients.checked.length;
+      const rightCount =
+        right.ingredients.unchecked.length + right.ingredients.checked.length;
+      const countDifference = rightCount - leftCount;
+
+      if (countDifference !== 0) {
+        return countDifference;
+      }
+
+      const nameDifference = left.recipe_name.localeCompare(
+        right.recipe_name,
+        undefined,
+        {
+          sensitivity: 'base',
+        },
+      );
+
+      if (nameDifference !== 0) {
+        return nameDifference;
+      }
+
+      return left.recipe_id - right.recipe_id;
+    });
+
   return (
-    <div className="grid min-h-0 flex-1 grid-cols-[repeat(auto-fit,minmax(450px,1fr))] gap-8 overflow-hidden">
-      <div
-        className={`flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-base-300`}
-      >
-        <div className="flex min-h-0 overflow-y-scroll">
-          <div className="w-full divide-y divide-base-300">
-            {shopping_list_by_recipes.map((recipe) => (
-              <React.Fragment key={recipe.recipe_id}>
-                {recipe.ingredients.unchecked.length > 0 && (
-                  <>
-                    <div className="flex max-w-full items-center gap-2 border-l-3 border-l-secondary px-7 py-4 font-medium text-base-content outline outline-offset-0 outline-base-300/50">
-                      <span className="items-center truncate text-lg font-medium text-secondary transition-all duration-200">
-                        {recipe.recipe_name}
-                      </span>
-                      <span>{'-'}</span>
-                      <span className="text-sm whitespace-nowrap text-secondary">
-                        {recipe.ingredients.unchecked.length} ingrédient(s)
-                      </span>
-                    </div>
-                    <div className="flex min-h-0 flex-col overflow-y-scroll">
-                      <div className="divide-y divide-base-300">
-                        {recipe.ingredients.unchecked.map((ingredient) => (
-                          <ShoppingListByRecipesIngredientItem
-                            key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
-                            ingredient={ingredient}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div
-        className={`flex h-full min-h-0 flex-col overflow-hidden rounded-xl border border-base-300`}
-      >
-        <div className="flex min-h-0 flex-col overflow-y-scroll">
-          <div className="w-full divide-y divide-base-300">
-            {shopping_list_by_recipes.map((recipe) => (
-              <React.Fragment key={recipe.recipe_id}>
-                {recipe.ingredients.checked.length > 0 && (
-                  <>
-                    <div className="flex max-w-full flex-col border-l-3 px-7 py-5 font-medium text-base-content outline outline-offset-0 outline-base-300/50">
-                      <span className="items-center truncate text-lg font-medium text-base-content/50 line-through transition-all duration-200">
-                        {recipe.recipe_name}
-                      </span>
-                    </div>
-                    <div className="flex min-h-0 flex-col overflow-y-scroll">
-                      <div className="divide-y divide-base-300">
-                        {recipe.ingredients.checked.map((ingredient) => (
-                          <ShoppingListByRecipesIngredientItem
-                            key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
-                            ingredient={ingredient}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </>
-                )}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+    <>
+      {recipesWithIngredients.map((recipe) => (
+        <ShoppingListRecipeCard key={recipe.recipe_id} recipe={recipe} />
+      ))}
+    </>
   );
 }

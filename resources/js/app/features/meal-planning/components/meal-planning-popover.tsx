@@ -190,10 +190,10 @@ export default function MealPlanningPopover({
                             className="btn flex justify-between gap-3 border-base-300/50 px-4 pl-3 text-sm text-secondary transition-colors btn-outline hover:border-secondary/50 hover:bg-secondary/5 disabled:opacity-50"
                           >
                             <div className="flex gap-3.5">
-                              {getMealTimeIcon(mealTime.name)}
+                              {getMealTimeIcon(mealTime.slug)}
                               <span className="pt-[1px]">
                                 {t(
-                                  `mealPlanning.dialog.filters.${mealTime.name}`,
+                                  `mealPlanning.dialog.filters.${mealTime.slug}`,
                                   mealTime.name,
                                 )}
                               </span>

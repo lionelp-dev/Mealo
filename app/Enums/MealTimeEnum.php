@@ -9,6 +9,16 @@ enum MealTimeEnum: string
     case Diner = 'diner';
     case Snack = 'snack';
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::Breakfast => 'Petit-déjeuner',
+            self::Lunch => 'Déjeuner',
+            self::Diner => 'Dîner',
+            self::Snack => 'Collation',
+        };
+    }
+
     /**
      * @return list<string>
      */

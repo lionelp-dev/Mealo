@@ -20,6 +20,7 @@ class MealTime extends Model
 
     protected $fillable = [
         'name',
+        'slug',
     ];
 
     /**

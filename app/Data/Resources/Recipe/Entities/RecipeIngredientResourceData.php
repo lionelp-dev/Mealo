@@ -14,6 +14,7 @@ class RecipeIngredientResourceData extends Data
         public string $name,
         public float $quantity,
         public string $unit,
+        public int $category_id,
     ) {}
 
     public static function fromModel(Ingredient $ingredient): self
@@ -23,6 +24,7 @@ class RecipeIngredientResourceData extends Data
             $ingredient->name,
             $ingredient->pivot->quantity,
             $ingredient->pivot->unit,
+            $ingredient->category_id,
         );
     }
 }

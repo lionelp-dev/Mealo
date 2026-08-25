@@ -19,7 +19,7 @@ class ShoppingListAggregateByIngredientAction
         $plannedMealIngredients = $shoppingList->plannedMealIngredients()
             ->with([
                 'plannedMeal.recipe',
-                'ingredient',
+                'ingredient.category',
             ])
             ->get();
 
@@ -37,6 +37,11 @@ class ShoppingListAggregateByIngredientAction
             $ingredient = $plannedMealIngredient->ingredient;
             if ($ingredient === null) {
                 throw new RuntimeException('Shopping list ingredient is missing its ingredient.');
+            }
+
+            $category = $ingredient->category;
+            if ($category === null) {
+                throw new RuntimeException('Shopping list ingredient is missing its category.');
             }
 
             $pivotData = RecipeIngredient::query()
@@ -57,6 +62,9 @@ class ShoppingListAggregateByIngredientAction
                     'shopping_list_id' => $shoppingList->id,
                     'ingredient_id' => $ingredient->id,
                     'name' => $ingredient->name,
+                    'category_id' => $ingredient->category_id,
+                    'category_name' => $category->name,
+                    'category_slug' => $category->slug,
                     'total_quantity' => 0.0,
                     'unit' => $pivotData->unit,
                     'is_checked' => $plannedMealIngredient->is_checked,

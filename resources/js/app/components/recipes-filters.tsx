@@ -78,14 +78,14 @@ export function RecipesFilters() {
               return (
                 <label
                   className={cn(
-                    'btn join-item flex-1 border-0 px-3 text-xs whitespace-nowrap min-md:px-4',
+                    'btn join-item flex-1 items-center border-0 px-2 text-xs whitespace-nowrap min-sm:px-3 min-md:px-4',
                     isActive
                       ? 'btn-active btn-secondary'
                       : 'text-base-content btn-ghost',
                   )}
                   key={`${section.type}-${option.value}`}
                 >
-                  <span className="min-w-0 truncate pb-[2px]">
+                  <span className="min-w-0 truncate">
                     {capitalize(
                       isAllOption
                         ? t('mealPlanning.dialog.filters.allCompact', 'Tous')

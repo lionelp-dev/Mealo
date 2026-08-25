@@ -18,9 +18,10 @@ class RegisteredUserController extends Controller
     /**
      * Show the registration page.
      */
-    public function create(): Response
+    public function create(): Response|RedirectResponse
     {
-        return Inertia::render('auth/register');
+        // return Inertia::render('auth/register');
+        return redirect()->route('login');
     }
 
     /**
@@ -30,10 +31,10 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        /** @var array{name: string, email: string, password: string} $validated */
+        { /*
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
+            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -52,5 +53,8 @@ class RegisteredUserController extends Controller
         $request->session()->put('starter_recipes_requested_at', now()->toISOString());
 
         return redirect()->intended(route('dashboard', absolute: false));
+       */}
+
+        return redirect()->route('login');
     }
 }

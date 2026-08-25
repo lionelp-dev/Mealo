@@ -17,7 +17,10 @@ describe('RecipeMealTimesSyncAction', function () {
         app(RecipeSyncMealTimesAction::class)($this->recipe, $this->recipeStoreRequestData->meal_times);
 
         foreach ($this->recipeStoreRequestData->meal_times as $mealTime) {
-            assertDatabaseHas('meal_times', $mealTime->transform());
+            assertDatabaseHas('recipe_meal_time', [
+                'recipe_id' => $this->recipe->id,
+                'meal_time_id' => $mealTime->id,
+            ]);
         }
     });
 });

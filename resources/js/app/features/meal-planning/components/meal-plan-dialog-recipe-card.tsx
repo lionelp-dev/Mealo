@@ -73,7 +73,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
                 className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
               >
                 {t(
-                  `mealPlanning.dialog.filters.${meal_time.name}`,
+                  `mealPlanning.dialog.filters.${meal_time.slug}`,
                   meal_time.name,
                 )}
               </span>

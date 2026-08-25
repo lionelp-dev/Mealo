@@ -7,6 +7,7 @@ import Select from 'react-select';
 interface SelectOption {
   value: number;
   label: string;
+  slug: string;
 }
 
 interface MultiSelectFieldProps {
@@ -20,15 +21,16 @@ export function MultiSelectField({
   label,
   placeholder,
 }: MultiSelectFieldProps) {
-  const field = useFieldContext<Array<{ id?: number; name: string }>>();
+  const field = useFieldContext<Array<{ id: number; slug: string }>>();
 
   const selectedValues = useMemo(() => {
     const values = field.state.value ?? [];
     return values.map((item) => ({
       value: item.id,
-      label: item.name,
+      label: options.find((option) => option.value === item.id)?.label ?? '',
+      slug: item.slug,
     }));
-  }, [field.state.value]);
+  }, [field.state.value, options]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -49,10 +51,9 @@ export function MultiSelectField({
         classNamePrefix="select"
         onBlur={field.handleBlur}
         onChange={(selectedOptions) => {
-          console.log(selectedOptions);
           const transformed = selectedOptions.map((opt) => ({
             id: opt.value,
-            name: opt.label,
+            slug: opt.slug,
           }));
           field.handleChange(transformed);
         }}

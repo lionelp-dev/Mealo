@@ -85,7 +85,7 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
       open={isWorkspaceInvitationModalOpen}
       onOpenChange={closeWorkspaceInvitationModal}
     >
-      <DialogContent className="flex flex-col gap-4 px-4">
+      <DialogContent className="flex flex-col gap-4 px-4 max-sm:top-1/3">
         <DialogTitle>
           <span className="badge flex gap-2 rounded-full badge-soft badge-xl pr-4 text-sm badge-secondary">
             <FolderOpen className="h-5 w-5" />

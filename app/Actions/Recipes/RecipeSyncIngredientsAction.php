@@ -22,7 +22,13 @@ class RecipeSyncIngredientsAction
             $ingredient = Ingredient::query()->firstOrCreate([
                 'name' => $ingredientData->name,
                 'user_id' => $recipe->user->id,
+            ], [
+                'category_id' => $ingredientData->category_id,
             ]);
+
+            if ($ingredient->category_id !== $ingredientData->category_id) {
+                $ingredient->update(['category_id' => $ingredientData->category_id]);
+            }
 
             return [
                 $ingredient->id => [

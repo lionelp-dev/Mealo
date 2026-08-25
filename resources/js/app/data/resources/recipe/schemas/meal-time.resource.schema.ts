@@ -3,5 +3,6 @@ import z from 'zod';
 
 export const mealTimeResourceSchema = z.object({
   id: z.number(),
+  slug: z.string(),
   name: z.string(),
 }) satisfies z.ZodType<MealTimeResourceData>;

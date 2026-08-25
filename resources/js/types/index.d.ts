@@ -214,8 +214,11 @@ export type DayPlannedMeals = {
 
 export type PlannedMealIngredient = {
   shopping_list_id: number;
-  ingredient_id: number;
+  ingredient_id: string;
   name: string;
+  category_id: number;
+  category_name: string;
+  category_slug: string;
   total_quantity: number;
   unit: string;
   is_checked: boolean;

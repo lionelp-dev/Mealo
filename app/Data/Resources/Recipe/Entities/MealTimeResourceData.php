@@ -10,6 +10,7 @@ class MealTimeResourceData extends Data
 {
     public function __construct(
         public int $id,
+        public string $slug,
         public string $name,
     ) {}
 }

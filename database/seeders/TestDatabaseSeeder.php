@@ -14,6 +14,7 @@ class TestDatabaseSeeder extends Seeder
         $this->call([
             RolesAndPermissionsSeeder::class,  // First: create roles & permissions
             MealTimeSeeder::class,             // Required for recipe/meal planning tests
+            IngredientCategorySeeder::class,   // Required for recipe ingredients
         ]);
     }
 }

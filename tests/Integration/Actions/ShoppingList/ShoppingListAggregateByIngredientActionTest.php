@@ -8,6 +8,7 @@ use App\Actions\ShoppingList\ShoppingListAggregateByIngredientAction;
 use App\Data\Requests\PlannedMeal\Entities\PlannedMealRequestData;
 use App\Data\Requests\PlannedMeal\PlannedMealStoreRequestData;
 use App\Data\Requests\Recipe\RecipeStoreRequestData;
+use App\Models\IngredientCategory;
 
 beforeEach(function () {
     /** @var \Tests\TestCase $this */
@@ -37,19 +38,21 @@ test('groups ingredients by checked status', function () {
 
     foreach ($grouped['checked'] as $ingredient) {
         expect($ingredient['is_checked'])->toBeTrue();
-        expect($ingredient)->toHaveKeys(['shopping_list_id', 'ingredient_id', 'name', 'total_quantity', 'unit', 'is_checked', 'from_planned_meals', 'from_recipes']);
+        expect($ingredient)->toHaveKeys(['shopping_list_id', 'ingredient_id', 'name', 'category_id', 'category_name', 'category_slug', 'total_quantity', 'unit', 'is_checked', 'from_planned_meals', 'from_recipes']);
         expect($ingredient['from_planned_meals'][0]['planned_meal_id'])->toBe($plannedMeals[0]->id);
     }
 
     foreach ($grouped['unchecked'] as $ingredient) {
         expect($ingredient['is_checked'])->toBeFalse();
-        expect($ingredient)->toHaveKeys(['shopping_list_id', 'ingredient_id', 'name', 'total_quantity', 'unit', 'is_checked', 'from_planned_meals', 'from_recipes']);
+        expect($ingredient)->toHaveKeys(['shopping_list_id', 'ingredient_id', 'name', 'category_id', 'category_name', 'category_slug', 'total_quantity', 'unit', 'is_checked', 'from_planned_meals', 'from_recipes']);
         expect($ingredient['from_planned_meals'][0]['planned_meal_id'])->toBe($plannedMeals[1]->id);
     }
 });
 
 test('aggregates quantities by ingredient and unit', function () {
     /** @var \Tests\TestCase $this */
+    $categoryId = IngredientCategory::query()->where('slug', 'autres')->value('id');
+
     $firstRecipe = app(RecipeStoreAction::class)->execute(
         $this->user,
         RecipeStoreRequestData::from([
@@ -57,8 +60,8 @@ test('aggregates quantities by ingredient and unit', function () {
             'name' => 'Aggregate first recipe',
             'serving_size' => 1,
             'ingredients' => [
-                ['name' => 'Shopping List Unit Tomatoes', 'quantity' => 2, 'unit' => 'pieces'],
-                ['name' => 'Shopping List Unit Onions', 'quantity' => 1, 'unit' => 'pieces'],
+                ['name' => 'Shopping List Unit Tomatoes', 'quantity' => 2, 'unit' => 'pieces', 'category_id' => $categoryId],
+                ['name' => 'Shopping List Unit Onions', 'quantity' => 1, 'unit' => 'pieces', 'category_id' => $categoryId],
             ],
         ])
     );
@@ -69,8 +72,8 @@ test('aggregates quantities by ingredient and unit', function () {
             'name' => 'Aggregate second recipe',
             'serving_size' => 1,
             'ingredients' => [
-                ['name' => 'Shopping List Unit Tomatoes', 'quantity' => 3, 'unit' => 'pieces'],
-                ['name' => 'Shopping List Unit Onions', 'quantity' => 2, 'unit' => 'kg'],
+                ['name' => 'Shopping List Unit Tomatoes', 'quantity' => 3, 'unit' => 'pieces', 'category_id' => $categoryId],
+                ['name' => 'Shopping List Unit Onions', 'quantity' => 2, 'unit' => 'kg', 'category_id' => $categoryId],
             ],
         ])
     );
@@ -117,6 +120,9 @@ test('aggregates quantities by ingredient and unit', function () {
 
     expect($totalQuantity)->toBe($tomatoesEntry['total_quantity']);
     expect($tomatoesEntry['unit'])->toBe('pieces');
+    expect($tomatoesEntry['category_id'])->toBe($categoryId);
+    expect($tomatoesEntry['category_name'])->toBe('Autres');
+    expect($tomatoesEntry['category_slug'])->toBe('autres');
     expect($tomatoesEntry['from_planned_meals'])->toHaveCount(2);
     expect($tomatoesEntry['from_recipes'])->toHaveCount(2);
     expect($fromPlannedMeals[0]['ingredient_quantity'])->toBeFloat();
