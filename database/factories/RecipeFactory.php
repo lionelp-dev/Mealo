@@ -10,6 +10,7 @@ use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
 use App\Data\Requests\Recipe\Entities\StepRequestData;
 use App\Data\Requests\Recipe\Entities\TagRequestData;
 use App\Models\Ingredient;
+use App\Models\IngredientCategory;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\RecipeIngredient;
@@ -69,25 +70,29 @@ class RecipeFactory extends Factory
      */
     public function withIngredients($count): static
     {
-        return $this->afterMaking(function (Recipe $recipe) use ($count) {
-            $ingredients = Ingredient::factory()->count($count)->make()->map(function ($ingredient) {
+        $categoryId = IngredientCategory::query()->inRandomOrder()->value('id') ?? IngredientCategory::factory()->create()->id;
+
+        return $this->afterMaking(function (Recipe $recipe) use ($count, $categoryId) {
+            $ingredients = Ingredient::factory()->count($count)->make(['category_id' => $categoryId])->map(function ($ingredient) {
                 $pivot = RecipeIngredient::factory()->make();
 
                 return [
                     'name' => $ingredient->name,
                     'quantity' => $pivot->quantity,
                     'unit' => $pivot->unit,
+                    'category_id' => $ingredient->category_id,
                 ];
             });
             $recipe->setRelation('ingredients', $ingredients);
-        })->afterCreating(function (Recipe $recipe) use ($count) {
-            $ingredients = Ingredient::factory()->count($count)->make()->map(function ($ingredient) {
+        })->afterCreating(function (Recipe $recipe) use ($count, $categoryId) {
+            $ingredients = Ingredient::factory()->count($count)->make(['category_id' => $categoryId])->map(function ($ingredient) {
                 $pivot = RecipeIngredient::factory()->make();
 
                 return [
                     'name' => $ingredient->name,
                     'quantity' => $pivot->quantity,
                     'unit' => $pivot->unit,
+                    'category_id' => $ingredient->category_id,
                 ];
             });
 

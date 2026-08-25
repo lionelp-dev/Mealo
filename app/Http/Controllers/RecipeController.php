@@ -21,6 +21,7 @@ use App\Data\Requests\Recipe\RecipeImageAIGenerationRequestData;
 use App\Data\Requests\Recipe\RecipeSearchRequestData;
 use App\Data\Requests\Recipe\RecipeStoreRequestData;
 use App\Data\Requests\Recipe\RecipeUpdateRequestData;
+use App\Data\Resources\Recipe\Entities\IngredientCategoryResourceData;
 use App\Data\Resources\Recipe\Entities\IngredientResourceData;
 use App\Data\Resources\Recipe\Entities\MealTimeResourceData;
 use App\Data\Resources\Recipe\Entities\RecipeResourceData;
@@ -32,6 +33,7 @@ use App\Messages\Recipe\RecipeDeletedMessage;
 use App\Messages\Recipe\RecipeGenerationFailedMessage;
 use App\Messages\Recipe\RecipeGenerationQueuedMessage;
 use App\Messages\Recipe\RecipeUpdatedMessage;
+use App\Models\IngredientCategory;
 use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
@@ -103,6 +105,7 @@ class RecipeController extends Controller
             'recipe/create',
             [
                 'meal_times' => MealTimeResourceData::collect(MealTime::all()),
+                'ingredient_categories' => IngredientCategoryResourceData::collect(IngredientCategory::query()->orderBy('id')->get()),
                 'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
                 'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
             ]
@@ -143,6 +146,7 @@ class RecipeController extends Controller
 
             return Inertia::render('recipe/edit', [
                 'meal_times' => MealTimeRequestData::collect(MealTime::all()),
+                'ingredient_categories' => IngredientCategoryResourceData::collect(IngredientCategory::query()->orderBy('id')->get()),
                 'recipe' => RecipeResourceData::from($recipe)->include('ingredients'),
                 'ingredients_search_results' => Inertia::scroll(IngredientResourceData::collect($ingredients->paginate(5, pageName: 'ingredients_page'))),
                 'tags_search_results' => Inertia::scroll(TagResourceData::collect($tags->paginate(5, pageName: 'tags_page'))),
@@ -282,7 +286,7 @@ class RecipeController extends Controller
         try {
             Gate::authorize('create', Recipe::class);
 
-            $prompt = $recipeImageAIGenerationRequestData->name . 'with' . json_encode($recipeImageAIGenerationRequestData->ingredients);
+            $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
             return back()->with([

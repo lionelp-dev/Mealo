@@ -26,7 +26,11 @@ test('create recipe screen can be rendered', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
         ->get(route('recipes.create'))
-        ->assertOk();
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/create')
+            ->has('ingredient_categories')
+        );
 });
 
 test('recipe detail panel data can be rendered on recipes screen', function () {
@@ -48,7 +52,11 @@ test('edit recipe screen can be rendered', function () {
     /** @var \Tests\TestCase $this */
     $this->actingAs($this->user)
         ->get(route('recipes.edit', $this->recipe))
-        ->assertOk();
+        ->assertOk()
+        ->assertInertia(fn (Assert $page) => $page
+            ->component('recipe/edit')
+            ->has('ingredient_categories')
+        );
 });
 
 test('user cannot access other users recipes', function () {

@@ -77,11 +77,11 @@ export function CreateRecipesView() {
         <div className="flex items-center gap-8">
           <div className="flex justify-end gap-4">
             <Link
-              className="btn"
+              className="btn max-md:btn-sm"
               href={showAiGenerationModal.url()}
               preserveUrl
             >
-              {t('recipes.generate.modalTitle', 'Generate Recipe with AI')}
+              {t('recipes.generate.triggerButton', 'Générer avec l’IA')}
             </Link>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
@@ -90,17 +90,17 @@ export function CreateRecipesView() {
                 <button
                   type="submit"
                   disabled={!canSubmit}
-                  className={`btn pr-3.5 pl-[23px] btn-secondary`}
+                  className={`btn btn-secondary max-sm:btn-sm min-sm:pr-3.5 min-sm:pl-[23px]`}
                   onClick={() => form.handleSubmit()}
                 >
                   {isSubmitting
                     ? '...'
                     : t('recipes.form.saveButton', 'Enregistrer la recette')}
-                  <ChefHatIcon className="h-4" />
+                  <ChefHatIcon className="h-4 max-md:hidden" />
                 </button>
               )}
             </form.Subscribe>
-            <button className="btn" onClick={() => viewRecipes()}>
+            <button className="btn max-sm:hidden" onClick={() => viewRecipes()}>
               {t('common.buttons.cancel', 'Cancel')}
             </button>
           </div>

@@ -6,11 +6,11 @@ use Spatie\LaravelData\Data;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
-class IngredientResourceData extends Data
+class IngredientCategoryResourceData extends Data
 {
     public function __construct(
-        public string $id,
+        public int $id,
         public string $name,
-        public int $category_id,
+        public string $slug,
     ) {}
 }

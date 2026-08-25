@@ -1,3 +1,4 @@
+import { ingredientCategoryResourceSchema } from '../schemas/ingredient-category.resource.schema';
 import { ingredientResourceSchema } from '../schemas/ingredient.resource.schema';
 import { mealTimeResourceSchema } from '../schemas/meal-time.resource.schema';
 import { recipeIngredientResourceSchema } from '../schemas/recipe-ingredient.resource.schema';
@@ -14,3 +15,6 @@ export type MealTimeResource = z.infer<typeof mealTimeResourceSchema>;
 export type StepResource = z.infer<typeof stepResourceSchema>;
 export type TagResource = z.infer<typeof tagResourceSchema>;
 export type IngredientResource = z.infer<typeof ingredientResourceSchema>;
+export type IngredientCategoryResource = z.infer<
+  typeof ingredientCategoryResourceSchema
+>;

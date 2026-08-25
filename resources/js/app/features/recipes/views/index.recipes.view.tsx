@@ -121,16 +121,13 @@ export function IndexRecipesView() {
     headerLeftContent: <RecipesSearch className="max-lg:hidden" />,
     headerRightContent: (
       <div className="flex flex-1 items-center justify-end gap-3">
-        <RecipeAIGenerationPopover
-          className="max-md:hidden"
-          meal_times={meal_times ?? []}
-        />
+        <RecipeAIGenerationPopover meal_times={meal_times ?? []} />
         <button
-          className="btn gap-2 pl-5.5 btn-secondary"
+          className="btn gap-2 btn-sm btn-secondary min-md:pl-5.5"
           onClick={handleNavigateToCreateRecipe}
         >
           {t('recipes.index.createButton', 'Create recipe')}
-          <ChefHatIcon size={15} />
+          <ChefHatIcon className="h-4 w-auto max-md:hidden" />
         </button>
       </div>
     ),
@@ -140,7 +137,7 @@ export function IndexRecipesView() {
         <div className="flex h-full min-h-0 w-full max-w-full min-w-0 flex-col overflow-x-clip overflow-y-hidden">
           <div
             className={
-              'z-10 mx-auto grid h-fit w-full min-w-0 gap-3 px-6 py-3 pb-2.5 pl-7.5 lg:grid-cols-[minmax(0,1fr)_auto]'
+              'z-10 mx-auto grid h-fit w-full min-w-0 gap-3 px-4 py-3 pb-2.5 lg:grid-cols-[minmax(0,1fr)_auto]'
             }
           >
             <RecipesSearch className="min-lg:hidden" />
@@ -202,7 +199,7 @@ export function IndexRecipesView() {
           )}
 
           {(recipes.data.length > 0 || isGeneratingRecipes) && (
-            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden pr-6 pl-7.5">
+            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-4">
               <div className="min-h-0 w-full min-w-0 overflow-y-auto">
                 <InfiniteScroll data="recipes">
                   <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pt-1 pb-10">

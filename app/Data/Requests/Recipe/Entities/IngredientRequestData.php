@@ -13,6 +13,7 @@ class IngredientRequestData extends Data
         public string $name,
         public float $quantity,
         public string $unit,
+        public int $category_id,
         #[Optional]
         public ?string $id = null,
     ) {}
@@ -27,6 +28,7 @@ class IngredientRequestData extends Data
             'name' => 'required|string|min:1|max:255',
             'quantity' => 'required|numeric|min:0|max:10000',
             'unit' => 'required|string|min:1|max:50',
+            'category_id' => 'required|integer|exists:ingredient_categories,id',
         ];
     }
 }

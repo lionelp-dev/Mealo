@@ -1,7 +1,7 @@
 import type { MealTimeRequestData } from '@laravel-types/generated'
 import z from 'zod'
-import { mealTimeSchema } from './meal_time.schema.ts'
 
 export const mealTimeRequestSchema = z.object({
-  name: mealTimeSchema,
+  id: z.number().int().positive(),
+  name: z.string().trim().min(1, 'Le nom du moment de repas ne peut pas être vide'),
 }) satisfies z.ZodType<MealTimeRequestData>

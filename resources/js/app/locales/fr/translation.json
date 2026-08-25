@@ -280,12 +280,17 @@
     "shoppingLists": {
         "title": "Listes de courses",
         "pageTitle": "Listes de courses",
+        "mobileTitle": "Panier",
+        "desktopTitle": "Liste de courses",
         "viewByIngredients": "Ingrédients",
         "viewByRecipes": "Recettes",
         "toBuy": "À acheter",
+        "checked": "Cochés",
         "completed": "Complété",
+        "listProgress": "{{checked}} sur {{total}}",
         "itemsCount": "{{count}} article(s)",
         "itemsCheckedOff": "{{count}} article(s) cochés",
+        "progress": "{{checked}} sur {{total}} cochés",
         "empty": {
             "title": "Aucune liste de courses",
             "description": "Planifiez des repas pour créer automatiquement votre liste de courses."

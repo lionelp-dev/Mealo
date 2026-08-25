@@ -50,7 +50,7 @@ export function WorkspaceEditModal({ workspace_data }: Props) {
       open={isWorkspaceEditModalOpen}
       onOpenChange={closeWorkspaceEditModal}
     >
-      <DialogContent>
+      <DialogContent className="max-sm:top-1/3">
         <DialogHeader>
           <DialogTitle>
             <span className="text-secondary">

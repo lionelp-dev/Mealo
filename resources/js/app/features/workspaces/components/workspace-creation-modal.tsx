@@ -76,7 +76,7 @@ export default function WorkspaceCreationModal() {
       open={isWorkspaceCreationModalOpen}
       onOpenChange={closeWorkspaceCreationModal}
     >
-      <DialogContent>
+      <DialogContent className="max-sm:top-1/3">
         <DialogHeader>
           <DialogTitle className="tracking-tight text-secondary">
             {t('workspace.create.title', 'Créer un espace')}

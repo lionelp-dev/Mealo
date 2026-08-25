@@ -24,7 +24,7 @@ class RecipeAIGenerationAction
                 $this->recipeAIClient->generate($requestData, $generateImages)
             );
         } catch (Exception $e) {
-            throw new Exception('Failed to generate recipes: ' . $e->getMessage());
+            throw new Exception('Failed to generate recipes: '.$e->getMessage());
         }
     }
 }

@@ -2,7 +2,7 @@ import type { GraphNode } from '@langchain/langgraph'
 import { ChatOpenRouter } from '@langchain/openrouter'
 import z from 'zod'
 
-import { recipeStoreRequestSchema } from '../../../data/request/recipe/schemas/recipe_store.request.schema.ts'
+import { createRecipeStoreRequestSchema } from '../../../data/request/recipe/schemas/recipe_store.request.schema.ts'
 import type { GraphState } from '../recipe_generation_state.ts'
 import { chunk } from '../utils/chunk.ts'
 import { generateSeed } from '../utils/generate_seed.ts'
@@ -10,22 +10,35 @@ import { generateSeed } from '../utils/generate_seed.ts'
 const RECIPES_PER_BATCH = 5
 const MAX_CONCURRENT_RECIPE_GENERATIONS = 5
 
-const model = new ChatOpenRouter({
-  model: 'openai/gpt-4o-mini',
-  seed: generateSeed(),
-  temperature: 0.8,
-}).withStructuredOutput(
-  z.object({
-    recipes: z.array(recipeStoreRequestSchema),
-  }),
-  {
-    method: 'jsonSchema',
-    strict: true,
-  }
-)
-
 export const nodeGenerateRecipesByBatch: GraphNode<typeof GraphState> = async (state) => {
-  const { recipeNames, context } = state
+  const {
+    recipeNames,
+    context,
+    ingredient_categories: ingredientCategories,
+    meal_times: mealTimes,
+  } = state
+  const ingredientCategoryCatalog = ingredientCategories
+    .map((category) => `${category.id}: ${category.name} (${category.slug})`)
+    .join('\n')
+
+  const model = new ChatOpenRouter({
+    model: 'openai/gpt-4o-mini',
+    seed: generateSeed(),
+    temperature: 0.8,
+  }).withStructuredOutput(
+    z.object({
+      recipes: z.array(
+        createRecipeStoreRequestSchema({
+          ingredient_categories: ingredientCategories,
+          meal_times: mealTimes,
+        })
+      ),
+    }),
+    {
+      method: 'jsonSchema',
+      strict: true,
+    }
+  )
 
   const { meal_time: mealTime } = context
 
@@ -60,10 +73,14 @@ export const nodeGenerateRecipesByBatch: GraphNode<typeof GraphState> = async (s
           Contraintes de format :
           - image doit toujours être null ;
           - image_data_url doit toujours être null ;
+          - ingredients[].category_id doit toujours être l'ID exact du catalogue de catégories d'ingrédients ;
+          - les slugs et les noms des catégories d'ingrédients ne servent que de contexte métier, jamais de sortie ;
+          - catalogue des catégories d'ingrédients :
+            ${ingredientCategoryCatalog || 'aucune catégorie disponible'}
           ${
             mealTime
-              ? `- meal_times.name doit valoir ${mealTime} ;`
-              : '- meal_times.name doit valoir breakfast, lunch, diner ou snack ;'
+              ? `- meal_times.name doit valoir ${mealTime} et meal_times.id doit correspondre au catalogue ;`
+              : '- meal_times.id doit correspondre au catalogue fourni et meal_times.name doit être le libellé exact du catalogue ;'
           }
           - les unités doivent utiliser les valeurs
             autorisées par le schema ;

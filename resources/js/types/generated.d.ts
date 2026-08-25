@@ -32,15 +32,46 @@ export type DemoInviteUpdateRequestData = {
   expires_at: string | null;
   is_active: boolean;
 };
+export type IngredientCategoryEnum =
+  | 'fruits'
+  | 'legumes-herbes-fraiches'
+  | 'viandes'
+  | 'charcuterie'
+  | 'poissons-fruits-de-mer'
+  | 'oeufs'
+  | 'produits-laitiers'
+  | 'alternatives-vegetales'
+  | 'pains-produits-boulangerie'
+  | 'pates-riz-cereales'
+  | 'legumineuses'
+  | 'farines-aides-patisserie'
+  | 'noix-graines-fruits-secs'
+  | 'conserves-bocaux'
+  | 'huiles-vinaigres'
+  | 'sauces-condiments'
+  | 'herbes-sechees-epices'
+  | 'epicerie-salee'
+  | 'epicerie-sucree'
+  | 'produits-surgeles'
+  | 'boissons'
+  | 'produits-prepares'
+  | 'autres';
+export type IngredientCategoryResourceData = {
+  id: number;
+  name: string;
+  slug: string;
+};
 export type IngredientRequestData = {
   name: string;
   quantity: number;
   unit: string;
+  category_id: number;
   id?: string;
 };
 export type IngredientResourceData = {
   id: string;
   name: string;
+  category_id: number;
 };
 export type MealTimeConfigData = {
   name: string;
@@ -51,6 +82,7 @@ export type MealTimeData = {
 };
 export type MealTimeEnum = 'breakfast' | 'lunch' | 'diner' | 'snack';
 export type MealTimeRequestData = {
+  id: number;
   name: string;
 };
 export type MealTimeResourceData = {
@@ -146,6 +178,7 @@ export type RecipeIngredientResourceData = {
   name: string;
   quantity: number;
   unit: string;
+  category_id: number;
 };
 export type RecipeResourceData = {
   id: string;

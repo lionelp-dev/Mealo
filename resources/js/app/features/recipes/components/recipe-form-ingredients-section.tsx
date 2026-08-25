@@ -26,7 +26,14 @@ export const RecipeFormIngredientsSection = withFieldGroup({
   render: function Render({ group, title }) {
     const { t } = useTranslation();
 
-    const { url, ingredients_search_results } = useRecipesContextValue();
+    const { url, ingredients_search_results, ingredient_categories } =
+      useRecipesContextValue();
+
+    const defaultCategoryId =
+      ingredient_categories?.find((category) => category.slug === 'autres')
+        ?.id ??
+      ingredient_categories?.[0]?.id ??
+      0;
 
     const { searchIngredients, processing } = useSearchIngredients();
 
@@ -47,6 +54,7 @@ export const RecipeFormIngredientsSection = withFieldGroup({
         name: '',
         quantity: 0,
         unit: '',
+        category_id: defaultCategoryId,
       },
       validators: {
         onSubmit: recipeIngredientRequestSchema,
@@ -84,11 +92,14 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                     <th className="w-[55%]">
                       {t('recipes.ingredients.nameLabel', 'Name')}
                     </th>
-                    <th className="w-[15%]">
+                    <th className="w-[12%]">
                       {t('recipes.ingredients.quantityLabel', 'Quantity')}
                     </th>
-                    <th className="w-[20%]">
+                    <th className="w-[13%]">
                       {t('recipes.ingredients.unitLabel', 'Unit')}
+                    </th>
+                    <th className="w-[20%]">
+                      {t('recipes.ingredients.categoryLabel', 'Catégorie')}
                     </th>
                     {ingredients_field.state.value &&
                       ingredients_field.state.value.length !== 0 && (
@@ -139,6 +150,27 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                             <field.TextField
                               onBlur={() => ingredients_field.handleBlur()}
                             />
+                          )}
+                        />
+                      </td>
+                      <td>
+                        <group.AppField
+                          name={`ingredients[${index}].category_id`}
+                          children={(field) => (
+                            <select
+                              value={field.state.value}
+                              onChange={(e) =>
+                                field.handleChange(Number(e.target.value))
+                              }
+                              onBlur={() => ingredients_field.handleBlur()}
+                              className="select w-full"
+                            >
+                              {ingredient_categories?.map((category) => (
+                                <option key={category.id} value={category.id}>
+                                  {category.name}
+                                </option>
+                              ))}
+                            </select>
                           )}
                         />
                       </td>
@@ -218,6 +250,10 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                               'name',
                                               ingredient.name,
                                             );
+                                            form.setFieldValue(
+                                              'category_id',
+                                              ingredient.category_id,
+                                            );
                                             setPopoverOpen(false);
                                           }}
                                         >
@@ -276,6 +312,38 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                               !field.state.meta.isValid && 'input-error',
                             )}
                           />
+                        )}
+                      />
+                    </td>
+                    <td>
+                      <form.AppField
+                        name="category_id"
+                        validators={{
+                          onChange:
+                            recipeIngredientRequestSchema.shape.category_id,
+                          onBlur:
+                            recipeIngredientRequestSchema.shape.category_id,
+                        }}
+                        children={(field) => (
+                          <select
+                            value={field.state.value}
+                            onChange={(e) =>
+                              field.handleChange(Number(e.target.value))
+                            }
+                            onBlur={(e) => e.preventDefault()}
+                            className={cn(
+                              'select w-full',
+                              !ingredients_field.state.meta.isValid &&
+                                'select-error',
+                              !field.state.meta.isValid && 'select-error',
+                            )}
+                          >
+                            {ingredient_categories?.map((category) => (
+                              <option key={category.id} value={category.id}>
+                                {category.name}
+                              </option>
+                            ))}
+                          </select>
                         )}
                       />
                     </td>

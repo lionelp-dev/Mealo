@@ -7,6 +7,23 @@ const RecipesAIGenerationRequest = z.object({
     role: z.literal('user'),
     content: z.string().max(255),
   }),
+  ingredient_categories: z
+    .array(
+      z.object({
+        id: z.number().int().positive(),
+        slug: z.string().min(1).max(255),
+        name: z.string().min(1).max(255),
+      })
+    )
+    .min(1),
+  meal_times: z
+    .array(
+      z.object({
+        id: z.number().int().positive(),
+        name: z.string().min(1).max(255),
+      })
+    )
+    .min(1),
   context: z.object({
     meal_time: z.string().trim().min(1).max(50).nullable().optional().default(null),
     count: z.number().int().min(1).max(10).nullable().optional().default(null),

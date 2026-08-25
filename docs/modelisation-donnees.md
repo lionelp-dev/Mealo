@@ -61,7 +61,14 @@ erDiagram
   ingredients {
     string id PK
     number user_id FK
+    number category_id FK
     string name
+  }
+
+  ingredient_categories {
+    number id PK
+    string name
+    string slug
   }
 
   recipe_ingredient {
@@ -144,6 +151,7 @@ erDiagram
   recipes ||--o{ recipe_tag : has
   recipes ||--|{ steps : has
   ingredients ||--o{ recipe_ingredient : used_in
+  ingredient_categories ||--o{ ingredients : categorizes
   tags ||--o{ recipe_tag : assigned_to
   meal_times ||--o{ recipe_meal_time : used_in
   users ||--o{ ingredients : creates

@@ -18,7 +18,7 @@ Le projet s'appuie sur plusieurs niveaux de tests et sur un pipeline CI afin de 
 composer test
 composer test:types
 composer test:coverage
-pnpm types
+pnpm types        # TypeScript root + api/ai-services-adonis
 pnpm lint
 pnpm format:check
 ```

@@ -1,6 +1,7 @@
 import { GeneratedRecipeResource } from '@/app/data/requests/recipe/types';
 import {
   IngredientResource,
+  IngredientCategoryResource,
   MealTimeResource,
   RecipeResource,
   TagResource,
@@ -18,6 +19,7 @@ type PageProps = SharedData &
     recipes: PaginatedCollection<RecipeResource>;
     tags: TagResource[];
     meal_times: MealTimeResource[];
+    ingredient_categories: IngredientCategoryResource[];
     tags_search_results?: {
       data: TagResource[];
     };

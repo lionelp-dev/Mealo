@@ -48,12 +48,12 @@ export function RecipeAIGenerationPopover({ meal_times, className }: Props) {
         <Popover.Trigger asChild>
           <button
             className={cn(
-              'btn gap-2 pl-5.5 btn-outline btn-secondary',
+              'btn gap-2 btn-outline btn-sm btn-secondary min-md:pl-5.5',
               className,
             )}
           >
             {t('recipes.generate.triggerButton', 'Générer avec l’IA')}
-            <Wand2 size={15} />
+            <Wand2 className="h-4 w-auto max-md:hidden" />
           </button>
         </Popover.Trigger>
 

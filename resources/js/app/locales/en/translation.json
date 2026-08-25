@@ -267,7 +267,15 @@
     },
     "shoppingLists": {
         "title": "Shopping Lists",
-        "pageTitle": "Shopping Lists"
+        "pageTitle": "Shopping Lists",
+        "mobileTitle": "Basket",
+        "desktopTitle": "Shopping List",
+        "viewByIngredients": "Ingredients",
+        "viewByRecipes": "Recipes",
+        "checked": "Checked",
+        "listProgress": "{{checked}} of {{total}}",
+        "itemsCount": "{{count}} item(s)",
+        "progress": "{{checked}} of {{total}} completed"
     },
     "settings": {
         "title": "Settings",

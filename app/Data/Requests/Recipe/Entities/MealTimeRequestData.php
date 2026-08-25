@@ -9,6 +9,7 @@ use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 class MealTimeRequestData extends Data
 {
     public function __construct(
+        public int $id,
         public string $name,
     ) {}
 
@@ -18,7 +19,7 @@ class MealTimeRequestData extends Data
     public static function rules(): array
     {
         return [
-            'id' => 'sometimes|required|integer|min:1',
+            'id' => 'required|integer|exists:meal_times,id',
             'name' => 'required|string|min:1|max:255',
         ];
     }

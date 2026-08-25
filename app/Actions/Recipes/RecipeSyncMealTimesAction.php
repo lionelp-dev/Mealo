@@ -3,7 +3,6 @@
 namespace App\Actions\Recipes;
 
 use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
-use App\Models\MealTime;
 use App\Models\Recipe;
 
 class RecipeSyncMealTimesAction
@@ -17,11 +16,7 @@ class RecipeSyncMealTimesAction
     {
         $mealTimeIds = collect($mealTimesData)
             ->map(function (MealTimeRequestData $mealTimeData): int {
-                $mealTime = MealTime::query()
-                    ->where('name', $mealTimeData->name)
-                    ->firstOrFail();
-
-                return $mealTime->id;
+                return $mealTimeData->id;
             });
 
         $recipe->mealTimes()->sync($mealTimeIds);

@@ -72,7 +72,7 @@ export function RecipesFiltersPopover({
         <button
           className={cn(
             'flex items-center gap-1.5 whitespace-nowrap text-secondary hover:text-secondary-content max-md:max-w-fit',
-            'btn border border-secondary/40 pr-3.5 pl-5 btn-outline btn-soft btn-secondary',
+            'btn border border-secondary/40 pr-3.5 pl-5 btn-outline btn-soft btn-secondary max-md:pl-3 max-md:btn-sm',
             className,
           )}
           onClick={() => {

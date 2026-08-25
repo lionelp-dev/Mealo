@@ -38,6 +38,7 @@ jobs:
         run: |
           composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
           pnpm install
+          pnpm --dir api/ai-services-adonis install --frozen-lockfile
 
       - name: Generate Wayfinder Routes
         run: php artisan wayfinder:generate --with-form
