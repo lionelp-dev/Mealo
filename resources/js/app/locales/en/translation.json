@@ -220,7 +220,10 @@
         "searchRecipes": "Search recipes...",
         "weekSelector": {
             "today": "Today",
-            "week": "Week"
+            "week": "Week",
+            "thisWeek": "This week",
+            "previousWeek": "Previous week",
+            "nextWeek": "Next week"
         },
         "planDish": "Plan dish",
         "planDishes": "Plan dishes",

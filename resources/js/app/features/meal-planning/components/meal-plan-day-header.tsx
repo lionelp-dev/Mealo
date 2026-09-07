@@ -24,31 +24,13 @@ type MealPlanDayHeaderProps = {
 export default function MealPlanDayHeader({
   dayPlannedMeals,
 }: MealPlanDayHeaderProps) {
-  const { t } = useTranslation();
-
-  const {
-    date,
-    isCurrentDay,
-    hasPlannedMeals,
-    copiedDayPlannedMeals,
-    handleCopy,
-    handlePaste,
-    handleDeleteAll,
-  } = useMealPlanDayActions(dayPlannedMeals);
-
-  const [isOpen, setIsOpen] = useState(false);
-
-  const { canEditMealPlan } = useWorkspacePermissions();
+  const { date, isCurrentDay } = useMealPlanDayActions(dayPlannedMeals);
 
   return (
-    <div
-      className={`flex h-12 items-center justify-between rounded-lg bg-background pr-3 pl-5 shadow-xs outline outline-base-300/40 ${
-        isCurrentDay && 'border-b-2 border-secondary/80 pb-[1px] text-secondary'
-      }`}
-    >
+    <div className={`flex items-center justify-between px-5`}>
       <div
         className={cn(
-          'flex items-center gap-2 text-base font-normal text-base-content/80',
+          'flex items-center gap-2 text-xl font-semibold text-base-content/80',
           isCurrentDay && 'text-secondary',
         )}
       >
@@ -57,11 +39,40 @@ export default function MealPlanDayHeader({
           {date.weekdayLong?.slice(1)}
         </span>
         <span>{date.day}</span>
+        {isCurrentDay && (
+          <span className="badge rounded-full badge-soft badge-secondary">
+            Aujourd'hui
+          </span>
+        )}
       </div>
+      <MealPlanDayHeaderMenu dayPlannedMeals={dayPlannedMeals} />
+    </div>
+  );
+}
+
+export function MealPlanDayHeaderMenu({
+  dayPlannedMeals,
+}: MealPlanDayHeaderProps) {
+  const { canEditMealPlan } = useWorkspacePermissions();
+
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { t } = useTranslation();
+
+  const {
+    hasPlannedMeals,
+    copiedDayPlannedMeals,
+    handleCopy,
+    handlePaste,
+    handleDeleteAll,
+  } = useMealPlanDayActions(dayPlannedMeals);
+
+  return (
+    <>
       {canEditMealPlan && (hasPlannedMeals || copiedDayPlannedMeals) && (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <button className="btn btn-circle btn-ghost btn-sm hover:bg-base-200">
+            <button className="btn btn-circle btn-sm hover:bg-base-200">
               <EllipsisVertical
                 size={15}
                 className="rotate-90 text-base-content/75"
@@ -95,6 +106,6 @@ export default function MealPlanDayHeader({
           </DropdownMenuContent>
         </DropdownMenu>
       )}
-    </div>
+    </>
   );
 }

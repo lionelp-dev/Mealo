@@ -1,10 +1,8 @@
 import MealPlanEmptySlot from './meal-plan-empty-slot';
 import MealPlanMealCard from './meal-plan-meal-card';
+import { cn } from '@/app/lib';
 import { DayPlannedMeals } from '@/types';
 import { RecipeResourceData } from '@/types/generated';
-import { ScrollArea } from '@radix-ui/themes';
-import { useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 
 type MealPlanProps = {
   dayPlannedMeals: DayPlannedMeals;
@@ -15,49 +13,36 @@ export default function MealPlanSlots({
   dayPlannedMeals,
   onSelectRecipe,
 }: MealPlanProps) {
-  const { t } = useTranslation();
-
   const { date, plannedMealsSlots } = dayPlannedMeals;
 
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-
   return (
-    <div className="h-[62vh] w-full overflow-hidden rounded-xl border border-base-300/40 bg-base-100 pt-3.5 pb-2.5 shadow-xs">
-      <div className="flex h-full w-full min-w-0 flex-1">
-        <ScrollArea
-          ref={scrollContainerRef}
-          scrollbars="vertical"
-          type="auto"
-          className="!z-10 flex h-full w-full flex-col overflow-hidden px-2.5 [&>div>div]:!max-w-[100%]"
-        >
-          <div className="flex h-full w-full min-w-0 flex-col gap-3 border-base-300 bg-base-100">
+    <div className="w-full overflow-hidden shadow-xs lg:h-[60vh]">
+      <div className={cn('flex h-full w-full min-w-0 flex-1')}>
+        <div className="h-full w-full px-2.5 md:overflow-scroll">
+          <div className="flex h-full w-full min-w-0 flex-col gap-6">
             {plannedMealsSlots.length > 0 && (
-              <div className="flex w-full min-w-0 flex-col gap-5 pt-1">
-                {plannedMealsSlots.map(({ mealTime, plannedMeals }) => (
-                  <div
-                    key={mealTime.id}
-                    className="flex w-full min-w-0 flex-col justify-between gap-[15px] px-1"
-                  >
-                    <span className="badge rounded-full badge-soft badge-outline border-secondary/15 badge-sm badge-secondary">
-                      {t(
-                        `mealPlanning.dialog.filters.${mealTime.slug}`,
-                        mealTime.name,
-                      )}
-                    </span>
-                    {plannedMeals.map((plannedMeal) => (
-                      <MealPlanMealCard
-                        key={plannedMeal.id}
-                        plannedMeal={plannedMeal}
-                        onSelectRecipe={onSelectRecipe}
-                      />
-                    ))}
-                  </div>
-                ))}
+              <div className="flex w-full min-w-0 flex-col gap-6">
+                {plannedMealsSlots.map(({ mealTime, plannedMeals }) => {
+                  return (
+                    <div
+                      key={mealTime.id}
+                      className="flex w-full min-w-0 flex-col justify-between gap-3.25"
+                    >
+                      {plannedMeals.map((plannedMeal) => (
+                        <MealPlanMealCard
+                          key={plannedMeal.id}
+                          plannedMeal={plannedMeal}
+                          onSelectRecipe={onSelectRecipe}
+                        />
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
             )}
             <MealPlanEmptySlot date={date} />
           </div>
-        </ScrollArea>
+        </div>
       </div>
     </div>
   );

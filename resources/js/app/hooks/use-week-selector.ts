@@ -7,24 +7,13 @@ type UseWeekSelectorProps = {
 };
 
 export const useWeekSelector = ({ currentWeek, url }: UseWeekSelectorProps) => {
-  const scrollToToday = () =>
-    requestAnimationFrame(() => {
-      const todayContainer = document.getElementById('today');
-      if (todayContainer) {
-        todayContainer.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }
-    });
-
   const navigateToWeek = (targetWeek: DateTime) => {
     router.get(
       url,
       {
         week: targetWeek.toISODate(),
       },
-      { preserveState: true, onSuccess: () => scrollToToday() },
+      { preserveState: true },
     );
   };
 

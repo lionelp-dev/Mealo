@@ -230,7 +230,10 @@
         "tryAdjustingSearch": "Essayez d'ajuster votre recherche ou vos filtres",
         "weekSelector": {
             "today": "Aujourd'hui",
-            "week": "Semaine"
+            "week": "Semaine",
+            "thisWeek": "Cette semaine",
+            "previousWeek": "Semaine précédente",
+            "nextWeek": "Semaine suivante"
         },
         "planDish": "Planifier le plat",
         "planDishes": "Planifier les plats",
