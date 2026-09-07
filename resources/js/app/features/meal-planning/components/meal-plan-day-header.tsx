@@ -35,8 +35,10 @@ export default function MealPlanDayHeader({
         )}
       >
         <span>
-          {date.weekdayLong && date.weekdayLong[0].toUpperCase()}
-          {date.weekdayLong?.slice(1)}
+          {date.weekdayLong &&
+            `${date.weekdayLong[0].toUpperCase()}${date.weekdayLong
+              .slice(1)
+              .replace(/\.$/, '')}`}
         </span>
         <span>{date.day}</span>
         {isCurrentDay && (

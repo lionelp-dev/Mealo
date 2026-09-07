@@ -6,6 +6,8 @@ import MealPlanDialog from '../components/meal-plan-dialog';
 import { MealPlanRecipeCard } from '../components/meal-plan-dialog-recipe-card';
 import { MealPlanGenerationPopover } from '../components/meal-plan-generation-popover';
 import MealPlanSlots from '../components/meal-plan-slots';
+import MealPlanningDayNavigator from '../components/meal-planning-day-navigator';
+import { useMealPlanDayNavigation } from '../hooks/use-meal-plan-day-navigation';
 import { useWeekPlannedMeals } from '../hooks/use-week-meal-plan';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
@@ -30,6 +32,15 @@ export function MealPlanningIndexView() {
   const { recipes } = usePlannedMealsContextValue();
 
   const {
+    activeDayId,
+    stickyRef,
+    stickyHeight,
+    lastDayMinHeight,
+    contentRef,
+    handleSelectDay,
+  } = useMealPlanDayNavigation(weekStart);
+
+  const {
     setSelectedRecipe,
     displayedRecipe,
     isRecipeDetailMounted,
@@ -52,8 +63,16 @@ export function MealPlanningIndexView() {
       </div>
     ),
     children: (
-      <div className="w-full overflow-y-scroll px-2 py-6 md:px-6">
+      <div ref={contentRef} className="min-h-0 w-full flex-1 overflow-y-auto">
         <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
+
+        <MealPlanningDayNavigator
+          activeDayId={activeDayId}
+          days={weekPlannedMeals}
+          onSelectDay={handleSelectDay}
+          stickyRef={stickyRef}
+        />
+
         <div className="flex min-w-0 gap-3 overflow-x-clip">
           <RecipeDetailPanelContainer
             isMounted={isRecipeDetailMounted}
@@ -72,16 +91,31 @@ export function MealPlanningIndexView() {
               isRecipeDetailMounted ? '2xl:grid-cols-2' : '2xl:grid-cols-4'
             }`}
           >
-            {weekPlannedMeals.map((dayPlannedMeals) => {
+            {weekPlannedMeals.map((dayPlannedMeals, index) => {
               const { date } = dayPlannedMeals;
-              const isToday = date.hasSame(DateTime.now(), 'day');
+              const dayId = date.toISODate();
+              const isLastDay = index === weekPlannedMeals.length - 1;
 
               return (
                 <div
-                  key={date.toISODate()}
-                  id={isToday ? 'today' : ''}
+                  key={dayId}
                   className={cn('flex w-full min-w-0 flex-col gap-3')}
+                  style={
+                    isLastDay && lastDayMinHeight
+                      ? { minHeight: lastDayMinHeight }
+                      : undefined
+                  }
                 >
+                  {dayId && (
+                    <div
+                      id={`planning-day-marker-${dayId}`}
+                      aria-hidden="true"
+                      className="-mb-px h-px"
+                      style={{
+                        scrollMarginTop: stickyHeight || undefined,
+                      }}
+                    />
+                  )}
                   <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
                   <MealPlanSlots
                     dayPlannedMeals={dayPlannedMeals}

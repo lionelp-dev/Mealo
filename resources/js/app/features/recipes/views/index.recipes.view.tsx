@@ -123,7 +123,7 @@ export function IndexRecipesView() {
       <div className="flex flex-1 items-center justify-end gap-3">
         <RecipeAIGenerationPopover meal_times={meal_times ?? []} />
         <button
-          className="btn gap-2 btn-sm btn-secondary min-md:pl-5.5"
+          className="btn gap-2 btn-secondary max-md:btn-sm min-md:pl-5.5"
           onClick={handleNavigateToCreateRecipe}
         >
           {t('recipes.index.createButton', 'Create recipe')}
@@ -200,6 +200,22 @@ export function IndexRecipesView() {
 
           {(recipes.data.length > 0 || isGeneratingRecipes) && (
             <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-4">
+              <RecipeDetailPanelContainer
+                isMounted={isRecipeDetailMounted}
+                isVisible={isRecipeDetailVisible}
+              >
+                {displayedRecipe && (
+                  <RecipeDetailPanel
+                    recipe={displayedRecipe}
+                    onClose={closeRecipeDetail}
+                    onEdit={
+                      canEditRecipe(displayedRecipe.user_id)
+                        ? () => editRecipe(displayedRecipe.id)
+                        : undefined
+                    }
+                  />
+                )}
+              </RecipeDetailPanelContainer>
               <div className="min-h-0 w-full min-w-0 overflow-y-auto">
                 <InfiniteScroll data="recipes">
                   <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pt-1 pb-10">
@@ -217,22 +233,6 @@ export function IndexRecipesView() {
                   </div>
                 </InfiniteScroll>
               </div>
-              <RecipeDetailPanelContainer
-                isMounted={isRecipeDetailMounted}
-                isVisible={isRecipeDetailVisible}
-              >
-                {displayedRecipe && (
-                  <RecipeDetailPanel
-                    recipe={displayedRecipe}
-                    onClose={closeRecipeDetail}
-                    onEdit={
-                      canEditRecipe(displayedRecipe.user_id)
-                        ? () => editRecipe(displayedRecipe.id)
-                        : undefined
-                    }
-                  />
-                )}
-              </RecipeDetailPanelContainer>
             </div>
           )}
         </div>

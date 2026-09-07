@@ -81,7 +81,7 @@ export function MealPlanGenerationPopover({ className }: Props) {
               {isGenerating ? (
                 <span className="loading loading-sm loading-spinner"></span>
               ) : (
-                <Bot className="h-4.5 w-4.5" />
+                <Bot className="h-4.5 w-4.5 max-md:hidden" />
               )}
             </span>
             <span>{t('mealPlanning.generatePlan', 'Generate Plan')}</span>
