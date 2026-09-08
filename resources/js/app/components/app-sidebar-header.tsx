@@ -52,7 +52,7 @@ export function AppSidebarHeader({
   const usesCustomMobileTriggerPlacement = Boolean(renderHeaderLeftContent);
 
   return (
-    <header className="sticky z-20 flex h-fit shrink-0 items-center gap-3 border-b border-sidebar-border/50 px-5 py-3 transition-[width,height] ease-linear min-lg:gap-6">
+    <header className="sticky z-20 flex h-fit shrink-0 items-center gap-3 border-b border-sidebar-border/50 px-3 py-3 transition-[width,height] ease-linear md:px-5 min-lg:gap-6">
       {!usesCustomMobileTriggerPlacement && mobileSidebarTrigger}
       <AppSidebarTrigger className="max-lg:hidden" />
       <Breadcrumbs breadcrumbs={breadcrumbs} />

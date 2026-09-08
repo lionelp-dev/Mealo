@@ -5,6 +5,7 @@ import { useShoppingList } from '../hooks/use-shopping-list';
 import { useShoppingListsContextValue } from '../inertia.adapter';
 import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
 import WeekSelector from '@/app/components/week-selector';
+import { useWeekSelector } from '@/app/hooks/use-week-selector';
 import AppLayout from '@/app/layouts/app-layout';
 import { cn } from '@/app/lib/';
 import shoppingLists from '@/routes/shopping-lists';
@@ -21,14 +22,21 @@ export default function ShoppingListsView() {
   const { weekStart, workspace_data } = useShoppingListsContextValue();
 
   const { total, viewMode, checkedCount } = useShoppingList();
+  const currentWeek = DateTime.fromISO(weekStart);
+  const { goToCurrentWeek, goToPreviousWeek, goToNextWeek } = useWeekSelector({
+    currentWeek,
+    url: shoppingLists.index.url(),
+  });
 
   return (
     <AppLayout
       renderHeaderLeftContent={({ mobileSidebarTrigger }) => (
         <WeekSelector
-          currentWeek={DateTime.fromISO(weekStart)}
+          currentWeek={currentWeek}
           leadingContent={mobileSidebarTrigger}
-          url={shoppingLists.index.url()}
+          onTodayClick={goToCurrentWeek}
+          onPreviousWeekClick={goToPreviousWeek}
+          onNextWeekClick={goToNextWeek}
         />
       )}
       headerRightContent={

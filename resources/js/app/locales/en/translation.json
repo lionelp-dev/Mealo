@@ -218,6 +218,8 @@
             "planMeal": "Plan meal"
         },
         "searchRecipes": "Search recipes...",
+        "noRecipesFound": "No recipes found",
+        "tryAdjustingSearch": "Try adjusting your search or filters",
         "weekSelector": {
             "today": "Today",
             "week": "Week",

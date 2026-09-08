@@ -26,7 +26,7 @@ export default function MealPlanEmptySlot({
       {canPlanMeal && (
         <button
           type="button"
-          className="group flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-base-300 bg-base-100/80 px-4 py-9 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out hover:border-primary hover:bg-primary/10 hover:text-primary"
+          className="group flex h-full w-full cursor-pointer items-center justify-center gap-2 rounded-xl border border-dashed border-base-300 bg-base-100/80 px-4 py-11 text-sm font-medium text-gray-500 transition-all duration-200 ease-in-out hover:border-primary hover:bg-primary/10 hover:text-primary lg:py-8"
           onClick={() => openMealPlanDialog(date)}
         >
           <span className="flex size-5 items-center justify-center rounded-full bg-base-200 text-gray-500 transition-colors duration-200 group-hover:bg-primary group-hover:text-primary-content">

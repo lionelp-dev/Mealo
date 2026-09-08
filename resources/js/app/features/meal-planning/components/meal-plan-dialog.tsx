@@ -8,12 +8,13 @@ import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
 import { useMultiSelectRecipe } from '@/app/hooks/use-multi-select-recipe';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import { useUrlFilterSync } from '@/app/hooks/use-url-filter-sync';
+import { cn } from '@/app/lib';
 import i18n from '@/app/lib/i18n';
 import { useRecipeSearchStore } from '@/app/stores/recipe-search';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { usePoll } from '@inertiajs/react';
 import * as Dialog from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
+import { CalendarDays, X } from 'lucide-react';
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -79,35 +80,61 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
     >
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-10 bg-black/50" />
-        <Dialog.Content className="fixed left-1/2 z-20 flex h-[91vh] w-full flex-1 -translate-x-1/2 transform flex-col gap-3 rounded-xl bg-base-100 p-7 pb-6 max-lg:bottom-0 min-lg:top-1/2 min-lg:w-[65vw] min-lg:-translate-y-1/2">
+        <Dialog.Content
+          className={cn(
+            'fixed left-1/2 z-20 flex h-[91vh] w-full flex-1 -translate-x-1/2 transform flex-col gap-3 rounded-2xl bg-base-100 p-3',
+            'max-lg:bottom-0 md:px-9 md:py-6 md:pb-6 min-lg:top-1/2 lg:w-[60vw] min-lg:-translate-y-1/2',
+          )}
+        >
           <Dialog.Title className="flex flex-col gap-3.5 pb-0.5">
             <span className="-mb-1.5 flex flex-col gap-0.5">
-              <span className="flex flex-1 justify-between">
-                <span className="text-3xl font-bold text-secondary">
+              <span className="flex flex-1 items-center justify-between">
+                <span className="text-2xl font-bold text-secondary md:text-3xl">
                   Plannifier un repas
                 </span>
                 <Dialog.Close asChild>
-                  <button className="btn btn-circle text-base-content btn-ghost btn-sm">
-                    <X size={24} />
+                  <button className="btn btn-circle text-base-content btn-soft btn-sm">
+                    <X size={18} />
                   </button>
                 </Dialog.Close>
               </span>
-              <span className="text-lg text-secondary">
-                Pour{' '}
+              <span className="flex items-center gap-2 text-lg text-secondary">
+                <CalendarDays className="h-5 w-5 shrink-0" />
                 {selectedDate &&
-                  selectedDate
-                    ?.setLocale(i18n.language)
-                    .toFormat('EEEE d MMMM')}
+                  selectedDate.setLocale(i18n.language).toFormat('EEEE d MMMM')}
               </span>
             </span>
-            <RecipesSearch />
+            <div className="flex min-w-0 items-center gap-2.5">
+              <RecipesSearch className="min-w-0 flex-1" />
+              <div className="hidden min-w-0 shrink-0 items-center gap-2.5 lg:flex">
+                <RecipesFiltersPopover
+                  tags={tags}
+                  className="max-w-full flex-none"
+                />
+              </div>
+            </div>
             <div className="flex min-w-0 flex-col gap-2.5 lg:flex-row lg:items-start lg:justify-between">
               <RecipesFilters />
-              <RecipesFiltersPopover tags={tags} className="w-full lg:w-auto" />
+            </div>
+            <div className="flex min-w-0 items-center justify-between gap-2.5 lg:hidden">
+              <RecipesFiltersPopover
+                tags={tags}
+                className="max-w-full flex-none"
+              />
+              {activeFilters.length > 0 && (
+                <button
+                  onClick={clearAllFilters}
+                  className="btn h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link"
+                >
+                  <span className="min-w-0 truncate">
+                    {t('mealPlanning.dialog.filters.reset', 'Réinitialiser')}
+                  </span>
+                </button>
+              )}
             </div>
           </Dialog.Title>
 
-          <div className="flex flex-1 flex-col gap-2.5 overflow-hidden">
+          <div className="flex min-w-0 flex-1 flex-col gap-2.5 overflow-hidden">
             {(!recipes || !recipes.data || recipes.data.length === 0) &&
               (isGeneratingStarterRecipes &&
               !searchTerm &&
@@ -116,10 +143,15 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
               ) : (
                 <div className="flex items-center justify-center py-8">
                   <div className="text-center text-base-content">
-                    <p className="mb-2">No recipes found</p>
+                    <p className="mb-2">
+                      {t('mealPlanning.noRecipesFound', 'No recipes found')}
+                    </p>
                     {(searchTerm || activeFilters.length > 0) && (
                       <p className="text-sm">
-                        Try adjusting your search or filters
+                        {t(
+                          'mealPlanning.tryAdjustingSearch',
+                          'Try adjusting your search or filters',
+                        )}
                       </p>
                     )}
                   </div>

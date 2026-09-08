@@ -66,7 +66,8 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
         <Popover.Trigger asChild>
           <button
             className={clsx([
-              'btn items-center gap-2 border-secondary/40 bg-secondary/10 text-secondary btn-soft hover:bg-secondary/10 max-lg:rounded-full max-md:flex-row-reverse max-md:btn-sm',
+              'btn items-center gap-2 border-secondary/40 bg-secondary/10 text-secondary btn-soft hover:bg-secondary/10 max-lg:rounded-full',
+              'max-md:flex-row-reverse max-md:pr-1.5 max-md:pl-1 max-md:btn-sm',
               className,
             ])}
             disabled={isLoading}

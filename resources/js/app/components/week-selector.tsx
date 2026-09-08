@@ -1,4 +1,3 @@
-import { useWeekSelector } from '@/app/hooks/use-week-selector';
 import { cn } from '@/app/lib';
 import { ClassValue } from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -10,14 +9,18 @@ type WeekSelectorProps = {
   currentWeek: DateTime;
   leadingContent?: ReactNode;
   className?: ClassValue;
-  url: string;
+  onTodayClick: () => void;
+  onPreviousWeekClick: () => void;
+  onNextWeekClick: () => void;
 };
 
 export default function WeekSelector({
   currentWeek,
   leadingContent,
-  url,
   className,
+  onTodayClick,
+  onPreviousWeekClick,
+  onNextWeekClick,
 }: WeekSelectorProps) {
   const { t, i18n } = useTranslation();
 
@@ -43,11 +46,6 @@ export default function WeekSelector({
           year: 'numeric',
         })}`;
 
-  const { goToCurrentWeek, goToPreviousWeek, goToNextWeek } = useWeekSelector({
-    currentWeek,
-    url,
-  });
-
   return (
     <div
       className={cn(
@@ -58,7 +56,7 @@ export default function WeekSelector({
       <div className="flex w-full min-w-0 items-center gap-4 min-lg:order-2">
         {leadingContent}
 
-        <span className="min-w-0 truncate text-2xl font-semibold text-base-content/80 capitalize max-lg:pl-2.5">
+        <span className="min-w-0 truncate text-2xl font-semibold tracking-tight text-secondary capitalize max-lg:pl-2.5">
           <span className="truncate lg:hidden">{mobileLabel}</span>
           <span className="truncate max-lg:hidden">{desktopLabel}</span>
         </span>
@@ -71,22 +69,22 @@ export default function WeekSelector({
 
       <div className={cn('flex gap-1.5', 'min-lg:order-1 min-lg:gap-2.75')}>
         <button
-          className={cn('btn btn-soft max-sm:btn-sm', 'max-lg:order-3')}
-          onClick={goToCurrentWeek}
+          className={cn('btn btn-soft max-sm:btn-sm')}
+          onClick={onTodayClick}
         >
           {t('mealPlanning.weekSelector.today', 'Today')}
         </button>
         <button
-          className="btn join-item px-2 btn-soft max-md:btn-sm min-md:px-3"
-          onClick={goToPreviousWeek}
+          className="btn join-item px-1.5 btn-soft max-md:btn-sm min-md:px-2.5"
+          onClick={onPreviousWeekClick}
         >
-          <ChevronLeft size={15} />
+          <ChevronLeft className="h-3.5 md:h-4.75" />
         </button>
         <button
-          className="btn join-item px-2 btn-soft max-md:btn-sm min-md:px-3"
-          onClick={goToNextWeek}
+          className="btn join-item px-1.5 btn-soft max-md:btn-sm min-md:px-2.5"
+          onClick={onNextWeekClick}
         >
-          <ChevronRight size={15} />
+          <ChevronRight className="h-3.5 md:h-4.75" />
         </button>
       </div>
     </div>

@@ -67,7 +67,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 key={`${typeof item.href === 'string' ? item.href : item.href.url}-${index}`}
                 href={item.href}
                 className={cn('btn w-full justify-start btn-ghost btn-sm', {
-                  'bg-muted':
+                  'bg-secondary text-secondary-foreground':
                     currentPath ===
                     (typeof item.href === 'string' ? item.href : item.href.url),
                 })}

@@ -27,10 +27,10 @@ export default function MealPlanDayHeader({
   const { date, isCurrentDay } = useMealPlanDayActions(dayPlannedMeals);
 
   return (
-    <div className={`flex items-center justify-between px-5`}>
-      <div
+    <div className={`flex items-center justify-between px-3`}>
+      <span
         className={cn(
-          'flex items-center gap-2 text-xl font-semibold text-base-content/80',
+          'flex items-center gap-2 text-xl font-semibold tracking-tight text-base-content/80',
           isCurrentDay && 'text-secondary',
         )}
       >
@@ -46,7 +46,7 @@ export default function MealPlanDayHeader({
             Aujourd'hui
           </span>
         )}
-      </div>
+      </span>
       <MealPlanDayHeaderMenu dayPlannedMeals={dayPlannedMeals} />
     </div>
   );
@@ -74,7 +74,7 @@ export function MealPlanDayHeaderMenu({
       {canEditMealPlan && (hasPlannedMeals || copiedDayPlannedMeals) && (
         <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
           <DropdownMenuTrigger asChild>
-            <button className="btn btn-circle btn-sm hover:bg-base-200">
+            <button className="btn btn-circle btn-ghost btn-sm hover:bg-base-200">
               <EllipsisVertical
                 size={15}
                 className="rotate-90 text-base-content/75"

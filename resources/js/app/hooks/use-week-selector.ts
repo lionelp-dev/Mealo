@@ -6,30 +6,38 @@ type UseWeekSelectorProps = {
   url: string;
 };
 
+type NavigateToWeekOptions = {
+  onSuccess?: () => void;
+};
+
 export const useWeekSelector = ({ currentWeek, url }: UseWeekSelectorProps) => {
-  const navigateToWeek = (targetWeek: DateTime) => {
+  const goToWeek = (
+    targetWeek: DateTime,
+    options: NavigateToWeekOptions = {},
+  ) => {
     router.get(
       url,
       {
         week: targetWeek.toISODate(),
       },
-      { preserveState: true },
+      { preserveState: true, onSuccess: options.onSuccess },
     );
   };
 
   const goToPreviousWeek = () => {
-    navigateToWeek(currentWeek.minus({ weeks: 1 }));
+    goToWeek(currentWeek.minus({ weeks: 1 }));
   };
 
   const goToNextWeek = () => {
-    navigateToWeek(currentWeek.plus({ weeks: 1 }));
+    goToWeek(currentWeek.plus({ weeks: 1 }));
   };
 
-  const goToCurrentWeek = () => {
-    navigateToWeek(DateTime.now());
+  const goToCurrentWeek = (options?: NavigateToWeekOptions) => {
+    goToWeek(DateTime.now(), options);
   };
 
   return {
+    goToWeek,
     goToPreviousWeek,
     goToNextWeek,
     goToCurrentWeek,

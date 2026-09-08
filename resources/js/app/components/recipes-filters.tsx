@@ -2,7 +2,7 @@ import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';
 import { Filter, FilterSection } from '@/types';
-import { TrashIcon, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 enum MealTimeEnum {
@@ -50,15 +50,15 @@ export function RecipesFilters() {
     isFilterActive,
     selectSingleFilter,
     clearFilterType,
-    removeFilter,
     clearAllFilters,
+    removeFilter,
   } = useRecipesFiltersStore();
 
   return (
-    <div className="flex h-fit min-w-0 flex-1 items-center gap-2.5 max-lg:w-full max-lg:flex-col max-lg:items-stretch min-md:max-w-fit">
+    <div className="flex h-fit min-w-0 flex-1 flex-wrap items-center gap-2.5 max-lg:w-full">
       {FILTERS_SECTIONS.map((section) => (
         <div
-          className="max-w-full min-w-0 rounded-lg bg-base-200"
+          className="max-w-full min-w-0 rounded-lg bg-base-200 max-lg:w-full"
           key={section.type}
         >
           <div className="join w-full">
@@ -115,51 +115,45 @@ export function RecipesFilters() {
           </div>
         </div>
       ))}
-      <div className="flex min-w-0 flex-wrap items-center gap-2.5 max-lg:hidden">
-        {activeFilters.length > 0 &&
-          activeFilters.map(
-            (filter) =>
-              filter.type !== 'meal_time' && (
-                <label
-                  className={cn(
-                    `btn flex max-w-40 min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-full text-sm font-normal whitespace-nowrap transition-colors btn-sm btn-secondary select-none`,
-                  )}
-                  htmlFor={`${filter.type}-${filter.value}`}
-                  key={`${filter.type}-${filter.value}`}
-                  onClick={() => removeFilter(filter)}
-                >
-                  <input
-                    id={`${filter.type}-${filter.value}`}
-                    type="checkbox"
-                    onChange={() => removeFilter(filter)}
-                    className="h-0 w-0 flex-shrink-0 opacity-0"
-                  />
-                  <span className="min-w-0 truncate pb-[2px]">
-                    {filter.type === 'preparation_time' &&
-                      t('mealPlanning.dialog.filters.prep', 'Prep: ')}
-                    {filter.type === 'cooking_time' &&
-                      t('mealPlanning.dialog.filters.cook', 'Cook: ')}
-                    {capitalize(filter.label)}
-                  </span>
-                  <X className="h-[15px] w-[15px] shrink-0" />
-                </label>
-              ),
-          )}
-        {activeFilters.length > 0 && (
-          <button
-            onClick={clearAllFilters}
-            className={`btn h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-start p-0 pt-1 pl-1 text-secondary btn-link`}
-          >
-            <span className="min-w-0 truncate">
-              {t(
-                'mealPlanning.dialog.filters.clearAllFilters',
-                'Clear all filters',
-              )}
-            </span>
-            <TrashIcon className="h-4 w-auto shrink-0" />
-          </button>
+      {activeFilters.length > 0 &&
+        activeFilters.map(
+          (filter) =>
+            filter.type !== 'meal_time' && (
+              <label
+                className={cn(
+                  `btn flex max-w-40 min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-full text-sm font-normal whitespace-nowrap transition-colors btn-sm btn-secondary select-none max-lg:hidden`,
+                )}
+                htmlFor={`${filter.type}-${filter.value}`}
+                key={`${filter.type}-${filter.value}`}
+                onClick={() => removeFilter(filter)}
+              >
+                <input
+                  id={`${filter.type}-${filter.value}`}
+                  type="checkbox"
+                  onChange={() => removeFilter(filter)}
+                  className="h-0 w-0 flex-shrink-0 opacity-0"
+                />
+                <span className="min-w-0 truncate pb-[2px]">
+                  {filter.type === 'preparation_time' &&
+                    t('mealPlanning.dialog.filters.prep', 'Prep: ')}
+                  {filter.type === 'cooking_time' &&
+                    t('mealPlanning.dialog.filters.cook', 'Cook: ')}
+                  {capitalize(filter.label)}
+                </span>
+                <X className="h-[15px] w-[15px] shrink-0" />
+              </label>
+            ),
         )}
-      </div>
+      {activeFilters.length > 0 && (
+        <button
+          onClick={clearAllFilters}
+          className="btn hidden h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link lg:inline-flex"
+        >
+          <span className="min-w-0 truncate">
+            {t('mealPlanning.dialog.filters.reset', 'Réinitialiser')}
+          </span>
+        </button>
+      )}
     </div>
   );
 }

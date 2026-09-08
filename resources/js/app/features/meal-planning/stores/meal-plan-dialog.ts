@@ -28,10 +28,11 @@ export const useMealPlanDialogStore = create<
 
   setIsOpen: (value) => set({ isOpen: value }),
 
-  openMealPlanDialog: (date) =>
+  openMealPlanDialog: (date, mealTimeId) =>
     set({
       isOpen: true,
       selectedDate: date,
+      selectedMealTimeId: mealTimeId,
     }),
 
   closeDialog: () => set(initialState),

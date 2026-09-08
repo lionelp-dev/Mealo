@@ -23,7 +23,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
   return (
     <div
       key={recipe.id}
-      className={`card cursor-pointer overflow-hidden rounded-md bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-lg ${!isMultiSelectMode && 'hover:[&_.plan-meal-btn]:opacity-100'}`}
+      className={`card cursor-pointer overflow-hidden rounded-2xl bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-lg ${!isMultiSelectMode && 'hover:[&_.plan-meal-btn]:opacity-100'}`}
       onClick={() => {
         if (isMultiSelectMode) {
           return toggleRecipeSelection(recipe.id);

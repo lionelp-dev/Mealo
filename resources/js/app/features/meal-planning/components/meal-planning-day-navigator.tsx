@@ -35,9 +35,9 @@ export default function MealPlanningDayNavigator({
       ref={stickyRef}
       className="sticky top-0 z-10 bg-base-100 px-2 md:hidden"
     >
-      <div className="border-b border-base-content/5 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
-        <div className="overflow-x-auto">
-          <div className="flex min-w-max snap-x justify-center gap-3 px-2 py-2.25">
+      <div className="h-fit border-b border-base-content/5 backdrop-blur supports-[backdrop-filter]:bg-base-100/80">
+        <div className="overflow-x-auto px-0.25 py-1.5">
+          <div className="flex min-w-max snap-x justify-center gap-3 px-1">
             {days.map((day) => {
               const localizedDate = day.date.setLocale(i18n.language);
               const dayId = day.date.toISODate();
@@ -58,8 +58,8 @@ export default function MealPlanningDayNavigator({
                   key={dayKey}
                   type="button"
                   className={cn(
-                    'btn relative shrink-0 snap-start border border-base-content/5 px-3 py-6.5',
-                    'flex-col gap-0.75 text-xs leading-none',
+                    'btn relative shrink-0 snap-start border border-base-content/5 px-2.75 py-6.25',
+                    'flex-col gap-1.5 text-[13px] leading-none btn-xs',
                     isToday
                       ? 'text-secondary-content shadow-sm btn-secondary'
                       : 'bg-base-200/60 text-base-content/75 btn-soft hover:bg-base-200',
@@ -70,12 +70,10 @@ export default function MealPlanningDayNavigator({
                   aria-label={ariaLabel}
                   aria-current={isActive ? 'date' : undefined}
                 >
-                  <span className="text-[0.62rem] font-medium tracking-[0.18em] opacity-80">
+                  <span className="text-[12px] font-medium tracking-[0.1em] opacity-80">
                     {weekdayLabel}
                   </span>
-                  <span className="text-base font-semibold">
-                    {day.date.day}
-                  </span>
+                  <span className="font-semibold">{day.date.day}</span>
                 </button>
               );
             })}

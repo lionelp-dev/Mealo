@@ -5,6 +5,8 @@ import WeekSelector from './week-selector';
 import { Meta, StoryObj } from '@storybook/react-vite';
 import { DateTime } from 'luxon';
 
+const noop = () => {};
+
 const meta: Meta<typeof AppSidebarHeader> = {
   title: 'Meal Planner/Sidebar Header',
   component: AppSidebarHeader,
@@ -31,7 +33,9 @@ export const MealPlanSideBarHeader: Story = {
       <WeekSelector
         currentWeek={DateTime.fromISO('2025-12-15')}
         leadingContent={mobileSidebarTrigger}
-        url="/meal-planning"
+        onTodayClick={noop}
+        onPreviousWeekClick={noop}
+        onNextWeekClick={noop}
       />
     ),
     headerRightContent: <LanguageSwitcher />,

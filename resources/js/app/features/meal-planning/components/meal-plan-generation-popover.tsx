@@ -5,7 +5,7 @@ import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import 'cally';
 import clsx, { ClassValue } from 'clsx';
-import { Bot, CalendarRange, Minus, Plus } from 'lucide-react';
+import { Bot, CalendarRange, Minus, Plus, Sparkles } from 'lucide-react';
 import { DateTime, Interval } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,17 +73,15 @@ export function MealPlanGenerationPopover({ className }: Props) {
         <Popover.Trigger asChild>
           <button
             className={clsx([
-              'btn gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary max-md:btn-sm min-md:pl-5',
+              'btn gap-2 whitespace-nowrap btn-secondary max-md:btn-sm md:pr-4.5',
               className,
             ])}
           >
-            <span className="">
-              {isGenerating ? (
-                <span className="loading loading-sm loading-spinner"></span>
-              ) : (
-                <Bot className="h-4.5 w-4.5 max-md:hidden" />
-              )}
-            </span>
+            {isGenerating ? (
+              <span className="loading loading-sm loading-spinner"></span>
+            ) : (
+              <Sparkles className="h-4.5 w-4.5 max-md:hidden" />
+            )}
             <span>{t('mealPlanning.generatePlan', 'Generate Plan')}</span>
           </button>
         </Popover.Trigger>

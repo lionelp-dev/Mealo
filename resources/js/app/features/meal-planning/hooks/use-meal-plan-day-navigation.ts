@@ -292,6 +292,7 @@ export function useMealPlanDayNavigation(weekStart: string) {
     stickyHeight,
     lastDayMinHeight,
     contentRef,
+    scrollToDay: handleSelectDay,
     handleSelectDay,
   };
 }

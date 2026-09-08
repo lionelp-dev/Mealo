@@ -1,36 +1,49 @@
-import { router } from '@inertiajs/react';
+import { useWeekSelector } from '@/app/hooks/use-week-selector';
+import mealPlanningRoute from '@/routes/meal-planning';
 import { DateTime } from 'luxon';
+import { useCallback } from 'react';
 
-export const useMealPlanNavigation = (currentWeek: DateTime) => {
-  const goToPrevWeek = () => {
-    const prevWeek = currentWeek.minus({ week: 1 }).toISODate();
-    router.visit('/meal-planning', {
-      data: {
-        week: prevWeek,
-      },
-    });
-  };
+type UseMealPlanNavigationProps = {
+  scrollToDay: (dayId: string) => void;
+  weekStart: string;
+};
 
-  const goToNextWeek = () => {
-    const nextWeek = currentWeek.plus({ week: 1 }).toISODate();
-    router.visit('/meal-planning', {
-      data: {
-        week: nextWeek,
-      },
-    });
-  };
+export const useMealPlanNavigation = ({
+  scrollToDay,
+  weekStart,
+}: UseMealPlanNavigationProps) => {
+  const currentWeek = DateTime.fromISO(weekStart);
 
-  const goToCurrentDay = () => {
-    const weekStart = DateTime.now().startOf('week').toISODate();
-    router.visit('/meal-planning', {
-      data: {
-        week: weekStart,
-      },
+  const { goToCurrentWeek, goToPreviousWeek, goToNextWeek } = useWeekSelector({
+    currentWeek,
+    url: mealPlanningRoute.index.url(),
+  });
+
+  const scrollToToday = useCallback(() => {
+    window.requestAnimationFrame(() => {
+      const todayId = DateTime.now().toISODate();
+
+      if (!todayId) return;
+
+      scrollToDay(todayId);
     });
-  };
+  }, [scrollToDay]);
+
+  const goToToday = useCallback(() => {
+    const today = DateTime.now();
+
+    if (currentWeek.startOf('week').hasSame(today.startOf('week'), 'day')) {
+      scrollToToday();
+      return;
+    }
+
+    goToCurrentWeek({ onSuccess: scrollToToday });
+  }, [currentWeek, goToCurrentWeek, scrollToToday]);
+
   return {
-    goToPrevWeek,
+    currentWeek,
+    goToToday,
+    goToPreviousWeek,
     goToNextWeek,
-    goToCurrentDay,
   };
 };
