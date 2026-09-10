@@ -3,14 +3,14 @@ import z from 'zod';
 export const RECIPE_GENERATION_COUNT_OPTIONS = [1, 3, 5, 10] as const;
 
 /**
- * Predefined prompt presets shown as buttons in the generation popover.
+ * Predefined prompt presets shown as buttons in the generation modal.
  * `labelKey` / `promptKey` resolve i18n strings (with the inline fallbacks).
  */
 export const RECIPE_PROMPT_PRESETS = [
   {
     id: 'quick',
     labelKey: 'recipes.generate.presets.quick.label',
-    labelFallback: 'Rapide & facile',
+    labelFallback: 'Rapide',
     promptKey: 'recipes.generate.presets.quick.prompt',
     promptFallback:
       'Des recettes rapides et faciles, prêtes en moins de 20 minutes',
@@ -18,21 +18,21 @@ export const RECIPE_PROMPT_PRESETS = [
   {
     id: 'vegetarian',
     labelKey: 'recipes.generate.presets.vegetarian.label',
-    labelFallback: 'Végétarien',
+    labelFallback: 'Végétarienne',
     promptKey: 'recipes.generate.presets.vegetarian.prompt',
     promptFallback: 'Des recettes végétariennes savoureuses et équilibrées',
   },
   {
     id: 'healthy',
     labelKey: 'recipes.generate.presets.healthy.label',
-    labelFallback: 'Healthy',
+    labelFallback: 'Équilibrée',
     promptKey: 'recipes.generate.presets.healthy.prompt',
     promptFallback: 'Des recettes saines, légères et équilibrées',
   },
   {
     id: 'comfort',
     labelKey: 'recipes.generate.presets.comfort.label',
-    labelFallback: 'Réconfortant',
+    labelFallback: 'Réconfortante',
     promptKey: 'recipes.generate.presets.comfort.prompt',
     promptFallback: 'Des plats réconfortants et gourmands',
   },
@@ -61,6 +61,7 @@ export const recipeAIGenerateRequestSchema = z.object({
     }),
   context: z.object({
     meal_time: z.string().max(50).nullable(),
+    meal_times: z.array(z.string().max(50)).max(10),
     count: z
       .number()
       .refine(

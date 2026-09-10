@@ -90,35 +90,54 @@
             "triggerButton": "Générer avec l’IA",
             "title": "Générer des recettes",
             "submit": "Générer",
-            "modalTitle": "Générer une recette avec IA",
+            "submitSingle": "Générer la recette",
+            "submitMultiple": "Générer {{count}} recettes",
+            "modalTitle": "Générer des recettes avec IA",
+            "modalTitleSingle": "Générer une recette",
+            "modalTitleMultiple": "Générer plusieurs recettes",
+            "modalDescription": "Décrivez une idée précise ou laissez l’IA proposer plusieurs recettes adaptées à vos repas.",
             "generating": "Génération en cours...",
             "overlayTitle": "Génération de vos recettes en cours",
+            "tabs": {
+                "single": "Une recette",
+                "multiple": "Plusieurs recettes"
+            },
+            "single": {
+                "title": "VOTRE IDÉE",
+                "description": "Donnez une envie, des ingrédients ou une contrainte pour créer une recette complète.",
+                "promptLabel": "Que souhaitez-vous cuisiner ?"
+            },
+            "multiple": {
+                "title": "VOS PRÉFÉRENCES",
+                "description": "Choisissez les types, les moments et le volume de recettes à créer."
+            },
             "prompt": {
                 "label": "Description de la recette",
-                "placeholder": "Décrivez la recette que vous voulez créer, ex: 'Un plat méditerranéen sain au poulet avec des légumes'"
+                "placeholder": "Ex: Un plat végétarien avec des courgettes et du fromage frais"
             },
             "mealTime": {
-                "label": "Moment du repas"
+                "label": "Moment du repas",
+                "multipleLabel": "Moments du repas"
             },
             "count": {
                 "label": "Nombre de recettes"
             },
             "presets": {
-                "label": "Type de recettes",
+                "label": "Types de recettes",
                 "quick": {
-                    "label": "Rapide & facile",
+                    "label": "Rapide",
                     "prompt": "Des recettes rapides et faciles, prêtes en moins de 20 minutes"
                 },
                 "vegetarian": {
-                    "label": "Végétarien",
+                    "label": "Végétarienne",
                     "prompt": "Des recettes végétariennes savoureuses et équilibrées"
                 },
                 "healthy": {
-                    "label": "Healthy",
+                    "label": "Équilibrée",
                     "prompt": "Des recettes saines, légères et équilibrées"
                 },
                 "comfort": {
-                    "label": "Réconfortant",
+                    "label": "Réconfortante",
                     "prompt": "Des plats réconfortants et gourmands"
                 },
                 "world": {
@@ -132,7 +151,8 @@
             },
             "imageGeneration": {
                 "label": "Générer une image",
-                "description": "L'IA créera une photo de la recette (peut prendre plus de temps)"
+                "multipleLabel": "Générer une image pour chaque recette",
+                "description": "Peut prendre plus de temps"
             }
         },
         "edit": {

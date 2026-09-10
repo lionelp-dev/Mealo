@@ -18,7 +18,7 @@ import recipes from '@/routes/recipes';
 import shoppingLists from '@/routes/shopping-lists';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { Calendar, CookingPot, Pen, ShoppingCart, Wand } from 'lucide-react';
+import { Calendar, CookingPot, Pen, ShoppingCart } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function AppSidebar() {
@@ -44,11 +44,6 @@ export function AppSidebar() {
       title: t('recipes.create.button', 'Create recipe'),
       href: recipes.create.url(),
       icon: Pen,
-    },
-    {
-      title: t('recipes.generate.button', 'Generate recipe'),
-      href: recipes.showAiGenerationModal.url(),
-      icon: Wand,
     },
   ];
 

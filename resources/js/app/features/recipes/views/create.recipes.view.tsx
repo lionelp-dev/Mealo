@@ -1,4 +1,3 @@
-import RecipeAIGenerationModal from '../components/recipe-ai-generation-modal';
 import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredients-section';
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
@@ -11,8 +10,7 @@ import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/rec
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
-import { showAiGenerationModal } from '@/routes/recipes';
-import { Head, Link } from '@inertiajs/react';
+import { Head } from '@inertiajs/react';
 import { useStore } from '@tanstack/react-form';
 import { ChefHatIcon, Wand2 } from 'lucide-react';
 import { useEffect } from 'react';
@@ -76,13 +74,6 @@ export function CreateRecipesView() {
       headerRightContent={
         <div className="flex items-center gap-8">
           <div className="flex justify-end gap-4">
-            <Link
-              className="btn max-md:btn-sm"
-              href={showAiGenerationModal.url()}
-              preserveUrl
-            >
-              {t('recipes.generate.triggerButton', 'Générer avec l’IA')}
-            </Link>
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
@@ -340,8 +331,6 @@ export function CreateRecipesView() {
             </form.AppForm>
           </div>
         </form>
-
-        <RecipeAIGenerationModal />
       </AppMainContent>
     </AppLayout>
   );

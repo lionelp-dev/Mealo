@@ -26,8 +26,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return to_route('meal-planning.index');
     })->name('dashboard');
 
-    Route::get('recipes/show-ai-generation-modal', [RecipeController::class, 'showAIGenerationModal'])->name('recipes.show-ai-generation-modal');
-    Route::post('recipes/ai-generation-preview', [RecipeController::class, 'aiGenerationPreview'])->name('recipes.ai-generation-preview');
     Route::post('recipes/ai-generation', [RecipeController::class, 'aiGeneration'])->name('recipes.ai-generation');
     Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
@@ -66,6 +64,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('workspace-invitations/{token}/accept', [WorkspaceInvitationController::class, 'acceptFromEmail'])
     ->name('workspace-invitations.acceptFromEmail');
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/admin.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/admin.php';

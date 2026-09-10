@@ -10,7 +10,7 @@ export class RecipeAiGenerationService {
     message: { role: 'user'; content: string }
     ingredient_categories: Array<{ id: number; slug: string; name: string }>
     meal_times: Array<{ id: number; slug: string }>
-    context: { meal_time: string | null; count: number | null }
+    context: { meal_time: string | null; count: number | null; generate_images?: boolean }
   }) {
     if (context.count !== null && (!Number.isInteger(context.count) || context.count < 1)) {
       throw new Error('Recipe generation count must be a positive integer')

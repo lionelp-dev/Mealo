@@ -5,7 +5,7 @@ import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import 'cally';
 import clsx, { ClassValue } from 'clsx';
-import { Bot, CalendarRange, Minus, Plus, Sparkles } from 'lucide-react';
+import { CalendarRange, Minus, Plus, Sparkles } from 'lucide-react';
 import { DateTime, Interval } from 'luxon';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Actions\Recipes\RecipeAIGenerationAction;
 use App\Actions\Recipes\RecipeDestroyAction;
 use App\Actions\Recipes\RecipeFiltersAction;
 use App\Actions\Recipes\RecipeGenerationSessionState;
@@ -42,6 +41,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -223,38 +223,6 @@ class RecipeController extends Controller
         ]);
     }
 
-    public function showAIGenerationModal(
-    ): RedirectResponse {
-        return to_route('recipes.create')
-            ->with([
-                'show_recipe_ai_generation_modal' => true,
-            ]);
-    }
-
-    public function aiGenerationPreview(
-        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
-        RecipeAIGenerationAction $recipeAIGenerationAction,
-        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
-    ): Response|RedirectResponse {
-        try {
-            Gate::authorize('create', Recipe::class);
-
-            $recipes = $recipeAIGenerationAction->execute($recipeAIGenerationRequestData, true);
-            $recipe = $recipes[0] ?? throw new \Exception('No recipe generated from AI response.');
-
-            return Inertia::render(
-                'recipe/create',
-                [
-                    'generated_recipe' => $recipe,
-                    'generated_image_data_url' => $recipe->image_data_url,
-                    'show_recipe_ai_generation_modal' => false,
-                ]
-            );
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }
-    }
-
     public function aiGeneration(
         RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
         RecipeGenerationSessionState $recipeGenerationSessionState,
@@ -266,16 +234,123 @@ class RecipeController extends Controller
             $user = $this->authenticatedUser();
             $requestedCount = (int) ($recipeAIGenerationRequestData->context['count'] ?? 1);
             $requestedCount = max(1, min(10, $requestedCount));
+            $selectedMealTimes = $this->selectedMealTimeSlugs($recipeAIGenerationRequestData);
 
-            RecipeAIGenerationJob::dispatch($user->id, $recipeAIGenerationRequestData)
-                ->onQueue(RecipeAIGenerationJob::QUEUE);
+            if ($requestedCount < count($selectedMealTimes)) {
+                throw ValidationException::withMessages([
+                    'context.count' => __('The recipe count must be at least the number of selected meal times.'),
+                ]);
+            }
+
+            $this->assertMealTimeSlugsExist($selectedMealTimes);
+
+            foreach ($this->generationRequestsByMealTime($recipeAIGenerationRequestData, $selectedMealTimes, $requestedCount) as $generationRequest) {
+                RecipeAIGenerationJob::dispatch($user->id, $generationRequest)
+                    ->onQueue(RecipeAIGenerationJob::QUEUE);
+            }
 
             $recipeGenerationSessionState->trackQueuedGeneration($request, $user, $requestedCount);
 
             return back()->with('success', RecipeGenerationQueuedMessage::message());
+        } catch (ValidationException $e) {
+            throw $e;
         } catch (\Exception $e) {
             return back()->with('error', RecipeGenerationFailedMessage::message());
         }
+    }
+
+    /**
+     * @return list<string>
+     */
+    private function selectedMealTimeSlugs(RecipeAIGenerationRequestData $requestData): array
+    {
+        $contextMealTimes = $requestData->context['meal_times'] ?? null;
+
+        if (is_array($contextMealTimes) && $contextMealTimes !== []) {
+            $mealTimeSlugs = array_values(array_unique(array_filter(
+                array_map(
+                    fn (string $mealTime): string => trim($mealTime),
+                    $contextMealTimes,
+                ),
+                fn (string $mealTime): bool => $mealTime !== '',
+            )));
+
+            if ($mealTimeSlugs !== []) {
+                return $mealTimeSlugs;
+            }
+        }
+
+        $legacyMealTime = $requestData->context['meal_time'] ?? null;
+
+        return is_string($legacyMealTime) && trim($legacyMealTime) !== ''
+            ? [trim($legacyMealTime)]
+            : [];
+    }
+
+    /**
+     * @param  list<string>  $mealTimeSlugs
+     */
+    private function assertMealTimeSlugsExist(array $mealTimeSlugs): void
+    {
+        if ($mealTimeSlugs === []) {
+            return;
+        }
+
+        $knownMealTimes = MealTime::query()
+            ->whereIn('slug', $mealTimeSlugs)
+            ->pluck('slug')
+            ->all();
+
+        $unknownMealTimes = array_values(array_diff($mealTimeSlugs, $knownMealTimes));
+
+        if ($unknownMealTimes !== []) {
+            throw ValidationException::withMessages([
+                'context.meal_times' => __('The selected meal time is invalid.'),
+            ]);
+        }
+    }
+
+    /**
+     * @param  list<string>  $mealTimeSlugs
+     * @return list<RecipeAIGenerationRequestData>
+     */
+    private function generationRequestsByMealTime(
+        RecipeAIGenerationRequestData $requestData,
+        array $mealTimeSlugs,
+        int $requestedCount,
+    ): array {
+        if ($mealTimeSlugs === []) {
+            return [$this->makeRecipeAIGenerationRequest($requestData, null, $requestedCount)];
+        }
+
+        $baseCount = intdiv($requestedCount, count($mealTimeSlugs));
+        $remainder = $requestedCount % count($mealTimeSlugs);
+
+        return array_map(
+            fn (string $mealTimeSlug, int $index): RecipeAIGenerationRequestData => $this->makeRecipeAIGenerationRequest(
+                $requestData,
+                $mealTimeSlug,
+                $baseCount + ($index < $remainder ? 1 : 0),
+            ),
+            $mealTimeSlugs,
+            array_keys($mealTimeSlugs),
+        );
+    }
+
+    private function makeRecipeAIGenerationRequest(
+        RecipeAIGenerationRequestData $requestData,
+        ?string $mealTimeSlug,
+        int $count,
+    ): RecipeAIGenerationRequestData {
+        return RecipeAIGenerationRequestData::validateAndCreate([
+            'prompt' => $requestData->prompt,
+            'message' => $requestData->message,
+            'context' => [
+                'meal_time' => $mealTimeSlug,
+                'count' => $count,
+            ],
+            'image_generation' => $requestData->image_generation,
+        ]);
     }
 
     public function aiImageGeneration(

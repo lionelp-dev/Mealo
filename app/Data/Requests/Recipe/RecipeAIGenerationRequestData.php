@@ -15,7 +15,7 @@ class RecipeAIGenerationRequestData extends Data
 
     /**
      * @param  array{role?: string|null, content?: string|null}|null  $message
-     * @param  array{meal_time?: string|null, count?: int|null}|null  $context
+     * @param  array{meal_time?: string|null, meal_times?: array<int, string>|null, count?: int|null}|null  $context
      */
     public function __construct(
         #[Optional]
@@ -70,11 +70,20 @@ class RecipeAIGenerationRequestData extends Data
                 ])
                 ->all(),
             'context' => [
-                'meal_time' => $this->context['meal_time'] ?? null,
+                'meal_time' => $this->selectedMealTimeSlug(),
                 'count' => $this->context['count'] ?? null,
                 'generate_images' => $generateImages,
             ],
         ];
+    }
+
+    private function selectedMealTimeSlug(): ?string
+    {
+        $legacyMealTime = $this->context['meal_time'] ?? null;
+
+        return is_string($legacyMealTime) && trim($legacyMealTime) !== ''
+            ? $legacyMealTime
+            : null;
     }
 
     /**
@@ -83,12 +92,14 @@ class RecipeAIGenerationRequestData extends Data
     public static function rules(): array
     {
         return [
-            'prompt' => 'sometimes|string|min:5|max:255',
+            'prompt' => 'sometimes|nullable|string|min:5|max:255',
             'message' => 'sometimes|nullable|array',
             'message.role' => 'sometimes|nullable|string|in:user',
             'message.content' => 'sometimes|nullable|string|max:255',
             'context' => 'sometimes|nullable|array',
             'context.meal_time' => 'sometimes|nullable|string|max:50',
+            'context.meal_times' => 'sometimes|nullable|array|max:10',
+            'context.meal_times.*' => 'string|max:50',
             'context.count' => 'sometimes|nullable|integer|min:1|max:10',
             'image_generation' => 'sometimes|boolean',
         ];

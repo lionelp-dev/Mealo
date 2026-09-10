@@ -90,23 +90,42 @@
             "triggerButton": "Generate with AI",
             "title": "Generate recipes",
             "submit": "Generate",
-            "modalTitle": "Generate Recipe with AI",
+            "submitSingle": "Generate recipe",
+            "submitMultiple": "Generate {{count}} recipes",
+            "modalTitle": "Generate recipes with AI",
+            "modalTitleSingle": "Generate a recipe",
+            "modalTitleMultiple": "Generate several recipes",
+            "modalDescription": "Describe a precise idea or let AI suggest several recipes suited to your meals.",
             "generating": "Generating...",
             "overlayTitle": "Generating your recipes",
+            "tabs": {
+                "single": "One recipe",
+                "multiple": "Several recipes"
+            },
+            "single": {
+                "title": "YOUR IDEA",
+                "description": "Share a craving, ingredients, or a constraint to create a complete recipe.",
+                "promptLabel": "What would you like to cook?"
+            },
+            "multiple": {
+                "title": "YOUR PREFERENCES",
+                "description": "Choose the types, meal times, and number of recipes to create."
+            },
             "prompt": {
                 "label": "Recipe Description",
-                "placeholder": "Describe the recipe you want to create, e.g., 'A healthy Mediterranean chicken dish with vegetables'"
+                "placeholder": "Example: A vegetarian dish with zucchini and fresh cheese"
             },
             "mealTime": {
-                "label": "Meal time"
+                "label": "Meal time",
+                "multipleLabel": "Meal times"
             },
             "count": {
                 "label": "Number of recipes"
             },
             "presets": {
-                "label": "Recipe type",
+                "label": "Recipe types",
                 "quick": {
-                    "label": "Quick & easy",
+                    "label": "Quick",
                     "prompt": "Quick and easy recipes, ready in under 20 minutes"
                 },
                 "vegetarian": {
@@ -114,11 +133,11 @@
                     "prompt": "Tasty and balanced vegetarian recipes"
                 },
                 "healthy": {
-                    "label": "Healthy",
+                    "label": "Balanced",
                     "prompt": "Healthy, light and balanced recipes"
                 },
                 "comfort": {
-                    "label": "Comfort food",
+                    "label": "Comforting",
                     "prompt": "Comforting and indulgent dishes"
                 },
                 "world": {
@@ -126,13 +145,14 @@
                     "prompt": "Varied recipes from around the world"
                 },
                 "budget": {
-                    "label": "Budget-friendly",
+                    "label": "Zero-waste",
                     "prompt": "Budget-friendly, zero-waste recipes"
                 }
             },
             "imageGeneration": {
                 "label": "Generate image",
-                "description": "AI will create a photo of the recipe (may take longer)"
+                "multipleLabel": "Generate an image for each recipe",
+                "description": "May take longer"
             }
         },
         "edit": {

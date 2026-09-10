@@ -1,4 +1,4 @@
-import { RecipeAIGenerationPopover } from '../components/recipe-ai-generation-popover';
+import RecipeAIGenerationModal from '../components/recipe-ai-generation-modal';
 import { RecipeCard } from '../components/recipe-card';
 import { RecipeCardSkeleton } from '../components/recipe-card-skeleton';
 import RecipeDetailPanel from '../components/recipe-detail-panel';
@@ -121,9 +121,9 @@ export function IndexRecipesView() {
     headerLeftContent: <RecipesSearch className="max-lg:hidden" />,
     headerRightContent: (
       <div className="flex flex-1 items-center justify-end gap-3">
-        <RecipeAIGenerationPopover meal_times={meal_times ?? []} />
+        <RecipeAIGenerationModal meal_times={meal_times ?? []} />
         <button
-          className="btn gap-2 btn-secondary max-md:btn-sm min-md:pl-5.5"
+          className="btn gap-2 btn-outline btn-secondary max-md:btn-sm min-md:pl-5.5"
           onClick={handleNavigateToCreateRecipe}
         >
           {t('recipes.index.createButton', 'Create recipe')}
