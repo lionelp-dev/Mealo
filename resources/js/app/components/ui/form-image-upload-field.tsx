@@ -113,13 +113,9 @@ export function ImageUploadField({
   }, [value]);
 
   return (
-    <div className={`flex flex-col gap-4 ${className} z-2`}>
-      <label className="text-base-content">
-        {t('recipes.form.imageLabel', 'Image')}
-      </label>
-
+    <div className={`z-2 flex w-full min-w-0 flex-col gap-4 ${className}`}>
       <div
-        className={`relative flex h-[14.5lh] cursor-pointer items-center justify-center overflow-hidden rounded-lg border-2 border-dashed text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
+        className={`relative flex h-[11lh] w-full min-w-0 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-1 border-dashed text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
         onDrop={handleDrop}
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -145,11 +141,11 @@ export function ImageUploadField({
         )}
 
         {displayImage ? (
-          <div className="relative flex h-full">
+          <div className="relative flex h-full max-w-full min-w-0">
             <img
               src={displayImage}
               alt="Preview"
-              className="h-full w-full object-cover object-center"
+              className="h-full w-full min-w-0 object-cover object-center"
             />
             {!disabled && (
               <button
@@ -165,7 +161,7 @@ export function ImageUploadField({
             )}
           </div>
         ) : (
-          <div className="py-8">
+          <div className="min-w-0 px-3 py-8">
             <svg
               className="mx-auto h-12 w-12 text-base-content/40"
               stroke="currentColor"
@@ -179,8 +175,8 @@ export function ImageUploadField({
                 strokeLinejoin="round"
               />
             </svg>
-            <div className="mt-4">
-              <p className="text-base-content">
+            <div className="mt-4 min-w-0">
+              <p className="min-w-0 break-words text-base-content">
                 <span className="font-medium text-primary">
                   {t(
                     'recipes.form.imageUpload.clickToUpload',
@@ -189,7 +185,7 @@ export function ImageUploadField({
                 </span>{' '}
                 {t('recipes.form.imageUpload.orDragDrop', 'or drag and drop')}
               </p>
-              <p className="mt-1 text-sm text-base-content/60">
+              <p className="mt-1 min-w-0 text-sm break-words text-base-content/60">
                 {t(
                   'recipes.form.imageUpload.formats',
                   'PNG, JPG, WebP up to 5MB',
@@ -203,7 +199,7 @@ export function ImageUploadField({
       {error && <p className="text-sm text-error">{error}</p>}
 
       {value && (
-        <div className="text-xs text-base-content/60">
+        <div className="min-w-0 text-xs break-words text-base-content/60">
           {t('recipes.form.imageUpload.selectedFile', 'Fichier sélectionné')}:{' '}
           {value.name} ({(value.size / 1024 / 1024).toFixed(2)} MB)
         </div>

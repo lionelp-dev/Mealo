@@ -194,8 +194,21 @@
                 "error": "Failed to generate image. Please try again."
             }
         },
+        "prefill": {
+            "title": "Prefill a recipe with AI",
+            "description": "Enter a name, describe a dish, or paste a complete recipe. AI will prefill the fields.",
+            "placeholder": "E.g. Chicken curry or quick vegetarian dish for 4 people...",
+            "button": "Analyze and prefill",
+            "generating": "Prefilling...",
+            "hide": "Hide",
+            "show": "Show",
+            "validation": {
+                "tooShort": "The text must contain at least 5 characters."
+            }
+        },
         "ingredients": {
             "addButton": "Add ingredient",
+            "ingredientLabel": "Ingredient",
             "nameLabel": "Name",
             "namePlaceholder": "Ingredient name",
             "quantityLabel": "Quantity",
@@ -590,6 +603,7 @@
     "landing": {
         "header": {
             "appName": "Mealo Planner",
+            "about": "About",
             "features": "Features",
             "howItWorks": "How it works",
             "preview": "Preview",

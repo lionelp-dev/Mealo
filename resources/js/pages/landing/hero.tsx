@@ -6,7 +6,7 @@ export function Hero() {
   const { t } = useTranslation();
 
   return (
-    <section id="features" className="relative overflow-hidden py-26">
+    <section id="about" className="relative overflow-hidden py-26">
       <div className="mx-auto flex max-w-6xl flex-col gap-34 px-6">
         <div className="flex flex-col items-center text-center">
           {/* Badge */}

@@ -5,7 +5,7 @@ import z from 'zod'
 const RecipesAIGenerationRequest = z.object({
   message: z.object({
     role: z.literal('user'),
-    content: z.string().max(255),
+    content: z.string().max(5000),
   }),
   ingredient_categories: z
     .array(

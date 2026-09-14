@@ -1,3 +1,4 @@
+import { RecipeFormCard } from '../components/recipe-form-card';
 import { RecipeFormIngredientsSection } from '../components/recipe-form-ingredients-section';
 import { RecipeFormStepsSection } from '../components/recipe-form-steps-section';
 import { RecipeFormTagsSection } from '../components/recipe-form-tags-section';
@@ -5,8 +6,8 @@ import { useRecipesContextValue } from '../inertia.adapter';
 import { viewRecipe } from '../repositories/recipes.repository';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { useUpdateRecipe } from '../repositories/use-update-recipe';
-import { AppMainContent } from '@/app/components/app-main-content';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
+import { PageContainer } from '@/app/components/page-container';
 import { recipeUpdateRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-update.request.schema';
 import { RecipeUpdateRequest } from '@/app/data/requests/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
@@ -14,7 +15,7 @@ import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
 import { Head } from '@inertiajs/react';
 import { useStore } from '@tanstack/react-form';
-import { Wand2 } from 'lucide-react';
+import { ChefHatIcon, Wand2 } from 'lucide-react';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -73,8 +74,8 @@ export function EditRecipesView() {
   return (
     <AppLayout
       headerRightContent={
-        <div className="flex items-center gap-8">
-          <div className="flex justify-end gap-4">
+        <div className="flex min-w-0 items-center gap-3 sm:gap-8">
+          <div className="flex min-w-0 flex-wrap justify-end gap-2 sm:gap-4">
             <form.Subscribe
               selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
@@ -82,16 +83,21 @@ export function EditRecipesView() {
                 <button
                   type="submit"
                   disabled={!canSubmit}
-                  className={`btn btn-secondary`}
+                  className="btn max-w-full min-w-0 btn-secondary max-sm:btn-sm min-sm:pr-3.5 min-sm:pl-[23px]"
                   onClick={() => form.handleSubmit()}
                 >
-                  {isSubmitting ? '...' : t('common.buttons.update', 'Update')}
+                  <span className="min-w-0 truncate">
+                    {isSubmitting
+                      ? '...'
+                      : t('common.buttons.update', 'Update')}
+                  </span>
+                  <ChefHatIcon className="h-4 max-md:hidden" />
                 </button>
               )}
             </form.Subscribe>
             <button
               type="reset"
-              className="btn"
+              className="btn max-sm:hidden"
               onClick={() => recipe && viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
@@ -103,7 +109,7 @@ export function EditRecipesView() {
       }
     >
       <Head title={t('recipes.edit.pageTitle', 'Edit recipe')}></Head>
-      <AppMainContent>
+      <PageContainer size="default">
         <h1 className="mb-6 text-2xl font-bold text-secondary">
           {t('recipes.edit.title', 'Edit recipe')}
         </h1>
@@ -112,206 +118,233 @@ export function EditRecipesView() {
             e.preventDefault();
             form.handleSubmit();
           }}
-          className="flex flex-col gap-7"
+          className="flex w-full min-w-0 flex-col gap-6"
         >
-          <div className="grid gap-x-12 gap-y-8 min-2xl:grid-cols-[9fr_10fr]">
-            <form.AppField
-              name="name"
-              children={(field) => (
-                <field.TextField
-                  label={t('recipes.form.nameLabel', 'Recipe name')}
-                  placeholder={t(
-                    'recipes.form.namePlaceholder',
-                    'Enter recipe name',
-                  )}
-                />
-              )}
-            />
-
-            <form.AppField
-              name="description"
-              children={(field) => (
-                <field.TextAreaField
-                  label={t('recipes.form.descriptionLabel', 'Description')}
-                  placeholder={t(
-                    'recipes.form.descriptionPlaceholder',
-                    'Describe your recipe',
-                  )}
-                  rows={10}
-                />
-              )}
-            />
-
-            <form.AppField
-              name="meal_times"
-              mode="array"
-              validators={{
-                onChange: recipeUpdateRequestSchema.shape.meal_times,
-                onBlur: recipeUpdateRequestSchema.shape.meal_times,
-              }}
-              children={(field) => {
-                const options = (meal_times ?? []).map((mt) => ({
-                  value: mt.id,
-                  label: mt.name,
-                  slug: mt.slug,
-                }));
-
-                return (
-                  <field.MultiSelectField
-                    options={options}
-                    label={t('recipes.form.mealTimesTitle', 'Meal times')}
-                  />
-                );
-              }}
-            />
-
-            <div className="grid grid-flow-col gap-5">
-              <form.AppField
-                name="serving_size"
-                children={(field) => (
-                  <field.NumberField
-                    value={field.state.value}
-                    label={t(
-                      'recipes.form.servingSizeLabel',
-                      'Nombre de portions',
-                    )}
-                    placeholder="4"
-                    min="1"
-                    max="50"
-                  />
-                )}
-              />
-
-              <form.AppField
-                name="preparation_time"
-                children={(field) => (
-                  <field.NumberField
-                    value={field.state.value}
-                    label={t(
-                      'recipes.form.preparationTimeLabel',
-                      'Preparation time (minutes)',
-                    )}
-                    placeholder="0"
-                    min="0"
-                  />
-                )}
-              />
-
-              <form.AppField
-                name="cooking_time"
-                children={(field) => (
-                  <field.NumberField
-                    value={field.state.value}
-                    label={t(
-                      'recipes.form.cookingTimeLabel',
-                      'Cooking time (minutes)',
-                    )}
-                    placeholder="0"
-                    min="0"
-                  />
-                )}
-              />
-            </div>
-
-            <div className="flex flex-col gap-2 min-2xl:col-start-2 min-2xl:row-start-1 min-2xl:row-end-4">
-              {/* Composant ImageUpload existant */}
-              <form.AppField
-                name="image"
-                children={(field) => (
-                  <field.ImageUploadField
-                    previewUrl={
-                      generated_image_data_url
-                        ? null
-                        : (recipe?.image_url ?? null)
-                    }
-                    value={field.state.value}
-                    onChange={(file) => {
-                      field.handleChange(file);
-                      if (file) {
-                        form.setFieldValue('remove_image', false);
-                      }
-                    }}
-                    onRemove={() => form.setFieldValue('remove_image', true)}
-                  />
-                )}
-              />
-              <div className="divider">{t('common.or', 'Ou')}</div>
-              <button
-                type="button"
-                onClick={handleGenerateImage}
-                disabled={imageGenerating || !form.state.values.name}
-                className="btn gap-2 btn-sm btn-secondary"
+          <div className="grid w-full min-w-0 grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1.35fr)_minmax(320px,0.9fr)] lg:gap-6">
+            <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-5">
+              <RecipeFormCard
+                title="Informations générales"
+                className="order-1 lg:order-none"
               >
-                {imageGenerating ? (
-                  <>
-                    <span className="loading loading-xs loading-spinner"></span>
-                    {t(
-                      'recipes.form.imageGeneration.generating',
-                      'Génération...',
-                    )}
-                  </>
-                ) : (
-                  <>
-                    <Wand2 className="h-4 w-4" />
-                    {t(
-                      'recipes.form.imageGeneration.button',
-                      'Générer avec IA',
-                    )}
-                  </>
-                )}
-              </button>
-              {imageGenerating && (
-                <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/30 text-white backdrop-blur-xs">
-                  <span className="loading loading-xl loading-spinner"></span>
-                  <div className="flex flex-col items-center gap-2">
-                    <p className="text-lg font-medium">
-                      {t("Génération de l'image de votre recette en cours")}
-                    </p>
-                    <p className="text text-white/60">
-                      {t(
-                        'mealPlanning.estimatedTime',
-                        'Cela peut prendre quelques instants',
-                      )}{' '}
-                      <span className="loading loading-xs loading-dots"></span>
-                    </p>
-                  </div>
-                </div>
-              )}
-            </div>
+                <form.AppField
+                  name="name"
+                  validators={{
+                    onChange: recipeUpdateRequestSchema.shape.name,
+                    onBlur: recipeUpdateRequestSchema.shape.name,
+                  }}
+                  children={(field) => (
+                    <field.TextField
+                      label={t('recipes.form.nameLabel', 'Recipe name')}
+                      placeholder={t(
+                        'recipes.form.namePlaceholder',
+                        'Enter recipe name',
+                      )}
+                    />
+                  )}
+                />
 
-            <div className="min-2xl:col-start-2 min-2xl:row-start-4 min-2xl:row-end-6">
-              <RecipeFormTagsSection form={form} fields={{ tags: 'tags' }} />
-            </div>
+                <form.AppField
+                  name="description"
+                  validators={{
+                    onChange: recipeUpdateRequestSchema.shape.description,
+                    onBlur: recipeUpdateRequestSchema.shape.description,
+                  }}
+                  children={(field) => (
+                    <field.TextAreaField
+                      label={t('recipes.form.descriptionLabel', 'Description')}
+                      placeholder={t(
+                        'recipes.form.descriptionPlaceholder',
+                        'Describe your recipe',
+                      )}
+                      rows={5}
+                    />
+                  )}
+                />
+              </RecipeFormCard>
 
-            <div className="min-2xl:row-start-5 min-2xl:row-end-8">
-              <RecipeFormStepsSection
-                form={form}
-                fields={{ steps: 'steps' }}
+              <RecipeFormCard
+                title={`${t('recipes.form.ingredientsTitle', 'Ingredients')} *`}
+                className="order-4 lg:order-none"
+              >
+                <RecipeFormIngredientsSection
+                  form={form}
+                  fields={{ ingredients: 'ingredients' }}
+                  title=""
+                />
+              </RecipeFormCard>
+
+              <RecipeFormCard
                 title={t('recipes.form.stepsTitle', 'Steps')}
-              />
+                className="order-5 lg:order-none"
+              >
+                <RecipeFormStepsSection
+                  form={form}
+                  fields={{ steps: 'steps' }}
+                  title=""
+                />
+              </RecipeFormCard>
             </div>
 
-            <RecipeFormIngredientsSection
-              form={form}
-              fields={{ ingredients: 'ingredients' }}
-              title={t('recipes.form.ingredientsTitle', 'Ingredients')}
-            />
+            <div className="contents lg:flex lg:min-w-0 lg:flex-col lg:gap-5">
+              <RecipeFormCard
+                title={t('recipes.form.photoTitle', 'Photo')}
+                className="order-2 lg:order-none"
+              >
+                {/* Composant ImageUpload existant */}
+                <form.AppField
+                  name="image"
+                  children={(field) => (
+                    <field.ImageUploadField
+                      previewUrl={
+                        generated_image_data_url
+                          ? null
+                          : (recipe?.image_url ?? null)
+                      }
+                      value={field.state.value}
+                      onChange={(file) => {
+                        field.handleChange(file);
+                        if (file) {
+                          form.setFieldValue('remove_image', false);
+                        }
+                      }}
+                      onRemove={() => form.setFieldValue('remove_image', true)}
+                    />
+                  )}
+                />
+                <div className="divider">{t('common.or', 'Ou')}</div>
+                <button
+                  type="button"
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    handleGenerateImage();
+                  }}
+                  disabled={imageGenerating || !form.state.values.name}
+                  className="btn max-w-full min-w-0 gap-2 whitespace-normal btn-sm btn-secondary sm:w-fit"
+                >
+                  {imageGenerating ? (
+                    <>
+                      <span className="loading loading-xs loading-spinner"></span>
+                      <span className="min-w-0 truncate">
+                        {t(
+                          'recipes.form.imageGeneration.generating',
+                          'Génération...',
+                        )}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Wand2 className="h-4 w-4" />
+                      <span className="min-w-0 truncate">
+                        {t(
+                          'recipes.form.imageGeneration.button',
+                          'Générer avec IA',
+                        )}
+                      </span>
+                    </>
+                  )}
+                </button>
+              </RecipeFormCard>
+
+              <RecipeFormCard
+                title={t('recipes.form.detailsTitle', 'Détails')}
+                className="order-3 lg:order-none"
+              >
+                <form.AppField
+                  name="meal_times"
+                  mode="array"
+                  validators={{
+                    onChange: recipeUpdateRequestSchema.shape.meal_times,
+                    onBlur: recipeUpdateRequestSchema.shape.meal_times,
+                  }}
+                  children={(field) => {
+                    const options = (meal_times ?? []).map((mt) => ({
+                      value: mt.id,
+                      label: mt.name,
+                      slug: mt.slug,
+                    }));
+
+                    return (
+                      <field.MealTimesCheckboxField
+                        options={options}
+                        label={t('recipes.form.mealTimesTitle', 'Meal times')}
+                      />
+                    );
+                  }}
+                />
+
+                <div className="grid min-w-0 grid-cols-1 gap-5 sm:grid-cols-3">
+                  <form.AppField
+                    name="serving_size"
+                    children={(field) => (
+                      <field.NumberField
+                        value={field.state.value}
+                        label={t(
+                          'recipes.form.servingSizeLabel',
+                          'Nombre de portions',
+                        )}
+                        placeholder="4"
+                        min="1"
+                        max="50"
+                      />
+                    )}
+                  />
+
+                  <form.AppField
+                    name="preparation_time"
+                    children={(field) => (
+                      <field.NumberField
+                        value={field.state.value}
+                        label={t(
+                          'recipes.form.preparationTimeLabel',
+                          'Preparation time (minutes)',
+                        )}
+                        placeholder="0"
+                        min="0"
+                      />
+                    )}
+                  />
+
+                  <form.AppField
+                    name="cooking_time"
+                    children={(field) => (
+                      <field.NumberField
+                        value={field.state.value}
+                        label={t(
+                          'recipes.form.cookingTimeLabel',
+                          'Cooking time (minutes)',
+                        )}
+                        placeholder="0"
+                        min="0"
+                      />
+                    )}
+                  />
+                </div>
+
+                <RecipeFormTagsSection form={form} fields={{ tags: 'tags' }} />
+              </RecipeFormCard>
+            </div>
           </div>
 
-          <div className="flex justify-end gap-4">
+          <div className="flex min-w-0 flex-wrap justify-end gap-2 sm:gap-4">
             <button
               type="reset"
-              className="btn"
+              className="btn max-w-full min-w-0"
               onClick={() => recipe && viewRecipe(recipe.id)}
             >
               {t('common.buttons.cancel', 'Cancel')}
             </button>
             <form.AppForm>
-              <form.SubmitButton label={t('common.buttons.update', 'Update')} />
+              <form.SubmitButton className="max-w-full min-w-0 pr-3.5 pl-[23px]">
+                <span className="min-w-0 truncate">
+                  {t('common.buttons.update', 'Update')}
+                </span>
+                <ChefHatIcon className="h-4" />
+              </form.SubmitButton>
             </form.AppForm>
           </div>
         </form>
-      </AppMainContent>
+      </PageContainer>
     </AppLayout>
   );
 }

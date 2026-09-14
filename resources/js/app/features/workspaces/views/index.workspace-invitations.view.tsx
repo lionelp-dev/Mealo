@@ -1,6 +1,6 @@
 import { useWorkspaces } from '../hooks/use-workspaces';
 import { useWorkspaceContextValue } from '../inertia.adapter';
-import { AppMainContent } from '@/app/components/app-main-content';
+import { PageContainer } from '@/app/components/page-container';
 import { useInitials } from '@/app/hooks/use-initials';
 import AppLayout from '@/app/layouts/app-layout';
 import { capitalize, pluralize } from '@/app/utils/';
@@ -27,7 +27,7 @@ export function WorkspacesInvitationsView() {
     <AppLayout>
       <Head title={t('invitation.pageTitle', 'Invitations')} />
 
-      <AppMainContent>
+      <PageContainer size="default">
         <div className="grid h-full gap-8">
           {/* Header Section */}
           <span className="flex flex-col">
@@ -199,7 +199,7 @@ export function WorkspacesInvitationsView() {
             </div>
           )}
         </div>
-      </AppMainContent>
+      </PageContainer>
     </AppLayout>
   );
 }

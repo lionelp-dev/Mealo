@@ -17,9 +17,12 @@ export default function TextAreaField({
 }: TextAreaFieldProps) {
   const field = useFieldContext<string>();
   return (
-    <div className={cn('flex flex-1 flex-col gap-3', className)}>
+    <div className={cn('flex min-w-0 flex-1 flex-col gap-3', className)}>
       {label && (
-        <label htmlFor={field.name} className="text-base text-base-content">
+        <label
+          htmlFor={field.name}
+          className="min-w-0 text-base text-base-content"
+        >
           {label}
         </label>
       )}
@@ -30,8 +33,13 @@ export default function TextAreaField({
         onBlur={field.handleBlur}
         onChange={(e) => field.handleChange(e.target.value)}
         rows={rows}
+        style={{
+          minHeight: `${rows * 1.5 + 1}rem`,
+          overflow: 'auto',
+          resize: 'vertical',
+        }}
         className={cn(
-          'textarea w-full flex-1',
+          'textarea block h-auto w-full min-w-0 resize-y overflow-auto',
           className,
           !field.state.meta.isValid && 'textarea-error',
         )}

@@ -6,8 +6,10 @@ return [
         'updated' => 'Recette mise à jour avec succès',
         'deleted' => 'Recette supprimée avec succès',
         'generated' => 'Recettes générées avec succès',
+        'prefilled' => 'La recette a été préremplie avec succès.',
         'generation_queued' => 'La génération des recettes a démarré. Elles apparaîtront dans quelques instants.',
         'generation_failed' => 'La génération des recettes n’a pas pu démarrer. Réessayez dans quelques instants.',
+        'image_generated' => 'Image de la recette générée avec succès.',
         'image_generation_failed' => "Impossible de générer l'image de la recette pour le moment.",
     ],
     'planned_meal' => [

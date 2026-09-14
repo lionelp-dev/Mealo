@@ -12,10 +12,12 @@ import { useMealPlanNavigation } from '../hooks/use-meal-plan-navigation';
 import { useWeekPlannedMeals } from '../hooks/use-week-meal-plan';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
+import { PageContainer } from '@/app/components/page-container';
 import WeekSelector from '@/app/components/week-selector';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import AppLayout from '@/app/layouts/app-layout';
 import { Head, InfiniteScroll } from '@inertiajs/react';
+import { type CSSProperties, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function MealPlanningIndexView() {
@@ -51,6 +53,46 @@ export function MealPlanningIndexView() {
     isRecipeDetailVisible,
     closeRecipeDetail,
   } = useRecipeDetailPanel();
+  const [detailPanelHeight, setDetailPanelHeight] = useState<number | null>(
+    null,
+  );
+
+  useEffect(() => {
+    const scroller = contentRef.current;
+
+    if (!scroller) return;
+
+    const updateDetailPanelHeight = () => {
+      const styles = window.getComputedStyle(scroller);
+      const paddingTop = Number.parseFloat(styles.paddingTop) || 0;
+      const paddingBottom = Number.parseFloat(styles.paddingBottom) || 0;
+
+      setDetailPanelHeight(
+        Math.max(0, scroller.clientHeight - paddingTop - paddingBottom),
+      );
+    };
+
+    updateDetailPanelHeight();
+
+    const resizeObserver =
+      typeof ResizeObserver === 'undefined'
+        ? null
+        : new ResizeObserver(updateDetailPanelHeight);
+
+    resizeObserver?.observe(scroller);
+    window.addEventListener('resize', updateDetailPanelHeight);
+
+    return () => {
+      resizeObserver?.disconnect();
+      window.removeEventListener('resize', updateDetailPanelHeight);
+    };
+  }, [contentRef]);
+
+  const detailPanelStyle = {
+    '--meal-planning-detail-panel-height': detailPanelHeight
+      ? `${detailPanelHeight}px`
+      : undefined,
+  } as CSSProperties;
 
   return AppLayout({
     renderHeaderLeftContent: ({ mobileSidebarTrigger }) => (
@@ -69,24 +111,30 @@ export function MealPlanningIndexView() {
       </div>
     ),
     children: (
-      <div
-        ref={contentRef}
-        className="min-h-0 w-full max-w-full min-w-0 flex-1 overflow-y-auto"
-      >
-        <div className="m-auto w-full max-w-[1800px] min-w-0 md:px-5 md:pt-2 min-md:pb-5">
+      <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+        <MealPlanningDayNavigator
+          activeDayId={activeDayId}
+          days={weekPlannedMeals}
+          onSelectDay={scrollToDay}
+          stickyRef={stickyRef}
+        />
+        <PageContainer
+          ref={contentRef}
+          size="wide"
+          className="py-6.75"
+        >
           <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
 
-          <MealPlanningDayNavigator
-            activeDayId={activeDayId}
-            days={weekPlannedMeals}
-            onSelectDay={scrollToDay}
-            stickyRef={stickyRef}
-          />
-
-          <div className="flex w-full max-w-full min-w-0 gap-3 overflow-x-clip">
+          <div
+            className={`flex w-full max-w-full min-w-0 gap-3 ${
+              isRecipeDetailMounted ? 'min-lg:pr-3' : ''
+            }`}
+            style={detailPanelStyle}
+          >
             <RecipeDetailPanelContainer
               isMounted={isRecipeDetailMounted}
               isVisible={isRecipeDetailVisible}
+              className="min-lg:top-0 min-lg:h-[var(--meal-planning-detail-panel-height)] min-lg:w-96 min-lg:min-w-96"
             >
               {displayedRecipe && (
                 <RecipeDetailPanel
@@ -97,7 +145,7 @@ export function MealPlanningIndexView() {
             </RecipeDetailPanelContainer>
 
             <div
-              className={`grid min-w-0 flex-1 grid-cols-1 gap-x-3 gap-y-5 px-2.75 md:px-5 lg:grid-cols-2 ${
+              className={`grid min-w-0 flex-1 grid-cols-1 gap-x-6.5 gap-y-5.75 lg:grid-cols-2 ${
                 isRecipeDetailMounted ? '2xl:grid-cols-2' : '2xl:grid-cols-4'
               }`}
             >
@@ -109,7 +157,7 @@ export function MealPlanningIndexView() {
                 return (
                   <div
                     key={dayId}
-                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white pb-3"
+                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white px-2.25 pb-3"
                     style={
                       isLastDay && lastDayMinHeight
                         ? { minHeight: lastDayMinHeight }
@@ -150,7 +198,7 @@ export function MealPlanningIndexView() {
               </div>
             </MealPlanDialog>
           </div>
-        </div>
+        </PageContainer>
       </div>
     ),
   });

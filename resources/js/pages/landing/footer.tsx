@@ -10,16 +10,11 @@ export function Footer() {
         <div className="flex flex-col items-center justify-between md:flex-row">
           {/* Logo & Description */}
           <div className="flex flex-col items-center gap-3 md:items-start">
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-secondary">
-                <span className="text-sm font-semibold text-primary-foreground">
-                  M
-                </span>
-              </div>
-              <span className="font-semibold text-secondary">
-                {t('landing.footer.appName')}
-              </span>
-            </div>
+            <img
+              src="/logo.svg"
+              alt={t('landing.footer.appName')}
+              className="h-10 w-auto max-w-44 object-contain"
+            />
             <p className="max-w-xs text-center text-sm text-muted-foreground md:text-left">
               {t('landing.footer.description')}
             </p>
@@ -28,20 +23,22 @@ export function Footer() {
           {/* Links */}
           <div className="flex items-center gap-6">
             <a
-              href="#"
+              href="#about"
               className="text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               {t('landing.footer.about')}
             </a>
             <a
-              href="#"
+              href="mailto:lionelp.dev@gmail.com"
               className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <Mail className="h-4 w-4" />
               {t('landing.footer.contact')}
             </a>
             <a
-              href="#"
+              href="https://github.com/lionelp-dev"
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground"
             >
               <Github className="h-4 w-4" />

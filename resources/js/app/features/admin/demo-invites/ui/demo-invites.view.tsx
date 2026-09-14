@@ -1,6 +1,6 @@
 import { useAdminDemoInvitesContext } from '../infrastructure/inertia.adapter';
 import DemoInviteFormModal from './demo-invite-form-modal';
-import { AppMainContent } from '@/app/components/app-main-content';
+import { PageContainer } from '@/app/components/page-container';
 import {
   Collapsible,
   CollapsibleContent,
@@ -69,7 +69,7 @@ export default function AdminDemoInvitesView() {
     <AdminLayout>
       <Head title="Demo links" />
 
-      <AppMainContent>
+      <PageContainer size="default">
         <div className="grid gap-6">
           <div className="flex items-start justify-between">
             <div>
@@ -210,7 +210,7 @@ export default function AdminDemoInvitesView() {
             ))}
           </div>
         </div>
-      </AppMainContent>
+      </PageContainer>
 
       {formOpen && (
         <DemoInviteFormModal

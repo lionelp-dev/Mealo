@@ -18,6 +18,10 @@ const defaultValues: { ingredients: RecipeIngredientRequest[] } = {
   ingredients: [],
 };
 
+function parseQuantityInput(value: string): number {
+  return value === '' ? 0 : Math.round(Number(value) * 100) / 100;
+}
+
 export const RecipeFormIngredientsSection = withFieldGroup({
   defaultValues,
   props: {
@@ -82,304 +86,342 @@ export const RecipeFormIngredientsSection = withFieldGroup({
           onSubmit: recipeStoreRequestSchema.shape.ingredients,
           onBlur: recipeStoreRequestSchema.shape.ingredients,
         }}
-        children={(ingredients_field) => (
-          <div className="flex flex-col gap-4">
-            <span className="text-base-content">{title}</span>
-            <div className="flex flex-col gap-5">
-              <table className="table -mt-1 -mb-1 w-full table-xs">
-                <thead>
-                  <tr className="[&>th]:pb-2 [&>th]:text-sm [&>th]:font-normal [&>th]:text-base-content">
-                    <th className="w-[55%]">
-                      {t('recipes.ingredients.nameLabel', 'Name')}
-                    </th>
-                    <th className="w-[12%]">
-                      {t('recipes.ingredients.quantityLabel', 'Quantity')}
-                    </th>
-                    <th className="w-[13%]">
-                      {t('recipes.ingredients.unitLabel', 'Unit')}
-                    </th>
-                    <th className="w-[20%]">
-                      {t('recipes.ingredients.categoryLabel', 'Catégorie')}
-                    </th>
-                    {ingredients_field.state.value &&
-                      ingredients_field.state.value.length !== 0 && (
-                        <th className="w-[10%]">
-                          {t('recipes.table.actions', 'Actions')}
-                        </th>
-                      )}
-                  </tr>
-                </thead>
-                <tbody className="*:border-none [&>tr:first-child>td]:pt-3 [&>tr>td:first-child]:pl-0 [&>tr>td:last-child]:pr-0">
-                  {ingredients_field.state.value?.map((_, index) => (
-                    <tr key={index} className="*:pb-4 *:align-top">
-                      <td>
-                        <group.AppField
-                          name={`ingredients[${index}].name`}
-                          children={(field) => (
-                            <field.TextField
-                              onBlur={() => ingredients_field.handleBlur()}
-                            />
-                          )}
-                        />
-                      </td>
-                      <td>
+        children={(ingredientsField) => {
+          const ingredients = ingredientsField.state.value ?? [];
+          const hasIngredients = ingredients.length > 0;
+          const gridClassName = cn(
+            'grid w-full min-w-0 gap-3 sm:items-start',
+            hasIngredients
+              ? 'sm:grid-cols-[minmax(0,1fr)_auto_auto_auto_46px]'
+              : 'sm:grid-cols-[minmax(0,1fr)_auto_auto_auto]',
+          );
+          const categoryOptions =
+            ingredient_categories?.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })) ?? [];
+
+          function IngredientRows() {
+            return (
+              <>
+                {ingredients.map((_, index) => (
+                  <div
+                    key={index}
+                    className="grid min-w-0 gap-3 rounded-2xl border border-base-300 bg-base-100 p-4 sm:contents"
+                  >
+                    <div className="min-w-0">
+                      <group.AppField
+                        name={`ingredients[${index}].name`}
+                        children={(field) => (
+                          <field.TextField
+                            label={t('recipes.ingredients.nameLabel', 'Nom')}
+                            onBlur={() => ingredientsField.handleBlur()}
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="grid min-w-0 grid-cols-2 gap-3 sm:contents">
+                      <div className="min-w-0">
                         <group.AppField
                           name={`ingredients[${index}].quantity`}
                           children={(field) => (
                             <field.NumberField
+                              label={t(
+                                'recipes.ingredients.quantityLabel',
+                                'Quantité',
+                              )}
                               value={field.state.value}
                               min="0"
                               step="0.01"
-                              onBlur={() => ingredients_field.handleBlur()}
+                              className="sm:w-24"
+                              onBlur={() => ingredientsField.handleBlur()}
                               onChange={(e) =>
                                 field.handleChange(
-                                  e.target.value === ''
-                                    ? 0
-                                    : Math.round(Number(e.target.value) * 100) /
-                                        100,
+                                  parseQuantityInput(e.target.value),
                                 )
                               }
                             />
                           )}
                         />
-                      </td>
-                      <td>
+                      </div>
+                      <div className="min-w-0">
                         <group.AppField
                           name={`ingredients[${index}].unit`}
                           children={(field) => (
                             <field.TextField
-                              onBlur={() => ingredients_field.handleBlur()}
+                              label={t(
+                                'recipes.ingredients.unitLabel',
+                                'Unité',
+                              )}
+                              className="sm:w-24"
+                              onBlur={() => ingredientsField.handleBlur()}
                             />
                           )}
                         />
-                      </td>
-                      <td>
-                        <group.AppField
-                          name={`ingredients[${index}].category_id`}
-                          children={(field) => (
-                            <select
+                      </div>
+                    </div>
+                    <div className="min-w-0">
+                      <group.AppField
+                        name={`ingredients[${index}].category_id`}
+                        children={(field) => (
+                          <field.SelectField
+                            label={t(
+                              'recipes.ingredients.categoryLabel',
+                              'Catégorie',
+                            )}
+                            options={categoryOptions}
+                            className="w-full"
+                          />
+                        )}
+                      />
+                    </div>
+                    <div className="sm:hidden">
+                      <button
+                        type="button"
+                        onClick={() => ingredientsField.removeValue(index)}
+                        className="btn w-full max-w-full min-w-0 border-red-100 bg-red-50 text-red-700 hover:border-red-200 hover:bg-red-100"
+                      >
+                        <Trash2 className="size-4" />
+                        <span className="min-w-0 truncate">
+                          {t('recipes.ingredients.removeButton', 'Supprimer')}
+                        </span>
+                      </button>
+                    </div>
+                    <div className="hidden sm:block sm:pt-10">
+                      <button
+                        type="button"
+                        onClick={() => ingredientsField.removeValue(index)}
+                        className="btn h-10 min-h-0 w-10 border-red-100 bg-red-50 p-0 text-red-700 hover:border-red-200 hover:bg-red-100"
+                      >
+                        <Trash2 className="size-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </>
+            );
+          }
+
+          function NewIngredientRow() {
+            return (
+              <div
+                className="relative grid min-w-0 gap-3 rounded-2xl border border-base-300 bg-base-100 p-4 sm:contents"
+                onBlur={(e) => {
+                  if (!e.currentTarget.contains(e.relatedTarget)) {
+                    ingredientsField.handleBlur();
+                  }
+                }}
+              >
+                <div className="min-w-0">
+                  <Popover.Root
+                    open={isPopoverOpen}
+                    onOpenChange={setPopoverOpen}
+                  >
+                    <Popover.Anchor className="flex min-w-0">
+                      <form.AppField
+                        name="name"
+                        children={(field) => (
+                          <div className="min-w-0 flex-1">
+                            <field.TextField
+                              label={t('recipes.ingredients.nameLabel', 'Nom')}
+                              data-ingredient-input
                               value={field.state.value}
-                              onChange={(e) =>
-                                field.handleChange(Number(e.target.value))
-                              }
-                              onBlur={() => ingredients_field.handleBlur()}
-                              className="select w-full"
-                            >
-                              {ingredient_categories?.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                  {category.name}
-                                </option>
-                              ))}
-                            </select>
+                              onFocus={() => setPopoverOpen(true)}
+                              onChange={(e) => {
+                                field.handleChange(e.target.value);
+                                setPopoverOpen(true);
+                              }}
+                              placeholder={t(
+                                'recipes.ingredients.namePlaceholder',
+                                "Nom de l'ingrédient",
+                              )}
+                              autoComplete="off"
+                              className={cn(
+                                !ingredientsField.state.meta.isValid &&
+                                  'input-error',
+                                !field.state.meta.isValid && 'input-error',
+                              )}
+                            />
+                          </div>
+                        )}
+                      />
+                    </Popover.Anchor>
+                    <Popover.Content
+                      side="top"
+                      sideOffset={8}
+                      align="start"
+                      onOpenAutoFocus={(e) => e.preventDefault()}
+                      onCloseAutoFocus={(e) => e.preventDefault()}
+                      onMouseDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      className="z-50 max-w-[calc(100vw-2rem)]"
+                    >
+                      {ingredients_search_results?.data &&
+                        ingredients_search_results.data.length > 0 && (
+                          <div className="flex max-w-full overflow-hidden rounded-sm border border-solid border-base-300 bg-base-100 p-1">
+                            <div className="max-h-40 max-w-full overflow-y-auto">
+                              <InfiniteScroll
+                                data="ingredients_search_results"
+                                preserveUrl
+                              >
+                                {ingredients_search_results.data.map(
+                                  (ingredient) => (
+                                    <div
+                                      key={ingredient.id}
+                                      className="flex max-w-full cursor-pointer items-center justify-between rounded px-3 py-2 text-base hover:bg-base-200"
+                                      onClick={() => {
+                                        form.setFieldValue(
+                                          'name',
+                                          ingredient.name,
+                                        );
+                                        form.setFieldValue(
+                                          'category_id',
+                                          ingredient.category_id,
+                                        );
+                                        setPopoverOpen(false);
+                                      }}
+                                    >
+                                      <span className="min-w-0 truncate">
+                                        {ingredient.name}
+                                      </span>
+                                    </div>
+                                  ),
+                                )}
+                              </InfiniteScroll>
+                            </div>
+                          </div>
+                        )}
+                    </Popover.Content>
+                  </Popover.Root>
+                </div>
+                <div className="grid min-w-0 grid-cols-2 gap-3 sm:contents">
+                  <div className="min-w-0">
+                    <form.AppField
+                      name="quantity"
+                      validators={{
+                        onChange: recipeIngredientRequestSchema.shape.quantity,
+                        onBlur: recipeIngredientRequestSchema.shape.quantity,
+                      }}
+                      children={(field) => (
+                        <field.NumberField
+                          label={t(
+                            'recipes.ingredients.quantityLabel',
+                            'Quantité',
+                          )}
+                          value={field.state.value}
+                          min="0"
+                          step="0.01"
+                          className={cn(
+                            'sm:w-24',
+                            !ingredientsField.state.meta.isValid &&
+                              'input-error',
+                            !field.state.meta.isValid && 'input-error',
+                          )}
+                          onBlur={(e) => e.preventDefault()}
+                          onChange={(e) =>
+                            field.handleChange(
+                              parseQuantityInput(e.target.value),
+                            )
+                          }
+                        />
+                      )}
+                    />
+                  </div>
+                  <div className="min-w-0">
+                    <form.AppField
+                      name="unit"
+                      children={(field) => (
+                        <field.TextField
+                          label={t('recipes.ingredients.unitLabel', 'Unité')}
+                          onBlur={(e) => e.preventDefault()}
+                          placeholder={t(
+                            'recipes.ingredients.unitLabel',
+                            'Unit',
+                          )}
+                          className={cn(
+                            'sm:w-24',
+                            !ingredientsField.state.meta.isValid &&
+                              'input-error',
+                            !field.state.meta.isValid && 'input-error',
                           )}
                         />
-                      </td>
-                      <td className="align-top">
-                        <button
-                          type="button"
-                          onClick={() => ingredients_field.removeValue(index)}
-                          className="btn text-red-700 btn-ghost hover:border-red-50 hover:bg-red-100"
-                        >
-                          <Trash2 size={18} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                  <tr
-                    className="*:align-top"
-                    onBlur={(e) => {
-                      if (!e.currentTarget.contains(e.relatedTarget)) {
-                        ingredients_field.handleBlur();
-                      }
+                      )}
+                    />
+                  </div>
+                </div>
+                <div className="min-w-0">
+                  <form.AppField
+                    name="category_id"
+                    validators={{
+                      onChange: recipeIngredientRequestSchema.shape.category_id,
+                      onBlur: recipeIngredientRequestSchema.shape.category_id,
                     }}
-                  >
-                    <td>
-                      <Popover.Root
-                        open={isPopoverOpen}
-                        onOpenChange={setPopoverOpen}
-                      >
-                        <Popover.Anchor className="flex">
-                          <form.AppField
-                            name="name"
-                            children={(field) => (
-                              <Popover.Trigger className="flex-1">
-                                <field.TextField
-                                  data-ingredient-input
-                                  value={field.state.value}
-                                  onChange={(e) => {
-                                    field.handleChange(e.target.value);
-                                  }}
-                                  autoComplete="off"
-                                  className={cn(
-                                    !ingredients_field.state.meta.isValid &&
-                                      'input-error',
-                                    !field.state.meta.isValid && 'input-error',
-                                  )}
-                                />
-                              </Popover.Trigger>
-                            )}
-                          />
-                        </Popover.Anchor>
-                        <Popover.Content
-                          className=""
-                          side="top"
-                          sideOffset={8}
-                          align="start"
-                          onOpenAutoFocus={(e) => e.preventDefault()}
-                          onCloseAutoFocus={(e) => e.preventDefault()}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                        >
-                          {ingredients_search_results?.data &&
-                            ingredients_search_results.data.length > 0 && (
-                              <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-1">
-                                <div className="max-h-40 overflow-y-auto">
-                                  <InfiniteScroll
-                                    data="ingredients_search_results"
-                                    preserveUrl
-                                  >
-                                    {ingredients_search_results.data.map(
-                                      (ingredient) => (
-                                        <div
-                                          key={ingredient.id}
-                                          className="flex cursor-pointer items-center justify-between rounded px-3 py-2 text-base hover:bg-base-200"
-                                          onClick={() => {
-                                            form.setFieldValue(
-                                              'name',
-                                              ingredient.name,
-                                            );
-                                            form.setFieldValue(
-                                              'category_id',
-                                              ingredient.category_id,
-                                            );
-                                            setPopoverOpen(false);
-                                          }}
-                                        >
-                                          {ingredient.name}
-                                        </div>
-                                      ),
-                                    )}
-                                  </InfiniteScroll>
-                                </div>
-                              </div>
-                            )}
-                        </Popover.Content>
-                      </Popover.Root>
-                    </td>
+                    children={(field) => (
+                      <field.SelectField
+                        label={t(
+                          'recipes.ingredients.categoryLabel',
+                          'Catégorie',
+                        )}
+                        options={categoryOptions}
+                        className={cn(
+                          'w-full',
+                          !ingredientsField.state.meta.isValid &&
+                            'select-error',
+                          !field.state.meta.isValid && 'select-error',
+                        )}
+                      />
+                    )}
+                  />
+                </div>
+                {hasIngredients && <div className="hidden sm:block" />}
+              </div>
+            );
+          }
 
-                    <td>
-                      <form.AppField
-                        name="quantity"
-                        validators={{
-                          onChange:
-                            recipeIngredientRequestSchema.shape.quantity,
-                          onBlur: recipeIngredientRequestSchema.shape.quantity,
-                        }}
-                        children={(field) => (
-                          <field.NumberField
-                            value={field.state.value}
-                            min="0"
-                            step="0.01"
-                            className={cn(
-                              !ingredients_field.state.meta.isValid &&
-                                'input-error',
-                              !field.state.meta.isValid && 'input-error',
-                            )}
-                            onBlur={(e) => e.preventDefault()}
-                            onChange={(e) =>
-                              field.handleChange(
-                                e.target.value === ''
-                                  ? 0
-                                  : Math.round(Number(e.target.value) * 100) /
-                                      100,
-                              )
-                            }
-                          />
-                        )}
-                      />
-                    </td>
-                    <td>
-                      <form.AppField
-                        name="unit"
-                        children={(field) => (
-                          <field.TextField
-                            onBlur={(e) => e.preventDefault()}
-                            className={cn(
-                              !ingredients_field.state.meta.isValid &&
-                                'input-error',
-                              !field.state.meta.isValid && 'input-error',
-                            )}
-                          />
-                        )}
-                      />
-                    </td>
-                    <td>
-                      <form.AppField
-                        name="category_id"
-                        validators={{
-                          onChange:
-                            recipeIngredientRequestSchema.shape.category_id,
-                          onBlur:
-                            recipeIngredientRequestSchema.shape.category_id,
-                        }}
-                        children={(field) => (
-                          <select
-                            value={field.state.value}
-                            onChange={(e) =>
-                              field.handleChange(Number(e.target.value))
-                            }
-                            onBlur={(e) => e.preventDefault()}
-                            className={cn(
-                              'select w-full',
-                              !ingredients_field.state.meta.isValid &&
-                                'select-error',
-                              !field.state.meta.isValid && 'select-error',
-                            )}
-                          >
-                            {ingredient_categories?.map((category) => (
-                              <option key={category.id} value={category.id}>
-                                {category.name}
-                              </option>
-                            ))}
-                          </select>
-                        )}
-                      />
-                    </td>
-                    {ingredients_field.state.value &&
-                      ingredients_field.state.value.length !== 0 && <td></td>}
-                  </tr>
-                </tbody>
-              </table>
+          return (
+            <div className="flex w-full min-w-0 flex-col gap-4">
+              {title && (
+                <span className="text-base font-bold text-base-content">
+                  {title} *
+                </span>
+              )}
+              <div className="flex min-w-0 flex-col gap-5">
+                <div className={gridClassName}>
+                  {IngredientRows()}
+                  {NewIngredientRow()}
+                </div>
 
-              <FieldInfo />
-              <form.Subscribe>
-                {(state) => (
-                  <button
-                    type="button"
-                    disabled={!state.canSubmit}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      form.handleSubmit();
-                      ingredients_field.setErrorMap({
-                        onBlur: undefined,
-                        onSubmit: undefined,
-                      });
-                    }}
-                    onMouseDown={(e) => e.preventDefault()}
-                    className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
-                  >
-                    <span>
-                      {t('recipes.ingredients.addButton', 'Add ingredient')}
-                    </span>
-                    <PlusIcon className="h-5 shrink-0 pt-[2px]" />
-                  </button>
-                )}
-              </form.Subscribe>
+                <FieldInfo />
+                <form.Subscribe>
+                  {(state) => (
+                    <button
+                      type="button"
+                      disabled={!state.canSubmit}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        form.handleSubmit();
+                        ingredientsField.setErrorMap({
+                          onBlur: undefined,
+                          onSubmit: undefined,
+                        });
+                      }}
+                      onMouseDown={(e) => e.preventDefault()}
+                      className="btn w-full max-w-full min-w-0 border-secondary/20 pl-6.5 btn-soft btn-secondary sm:w-fit"
+                    >
+                      <span className="min-w-0 truncate">
+                        {t('recipes.ingredients.addButton', 'Add ingredient')}
+                      </span>
+                      <PlusIcon className="h-5 shrink-0 pt-[2px]" />
+                    </button>
+                  )}
+                </form.Subscribe>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        }}
       />
     );
   },

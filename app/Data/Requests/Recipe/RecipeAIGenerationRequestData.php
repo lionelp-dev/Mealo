@@ -92,10 +92,10 @@ class RecipeAIGenerationRequestData extends Data
     public static function rules(): array
     {
         return [
-            'prompt' => 'sometimes|nullable|string|min:5|max:255',
+            'prompt' => 'sometimes|nullable|string|min:5|max:5000',
             'message' => 'sometimes|nullable|array',
             'message.role' => 'sometimes|nullable|string|in:user',
-            'message.content' => 'sometimes|nullable|string|max:255',
+            'message.content' => 'sometimes|nullable|string|max:5000',
             'context' => 'sometimes|nullable|array',
             'context.meal_time' => 'sometimes|nullable|string|max:50',
             'context.meal_times' => 'sometimes|nullable|array|max:10',

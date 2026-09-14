@@ -55,9 +55,9 @@ export const RECIPE_PROMPT_PRESETS = [
 export const recipeAIGenerateRequestSchema = z.object({
   prompt: z
     .string()
-    .max(255)
+    .max(5000)
     .refine((value) => value === '' || value.length >= 5, {
-      message: 'Prompt must be at least 5 characters',
+      message: 'recipes.prefill.validation.tooShort',
     }),
   context: z.object({
     meal_time: z.string().max(50).nullable(),

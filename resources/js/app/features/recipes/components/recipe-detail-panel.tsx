@@ -42,8 +42,8 @@ export default function RecipeDetailPanel({
           <Edit2Icon size={16} />
         </button>
       )}
-      <div className="flex h-full flex-col overflow-y-auto">
-        <div className="flex flex-col gap-4">
+      <div className="flex h-full flex-col overflow-x-hidden overflow-y-auto">
+        <div className="flex w-full min-w-0 flex-col gap-4">
           <div className="top-0 z-10 flex flex-col gap-2 bg-white min-lg:sticky">
             {recipe.image_url && (
               <img
@@ -54,7 +54,7 @@ export default function RecipeDetailPanel({
                 decoding="async"
               />
             )}
-            <div className="flex w-full max-w-2xl flex-col gap-2 self-center px-4 min-md:pt-4 min-lg:px-4">
+            <div className="flex w-full min-w-0 max-w-2xl flex-col gap-2 self-center px-4 min-md:pt-4 min-lg:px-4">
               <h2 className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap text-base-content">
                 {recipe.name}
               </h2>
@@ -63,11 +63,11 @@ export default function RecipeDetailPanel({
               </p>
             </div>
           </div>
-          <div className="flex max-w-2xl flex-col gap-3 self-center px-4 pb-5 min-lg:px-4">
-            <div className="grid grid-cols-3 gap-3">
+          <div className="flex w-full min-w-0 max-w-2xl flex-col gap-3 self-center px-4 pb-5 min-lg:px-4">
+            <div className="grid min-w-0 grid-cols-3 gap-3">
               <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
                 <Clock3Icon size={15} className="text-base-content/60" />
-                <span className="text-xs text-base-content/60">
+                <span className="min-w-0 truncate text-xs text-base-content/60">
                   {t('recipes.table.preparationTime', 'Preparation time')}
                 </span>
                 <span className="text-sm font-semibold text-base-content">
@@ -77,7 +77,7 @@ export default function RecipeDetailPanel({
 
               <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
                 <CookingPotIcon size={15} className="text-base-content/60" />
-                <span className="text-xs text-base-content/60">
+                <span className="min-w-0 truncate text-xs text-base-content/60">
                   {t('recipes.table.cookingTime', 'Cooking time')}
                 </span>
                 <span className="text-sm font-semibold text-base-content">
@@ -87,7 +87,7 @@ export default function RecipeDetailPanel({
 
               <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
                 <UsersIcon size={15} className="text-base-content/60" />
-                <span className="text-xs text-base-content/60">
+                <span className="min-w-0 truncate text-xs text-base-content/60">
                   {t('recipes.show.servingSize', 'Portions')}
                 </span>
                 <span className="text-sm font-semibold text-base-content">
@@ -97,7 +97,7 @@ export default function RecipeDetailPanel({
             </div>
 
             {(recipe.meal_times.length > 0 || recipe.tags.length > 0) && (
-              <div className="flex flex-wrap gap-2">
+              <div className="flex min-w-0 flex-wrap gap-2">
                 {recipe.meal_times.map((mealTime) => (
                   <span
                     key={mealTime.id}
@@ -154,7 +154,7 @@ export default function RecipeDetailPanel({
                       key={step.id}
                       className="flex items-center gap-4 text-sm"
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-primary-content">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-content">
                         {step.order}
                       </span>
                       <p className="leading-6 text-base-content/75">

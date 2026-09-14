@@ -16,9 +16,9 @@ class RecipeImageAIGenerationAction
     public function instructions(string $prompt): string
     {
         return "A professional food photography of {$prompt}, appetizing presentation, "
-        . 'high quality, well-lit, centered on a clean white plate, neutral background, '
-        . 'culinary magazine style, realistic, detailed, '
-        . 'no text, no typography, no letters, no words, no labels, no logos, no watermark';
+        .'high quality, well-lit, centered on a clean white plate, neutral background, '
+        .'culinary magazine style, realistic, detailed, '
+        .'no text, no typography, no letters, no words, no labels, no logos, no watermark';
     }
 
     /**
@@ -81,7 +81,7 @@ class RecipeImageAIGenerationAction
                 throw new RuntimeException('Generated image exceeds 5MB limit');
             }
 
-            return 'data:image/jpeg;base64,' . $base64Data;
+            return 'data:image/jpeg;base64,'.$base64Data;
         } catch (Throwable $e) {
             throw new RecipeImageGenerationException(previous: $e);
         }

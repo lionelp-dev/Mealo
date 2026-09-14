@@ -6,7 +6,7 @@ import { useWorkspaceContextValue } from '../inertia.adapter';
 import { workspaceCreationStore } from '../stores/workspace-creation-modal-store';
 import { workspaceEditStore } from '../stores/workspace-edit-modal-store';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
-import { AppMainContent } from '@/app/components/app-main-content';
+import { PageContainer } from '@/app/components/page-container';
 import {
   ConfirmDialog,
   useConfirmDialog,
@@ -69,7 +69,7 @@ export function WorkspaceIndexView() {
     >
       <Head title={t('workspace.pageTitle', 'Mes groupes')} />
 
-      <AppMainContent>
+      <PageContainer size="default">
         <div className="grid h-full gap-8">
           <span className="flex flex-col">
             <span className="text-3xl leading-11 font-bold text-secondary">
@@ -308,7 +308,7 @@ export function WorkspaceIndexView() {
             </div>
           )}
         </div>
-      </AppMainContent>
+      </PageContainer>
       {dialogProps && <ConfirmDialog {...dialogProps} />}
       <WorkspaceInvitationModal workspace_data={workspace_data} />
       <WorkspaceCreationModal />

@@ -1,5 +1,5 @@
 import { useAdminDashboardContext } from '../infrastructure/inertia.adapter';
-import { AppMainContent } from '@/app/components/app-main-content';
+import { PageContainer } from '@/app/components/page-container';
 import AdminLayout from '@/app/layouts/admin-layout';
 import { Head } from '@inertiajs/react';
 import {
@@ -16,7 +16,7 @@ export default function AdminDashboard() {
     <AdminLayout>
       <Head title="Admin Dashboard" />
 
-      <AppMainContent>
+      <PageContainer size="default">
         <div className="grid gap-8">
           {/* Header */}
           <div>
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
             </div>
           </div>
         </div>
-      </AppMainContent>
+      </PageContainer>
     </AdminLayout>
   );
 }

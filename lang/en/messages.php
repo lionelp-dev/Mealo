@@ -6,8 +6,10 @@ return [
         'updated' => 'Recipe successfully updated',
         'deleted' => 'Recipe successfully deleted',
         'generated' => 'Recipes successfully generated',
+        'prefilled' => 'Recipe fields successfully prefilled.',
         'generation_queued' => 'Recipe generation started. The recipes will appear shortly.',
         'generation_failed' => 'Unable to start recipe generation. Please try again in a few moments.',
+        'image_generated' => 'Recipe image generated successfully.',
         'image_generation_failed' => 'Unable to generate the recipe image right now.',
     ],
     'planned_meal' => [

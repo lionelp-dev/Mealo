@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\Recipes\RecipeAIGenerationAction;
 use App\Actions\Recipes\RecipeDestroyAction;
 use App\Actions\Recipes\RecipeFiltersAction;
 use App\Actions\Recipes\RecipeGenerationSessionState;
@@ -30,6 +31,9 @@ use App\Messages\Recipe\RecipeCreatedMessage;
 use App\Messages\Recipe\RecipeDeletedMessage;
 use App\Messages\Recipe\RecipeGenerationFailedMessage;
 use App\Messages\Recipe\RecipeGenerationQueuedMessage;
+use App\Messages\Recipe\RecipeImageGeneratedMessage;
+use App\Messages\Recipe\RecipeImageGenerationFailedMessage;
+use App\Messages\Recipe\RecipePrefilledMessage;
 use App\Messages\Recipe\RecipeUpdatedMessage;
 use App\Models\IngredientCategory;
 use App\Models\MealTime;
@@ -259,6 +263,32 @@ class RecipeController extends Controller
         }
     }
 
+    public function aiGenerationPreview(
+        RecipeAIGenerationRequestData $recipeAIGenerationRequestData,
+        RecipeAIGenerationAction $recipeAIGenerationAction,
+    ): Response|RedirectResponse {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $recipes = $recipeAIGenerationAction->execute(
+                $this->makeRecipeAIGenerationRequest($recipeAIGenerationRequestData, null, 1),
+                false,
+            );
+
+            $recipe = $recipes[0] ?? throw new \Exception('No recipe generated from AI response.');
+
+            session()->flash('success', RecipePrefilledMessage::message());
+
+            return Inertia::render('recipe/create', [
+                'generated_recipe' => $recipe,
+            ]);
+        } catch (ValidationException $e) {
+            throw $e;
+        } catch (\Exception) {
+            return back()->with('error', RecipeGenerationFailedMessage::message());
+        }
+    }
+
     /**
      * @return list<string>
      */
@@ -355,19 +385,26 @@ class RecipeController extends Controller
 
     public function aiImageGeneration(
         RecipeImageAIGenerationRequestData $recipeImageAIGenerationRequestData,
-        RecipeImageAIGenerationAction $recipeImageAIGenerationAction
-    ): RedirectResponse {
+        RecipeImageAIGenerationAction $recipeImageAIGenerationAction,
+        Request $request,
+    ): Response|RedirectResponse {
         try {
             Gate::authorize('create', Recipe::class);
 
             $prompt = $recipeImageAIGenerationRequestData->name.'with'.json_encode($recipeImageAIGenerationRequestData->ingredients);
             $base64Image = $recipeImageAIGenerationAction->execute($prompt);
 
-            return back()->with([
+            session()->flash('success', RecipeImageGeneratedMessage::message());
+
+            $component = in_array($request->header('X-Inertia-Partial-Component'), ['recipe/create', 'recipe/edit'], true)
+                ? $request->header('X-Inertia-Partial-Component')
+                : 'recipe/create';
+
+            return Inertia::render($component, [
                 'generated_image_data_url' => $base64Image,
             ]);
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
+        } catch (\Exception) {
+            return back()->with('error', RecipeImageGenerationFailedMessage::message());
         }
     }
 }

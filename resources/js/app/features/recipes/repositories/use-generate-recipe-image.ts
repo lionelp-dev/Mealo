@@ -18,7 +18,7 @@ export function useGenerateRecipeImage() {
       },
       {
         only: ['generated_image_data_url', 'flash'],
-        reset: ['generated_image_data_url', 'flash'],
+        preserveScroll: true,
         preserveState: true,
         preserveUrl: true,
         onBefore: () => setProcessing(true),

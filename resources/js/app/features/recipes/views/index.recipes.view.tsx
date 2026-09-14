@@ -8,6 +8,7 @@ import { useRecipeDetailPanel } from '../hooks/use-recipe-detail-panel';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { editRecipe } from '../repositories/recipes.repository';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
+import { PageContainer } from '@/app/components/page-container';
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
@@ -134,10 +135,14 @@ export function IndexRecipesView() {
     children: (
       <>
         <Head title={t('recipes.pageTitle', 'My recipes')}></Head>
-        <div className="flex h-full min-h-0 w-full max-w-full min-w-0 flex-col overflow-x-clip overflow-y-hidden">
+        <PageContainer
+          size="full"
+          className="py-0"
+          contentClassName="flex min-h-0 flex-1 flex-col"
+        >
           <div
             className={
-              'z-10 mx-auto grid h-fit w-full min-w-0 gap-3 px-4 py-3 pb-2.5 lg:grid-cols-[minmax(0,1fr)_auto]'
+              'z-10 mx-auto grid h-fit w-full min-w-0 shrink-0 gap-3 py-3 pb-2.5 lg:grid-cols-[minmax(0,1fr)_auto]'
             }
           >
             <RecipesSearch className="min-lg:hidden" />
@@ -199,10 +204,11 @@ export function IndexRecipesView() {
           )}
 
           {(recipes.data.length > 0 || isGeneratingRecipes) && (
-            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden px-4">
+            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden pb-3">
               <RecipeDetailPanelContainer
                 isMounted={isRecipeDetailMounted}
                 isVisible={isRecipeDetailVisible}
+                className="min-lg:h-full"
               >
                 {displayedRecipe && (
                   <RecipeDetailPanel
@@ -235,7 +241,7 @@ export function IndexRecipesView() {
               </div>
             </div>
           )}
-        </div>
+        </PageContainer>
         {isMultiSelectMode && selectedRecipeIds.length > 0 && (
           <RecipesMultiSelectToolbar />
         )}

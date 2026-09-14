@@ -6,6 +6,7 @@ import RadioField from '@/app/components/ui/form-radio-field';
 import SelectField from '@/app/components/ui/form-select-field';
 import SubmitButton from '@/app/components/ui/form-submit-button';
 import TextAreaField from '@/app/components/ui/form-textarea-field';
+import { MealTimesCheckboxField } from '@/app/components/ui/meal-times-checkbox-field';
 import { MultiSelectField } from '@/app/components/ui/multi-select-field';
 import NumberField from '@/app/components/ui/number-input';
 import TextField from '@/app/components/ui/text-input';
@@ -21,6 +22,7 @@ export const { useAppForm, withForm, withFieldGroup } = createFormHook({
     CheckboxField,
     RadioField,
     MultiSelectField,
+    MealTimesCheckboxField,
     ImageUploadField,
   },
   formComponents: {

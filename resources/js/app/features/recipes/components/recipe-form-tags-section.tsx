@@ -64,30 +64,30 @@ export const RecipeFormTagsSection = withFieldGroup({
           onBlur: recipeStoreRequestSchema.shape.tags,
         }}
         children={(tags_field) => (
-          <div className="flex flex-col gap-4">
+          <div className="flex w-full min-w-0 flex-col gap-4">
             <span className="text-base text-base-content">
               {t('recipes.form.tagsTitle', 'Tags')}
             </span>
 
-            <div className="flex flex-col gap-6">
+            <div className="flex min-w-0 flex-col gap-6">
               <Popover.Root open={isPopoverOpen} onOpenChange={setPopoverOpen}>
-                <Popover.Anchor className="flex flex-1">
+                <Popover.Anchor className="flex min-w-0 flex-1">
                   <form.AppField
                     name="name"
                     children={(field) => (
-                      <Popover.Trigger className="flex-1">
+                      <Popover.Trigger className="min-w-0 flex-1">
                         <label
                           className={cn(
                             `${tags_field.state.value && tags_field.state.value.length > 0 && 'input pt-2 pr-4 pb-4 pl-3'}`,
-                            'flex h-fit w-full flex-col items-start gap-4 text-left [&>div:first-of-type]:w-full',
+                            'flex h-fit w-full max-w-full min-w-0 flex-col items-start gap-4 text-left [&>div:first-of-type]:w-full [&>div:first-of-type]:min-w-0',
                           )}
                         >
                           <div
-                            className={`${tags_field.state.value && tags_field.state.value.length > 0 && 'py-2'}`}
+                            className={`min-w-0 ${tags_field.state.value && tags_field.state.value.length > 0 && 'py-2'}`}
                           >
                             <field.TextField
                               className={cn(
-                                '-mb-1 w-full py-2',
+                                '-mb-1 w-full min-w-0 py-2',
                                 tags_field.state.value &&
                                   tags_field.state.value.length > 0 &&
                                   'outline outline-base-300',
@@ -111,17 +111,17 @@ export const RecipeFormTagsSection = withFieldGroup({
                           </div>
                           {tags_field.state.value &&
                             tags_field.state.value.length > 0 && (
-                              <div className="max-h-40 overflow-y-scroll">
-                                <div className="flex flex-wrap gap-3">
+                              <div className="max-h-40 max-w-full overflow-y-scroll">
+                                <div className="flex min-w-0 flex-wrap gap-3">
                                   {tags_field.state.value?.map((tag, index) => (
                                     <span
                                       key={index}
-                                      className="badge flex cursor-pointer content-center badge-secondary"
+                                      className="badge flex max-w-full cursor-pointer content-center badge-secondary"
                                       onClick={() =>
                                         tags_field.removeValue(index)
                                       }
                                     >
-                                      <span className="text-secondary-content">
+                                      <span className="min-w-0 truncate text-secondary-content">
                                         {tag.name}
                                       </span>
                                       <X size={14} />
@@ -146,11 +146,12 @@ export const RecipeFormTagsSection = withFieldGroup({
                       e.preventDefault();
                       e.stopPropagation();
                     }}
+                    className="z-50 max-w-[calc(100vw-2rem)]"
                   >
                     {tags_search_results?.data &&
                       tags_search_results.data.length > 0 && (
-                        <div className="z-50 flex rounded-sm border border-solid border-base-300 bg-base-100 p-1">
-                          <div className="h-fit max-h-[10lh] overflow-y-auto">
+                        <div className="flex max-w-full overflow-hidden rounded-sm border border-solid border-base-300 bg-base-100 p-1">
+                          <div className="h-fit max-h-[10lh] max-w-full overflow-y-auto">
                             <InfiniteScroll
                               data="tags_search_results"
                               preserveUrl
@@ -158,14 +159,14 @@ export const RecipeFormTagsSection = withFieldGroup({
                               {tags_search_results.data.map((tag) => (
                                 <div
                                   key={tag.id}
-                                  className="flex cursor-pointer items-center justify-between rounded px-4 py-2 hover:bg-base-300"
+                                  className="flex max-w-full cursor-pointer items-center justify-between rounded px-4 py-2 hover:bg-base-300"
                                   onMouseDown={(e) => e.preventDefault()}
                                   onClick={() => {
                                     form.setFieldValue('name', tag.name);
                                     setPopoverOpen(false);
                                   }}
                                 >
-                                  <span className="font-medium">
+                                  <span className="min-w-0 truncate font-medium">
                                     {tag.name}
                                   </span>
                                 </div>
@@ -183,15 +184,19 @@ export const RecipeFormTagsSection = withFieldGroup({
               <form.Subscribe>
                 {(state) => (
                   <button
+                    type="button"
                     disabled={!state.canSubmit}
-                    className="btn w-fit border-secondary/20 pl-6.5 btn-soft btn-secondary"
+                    className="btn w-full max-w-full min-w-0 border-secondary/20 pl-6.5 btn-soft btn-secondary sm:w-fit"
                     onClick={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
                       form.handleSubmit();
                     }}
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    {t('recipes.tags.addButton', 'Add tag')}
+                    <span className="min-w-0 truncate">
+                      {t('recipes.tags.addButton', 'Add tag')}
+                    </span>
                     <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}

@@ -1,6 +1,6 @@
 Mealo Planner est une application web full-stack développée avec Laravel, Inertia.js, React et TypeScript. Elle permet de gérer des recettes, de planifier des repas dans des espaces personnels ou partagés et de générer automatiquement une liste de courses à partir du planning.
 
-L'application intègre également des fonctionnalités d'intelligence artificielle permettant de générer des recettes, de créer des visuels et de proposer des plannings de repas à partir des recettes enregistrées.
+L'application intègre également des fonctionnalités d'intelligence artificielle permettant de générer des recettes et de créer des visuels. Elle propose aussi des plannings de repas générés automatiquement à partir des recettes enregistrées.
 
 ![Interface de Mealo Planner](./docs/images/app.png)
 
@@ -11,32 +11,32 @@ L'application intègre également des fonctionnalités d'intelligence artificiel
 - [Installation](#installation)
 - [Démarrage](#démarrage)
 - [Backend](#backend)
-    - [1. Stack Technique](#1-stack-technique)
-    - [2. Modèle logique de données : principales entités métier et relations](#2-modèle-logique-de-données--principales-entités-métier-et-relations)
-    - [3. Controllers : orchestration du traitement d’une requête](#3-controllers--orchestration-du-traitement-dune-requête)
-    - [4. Resource DTOs : transformation des données envoyées](#4-resource-dtos--transformation-des-données-envoyées)
-    - [5. Request DTOs : validation et typage des données reçues](#5-request-dtos--validation-et-typage-des-données-reçues)
-    - [6. Policies : gestion des autorisations](#6-policies--gestion-des-autorisations)
-    - [7. Actions : isolation des traitements applicatifs](#7-actions--isolation-des-traitements-applicatifs)
-    - [8. Observers : événements Eloquent et synchronisation des données](#8-observers--événements-eloquent-et-synchronisation-des-données)
-    - [9. Trait de message : formulation commune](#9-trait-de-message--formulation-commune)
-    - [10. Messages utilisateur : centralisation des retours](#10-messages-utilisateur--centralisation-des-retours)
-    - [11. Exceptions métier : représentation des opérations refusées](#11-exceptions-métier--représentation-des-opérations-refusées)
-    - [12. TestCase : configuration commune des tests](#12-testcase--configuration-commune-des-tests)
-    - [13. Préparation des données et des scénarios : Traits de context](#13-préparation-des-données-et-des-scénarios--traits-de-context)
-    - [14. Tests d’intégration : vérification des traitements applicatifs](#14-tests-dintégration--vérification-des-traitements-applicatifs)
-    - [15. Tests fonctionnels : vérification des parcours utilisateur](#15-tests-fonctionnels--vérification-des-parcours-utilisateur)
+  - [1. Stack Technique](#1-stack-technique)
+  - [2. Modèle logique de données : principales entités métier et relations](#2-modèle-logique-de-données--principales-entités-métier-et-relations)
+  - [3. Controllers : orchestration du traitement d’une requête](#3-controllers--orchestration-du-traitement-dune-requête)
+  - [4. Resource DTOs : transformation des données envoyées](#4-resource-dtos--transformation-des-données-envoyées)
+  - [5. Request DTOs : validation et typage des données reçues](#5-request-dtos--validation-et-typage-des-données-reçues)
+  - [6. Policies : gestion des autorisations](#6-policies--gestion-des-autorisations)
+  - [7. Actions : isolation des traitements applicatifs](#7-actions--isolation-des-traitements-applicatifs)
+  - [8. Observers : événements Eloquent et synchronisation des données](#8-observers--événements-eloquent-et-synchronisation-des-données)
+  - [9. Trait de message : formulation commune](#9-trait-de-message--formulation-commune)
+  - [10. Messages utilisateur : centralisation des retours](#10-messages-utilisateur--centralisation-des-retours)
+  - [11. Exceptions métier : représentation des opérations refusées](#11-exceptions-métier--représentation-des-opérations-refusées)
+  - [12. TestCase : configuration commune des tests](#12-testcase--configuration-commune-des-tests)
+  - [13. Préparation des données et des scénarios : Traits de context](#13-préparation-des-données-et-des-scénarios--traits-de-context)
+  - [14. Tests d’intégration : vérification des traitements applicatifs](#14-tests-dintégration--vérification-des-traitements-applicatifs)
+  - [15. Tests fonctionnels : vérification des parcours utilisateur](#15-tests-fonctionnels--vérification-des-parcours-utilisateur)
 - [Frontend](#frontend)
-    - [1. Stack Technique](#1-stack-technique-1)
-    - [2. Architecture : orientée feature](#2-architecture--orientée-feature)
-    - [3. Vue d’ensemble](#3-vue-densemble)
-    - [4. Pages Inertia : délégation de l’affichage aux Views des features](#4-pages-inertia--délégation-de-laffichage-aux-views-des-features)
-    - [5. Adapters Inertia et Context : mise à disposition des données](#5-adapters-inertia-et-context--mise-à-disposition-des-données)
-    - [6. Views : composition des écrans](#6-views--composition-des-écrans)
-    - [7. Components](#7-components)
-    - [8. Formulaires : gestion des données saisies](#8-formulaires--gestion-des-données-saisies)
-    - [9. Schémas de validation](#9-schémas-de-validation)
-    - [10. Repositories : découplage avec le router Inertia](#10-repositories--découplage-avec-le-router-inertia)
+  - [1. Stack Technique](#1-stack-technique-1)
+  - [2. Architecture : orientée feature](#2-architecture--orientée-feature)
+  - [3. Vue d’ensemble](#3-vue-densemble)
+  - [4. Pages Inertia : délégation de l’affichage aux Views des features](#4-pages-inertia--délégation-de-laffichage-aux-views-des-features)
+  - [5. Adapters Inertia et Context : mise à disposition des données](#5-adapters-inertia-et-context--mise-à-disposition-des-données)
+  - [6. Views : composition des écrans](#6-views--composition-des-écrans)
+  - [7. Components](#7-components)
+  - [8. Formulaires : gestion des données saisies](#8-formulaires--gestion-des-données-saisies)
+  - [9. Schémas de validation](#9-schémas-de-validation)
+  - [10. Repositories : découplage avec le router Inertia](#10-repositories--découplage-avec-le-router-inertia)
 - [Intégration continue](#intégration-continue)
 
 </br>
@@ -114,12 +114,32 @@ composer dev
 
 ### 1. Stack Technique
 
-| Catégorie                | Technologies                                                 |
-| ------------------------ | ------------------------------------------------------------ |
-| Application              | PHP 8.2+, Laravel 12, Inertia Laravel, Laravel Fortify       |
-| Données et autorisations | Eloquent, SQLite, Spatie Laravel Data, Spatie Permission     |
-| IA et tâches asynchrones | OpenAI PHP client, OpenAI/OpenRouter, jobs et queues Laravel |
-| Tests et qualité         | Pest, Larastan, Laravel Pint                                 |
+**Application**
+
+- **PHP 8.2+** — langage du backend
+- **Laravel 12** — framework applicatif (routing, Eloquent, queues)
+- **Inertia.js (adapter Laravel)** — rendu des pages React sans API REST dédiée
+- **Laravel Fortify** — authentification (login, inscription, réinitialisation)
+
+**Données et autorisations**
+
+- **Eloquent** — ORM et modélisation des entités
+- **PostgreSQL** — base de données en production
+- **SQLite** — base de données en développement et pour les tests
+- **Spatie Laravel Data** — DTOs typés pour la validation et la sérialisation
+- **Spatie Permission** — rôles et permissions par workspace (team-scoped)
+
+**IA et tâches asynchrones**
+
+- **Laravel AI SDK** — génération des visuels de recettes
+- **Jobs et queues Laravel** — traitement asynchrone des générations IA
+- **Microservice AdonisJS & (LangGraph / LangChain)** — génération des recettes via une API dédiée
+
+**Tests et qualité**
+
+- **Pest** — tests unitaires, d'intégration et fonctionnels
+- **Larastan** — analyse statique du typage (PHPStan niveau 10)
+- **Laravel Pint** — formatage automatique du code PHP
 
 </br>
 
@@ -729,12 +749,37 @@ Cet exemple vérifie qu’un utilisateur authentifié peut planifier un repas, r
 
 ### 1. Stack Technique
 
-| Catégorie                       | Technologies                                                     |
-| ------------------------------- | ---------------------------------------------------------------- |
-| Application                     | Inertia.js, React 19, TypeScript, Vite, Wayfinder                |
-| Interface utilisateur           | Tailwind CSS, DaisyUI, Radix UI, Headless UI, Lucide React       |
-| Données et formulaires          | TanStack Form, Zod, Zustand, i18next                             |
-| Tests, documentation et qualité | Vitest, Playwright, Testing Library, Storybook, ESLint, Prettier |
+**Application**
+
+- **Inertia.js** — pont entre les routes Laravel et les composants React
+- **React 19** — bibliothèque d'interface
+- **TypeScript** — typage statique du frontend
+- **Vite** — bundler et serveur de développement
+- **Wayfinder** — génération des helpers de routes typés depuis Laravel
+
+**Interface utilisateur**
+
+- **Tailwind CSS** — styles utilitaires
+- **DaisyUI** — composants et thèmes basés sur Tailwind
+- **Radix UI** — primitives d'interface accessibles
+- **Headless UI** — composants interactifs sans style imposé
+- **Lucide React** — jeu d'icônes
+
+**Données et formulaires**
+
+- **TanStack Form** — gestion des formulaires (via le hook `useAppForm`)
+- **Zod** — schémas de validation et inférence de types
+- **Zustand** — état d'interface partagé
+- **i18next** — internationalisation des textes
+
+**Tests, documentation et qualité**
+
+- **Vitest** — tests unitaires frontend
+- **Playwright** — tests end-to-end
+- **Testing Library** — tests orientés comportement des composants
+- **Storybook** — documentation et exploration des composants
+- **ESLint** — règles JavaScript / TypeScript / React
+- **Prettier** — formatage des sources
 
 </br>
 

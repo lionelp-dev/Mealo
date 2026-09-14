@@ -4,6 +4,7 @@ import ShoppingListProgress from '../components/shopping-list-progress';
 import { useShoppingList } from '../hooks/use-shopping-list';
 import { useShoppingListsContextValue } from '../inertia.adapter';
 import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
+import { PageContainer } from '@/app/components/page-container';
 import WeekSelector from '@/app/components/week-selector';
 import { useWeekSelector } from '@/app/hooks/use-week-selector';
 import AppLayout from '@/app/layouts/app-layout';
@@ -47,33 +48,38 @@ export default function ShoppingListsView() {
     >
       <Head title={t('shoppingLists.pageTitle', 'Shopping Lists')} />
 
-      <div className="sticky top-0 flex flex-col gap-1.25 border-b border-base-300/50 bg-base-100 px-4 py-3.25 md:px-12">
-        <div className="flex items-end justify-between">
-          <h1 className="text-xl font-bold text-secondary md:hidden">
-            {t('shoppingLists.mobileTitle', 'Panier')}
-          </h1>
-          <h1 className="text-2xl font-bold text-secondary max-md:hidden">
-            {t('shoppingLists.desktopTitle', 'Liste de courses')}
-          </h1>
-          <ShoppingListToggleView />
-        </div>
-        <ShoppingListProgress checkedCount={checkedCount} totalCount={total} />
-      </div>
-
-      <div className="flex h-full flex-col gap-5 overflow-y-auto bg-base-100 px-4 py-5 md:px-12">
-        {total > 0 && (
-          <div className="flex w-full flex-1 flex-col gap-4">
-            <div className="grid grid-cols-1 gap-7 md:gap-10 lg:grid-cols-3">
-              {viewMode === 'ingredients' ? (
-                <ShoppingListByIngredientCategories />
-              ) : (
-                <ShoppingListByRecipes />
-              )}
-            </div>
+      <PageContainer size="full" className="py-0">
+        <div className="sticky top-0 z-20 flex flex-col gap-1.25 border-b border-base-300/50 bg-[#f6f7f9] px-4 py-3.25 md:px-12">
+          <div className="flex items-end justify-between">
+            <h1 className="text-xl font-bold text-secondary md:hidden">
+              {t('shoppingLists.mobileTitle', 'Panier')}
+            </h1>
+            <h1 className="text-2xl font-bold text-secondary max-md:hidden">
+              {t('shoppingLists.desktopTitle', 'Liste de courses')}
+            </h1>
+            <ShoppingListToggleView />
           </div>
-        )}
-        <ShoppingListEmptyView />
-      </div>
+          <ShoppingListProgress
+            checkedCount={checkedCount}
+            totalCount={total}
+          />
+        </div>
+
+        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 py-5 md:px-12">
+          {total > 0 && (
+            <div className="flex w-full flex-1 flex-col gap-4">
+              <div className="grid grid-cols-1 gap-7 md:gap-10 lg:grid-cols-3">
+                {viewMode === 'ingredients' ? (
+                  <ShoppingListByIngredientCategories />
+                ) : (
+                  <ShoppingListByRecipes />
+                )}
+              </div>
+            </div>
+          )}
+          <ShoppingListEmptyView />
+        </div>
+      </PageContainer>
     </AppLayout>
   );
 }

@@ -194,8 +194,21 @@
                 "error": "Échec de la génération. Veuillez réessayer."
             }
         },
+        "prefill": {
+            "title": "Préremplir une recette avec l’IA",
+            "description": "Indiquez un nom, décrivez un plat ou collez une recette complète.",
+            "placeholder": "Ex. Curry de poulet ou plat végétarien rapide pour 4 personnes...",
+            "button": "Analyser et préremplir",
+            "generating": "Pré-remplissage...",
+            "hide": "Masquer",
+            "show": "Afficher",
+            "validation": {
+                "tooShort": "Le texte doit contenir au moins 5 caractères."
+            }
+        },
         "ingredients": {
             "addButton": "Ajouter un ingrédient",
+            "ingredientLabel": "Ingrédient",
             "nameLabel": "Nom",
             "namePlaceholder": "Nom de l'ingrédient",
             "quantityLabel": "Quantité",
@@ -607,6 +620,7 @@
     "landing": {
         "header": {
             "appName": "Mealo Planner",
+            "about": "À propos",
             "features": "Fonctionnalités",
             "howItWorks": "Comment ça marche",
             "preview": "Aperçu",

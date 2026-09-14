@@ -7,9 +7,9 @@ function FieldInfo() {
   const meta = useStore(field.store, (state) => state.meta);
 
   return meta.isTouched && !meta.isValid ? (
-    <em className="flex items-center gap-2 text-sm text-error">
+    <em className="flex min-w-0 items-start gap-2 text-sm text-error">
       <AlertTriangle size={14} className="flex-shrink-0" />
-      <span className="whitespace-nowrap">
+      <span className="min-w-0 break-words">
         {[...new Set(meta.errors.map((err) => err.message))].join(', ')}
       </span>
     </em>

@@ -1,5 +1,5 @@
 import { useAdminUsersContext } from '../infrastructure/inertia.adapter';
-import { AppMainContent } from '@/app/components/app-main-content';
+import { PageContainer } from '@/app/components/page-container';
 import {
   Dialog,
   DialogContent,
@@ -75,7 +75,7 @@ export default function AdminUsersView() {
     <AdminLayout>
       <Head title="Users" />
 
-      <AppMainContent>
+      <PageContainer size="default">
         <div className="grid gap-6">
           <div>
             <h1 className="text-3xl font-bold">Users</h1>
@@ -170,7 +170,7 @@ export default function AdminUsersView() {
             )}
           </div>
         </div>
-      </AppMainContent>
+      </PageContainer>
 
       {/* Details dialog */}
       <Dialog
