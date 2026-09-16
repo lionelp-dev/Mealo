@@ -10,11 +10,11 @@ use Illuminate\Support\Facades\Bus;
 
 class RecipeGenerateStarterPackAction
 {
-    public const SIGNUP_RECIPES_PER_MEAL_TIME = 5;
+    public const SIGNUP_RECIPES_PER_MEAL_TIME = 10;
 
     public function execute(
         User $user,
-        int $recipesPerMealTime = 5,
+        int $recipesPerMealTime = self::SIGNUP_RECIPES_PER_MEAL_TIME,
         bool $imageGeneration = true,
     ): void {
         $mealTimes = MealTime::query()->orderBy('id')->get(['slug']);
@@ -24,7 +24,7 @@ class RecipeGenerateStarterPackAction
         }
 
         $jobs = $mealTimes->map(
-            fn (MealTime $mealTime): RecipeAIGenerationJob => new RecipeAIGenerationJob(
+            fn(MealTime $mealTime): RecipeAIGenerationJob => new RecipeAIGenerationJob(
                 $user->id,
                 RecipeAIGenerationRequestData::validateAndCreate([
                     'message' => [

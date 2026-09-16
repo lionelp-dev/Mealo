@@ -50,14 +50,14 @@ export default function ShoppingListIngredientRow({
   return (
     <label
       className={cn(
-        'flex items-center gap-5 px-5 select-none',
+        'flex items-center gap-3 px-4 py-1 select-none',
         checked
           ? 'bg-gray-100/50 hover:bg-secondary/15'
           : 'hover:bg-secondary/5',
         (isLoading || externalIsLoading) && 'opacity-50',
       )}
     >
-      <div className="grid w-full grid-cols-[auto_1fr] grid-rows-[2.35rem_auto] items-center gap-x-4 py-1">
+      <div className="grid w-full grid-cols-[auto_1fr] items-center gap-x-3 py-1.5">
         {canEditShoppingList && (
           <input
             type="checkbox"
@@ -65,7 +65,7 @@ export default function ShoppingListIngredientRow({
             onChange={toggleChecked}
             disabled={isLoading || externalIsLoading}
             className={cn(
-              'checkbox flex-shrink-0 checkbox-xs hover:checkbox-secondary',
+              'checkbox flex-shrink-0 checkbox-sm rounded-full hover:checkbox-secondary',
               checked && 'checkbox-secondary',
             )}
           />
@@ -74,7 +74,7 @@ export default function ShoppingListIngredientRow({
         <span className="flex h-full min-w-0 items-center justify-between gap-1">
           <span
             className={cn(
-              'flex-1 items-center gap-2 truncate text-base font-medium text-base-content transition-all duration-200',
+              'flex-1 truncate text-sm font-medium text-base-content transition-all duration-200',
               checked && 'line-through',
             )}
           >

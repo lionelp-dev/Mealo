@@ -326,6 +326,8 @@
         "listProgress": "{{checked}} sur {{total}}",
         "itemsCount": "{{count}} article(s)",
         "itemsCheckedOff": "{{count}} article(s) cochés",
+        "showMore": "Voir les {{count}} autres",
+        "showLess": "Réduire",
         "progress": "{{checked}} sur {{total}} cochés",
         "empty": {
             "title": "Aucune liste de courses",

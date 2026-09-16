@@ -313,6 +313,8 @@
         "checked": "Checked",
         "listProgress": "{{checked}} of {{total}}",
         "itemsCount": "{{count}} item(s)",
+        "showMore": "See the {{count}} others",
+        "showLess": "Show less",
         "progress": "{{checked}} of {{total}} completed"
     },
     "settings": {

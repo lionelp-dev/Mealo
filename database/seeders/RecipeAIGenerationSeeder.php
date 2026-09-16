@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 
 class RecipeAIGenerationSeeder extends Seeder
 {
-    private const RECIPES_PER_MEAL_TIME = 5;
+    private const RECIPES_PER_MEAL_TIME = 10;
 
     public function __construct(
         private User $user,

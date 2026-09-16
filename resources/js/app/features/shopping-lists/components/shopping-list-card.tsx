@@ -1,5 +1,8 @@
 import { cn } from '@/app/lib/';
-import { ReactNode } from 'react';
+import { Children, ReactNode, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+const DEFAULT_VISIBLE_COUNT = 8;
 
 type ShoppingListCardProps = {
   children: ReactNode;
@@ -14,23 +17,29 @@ export default function ShoppingListCard({
   subtitle,
   title,
 }: ShoppingListCardProps) {
+  const { t } = useTranslation();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const childArray = Children.toArray(children);
+  const totalCount = childArray.length;
+  const hasMore = totalCount > DEFAULT_VISIBLE_COUNT;
+  const visibleChildren = isExpanded
+    ? childArray
+    : childArray.slice(0, DEFAULT_VISIBLE_COUNT);
+  const hiddenCount = totalCount - DEFAULT_VISIBLE_COUNT;
+
   return (
-    <section className="flex h-fit flex-col gap-3">
-      <div
-        className={cn(
-          'flex max-w-full items-start font-medium text-base-content',
-        )}
-      >
-        <div className="flex min-w-0 flex-1 flex-col gap-0.25">
+    <section className="flex h-fit flex-col overflow-hidden rounded-xl border border-base-200 bg-base-100">
+      <div className="border-b-2 border-secondary/70 px-4 py-3">
+        <div className="flex min-w-0 flex-col gap-0.5">
           <span
             className={cn(
-              'truncate text-lg font-medium text-secondary transition-all duration-200',
+              'truncate text-base font-bold text-base-content transition-all duration-200',
               isComplete && 'text-base-content/50 line-through',
             )}
           >
             {title}
           </span>
-
           {subtitle && (
             <span
               className={cn(
@@ -44,9 +53,23 @@ export default function ShoppingListCard({
         </div>
       </div>
 
-      <div className="divide-y divide-base-200 overflow-hidden rounded-xl border border-base-200 bg-base-100">
-        {children}
+      <div className="divide-y divide-base-200">
+        {visibleChildren}
       </div>
+
+      {hasMore && (
+        <button
+          onClick={() => setIsExpanded((expanded) => !expanded)}
+          className="border-t border-base-200 px-4 py-3 text-left text-sm font-semibold text-secondary hover:underline"
+        >
+          {isExpanded
+            ? t('shoppingLists.showLess', 'Réduire')
+            : t('shoppingLists.showMore', {
+                count: hiddenCount,
+                defaultValue: 'Voir les {{count}} autres',
+              })}
+        </button>
+      )}
     </section>
   );
 }

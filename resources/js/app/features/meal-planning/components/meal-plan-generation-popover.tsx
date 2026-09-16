@@ -30,6 +30,9 @@ export function MealPlanGenerationPopover({ className }: Props) {
   const { isGenerating, setIsGenerating, isOpen, setIsOpen } =
     useMealPlanGeneration();
 
+  const [isCalendarRangeIsOpen, setCalendarRangeIsOpen] =
+    useState<boolean>(false);
+
   const defaultValues: MealPlanGenerationForm = {
     range: {
       startDate: DateTime.fromISO(weekStart),
@@ -37,9 +40,6 @@ export function MealPlanGenerationPopover({ className }: Props) {
     },
     serving_size: 1,
   };
-
-  const [isCalendarRangeIsOpen, setCalendarRangeIsOpen] =
-    useState<boolean>(false);
 
   const form = useAppForm({
     defaultValues,
@@ -195,7 +195,7 @@ export function MealPlanGenerationPopover({ className }: Props) {
                             onPointerDownOutside={(e) => e.stopPropagation()}
                           >
                             <calendar-range
-                              className="cally [&_::part(button_day_today)]:bg-inherit [&_::part(button_day_today)]:text-base-content [&_::part(day):disabled]:bg-secondary/15 [&_::part(day):hover]:bg-secondary/20 [&_::part(selected)]:bg-secondary [&_::part(selected)]:text-secondary-content [&_::part(selected):hover]:bg-secondary/20"
+                              className="cally [&_::part(button_day_today)]:bg-inherit [&_::part(button_day_today)]:text-base-content [&_::part(day):disabled]:bg-secondary/15 [&_::part(day):disabled]:text-base-content/40 [&_::part(day):disabled]:line-through [&_::part(day):hover]:bg-secondary/20 [&_::part(selected)]:bg-secondary [&_::part(selected)]:text-secondary-content [&_::part(selected):hover]:bg-secondary/20"
                               months={1}
                               min={
                                 DateTime.fromISO(weekStart).toISODate() ??

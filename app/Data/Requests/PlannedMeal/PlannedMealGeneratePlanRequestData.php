@@ -20,7 +20,7 @@ class PlannedMealGeneratePlanRequestData extends Data
         #[DataCollectionOf(MealTimeConfigData::class)]
         public array $meal_times = [],
         public ?int $variant = null,
-        public float $maxSimilarity = 0.6,
+        public float $maxSimilarity = 1
     ) {}
 
     /**
@@ -30,7 +30,7 @@ class PlannedMealGeneratePlanRequestData extends Data
     {
         return [
             'startDate' => ['required', 'date'],
-            'endDate' => ['required', 'date'],
+            'endDate' => ['required', 'date', 'after_or_equal:startDate'],
             'serving_size' => ['required', 'integer', 'min:1', 'max:255'],
             'meal_times' => ['sometimes', 'array'],
             'meal_times.*.name' => ['required_with:meal_times', 'string'],
