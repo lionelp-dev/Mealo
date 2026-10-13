@@ -14,7 +14,7 @@ import { Bell, Users } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 type PageProps = {
-  workspace_data: WorkspaceData;
+  workspace_data?: WorkspaceData;
 };
 
 export function NavWorkspace() {
@@ -22,11 +22,9 @@ export function NavWorkspace() {
 
   const { workspace_data } = usePage<PageProps>().props;
 
-  if (!workspace_data) return null;
-
-  const workspaces = workspace_data.workspaces || [];
+  const workspaces = workspace_data?.workspaces ?? [];
   const pendingInvitationsCount =
-    workspace_data.workspaces_invitations?.length || 0;
+    workspace_data?.workspaces_invitations?.length ?? 0;
 
   const sharedWorkspaces = workspaces?.filter((w) => !w.is_personal);
 

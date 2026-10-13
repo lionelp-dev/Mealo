@@ -6,11 +6,11 @@ import { useWorkspaceContextValue } from '../inertia.adapter';
 import { workspaceCreationStore } from '../stores/workspace-creation-modal-store';
 import { workspaceEditStore } from '../stores/workspace-edit-modal-store';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
-import { PageContainer } from '@/app/components/page-container';
 import {
   ConfirmDialog,
   useConfirmDialog,
 } from '@/app/components/confirm-dialog';
+import { PageContainer } from '@/app/components/page-container';
 import {
   DropdownMenu,
   DropdownMenuContent,

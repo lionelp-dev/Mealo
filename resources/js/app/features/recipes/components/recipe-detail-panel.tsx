@@ -1,173 +1,169 @@
+import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { RecipeResourceData } from '@/types/generated';
-import {
-  Clock3Icon,
-  CookingPotIcon,
-  Edit2Icon,
-  UsersIcon,
-  XIcon,
-} from 'lucide-react';
-import { useTranslation } from 'react-i18next';
+import { ArrowLeft, Clock3, UtensilsCrossed, X } from 'lucide-react';
 
-type RecipeDetailPanelProps = {
-  recipe: RecipeResourceData;
-  onClose: () => void;
-  onEdit?: () => void;
+type DetailRecipe = RecipeResource | RecipeResourceData;
+
+type Props = {
+  recipe: DetailRecipe;
+  onClose?: () => void;
+  compact?: boolean;
+  showDesktopCloseButton?: boolean;
 };
 
 export default function RecipeDetailPanel({
   recipe,
   onClose,
-  onEdit,
-}: RecipeDetailPanelProps) {
-  const { t } = useTranslation();
-  const sortedSteps = [...recipe.steps].sort((a, b) => a.order - b.order);
+  compact,
+  showDesktopCloseButton = true,
+}: Props) {
+  const steps = [...recipe.steps].sort(
+    (left, right) => left.order - right.order,
+  );
+  const ingredients = recipe.ingredients ?? [];
+  const totalTime = recipe.preparation_time + recipe.cooking_time;
 
   return (
-    <div className="z-10 h-full w-full overflow-hidden rounded-xl border border-base-300/40 bg-base-100 shadow-xs">
-      <button
-        type="button"
-        onClick={onClose}
-        aria-label={t('common.buttons.close', 'Close')}
-        className="absolute top-3 left-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-base-100/90 text-base-content/70 shadow-xs backdrop-blur-sm transition hover:bg-base-200 hover:text-base-content"
-      >
-        <XIcon size={18} />
-      </button>
-      {onEdit && (
+    <div
+      className={`relative h-full min-h-0 flex-1 bg-base-100 lg:col-start-2 lg:row-start-1 ${compact ? '' : 'lg:w-[47rem] lg:flex-none lg:border-r lg:border-base-300/60'}`}
+    >
+      {onClose && showDesktopCloseButton && (
         <button
           type="button"
-          onClick={onEdit}
-          aria-label={t('common.buttons.edit', 'Edit')}
-          className="absolute top-3 right-3 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-base-100/90 text-base-content/70 shadow-xs backdrop-blur-sm transition hover:bg-base-200 hover:text-base-content"
+          onClick={onClose}
+          aria-label="Fermer l’aperçu"
+          className="btn absolute top-3 right-3 z-30 hidden btn-circle btn-soft btn-md lg:flex"
         >
-          <Edit2Icon size={16} />
+          <X size={22} strokeWidth={2.25} aria-hidden="true" />
         </button>
       )}
-      <div className="flex h-full flex-col overflow-x-hidden overflow-y-auto">
-        <div className="flex w-full min-w-0 flex-col gap-4">
-          <div className="top-0 z-10 flex flex-col gap-2 bg-white min-lg:sticky">
-            {recipe.image_url && (
-              <img
-                src={recipe.image_url}
-                alt={recipe.name}
-                className="h-50 w-full object-cover min-md:h-70 min-lg:h-60"
-                loading="lazy"
-                decoding="async"
-              />
+      <aside
+        aria-labelledby="recipe-detail-title"
+        className="h-full min-h-0 overflow-y-auto px-4 pt-0 pb-4 sm:px-6 sm:pt-0 sm:pb-6 lg:px-8 lg:py-7"
+      >
+        <div
+          className={`${compact ? 'mx-auto max-w-150' : 'mx-0 max-w-none'} flex min-h-full w-full flex-col`}
+        >
+          <div className="relative sticky top-0 z-20 -mx-4 mb-2 bg-base-100 px-5 pt-4 pb-2 sm:-mx-6 sm:px-7 lg:hidden">
+            {onClose && (
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex items-center gap-2 text-base font-semibold text-secondary lg:hidden"
+              >
+                <ArrowLeft size={22} aria-hidden="true" />
+                Retour aux recettes
+              </button>
             )}
-            <div className="flex w-full min-w-0 max-w-2xl flex-col gap-2 self-center px-4 min-md:pt-4 min-lg:px-4">
-              <h2 className="overflow-hidden text-lg font-semibold text-ellipsis whitespace-nowrap text-base-content">
+          </div>
+          {!compact && (
+            <p className="mb-2 hidden text-xs font-semibold tracking-wide text-base-content/55 uppercase lg:block">
+              Aperçu de la recette
+            </p>
+          )}
+          {recipe.image_url ? (
+            <img
+              src={recipe.image_url}
+              alt={`Photo de ${recipe.name}`}
+              className="aspect-[2.3/1] w-full rounded-2xl object-cover shadow-sm"
+            />
+          ) : (
+            <div className="aspect-[2.3/1] rounded-2xl bg-base-200" />
+          )}
+          <div className="flex flex-1 flex-col px-1 pt-4 pb-5 sm:pb-6">
+            <div className="sticky top-12 z-10 -mx-1 bg-base-100 px-2 pt-2 pb-2 sm:px-2 lg:top-0 lg:mx-0 lg:px-0">
+              <h2
+                id="recipe-detail-title"
+                className="text-2xl leading-tight font-bold tracking-tight sm:text-3xl"
+              >
                 {recipe.name}
               </h2>
-              <p className="line-clamp-3 text-sm leading-6 text-base-content/70">
-                {recipe.description}
-              </p>
             </div>
-          </div>
-          <div className="flex w-full min-w-0 max-w-2xl flex-col gap-3 self-center px-4 pb-5 min-lg:px-4">
-            <div className="grid min-w-0 grid-cols-3 gap-3">
-              <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
-                <Clock3Icon size={15} className="text-base-content/60" />
-                <span className="min-w-0 truncate text-xs text-base-content/60">
-                  {t('recipes.table.preparationTime', 'Preparation time')}
-                </span>
-                <span className="text-sm font-semibold text-base-content">
-                  {recipe.preparation_time} min
-                </span>
+            <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-2 text-sm text-base-content/55 sm:mt-2 sm:gap-x-5">
+              <div className="flex items-center gap-2">
+                <Clock3 size={16} />
+                <dd>{totalTime} min</dd>
               </div>
-
-              <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
-                <CookingPotIcon size={15} className="text-base-content/60" />
-                <span className="min-w-0 truncate text-xs text-base-content/60">
-                  {t('recipes.table.cookingTime', 'Cooking time')}
-                </span>
-                <span className="text-sm font-semibold text-base-content">
-                  {recipe.cooking_time} min
-                </span>
+              <div className="flex items-center gap-2">
+                <UtensilsCrossed size={16} />
+                <dd>{ingredients.length} ingrédients</dd>
               </div>
-
-              <div className="flex min-w-0 flex-col gap-1 rounded-md bg-base-200/65 px-3 py-2.5">
-                <UsersIcon size={15} className="text-base-content/60" />
-                <span className="min-w-0 truncate text-xs text-base-content/60">
-                  {t('recipes.show.servingSize', 'Portions')}
-                </span>
-                <span className="text-sm font-semibold text-base-content">
-                  {recipe.serving_size}
-                </span>
-              </div>
-            </div>
-
+            </dl>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-base-content/65 sm:mt-4">
+              {recipe.description || 'Aucune description disponible.'}
+            </p>
             {(recipe.meal_times.length > 0 || recipe.tags.length > 0) && (
-              <div className="flex min-w-0 flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 {recipe.meal_times.map((mealTime) => (
                   <span
                     key={mealTime.id}
-                    className="badge rounded-full badge-soft badge-outline border-secondary/15 badge-sm badge-secondary"
+                    className="badge h-7 bg-secondary/10 px-3 text-secondary"
                   >
-                    {t(
-                      `mealPlanning.dialog.filters.${mealTime.slug}`,
-                      mealTime.name,
-                    )}
+                    {mealTime.name}
                   </span>
                 ))}
                 {recipe.tags.map((tag) => (
                   <span
                     key={tag.id}
-                    className="badge rounded-full bg-base-200 badge-sm text-base-content"
+                    className="badge h-7 border-base-content/30 px-3 text-base-content/75"
                   >
                     {tag.name}
                   </span>
                 ))}
               </div>
             )}
-
-            {recipe.ingredients && recipe.ingredients.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-base-content">
-                  {t('recipes.form.ingredientsTitle', 'Ingredients')}
-                </h3>
-                <div className="overflow-hidden rounded-md border border-base-300/55">
-                  {recipe.ingredients.map((ingredient) => (
-                    <div
+            <section className="mt-6 flex-1 border-t border-base-300 pt-5">
+              <div className="flex items-center justify-between">
+                <h2 className="text-base font-bold">Ingrédients</h2>
+                <span className="text-xs text-base-content/45">
+                  Liste indicative
+                </span>
+              </div>
+              {ingredients.length ? (
+                <ul className="mt-3 space-y-0.5">
+                  {ingredients.map((ingredient) => (
+                    <li
                       key={ingredient.id}
-                      className="flex items-center justify-between gap-3 border-b border-base-300/55 px-3 py-2 text-sm last:border-b-0"
+                      className="flex items-center justify-between gap-3 px-1 py-2 text-sm text-base-content/70"
                     >
-                      <span className="min-w-0 truncate font-medium text-base-content">
-                        {ingredient.name}
-                      </span>
-                      <span className="shrink-0 text-base-content/70">
+                      <span className="truncate">{ingredient.name}</span>
+                      <span className="shrink-0">
                         {ingredient.quantity} {ingredient.unit}
                       </span>
-                    </div>
+                    </li>
                   ))}
-                </div>
-              </section>
-            )}
-
-            {sortedSteps.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <h3 className="text-sm font-semibold text-base-content">
-                  {t('recipes.form.stepsTitle', 'Steps')}
-                </h3>
-                <div className="grid gap-4">
-                  {sortedSteps.map((step) => (
-                    <div
+                </ul>
+              ) : (
+                <p className="mt-3 text-sm text-base-content/55">
+                  Aucun ingrédient pour le moment.
+                </p>
+              )}
+            </section>
+            <section className="mt-6 border-t border-base-300 pt-5">
+              <h2 className="text-base font-bold">Préparation</h2>
+              {steps.length ? (
+                <ol className="mt-3 space-y-3">
+                  {steps.map((step) => (
+                    <li
                       key={step.id}
-                      className="flex items-center gap-4 text-sm"
+                      className="flex gap-3 text-sm leading-6 text-base-content/70"
                     >
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary text-xs font-semibold text-secondary-content">
+                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-base-200 text-xs font-bold">
                         {step.order}
                       </span>
-                      <p className="leading-6 text-base-content/75">
-                        {step.description}
-                      </p>
-                    </div>
+                      <span>{step.description}</span>
+                    </li>
                   ))}
-                </div>
-              </section>
-            )}
+                </ol>
+              ) : (
+                <p className="mt-3 text-sm text-base-content/55">
+                  Aucune étape pour le moment.
+                </p>
+              )}
+            </section>
           </div>
         </div>
-      </div>
+      </aside>
     </div>
   );
 }

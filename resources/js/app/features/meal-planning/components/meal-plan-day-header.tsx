@@ -27,7 +27,7 @@ export default function MealPlanDayHeader({
   const { date, isCurrentDay } = useMealPlanDayActions(dayPlannedMeals);
 
   return (
-    <div className={`flex items-center justify-between px-3`}>
+    <div className="flex items-center justify-between">
       <span
         className={cn(
           'flex items-center gap-2 text-xl font-semibold tracking-tight text-base-content/80',

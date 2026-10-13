@@ -5,4 +5,7 @@ export interface ApiDefinition {
   recipeGeneration: {
     generate: typeof routes['recipe_generation.generate']
   }
+  recipeDiscovery: {
+    discover: typeof routes['recipe_discovery.discover']
+  }
 }

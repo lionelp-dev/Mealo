@@ -31,17 +31,17 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        { /*
+        /*
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+           'name' => 'required|string|max:255',
+           'email' => 'required|string|lowercase|email|max:255|unique:' . User::class,
+           'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         $user = User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
+           'name' => $validated['name'],
+           'email' => $validated['email'],
+           'password' => Hash::make($validated['password']),
         ]);
 
         event(new Registered($user));
@@ -53,7 +53,7 @@ class RegisteredUserController extends Controller
         $request->session()->put('starter_recipes_requested_at', now()->toISOString());
 
         return redirect()->intended(route('dashboard', absolute: false));
-       */}
+       */
 
         return redirect()->route('login');
     }

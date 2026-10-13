@@ -24,7 +24,7 @@ class RecipeGenerateStarterPackAction
         }
 
         $jobs = $mealTimes->map(
-            fn(MealTime $mealTime): RecipeAIGenerationJob => new RecipeAIGenerationJob(
+            fn (MealTime $mealTime): RecipeAIGenerationJob => new RecipeAIGenerationJob(
                 $user->id,
                 RecipeAIGenerationRequestData::validateAndCreate([
                     'message' => [

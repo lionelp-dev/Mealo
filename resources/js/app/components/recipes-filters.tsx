@@ -2,6 +2,7 @@ import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';
 import { Filter, FilterSection } from '@/types';
+import { ClassValue } from 'clsx';
 import { X } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -41,7 +42,17 @@ const FILTERS_SECTIONS: FilterSection[] = [
   },
 ];
 
-export function RecipesFilters() {
+type Props = {
+  className?: ClassValue;
+  showActiveFilters?: boolean;
+  showReset?: boolean;
+};
+
+export function RecipesFilters({
+  className,
+  showActiveFilters = true,
+  showReset = true,
+}: Props) {
   const { t } = useTranslation();
 
   const {
@@ -55,10 +66,15 @@ export function RecipesFilters() {
   } = useRecipesFiltersStore();
 
   return (
-    <div className="flex h-fit min-w-0 flex-1 flex-wrap items-center gap-2.5 max-lg:w-full">
+    <div
+      className={cn(
+        'flex h-fit w-full min-w-0 flex-1 flex-wrap items-center gap-2.5',
+        className,
+      )}
+    >
       {FILTERS_SECTIONS.map((section) => (
         <div
-          className="max-w-full min-w-0 rounded-lg bg-base-200 max-lg:w-full"
+          className="w-full max-w-full min-w-0 rounded-lg bg-base-200"
           key={section.type}
         >
           <div className="join w-full">
@@ -115,7 +131,8 @@ export function RecipesFilters() {
           </div>
         </div>
       ))}
-      {activeFilters.length > 0 &&
+      {showActiveFilters &&
+        activeFilters.length > 0 &&
         activeFilters.map(
           (filter) =>
             filter.type !== 'meal_time' && (
@@ -144,7 +161,7 @@ export function RecipesFilters() {
               </label>
             ),
         )}
-      {activeFilters.length > 0 && (
+      {showReset && activeFilters.length > 0 && (
         <button
           onClick={clearAllFilters}
           className="btn hidden h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link lg:inline-flex"

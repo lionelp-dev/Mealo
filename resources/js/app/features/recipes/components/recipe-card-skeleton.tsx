@@ -1,7 +1,7 @@
 export function RecipeCardSkeleton() {
   return (
     <div
-      className="card pointer-events-none overflow-hidden rounded-md bg-base-100 shadow-lg card-sm"
+      className="pointer-events-none card overflow-hidden rounded-md bg-base-100 shadow-lg card-sm"
       aria-hidden="true"
     >
       <div className="relative">

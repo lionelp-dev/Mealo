@@ -56,8 +56,10 @@ export function AppSidebarHeader({
       {!usesCustomMobileTriggerPlacement && mobileSidebarTrigger}
       <AppSidebarTrigger className="max-lg:hidden" />
       <Breadcrumbs breadcrumbs={breadcrumbs} />
-      <div className="flex h-full min-w-0 flex-1">{leftContent}</div>
-      <div className="flex max-w-fit flex-1 justify-end">
+      <div className={cn('flex h-full min-w-0', leftContent && 'flex-1')}>
+        {leftContent}
+      </div>
+      <div className="flex min-w-0 flex-1 justify-end">
         {headerRightContent}
       </div>
     </header>

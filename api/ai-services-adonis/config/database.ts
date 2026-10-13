@@ -1,5 +1,13 @@
 import app from '@adonisjs/core/services/app'
 import { defineConfig } from '@adonisjs/lucid'
+import { mkdirSync } from 'node:fs'
+import { dirname } from 'node:path'
+
+const discoveryDatabasePath = app.inProduction
+  ? app.makePath('../tmp/recipe_discovery.sqlite')
+  : app.makePath('tmp/recipe_discovery.sqlite')
+
+mkdirSync(dirname(discoveryDatabasePath), { recursive: true })
 
 const dbConfig = defineConfig({
   /**
@@ -15,7 +23,7 @@ const dbConfig = defineConfig({
       client: 'better-sqlite3',
 
       connection: {
-        filename: app.tmpPath('../../../database/database.sqlite'),
+        filename: discoveryDatabasePath,
       },
 
       /**

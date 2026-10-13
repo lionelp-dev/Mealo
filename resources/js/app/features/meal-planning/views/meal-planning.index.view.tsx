@@ -118,35 +118,30 @@ export function MealPlanningIndexView() {
           onSelectDay={scrollToDay}
           stickyRef={stickyRef}
         />
-        <PageContainer
-          ref={contentRef}
-          size="wide"
-          className="py-6.75"
-        >
+        <PageContainer ref={contentRef} size="wide" className="py-6.75">
           <Head title={t('mealPlanning.pageTitle', 'Meal Planning')}></Head>
 
           <div
-            className={`flex w-full max-w-full min-w-0 gap-3 ${
-              isRecipeDetailMounted ? 'min-lg:pr-3' : ''
-            }`}
+            className="flex w-full max-w-full min-w-0 gap-6"
             style={detailPanelStyle}
           >
             <RecipeDetailPanelContainer
               isMounted={isRecipeDetailMounted}
               isVisible={isRecipeDetailVisible}
-              className="min-lg:top-0 min-lg:h-[var(--meal-planning-detail-panel-height)] min-lg:w-96 min-lg:min-w-96"
+              className="rounded-xl bg-base-100 shadow-sm min-lg:top-0 min-lg:h-[var(--meal-planning-detail-panel-height)] min-lg:w-[35rem] min-lg:min-w-[35rem]"
             >
               {displayedRecipe && (
                 <RecipeDetailPanel
                   recipe={displayedRecipe}
                   onClose={closeRecipeDetail}
+                  compact
                 />
               )}
             </RecipeDetailPanelContainer>
 
             <div
               className={`grid min-w-0 flex-1 grid-cols-1 gap-x-6.5 gap-y-5.75 lg:grid-cols-2 ${
-                isRecipeDetailMounted ? '2xl:grid-cols-2' : '2xl:grid-cols-4'
+                isRecipeDetailMounted ? '2xl:grid-cols-3' : '2xl:grid-cols-4'
               }`}
             >
               {weekPlannedMeals.map((dayPlannedMeals, index) => {
@@ -157,7 +152,7 @@ export function MealPlanningIndexView() {
                 return (
                   <div
                     key={dayId}
-                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white px-2.25 pb-3"
+                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white px-4 py-4"
                     style={
                       isLastDay && lastDayMinHeight
                         ? { minHeight: lastDayMinHeight }

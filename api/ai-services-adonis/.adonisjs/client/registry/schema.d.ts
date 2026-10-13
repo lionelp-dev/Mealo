@@ -19,4 +19,16 @@ export interface Registry {
       errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/recipe_generation_controller').default['generate']>>>
     }
   }
+  'recipe_discovery.discover': {
+    methods: ["POST"]
+    pattern: '/internal/recipes/discover'
+    types: {
+      body: {}
+      paramsTuple: []
+      params: {}
+      query: {}
+      response: ExtractResponse<Awaited<ReturnType<import('#controllers/recipe_discovery_controller').default['discover']>>>
+      errorResponse: ExtractErrorResponse<Awaited<ReturnType<import('#controllers/recipe_discovery_controller').default['discover']>>>
+    }
+  }
 }

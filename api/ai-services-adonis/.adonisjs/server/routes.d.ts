@@ -5,6 +5,7 @@ type ParamValue = string | number | bigint | boolean
 export type ScannedRoutes = {
   ALL: {
     'recipe_generation.generate': { paramsTuple?: []; params?: {} }
+    'recipe_discovery.discover': { paramsTuple?: []; params?: {} }
   }
   GET: {
   }
@@ -12,6 +13,7 @@ export type ScannedRoutes = {
   }
   POST: {
     'recipe_generation.generate': { paramsTuple?: []; params?: {} }
+    'recipe_discovery.discover': { paramsTuple?: []; params?: {} }
   }
 }
 declare module '@adonisjs/core/types/http' {

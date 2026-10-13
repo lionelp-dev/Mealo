@@ -19,7 +19,7 @@ class RecipeSearchAction
         RecipeSearchRequestData $recipeSearchRequestData
     ): Builder {
         if (! empty($recipeSearchRequestData->search)) {
-            $query->where('name', 'LIKE', '%'.$recipeSearchRequestData->search.'%');
+            $query->whereLike('name', '%'.$recipeSearchRequestData->search.'%');
         }
 
         return $query;

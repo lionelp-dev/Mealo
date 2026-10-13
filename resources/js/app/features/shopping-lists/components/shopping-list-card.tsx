@@ -53,9 +53,7 @@ export default function ShoppingListCard({
         </div>
       </div>
 
-      <div className="divide-y divide-base-200">
-        {visibleChildren}
-      </div>
+      <div className="divide-y divide-base-200">{visibleChildren}</div>
 
       {hasMore && (
         <button

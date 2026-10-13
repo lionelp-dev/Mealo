@@ -18,8 +18,8 @@ function ShoppingListProgress({
     totalCount > 0 ? (checkedCount / totalCount) * 100 : 0;
 
   return (
-    <div className={cn('flex w-full shrink-0 flex-col gap-2', className)}>
-      <span className="text-sm font-medium text-base-content/70">
+    <div className={cn('flex w-full shrink-0 items-center gap-3', className)}>
+      <span className="shrink-0 text-sm font-medium text-base-content/70">
         {t('shoppingLists.progress', {
           checked: checkedCount,
           defaultValue: '{{checked}} sur {{total}} cochés',
@@ -27,7 +27,7 @@ function ShoppingListProgress({
         })}
       </span>
       <progress
-        className="progress progress-secondary"
+        className="progress flex-1 progress-secondary"
         value={progressPercentage}
         max="100"
       />

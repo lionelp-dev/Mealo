@@ -12,6 +12,12 @@ const routes = {
     tokens: [{"old":"/internal/recipes/generate","type":0,"val":"internal","end":""},{"old":"/internal/recipes/generate","type":0,"val":"recipes","end":""},{"old":"/internal/recipes/generate","type":0,"val":"generate","end":""}],
     types: placeholder as Registry['recipe_generation.generate']['types'],
   },
+  'recipe_discovery.discover': {
+    methods: ["POST"],
+    pattern: '/internal/recipes/discover',
+    tokens: [{"old":"/internal/recipes/discover","type":0,"val":"internal","end":""},{"old":"/internal/recipes/discover","type":0,"val":"recipes","end":""},{"old":"/internal/recipes/discover","type":0,"val":"discover","end":""}],
+    types: placeholder as Registry['recipe_discovery.discover']['types'],
+  },
 } as const satisfies Record<string, AdonisEndpoint>
 
 export { routes }

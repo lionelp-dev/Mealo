@@ -6,7 +6,7 @@ import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { Filter, FilterSection, Option } from '@/types';
 import * as Popover from '@radix-ui/react-popover';
 import { ClassValue } from 'clsx';
-import { FilterIcon } from 'lucide-react';
+import { FilterIcon, SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +23,9 @@ type Props = {
   side?: Popover.PopoverContentProps['side'];
   align?: Popover.PopoverContentProps['align'];
   sideOffset?: Popover.PopoverContentProps['sideOffset'];
+  label?: string;
+  compact?: boolean;
+  showActiveCount?: boolean;
 };
 
 export function RecipesFiltersPopover({
@@ -31,6 +34,9 @@ export function RecipesFiltersPopover({
   side = 'bottom',
   align = 'end',
   sideOffset = 6,
+  label,
+  compact = false,
+  showActiveCount = true,
 }: Props) {
   const { t } = useTranslation();
 
@@ -72,7 +78,7 @@ export function RecipesFiltersPopover({
         <button
           className={cn(
             'flex items-center gap-1.5 whitespace-nowrap text-secondary hover:text-secondary-content max-md:max-w-fit',
-            'btn border border-secondary/40 pr-3.5 pl-5 btn-outline btn-soft btn-secondary max-md:pl-3 max-md:btn-sm',
+            'btn border border-secondary/40 px-4 btn-outline btn-soft btn-secondary max-md:px-3',
             className,
           )}
           onClick={() => {
@@ -80,10 +86,21 @@ export function RecipesFiltersPopover({
             clearSelectedRecipes();
           }}
         >
-          <FilterIcon className={'h-4 w-auto pt-[1.5px]'} />
-          <span>{t('recipes.filters.advanced', 'Filtres avancés')}</span>
-          {activeFilters.length > 0 && (
-            <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-xs leading-none font-semibold text-secondary-content min-lg:hidden">
+          {compact ? (
+            <SlidersHorizontal className="h-4 w-auto" />
+          ) : (
+            <FilterIcon className="h-4 w-auto pt-[1.5px]" />
+          )}
+          <span>
+            {label ?? t('recipes.filters.advanced', 'Filtres avancés')}
+          </span>
+          {showActiveCount && activeFilters.length > 0 && (
+            <span
+              className={cn(
+                'flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-xs leading-none font-semibold text-secondary-content',
+                !compact && 'min-lg:hidden',
+              )}
+            >
               {activeFilters.length}
             </span>
           )}

@@ -65,7 +65,7 @@ export default function ShoppingListIngredientRow({
             onChange={toggleChecked}
             disabled={isLoading || externalIsLoading}
             className={cn(
-              'checkbox flex-shrink-0 checkbox-sm rounded-full hover:checkbox-secondary',
+              'checkbox flex-shrink-0 rounded-full checkbox-sm hover:checkbox-secondary',
               checked && 'checkbox-secondary',
             )}
           />

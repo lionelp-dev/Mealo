@@ -28,6 +28,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('recipes/ai-generation-preview', [RecipeController::class, 'aiGenerationPreview'])->name('recipes.ai-generation-preview');
     Route::post('recipes/ai-generation', [RecipeController::class, 'aiGeneration'])->name('recipes.ai-generation');
+    Route::post('recipes/discover/pool', [RecipeController::class, 'discoverPool'])->name('recipes.discover.pool');
+    Route::get('recipes/discover/status/{discoveryId}', [RecipeController::class, 'discoverStatus'])
+        ->whereUuid('discoveryId')
+        ->name('recipes.discover.status');
+    Route::post('recipes/discover/save', [RecipeController::class, 'discoverSave'])->name('recipes.discover.save');
     Route::post('recipes/ai-image-generation', [RecipeController::class, 'aiImageGeneration'])->name('recipes.ai-image-generation');
     Route::get('recipes/{recipe}/image', [RecipeController::class, 'image'])->name('recipes.image');
     Route::delete('recipes', [RecipeController::class, 'destroy'])->name('recipes.destroy');

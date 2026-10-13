@@ -1,7 +1,7 @@
 import type { Preview } from '@storybook/react-vite';
 import { useEffect } from 'react';
 import '../resources/css/app.css';
-import i18n from '../resources/js/lib/i18n';
+import i18n from '../resources/js/app/lib/i18n';
 
 const preview: Preview = {
   initialGlobals: {

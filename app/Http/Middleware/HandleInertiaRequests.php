@@ -2,8 +2,8 @@
 
 namespace App\Http\Middleware;
 
-use App\Actions\Recipes\RecipeGenerationSessionState;
 use App\Actions\Recipes\RecipeGenerateStarterPackAction;
+use App\Actions\Recipes\RecipeGenerationSessionState;
 use App\Models\MealTime;
 use App\Models\User;
 use Carbon\CarbonImmutable;

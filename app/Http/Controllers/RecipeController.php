@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\Recipes\RecipeAIGenerationAction;
 use App\Actions\Recipes\RecipeDestroyAction;
+use App\Actions\Recipes\RecipeDiscoveryJobState;
 use App\Actions\Recipes\RecipeFiltersAction;
 use App\Actions\Recipes\RecipeGenerationSessionState;
 use App\Actions\Recipes\RecipeImageAIGenerationAction;
@@ -12,8 +13,10 @@ use App\Actions\Recipes\RecipeSearchIngredientsAction;
 use App\Actions\Recipes\RecipeSearchTagsAction;
 use App\Actions\Recipes\RecipeStoreAction;
 use App\Actions\Recipes\RecipeUpdateAction;
+use App\Data\Requests\Recipe\RecipeAIGeneratedStoreRequestData;
 use App\Data\Requests\Recipe\RecipeAIGenerationRequestData;
 use App\Data\Requests\Recipe\RecipeDestroyRequestData;
+use App\Data\Requests\Recipe\RecipeDiscoveryRequestData;
 use App\Data\Requests\Recipe\RecipeEditRequestData;
 use App\Data\Requests\Recipe\RecipeFiltersRequestData;
 use App\Data\Requests\Recipe\RecipeImageAIGenerationRequestData;
@@ -27,6 +30,7 @@ use App\Data\Resources\Recipe\Entities\RecipeResourceData;
 use App\Data\Resources\Recipe\Entities\TagResourceData;
 use App\Http\Controllers\Concerns\HasAuthenticatedUser;
 use App\Jobs\RecipeAIGenerationJob;
+use App\Jobs\RecipeDiscoveryJob;
 use App\Messages\Recipe\RecipeCreatedMessage;
 use App\Messages\Recipe\RecipeDeletedMessage;
 use App\Messages\Recipe\RecipeGenerationFailedMessage;
@@ -40,6 +44,7 @@ use App\Models\MealTime;
 use App\Models\Recipe;
 use App\Models\Tag;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response as HttpResponse;
@@ -286,6 +291,72 @@ class RecipeController extends Controller
             throw $e;
         } catch (\Exception) {
             return back()->with('error', RecipeGenerationFailedMessage::message());
+        }
+    }
+
+    public function discoverPool(
+        RecipeDiscoveryRequestData $recipeDiscoveryRequestData,
+        RecipeDiscoveryJobState $recipeDiscoveryJobState,
+    ): Response|RedirectResponse {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $user = $this->authenticatedUser();
+            $discoveryId = $recipeDiscoveryJobState->queue($user->id);
+
+            RecipeDiscoveryJob::dispatch(
+                $discoveryId,
+                $user->id,
+                $recipeDiscoveryRequestData,
+            )->onQueue(RecipeDiscoveryJob::QUEUE);
+
+            return Inertia::render('recipe/index', [
+                'discovery_job' => [
+                    'id' => $discoveryId,
+                    'status' => 'queued',
+                ],
+            ]);
+        } catch (\Exception $exception) {
+            report($exception);
+
+            return Inertia::render('recipe/index', [
+                'discovery_error' => RecipeGenerationFailedMessage::message(),
+            ]);
+        }
+    }
+
+    public function discoverStatus(
+        string $discoveryId,
+        RecipeDiscoveryJobState $recipeDiscoveryJobState,
+    ): JsonResponse {
+        Gate::authorize('create', Recipe::class);
+
+        $state = $recipeDiscoveryJobState->forUser($discoveryId, $this->authenticatedUser()->id);
+
+        abort_unless($state !== null, 404);
+
+        return response()->json($state);
+    }
+
+    public function discoverSave(
+        RecipeAIGeneratedStoreRequestData $recipeAIGeneratedStoreRequestData,
+        RecipeStoreAction $recipeStoreAction,
+    ): Response|RedirectResponse {
+        try {
+            Gate::authorize('create', Recipe::class);
+
+            $recipe = $recipeStoreAction->execute(
+                $this->authenticatedUser(),
+                $recipeAIGeneratedStoreRequestData,
+            );
+
+            return to_route('recipes.index', ['recipe' => $recipe->id], 303);
+        } catch (\Exception $exception) {
+            report($exception);
+
+            return Inertia::render('recipe/index', [
+                'discovery_error' => RecipeGenerationFailedMessage::message(),
+            ]);
         }
     }
 

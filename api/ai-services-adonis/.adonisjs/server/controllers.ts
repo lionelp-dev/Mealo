@@ -4,5 +4,6 @@
  */
 
 export const controllers = {
+  RecipeDiscovery: () => import('#controllers/recipe_discovery_controller'),
   RecipeGeneration: () => import('#controllers/recipe_generation_controller'),
 }

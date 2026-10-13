@@ -7,17 +7,16 @@ use App\Data\Requests\Recipe\Entities\MealTimeRequestData;
 use App\Data\Requests\Recipe\Entities\StepRequestData;
 use App\Data\Requests\Recipe\Entities\TagRequestData;
 use Illuminate\Http\UploadedFile;
-use Spatie\TypeScriptTransformer\Attributes\LiteralTypeScriptType;
 use Spatie\TypeScriptTransformer\Attributes\TypeScript;
 
 #[TypeScript]
 class RecipeAIGeneratedStoreRequestData extends RecipeStoreRequestData
 {
     /**
-     * @param MealTimeRequestData[] $meal_times
-     * @param IngredientRequestData[] $ingredients
-     * @param StepRequestData[] $steps
-     * @param TagRequestData[] $tags
+     * @param  MealTimeRequestData[]  $meal_times
+     * @param  IngredientRequestData[]  $ingredients
+     * @param  StepRequestData[]  $steps
+     * @param  TagRequestData[]  $tags
      */
     public function __construct(
         string $name,

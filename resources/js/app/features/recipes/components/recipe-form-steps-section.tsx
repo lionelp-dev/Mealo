@@ -15,8 +15,7 @@ const stepRowClassName = 'flex w-full min-w-0 flex-col gap-3';
 const stepHeaderClassName =
   'flex w-full min-w-0 items-center justify-between gap-3';
 
-const stepActionsClassName =
-  'flex min-w-0 flex-wrap justify-end gap-2';
+const stepActionsClassName = 'flex min-w-0 flex-wrap justify-end gap-2';
 
 const stepActionButtonClassName =
   'rounded-md bg-base-200 p-2 text-base-content/70 hover:bg-base-300 disabled:pointer-events-none disabled:opacity-40';

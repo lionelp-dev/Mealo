@@ -1,83 +1,64 @@
-import RecipeAIGenerationModal from '../components/recipe-ai-generation-modal';
-import { RecipeCard } from '../components/recipe-card';
-import { RecipeCardSkeleton } from '../components/recipe-card-skeleton';
+import { RecipeBookList } from '../components/recipe-book-list';
 import RecipeDetailPanel from '../components/recipe-detail-panel';
-import RecipeDetailPanelContainer from '../components/recipe-detail-panel-container';
+import { DiscoveryPausedBanner } from '../components/recipe-discovery/discovery-paused-banner';
+import { RecipeDiscoveryPanel } from '../components/recipe-discovery/recipe-discovery-panel';
 import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-toolbar';
-import { useRecipeDetailPanel } from '../hooks/use-recipe-detail-panel';
+import { useDiscoverySession } from '../hooks/use-discovery-session';
 import { useRecipesContextValue } from '../inertia.adapter';
-import { editRecipe } from '../repositories/recipes.repository';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import { PageContainer } from '@/app/components/page-container';
 import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
 import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
-import { usePermissions } from '@/app/hooks/use-permissions';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
 import { cn } from '@/app/lib';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
+import { useRecipesSearchStore } from '@/app/stores/use-recipes-search-store';
+import { capitalize } from '@/app/utils';
 import recipesRoute from '@/routes/recipes';
-import { Head, InfiniteScroll, router, usePoll } from '@inertiajs/react';
-import { ChefHatIcon, CookingPot, Copy } from 'lucide-react';
+import { Head, router, usePoll } from '@inertiajs/react';
+import { ChefHatIcon, Sparkles, X } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export function IndexRecipesView() {
   const { t } = useTranslation();
-
   const {
     recipes,
     selected_recipe,
     url,
-    meal_times,
+    tags,
     starterRecipes,
     recipeGeneration,
   } = useRecipesContextValue();
-
-  const isGeneratingStarterRecipes = !!starterRecipes?.generating;
-  const isGeneratingRecipes = !!recipeGeneration?.generating;
-  const pendingStarterRecipeSkeletonCount =
-    recipes && recipes.data.length > 0 ? (starterRecipes?.count ?? 0) : 0;
-  const pendingRecipeSkeletonCount =
-    (recipeGeneration?.count ?? 0) + pendingStarterRecipeSkeletonCount;
-  const hasPendingRecipeSkeletons = pendingRecipeSkeletonCount > 0;
-
-  const { activeFilters, clearAllFilters } = useRecipesFiltersStore();
+  const { activeFilters, clearAllFilters, removeFilter } =
+    useRecipesFiltersStore();
+  const { searchTerm } = useRecipesSearchStore();
   const { triggerRecipesRequest } = useRecipesRequestCoordination();
-  const { canEditRecipe } = usePermissions();
   const isInitialRender = useRef(true);
-  const {
-    setSelectedRecipe,
-    displayedRecipe,
-    isRecipeDetailMounted,
-    isRecipeDetailVisible,
-    closeRecipeDetail,
-  } = useRecipeDetailPanel(selected_recipe);
+  const multiSelect = useRecipesMultiSelectStore();
+  const recipeItems = recipes?.data ?? [];
+  const discovery = useDiscoverySession(recipeItems, selected_recipe);
+  const isGeneratingRecipes =
+    !!recipeGeneration?.generating || !!starterRecipes?.generating;
+  const isGeneratingStarterRecipes = !!starterRecipes?.generating;
+  const isUnfilteredRecipeList =
+    activeFilters.length === 0 && searchTerm.trim() === '';
+  const { start, stop } = usePoll(
+    3000,
+    {
+      only: ['recipes', 'starterRecipes', 'recipeGeneration'],
+      reset: ['recipes'],
+    },
+    { autoStart: false },
+  );
 
-  // Keep this page fresh while recipes are generated in the background.
-  const { start: startRecipeGenerationPoll, stop: stopRecipeGenerationPoll } =
-    usePoll(
-      3000,
-      {
-        only: ['recipes', 'starterRecipes', 'recipeGeneration'],
-        reset: ['recipes'],
-      },
-      { autoStart: false },
-    );
   useEffect(() => {
-    if (isGeneratingStarterRecipes || isGeneratingRecipes) {
-      startRecipeGenerationPoll();
-    } else {
-      stopRecipeGenerationPoll();
-    }
-  }, [
-    isGeneratingStarterRecipes,
-    isGeneratingRecipes,
-    startRecipeGenerationPoll,
-    stopRecipeGenerationPoll,
-  ]);
+    if (isGeneratingRecipes) start();
+    else stop();
+  }, [isGeneratingRecipes, start, stop]);
 
   useEffect(() => {
     if (isInitialRender.current) {
@@ -85,47 +66,46 @@ export function IndexRecipesView() {
       return;
     }
     triggerRecipesRequest();
+    // `triggerRecipesRequest` is recreated by its coordination hook. Depending
+    // on it would turn every local selection render into another Inertia visit.
   }, [activeFilters]);
 
-  const recipesMultiSelectStore = useRecipesMultiSelectStore();
-  const {
-    isMultiSelectMode,
-    setIsMultiSelectMode,
-    selectedRecipeIds,
-    clearSelectedRecipes,
-  } = recipesMultiSelectStore;
-
-  useEffect(() => {
-    return () => {
-      recipesMultiSelectStore.resetStore();
-    };
-  }, [url]);
-
-  const handleNavigateToCreateRecipe = () => {
-    router.get(recipesRoute.create.url());
-  };
-
-  const handleToggleMultiSelect = () => {
-    const nextIsMultiSelectMode = !isMultiSelectMode;
-
-    setIsMultiSelectMode(nextIsMultiSelectMode);
-    if (!nextIsMultiSelectMode) {
-      clearSelectedRecipes();
-    }
-  };
-
-  const { tags } = useRecipesContextValue();
+  useEffect(() => () => multiSelect.resetStore(), [url]);
 
   if (!recipes) return null;
 
+  const toggleDiscovery = () => {
+    if (discovery.isDiscovering || discovery.hasPausedDiscovery) {
+      discovery.quitDiscovery();
+      return;
+    }
+    multiSelect.clearSelectedRecipes();
+    multiSelect.setIsMultiSelectMode(false);
+    discovery.startDiscovery();
+  };
+
   return AppLayout({
-    headerLeftContent: <RecipesSearch className="max-lg:hidden" />,
     headerRightContent: (
-      <div className="flex flex-1 items-center justify-end gap-3">
-        <RecipeAIGenerationModal meal_times={meal_times ?? []} />
+      <div className="flex min-w-0 flex-1 flex-wrap items-center justify-end gap-3 max-lg:gap-1.5">
         <button
-          className="btn gap-2 btn-outline btn-secondary max-md:btn-sm min-md:pl-5.5"
-          onClick={handleNavigateToCreateRecipe}
+          className="btn gap-2 btn-outline btn-secondary max-md:btn-sm"
+          onClick={toggleDiscovery}
+        >
+          <Sparkles className="h-4 w-4" />
+          {discovery.isDiscovering || discovery.hasPausedDiscovery ? (
+            'Quitter la découverte'
+          ) : (
+            <>
+              <span className="lg:hidden">Découvrir avec l’IA</span>
+              <span className="max-lg:hidden">
+                Découvrir des recettes avec l’IA
+              </span>
+            </>
+          )}
+        </button>
+        <button
+          className="btn gap-2 btn-secondary max-md:btn-sm min-md:pl-5.5"
+          onClick={() => router.get(recipesRoute.create.url())}
         >
           {t('recipes.index.createButton', 'Create recipe')}
           <ChefHatIcon className="h-4 w-auto max-md:hidden" />
@@ -134,117 +114,152 @@ export function IndexRecipesView() {
     ),
     children: (
       <>
-        <Head title={t('recipes.pageTitle', 'My recipes')}></Head>
+        <Head title={t('recipes.pageTitle', 'My recipes')} />
         <PageContainer
           size="full"
           className="py-0"
-          contentClassName="flex min-h-0 flex-1 flex-col"
+          contentClassName="flex min-h-0 w-full flex-1 flex-col px-0!"
         >
-          <div
-            className={
-              'z-10 mx-auto grid h-fit w-full min-w-0 shrink-0 gap-3 py-3 pb-2.5 lg:grid-cols-[minmax(0,1fr)_auto]'
-            }
-          >
-            <RecipesSearch className="min-lg:hidden" />
-            <RecipesFilters />
-            <div className="flex h-fit min-w-0 items-start gap-2.5 lg:justify-end">
-              <RecipesFiltersPopover
-                tags={tags ?? []}
-                className="min-w-0 flex-1 lg:flex-none"
+          {discovery.hasPausedDiscovery && (
+            <DiscoveryPausedBanner onResume={discovery.resumeDiscovery} />
+          )}
+          <div className="relative grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1fr_1.975fr]">
+            <div
+              className={
+                discovery.isDiscovering
+                  ? 'absolute inset-0 z-20 flex min-h-0 flex-col bg-base-100 shadow-2xl lg:contents'
+                  : 'hidden'
+              }
+            >
+              <RecipeDiscoveryPanel
+                key={discovery.sessionKey}
+                onSaved={discovery.savedRecipe}
+                onPendingChange={discovery.setPendingCount}
+                onGeneratingChange={discovery.setIsPoolGenerating}
+                onPreparationChange={discovery.setHasPreparation}
+                onClose={discovery.quitDiscovery}
               />
-              {activeFilters.length > 0 && (
-                <button
-                  onClick={clearAllFilters}
-                  className={`btn ml-auto h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link lg:hidden`}
-                >
-                  <span className="min-w-0 truncate">
-                    {t(
-                      'mealPlanning.dialog.filters.clearAllFilters',
-                      'Clear all filters',
+            </div>
+            {!discovery.isDiscovering &&
+              (discovery.selectedRecipe ? (
+                <div className="absolute inset-0 z-20 min-h-0 bg-base-100 shadow-2xl lg:contents">
+                  <RecipeDetailPanel
+                    recipe={discovery.selectedRecipe}
+                    onClose={discovery.closeSelectedRecipe}
+                    showDesktopCloseButton={false}
+                  />
+                </div>
+              ) : (
+                <section className="hidden min-h-64 items-center justify-center px-6 py-12 text-center lg:flex">
+                  <div>
+                    <p className="text-lg font-semibold">
+                      Choisissez une recette
+                    </p>
+                    <p className="mt-2 text-sm text-base-content/55">
+                      Sélectionnez une recette dans votre carnet pour voir ses
+                      détails.
+                    </p>
+                  </div>
+                </section>
+              ))}
+            <div className="flex min-h-0 flex-col overflow-hidden lg:col-start-1 lg:row-start-1">
+              <RecipeBookList
+                recipes={recipes.data}
+                selectedRecipeId={discovery.selectedRecipe?.id ?? null}
+                recentlyAddedRecipeId={discovery.recentlyAddedRecipeId}
+                onSelect={discovery.selectRecipe}
+                emptyContent={
+                  isGeneratingStarterRecipes && isUnfilteredRecipeList ? (
+                    <StarterRecipesNotice />
+                  ) : undefined
+                }
+                generationStatus={
+                  isGeneratingStarterRecipes ? (
+                    <StarterRecipesNotice variant="inline" />
+                  ) : undefined
+                }
+                controls={
+                  <div className="grid min-w-0 grid-cols-[minmax(0,1fr)_auto] gap-2.5">
+                    <RecipesSearch className="min-w-0" />
+                    <RecipesFiltersPopover
+                      tags={tags ?? []}
+                      label="Filtres"
+                      compact
+                      className="min-w-0"
+                    />
+                    <RecipesFilters
+                      className="col-span-2 min-w-0"
+                      showActiveFilters={false}
+                      showReset={false}
+                    />
+                    {activeFilters.some(
+                      (filter) => filter.type !== 'meal_time',
+                    ) && (
+                      <div className="col-span-2 flex min-w-0 items-center justify-between gap-3">
+                        <div className="flex max-h-[4.5rem] min-w-0 flex-wrap content-start items-center gap-2 overflow-hidden">
+                          {activeFilters
+                            .filter((filter) => filter.type !== 'meal_time')
+                            .map((filter) => (
+                              <button
+                                key={`${filter.type}-${filter.value}`}
+                                type="button"
+                                onClick={() => removeFilter(filter)}
+                                className="badge h-8 max-w-40 gap-1.5 border-0 bg-secondary/10 px-3 text-sm font-normal text-secondary"
+                              >
+                                <span className="truncate">
+                                  {filter.type === 'preparation_time' &&
+                                    t(
+                                      'mealPlanning.dialog.filters.prep',
+                                      'Prep: ',
+                                    )}
+                                  {filter.type === 'cooking_time' &&
+                                    t(
+                                      'mealPlanning.dialog.filters.cook',
+                                      'Cook: ',
+                                    )}
+                                  {capitalize(filter.label)}
+                                </span>
+                                <X size={14} className="shrink-0" />
+                              </button>
+                            ))}
+                        </div>
+                        <button
+                          onClick={clearAllFilters}
+                          className="btn h-fit shrink-0 p-0 text-secondary btn-link"
+                        >
+                          Effacer les filtres
+                        </button>
+                      </div>
                     )}
-                  </span>
-                </button>
-              )}
-
-              <button
-                className={cn(
-                  `btn min-w-0 flex-1 gap-2 border border-secondary/40 whitespace-nowrap btn-outline btn-soft btn-secondary max-md:hidden lg:flex-none`,
-                  isMultiSelectMode ? 'btn-active' : '',
-                )}
-                onClick={handleToggleMultiSelect}
-              >
-                <span className="min-w-0 truncate">
-                  {t('recipes.multiSelect.toggle', 'Multiple selection')}
-                </span>
-                <Copy size={14} className="mb-[1px] shrink-0" />
-              </button>
+                  </div>
+                }
+                footer={
+                  <button
+                    className={cn(
+                      'btn min-w-0 gap-2 border border-secondary/40 px-3 whitespace-nowrap btn-outline btn-soft btn-sm btn-secondary',
+                      multiSelect.isMultiSelectMode ? 'btn-active' : '',
+                    )}
+                    onClick={() => {
+                      const next = !multiSelect.isMultiSelectMode;
+                      multiSelect.setIsMultiSelectMode(next);
+                      if (!next) multiSelect.clearSelectedRecipes();
+                    }}
+                    disabled={discovery.isDiscovering}
+                  >
+                    <span className="min-w-0 truncate">
+                      Sélectionner des recettes
+                    </span>
+                  </button>
+                }
+              />
             </div>
           </div>
-
-          {/* Empty State */}
-          {recipes.data.length === 0 && !isGeneratingRecipes && (
-            <div className="flex flex-col items-center justify-center pt-44">
-              {isGeneratingStarterRecipes ? (
-                <StarterRecipesNotice />
-              ) : (
-                <>
-                  <CookingPot className="mb-4 h-12 w-12 text-muted-foreground" />
-                  <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
-                    {t('recipes.empty.title', 'Aucune recette')}
-                  </h3>
-                  <p className="mb-4 max-w-md text-center text-muted-foreground">
-                    {t(
-                      'recipes.empty.description',
-                      "Commencez par créer votre première recette ou utilisez l'IA pour générer des idées de repas.",
-                    )}
-                  </p>
-                </>
-              )}
-            </div>
-          )}
-
-          {(recipes.data.length > 0 || isGeneratingRecipes) && (
-            <div className="flex min-h-0 flex-1 gap-3 overflow-hidden pb-3">
-              <RecipeDetailPanelContainer
-                isMounted={isRecipeDetailMounted}
-                isVisible={isRecipeDetailVisible}
-                className="min-lg:h-full"
-              >
-                {displayedRecipe && (
-                  <RecipeDetailPanel
-                    recipe={displayedRecipe}
-                    onClose={closeRecipeDetail}
-                    onEdit={
-                      canEditRecipe(displayedRecipe.user_id)
-                        ? () => editRecipe(displayedRecipe.id)
-                        : undefined
-                    }
-                  />
-                )}
-              </RecipeDetailPanelContainer>
-              <div className="min-h-0 w-full min-w-0 overflow-y-auto">
-                <InfiniteScroll data="recipes">
-                  <div className="grid grid-cols-[repeat(auto-fill,minmax(min(20rem,100%),1fr)))] gap-x-7 gap-y-10 pt-1 pb-10">
-                    {hasPendingRecipeSkeletons &&
-                      Array.from({ length: pendingRecipeSkeletonCount }).map(
-                        (_, index) => <RecipeCardSkeleton key={index} />,
-                      )}
-                    {recipes.data.map((recipe) => (
-                      <RecipeCard
-                        key={recipe.id}
-                        recipe={recipe}
-                        onViewRecipe={setSelectedRecipe}
-                      />
-                    ))}
-                  </div>
-                </InfiniteScroll>
-              </div>
-            </div>
-          )}
         </PageContainer>
-        {isMultiSelectMode && selectedRecipeIds.length > 0 && (
-          <RecipesMultiSelectToolbar />
-        )}
+        {!discovery.isDiscovering &&
+          multiSelect.isMultiSelectMode &&
+          multiSelect.selectedRecipeIds.length > 0 && (
+            <RecipesMultiSelectToolbar />
+          )}
       </>
     ),
   });

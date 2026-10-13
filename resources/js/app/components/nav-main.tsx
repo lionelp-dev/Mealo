@@ -22,7 +22,8 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
       </SidebarGroupLabel>
       <SidebarMenu>
         {items.map((item) => {
-          const href = typeof item.href === 'string' ? item.href : item.href.url;
+          const href =
+            typeof item.href === 'string' ? item.href : item.href.url;
           const itemPath = href.split('?')[0];
           const isExactActive = currentPath === itemPath;
           const isNestedActive =

@@ -1,3 +1,4 @@
+import { DiscoveredRecipe } from './types/discovery';
 import { GeneratedRecipeResource } from '@/app/data/requests/recipe/types';
 import {
   IngredientResource,
@@ -29,6 +30,16 @@ type PageProps = SharedData &
     show_recipe_ai_generation_modal: boolean;
     generated_recipe?: GeneratedRecipeResource;
     generated_image_data_url?: string | null;
+    discovery_pool?: {
+      recipes: DiscoveredRecipe[];
+      failedRecipeCount: number;
+    };
+    discovery_job?: {
+      id: string;
+      status: 'queued';
+    };
+    discovery_error?: string;
+    saved_recipe_id?: string;
   }>;
 
 export const {
