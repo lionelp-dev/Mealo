@@ -114,7 +114,7 @@ aiGeneration.form = aiGenerationForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 export const aiImageGeneration = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -129,7 +129,7 @@ aiImageGeneration.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGeneration.url = (options?: RouteQueryOptions) => {
@@ -138,7 +138,7 @@ aiImageGeneration.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -148,7 +148,7 @@ aiImageGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> 
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 const aiImageGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -158,7 +158,7 @@ const aiImageGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGenerationForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

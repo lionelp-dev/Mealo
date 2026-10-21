@@ -23,6 +23,7 @@ export const createRecipeStoreRequestSchema = ({
 }) => {
   const allowedCategoryIds = ingredient_categories.map((category) => category.id)
   const allowedMealTimeSlugs = meal_times.map((mealTime) => mealTime.slug)
+  const maxMealTimeCount = allowedMealTimeSlugs.length === 1 ? 1 : 4
 
   return z.object({
     name: z
@@ -76,7 +77,7 @@ export const createRecipeStoreRequestSchema = ({
         })
       )
       .min(1, 'Au moins un moment de repas est requis')
-      .max(4, 'La recette ne doit pas dépasser 4 moments de repas'),
+      .max(maxMealTimeCount, 'La recette ne doit pas dépasser 4 moments de repas'),
     image: z.null(),
     image_data_url: z.string().nullable().default(null),
   })

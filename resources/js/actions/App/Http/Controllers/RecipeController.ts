@@ -169,7 +169,7 @@ discoverPool.form = discoverPoolForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 export const discoverStatus = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -184,7 +184,7 @@ discoverStatus.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 discoverStatus.url = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -211,7 +211,7 @@ discoverStatus.url = (args: { discoveryId: string | number } | [discoveryId: str
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 discoverStatus.get = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -221,7 +221,7 @@ discoverStatus.get = (args: { discoveryId: string | number } | [discoveryId: str
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 discoverStatus.head = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -231,7 +231,7 @@ discoverStatus.head = (args: { discoveryId: string | number } | [discoveryId: st
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 const discoverStatusForm = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -241,7 +241,7 @@ const discoverStatusForm = (args: { discoveryId: string | number } | [discoveryI
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 discoverStatusForm.get = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -251,7 +251,7 @@ discoverStatusForm.get = (args: { discoveryId: string | number } | [discoveryId:
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverStatus
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 discoverStatusForm.head = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -268,7 +268,7 @@ discoverStatus.form = discoverStatusForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverSave
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 export const discoverSave = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -283,7 +283,7 @@ discoverSave.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverSave
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 discoverSave.url = (options?: RouteQueryOptions) => {
@@ -292,7 +292,7 @@ discoverSave.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverSave
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 discoverSave.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -302,7 +302,7 @@ discoverSave.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverSave
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 const discoverSaveForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -312,7 +312,7 @@ const discoverSaveForm = (options?: RouteQueryOptions): RouteFormDefinition<'pos
 
 /**
 * @see \App\Http\Controllers\RecipeController::discoverSave
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 discoverSaveForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -324,7 +324,7 @@ discoverSave.form = discoverSaveForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 export const aiImageGeneration = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -339,7 +339,7 @@ aiImageGeneration.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGeneration.url = (options?: RouteQueryOptions) => {
@@ -348,7 +348,7 @@ aiImageGeneration.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -358,7 +358,7 @@ aiImageGeneration.post = (options?: RouteQueryOptions): RouteDefinition<'post'> 
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 const aiImageGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -368,7 +368,7 @@ const aiImageGenerationForm = (options?: RouteQueryOptions): RouteFormDefinition
 
 /**
 * @see \App\Http\Controllers\RecipeController::aiImageGeneration
-* @see app/Http/Controllers/RecipeController.php:457
+* @see app/Http/Controllers/RecipeController.php:453
 * @route '/recipes/ai-image-generation'
 */
 aiImageGenerationForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

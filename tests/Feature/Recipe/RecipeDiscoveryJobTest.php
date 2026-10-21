@@ -16,6 +16,7 @@ describe('RecipeDiscoveryJob', function () {
         $this->actingAs($this->user)
             ->post(route('recipes.discover.pool'), [
                 'prompt' => 'Un dîner végétarien rapide',
+                'meal_times' => ['diner', 'snack'],
             ])
             ->assertInertia(fn (Assert $page) => $page
                 ->component('recipe/index')
@@ -27,6 +28,7 @@ describe('RecipeDiscoveryJob', function () {
             RecipeDiscoveryJob::class,
             fn (RecipeDiscoveryJob $job): bool => $job->userId === $this->user->id
                 && $job->recipeDiscoveryRequestData->prompt === 'Un dîner végétarien rapide'
+                && $job->recipeDiscoveryRequestData->meal_times === ['diner', 'snack']
                 && $job->queue === RecipeDiscoveryJob::QUEUE
         );
     });

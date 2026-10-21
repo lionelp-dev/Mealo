@@ -1,14 +1,14 @@
 import { useRecipeDiscovery } from '../../hooks/use-recipe-discovery';
 import { RecipeFormCard } from '../recipe-form-card';
+import { MealTimeResource } from '@/app/data/resources/recipe/types';
 import {
   ArrowLeft,
-  Clock3,
+  CookingPot,
   Leaf,
   LoaderCircle,
   Plus,
   Settings2,
   Sparkles,
-  Utensils,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -17,10 +17,10 @@ type Props = {
   onPendingChange: (count: number) => void;
   onGeneratingChange: (value: boolean) => void;
   onPreparationChange: (value: boolean) => void;
+  mealTimes: MealTimeResource[];
   onClose?: () => void;
 };
 
-const durationOptions = ['15 min', '30 min', '1 h', 'Peu importe'];
 const dietOptions = [
   'Végétarien',
   'Végan',
@@ -47,13 +47,14 @@ export function RecipeDiscoveryPanel(props: Props) {
           {isLoading ? (
             <LoadingState />
           ) : (
-            <RecipeFormCard className="mt-6 sm:mt-8">
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                  discovery.generate();
-                }}
-              >
+            <form
+              className="mt-6 space-y-6 sm:mt-8 sm:space-y-7"
+              onSubmit={(event) => {
+                event.preventDefault();
+                discovery.generate();
+              }}
+            >
+              <RecipeFormCard className="gap-0">
                 <label className="font-semibold" htmlFor="discovery-prompt">
                   Qu’avez-vous envie de manger ?{' '}
                   <span className="font-normal text-base-content/50">
@@ -65,14 +66,21 @@ export function RecipeDiscoveryPanel(props: Props) {
                   value={discovery.prompt}
                   onChange={(event) => discovery.setPrompt(event.target.value)}
                   placeholder="Ex. un dîner végétarien gourmand, un plat rapide pour la semaine…"
-                  className="textarea-bordered textarea mt-2 min-h-40 w-full rounded-xl bg-base-100 p-4 sm:min-h-44"
+                  className="textarea-bordered textarea mt-2 min-h-28 w-full rounded-xl bg-base-100 p-4 sm:min-h-32"
                 />
                 <PreferenceGroup
-                  label="Durée maximale"
-                  icon={Clock3}
-                  options={durationOptions}
-                  selected={discovery.maxDuration}
-                  onSelect={discovery.selectDuration}
+                  label="Besoin d’inspiration ?"
+                  options={styleOptions}
+                  selected={discovery.style}
+                  onSelect={discovery.selectStyle}
+                  showOptional={false}
+                />
+              </RecipeFormCard>
+              <RecipeFormCard className="gap-0">
+                <MealTimesCheckboxGroup
+                  mealTimes={props.mealTimes}
+                  selected={discovery.selectedMealTimes}
+                  onToggle={discovery.toggleMealTime}
                 />
                 <PreferenceGroup
                   label="Alimentation"
@@ -81,25 +89,18 @@ export function RecipeDiscoveryPanel(props: Props) {
                   selected={discovery.diet}
                   onSelect={discovery.selectDiet}
                 />
-                <PreferenceGroup
-                  label="Style"
-                  icon={Utensils}
-                  options={styleOptions}
-                  selected={discovery.style}
-                  onSelect={discovery.selectStyle}
-                />
-                <button
-                  type="submit"
-                  disabled={discovery.prompt.trim().length < 3}
-                  className="btn mt-5 w-full gap-2 rounded-xl btn-md btn-secondary max-md:btn-sm sm:mt-6"
-                >
-                  <Sparkles size={18} />
-                  {discovery.isRefining
-                    ? 'Mettre à jour les suggestions'
-                    : 'Explorez de nouvelles recettes avec l’IA'}
-                </button>
-              </form>
-            </RecipeFormCard>
+              </RecipeFormCard>
+              <button
+                type="submit"
+                disabled={discovery.prompt.trim().length < 3}
+                className="btn w-full gap-2 rounded-xl btn-md btn-secondary max-md:btn-sm"
+              >
+                <Sparkles size={18} />
+                {discovery.isRefining
+                  ? 'Mettre à jour les suggestions'
+                  : 'Explorez de nouvelles recettes avec l’IA'}
+              </button>
+            </form>
           )}
           {discovery.error && (
             <ErrorState error={discovery.error} retry={discovery.retry} />
@@ -129,11 +130,18 @@ export function RecipeDiscoveryPanel(props: Props) {
               {discovery.diet}
             </span>
           )}
-          {discovery.maxDuration && discovery.maxDuration !== 'Peu importe' && (
-            <span className="badge badge-soft badge-lg badge-secondary">
-              <Clock3 size={16} /> {discovery.maxDuration} max
-            </span>
-          )}
+          {props.mealTimes
+            .filter((mealTime) =>
+              discovery.selectedMealTimes.includes(mealTime.slug),
+            )
+            .map((mealTime) => (
+              <span
+                key={mealTime.id}
+                className="badge badge-soft badge-lg badge-secondary"
+              >
+                {mealTime.name}
+              </span>
+            ))}
         </div>
         <article className="mt-4 rounded-xl border border-base-300 bg-base-100 shadow-sm sm:mt-5 sm:rounded-2xl">
           {recipe.image_data_url ? (
@@ -148,7 +156,10 @@ export function RecipeDiscoveryPanel(props: Props) {
             </div>
           )}
           <div className="p-4 sm:p-6">
-            <h2 className="sticky top-9 z-10 -mx-4 bg-base-100 px-4 py-3 text-2xl leading-tight font-bold sm:-mx-6 sm:px-6 sm:text-3xl lg:static lg:mx-0 lg:px-0 lg:py-0">
+            <h2
+              className="sticky top-9 z-10 -mx-4 truncate bg-base-100 px-4 py-3 text-2xl leading-tight font-bold sm:-mx-6 sm:px-6 sm:text-3xl lg:static lg:mx-0 lg:px-0 lg:py-0"
+              title={recipe.name}
+            >
               {recipe.name}
             </h2>
             <div className="mt-3 flex flex-wrap gap-2 text-sm sm:mt-4">
@@ -162,7 +173,7 @@ export function RecipeDiscoveryPanel(props: Props) {
               )}
               <span className="badge badge-lg">Suggestion IA</span>
             </div>
-            <p className="mt-3 text-sm leading-6 text-base-content/70 sm:mt-4 sm:text-base">
+            <p className="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-base-content/70 sm:mt-4 sm:text-base">
               {recipe.description}
             </p>
             <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-3">
@@ -231,30 +242,88 @@ function DiscoveryHeader({ onClose }: { onClose?: () => void }) {
   );
 }
 
+function MealTimesCheckboxGroup({
+  mealTimes,
+  selected,
+  onToggle,
+}: {
+  mealTimes: MealTimeResource[];
+  selected: string[];
+  onToggle: (slug: string) => void;
+}) {
+  return (
+    <fieldset>
+      <legend className="sr-only">Moments de repas</legend>
+      <div className="flex items-center gap-3">
+        <CookingPot
+          className="size-5 shrink-0 text-secondary"
+          strokeWidth={2}
+          aria-hidden="true"
+        />
+        <p className="font-semibold text-secondary/75">
+          Moments de repas{' '}
+          <span className="font-normal text-base-content/50">(facultatif)</span>
+        </p>
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        {mealTimes.map((mealTime) => {
+          const isSelected = selected.includes(mealTime.slug);
+
+          return (
+            <label
+              key={mealTime.id}
+              className={`btn gap-2 rounded-lg btn-md max-md:btn-sm ${isSelected ? 'btn-secondary' : 'btn-outline btn-secondary'}`}
+            >
+              <input
+                type="checkbox"
+                checked={isSelected}
+                onChange={() => onToggle(mealTime.slug)}
+                className="checkbox checkbox-sm"
+              />
+              {mealTime.name}
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+}
+
 function PreferenceGroup({
   label,
   icon: Icon,
   options,
   selected,
   onSelect,
+  showOptional = true,
 }: {
   label: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
   options: string[];
   selected: string | null;
   onSelect: (value: string) => void;
+  showOptional?: boolean;
 }) {
   return (
-    <div className="border-b border-base-300 py-4 sm:py-5">
+    <div className="pt-5 sm:pt-6">
       <div className="flex items-center gap-3">
-        <Icon
-          className="size-5 shrink-0 text-secondary"
-          strokeWidth={2}
-          aria-hidden="true"
-        />
-        <p className="font-semibold">
-          {label}{' '}
-          <span className="font-normal text-base-content/50">(facultatif)</span>
+        {Icon && (
+          <Icon
+            className="size-5 shrink-0 text-secondary"
+            strokeWidth={2}
+            aria-hidden="true"
+          />
+        )}
+        <p className="font-semibold text-secondary/75">
+          {label}
+          {showOptional && (
+            <>
+              {' '}
+              <span className="font-normal text-base-content/50">
+                (facultatif)
+              </span>
+            </>
+          )}
         </p>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">

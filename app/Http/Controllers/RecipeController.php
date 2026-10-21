@@ -319,9 +319,7 @@ class RecipeController extends Controller
         } catch (\Exception $exception) {
             report($exception);
 
-            return Inertia::render('recipe/index', [
-                'discovery_error' => RecipeGenerationFailedMessage::message(),
-            ]);
+            return back()->with('error', RecipeGenerationFailedMessage::message());
         }
     }
 
@@ -354,9 +352,7 @@ class RecipeController extends Controller
         } catch (\Exception $exception) {
             report($exception);
 
-            return Inertia::render('recipe/index', [
-                'discovery_error' => RecipeGenerationFailedMessage::message(),
-            ]);
+            return back()->with('error', RecipeGenerationFailedMessage::message());
         }
     }
 

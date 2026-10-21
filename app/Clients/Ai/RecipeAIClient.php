@@ -50,6 +50,15 @@ final class RecipeAIClient
      */
     public function discover(RecipeDiscoveryRequestData $payload, User $user): array
     {
+        $mealTimeCatalog = MealTime::query()
+            ->orderBy('id')
+            ->get(['id', 'slug'])
+            ->map(fn (MealTime $mealTime): array => [
+                'id' => $mealTime->id,
+                'slug' => $mealTime->slug,
+            ])
+            ->all();
+
         $response = $this->http->post('/internal/recipes/discover', [
             'owner_id' => $user->id,
             'prompt' => $payload->prompt,
@@ -62,14 +71,8 @@ final class RecipeAIClient
                     'name' => $category->name,
                 ])
                 ->all(),
-            'meal_times' => MealTime::query()
-                ->orderBy('id')
-                ->get(['id', 'slug'])
-                ->map(fn (MealTime $mealTime): array => [
-                    'id' => $mealTime->id,
-                    'slug' => $mealTime->slug,
-                ])
-                ->all(),
+            'meal_times' => $mealTimeCatalog,
+            'selected_meal_times' => $payload->meal_times,
             'existing_recipe_names' => $user->recipes()
                 ->pluck('name')
                 ->all(),

@@ -27,9 +27,9 @@ export function useRecipeDiscovery({
   onPreparationChange,
 }: Props) {
   const [prompt, setPrompt] = useState('');
-  const [maxDuration, setMaxDuration] = useState<string | null>(null);
   const [diet, setDiet] = useState<string | null>(null);
   const [style, setStyle] = useState<string | null>(null);
+  const [selectedMealTimes, setSelectedMealTimes] = useState<string[]>([]);
   const [recipes, setRecipes] = useState<DiscoveredRecipe[]>([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isPrefetching, setIsPrefetching] = useState(false);
@@ -137,25 +137,19 @@ export function useRecipeDiscovery({
     () =>
       onPreparationChange(
         prompt.trim().length > 0 ||
-          maxDuration !== null ||
           diet !== null ||
-          style !== null,
+          style !== null ||
+          selectedMealTimes.length > 0,
       ),
-    [diet, maxDuration, onPreparationChange, prompt, style],
+    [diet, onPreparationChange, prompt, selectedMealTimes, style],
   );
 
-  const replacePreference = (
-    kind: 'duration' | 'diet' | 'style',
-    previous: string | null,
-    next: string | null,
-  ) => {
+  const replacePreference = (previous: string | null, next: string | null) => {
     const phrase = (value: string | null) => {
-      if (!value || (kind === 'duration' && value === 'Peu importe')) {
+      if (!value) {
         return null;
       }
-      return kind === 'duration'
-        ? `à préparer en moins de ${value}`
-        : value.toLowerCase();
+      return value.toLowerCase();
     };
     setPrompt((value) => {
       const parts = value
@@ -167,20 +161,22 @@ export function useRecipeDiscovery({
     });
   };
 
-  const selectDuration = (value: string) => {
-    const next = maxDuration === value ? null : value;
-    replacePreference('duration', maxDuration, next);
-    setMaxDuration(next);
-  };
   const selectDiet = (value: string) => {
     const next = diet === value ? null : value;
-    replacePreference('diet', diet, next);
+    replacePreference(diet, next);
     setDiet(next);
   };
   const selectStyle = (value: string) => {
     const next = style === value ? null : value;
-    replacePreference('style', style, next);
+    replacePreference(style, next);
     setStyle(next);
+  };
+  const toggleMealTime = (slug: string) => {
+    setSelectedMealTimes((current) =>
+      current.includes(slug)
+        ? current.filter((value) => value !== slug)
+        : [...current, slug],
+    );
   };
 
   const requestPool = (prefetch: boolean) => {
@@ -194,7 +190,7 @@ export function useRecipeDiscovery({
     }
     router.post(
       '/recipes/discover/pool',
-      { prompt: prompt.trim() },
+      { prompt: prompt.trim(), meal_times: selectedMealTimes },
       {
         async: true,
         preserveUrl: true,
@@ -282,9 +278,9 @@ export function useRecipeDiscovery({
   return {
     currentRecipe,
     prompt,
-    maxDuration,
     diet,
     style,
+    selectedMealTimes,
     isGenerating,
     isPrefetching,
     isSaving,
@@ -293,9 +289,9 @@ export function useRecipeDiscovery({
     notice,
     setPrompt,
     setIsRefining,
-    selectDuration,
     selectDiet,
     selectStyle,
+    toggleMealTime,
     generate: () => {
       setNotice(null);
       requestPool(false);

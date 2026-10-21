@@ -57,7 +57,7 @@ pool.form = poolForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 export const status = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -72,7 +72,7 @@ status.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 status.url = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -99,7 +99,7 @@ status.url = (args: { discoveryId: string | number } | [discoveryId: string | nu
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 status.get = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -109,7 +109,7 @@ status.get = (args: { discoveryId: string | number } | [discoveryId: string | nu
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 status.head = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -119,7 +119,7 @@ status.head = (args: { discoveryId: string | number } | [discoveryId: string | n
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 const statusForm = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -129,7 +129,7 @@ const statusForm = (args: { discoveryId: string | number } | [discoveryId: strin
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 statusForm.get = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -139,7 +139,7 @@ statusForm.get = (args: { discoveryId: string | number } | [discoveryId: string 
 
 /**
 * @see \App\Http\Controllers\RecipeController::status
-* @see app/Http/Controllers/RecipeController.php:328
+* @see app/Http/Controllers/RecipeController.php:326
 * @route '/recipes/discover/status/{discoveryId}'
 */
 statusForm.head = (args: { discoveryId: string | number } | [discoveryId: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -156,7 +156,7 @@ status.form = statusForm
 
 /**
 * @see \App\Http\Controllers\RecipeController::save
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 export const save = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -171,7 +171,7 @@ save.definition = {
 
 /**
 * @see \App\Http\Controllers\RecipeController::save
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 save.url = (options?: RouteQueryOptions) => {
@@ -180,7 +180,7 @@ save.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \App\Http\Controllers\RecipeController::save
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 save.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -190,7 +190,7 @@ save.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
 /**
 * @see \App\Http\Controllers\RecipeController::save
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 const saveForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -200,7 +200,7 @@ const saveForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => (
 
 /**
 * @see \App\Http\Controllers\RecipeController::save
-* @see app/Http/Controllers/RecipeController.php:341
+* @see app/Http/Controllers/RecipeController.php:339
 * @route '/recipes/discover/save'
 */
 saveForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

@@ -23,6 +23,7 @@ const recipeSchema = z.object({
 
 export const RecipeDiscoveryState = new StateSchema({
   prompt: z.string(),
+  requiredMealTimeSlug: z.string().nullable().default(null),
   generatedRecipeName: z.string().nullable().default(null),
   generatedRecipe: recipeSchema.nullable().default(null),
   excludedRecipeNames: z.array(z.string()).default([]),

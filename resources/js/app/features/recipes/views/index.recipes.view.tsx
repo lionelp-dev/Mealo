@@ -27,6 +27,7 @@ export function IndexRecipesView() {
   const {
     recipes,
     selected_recipe,
+    meal_times,
     url,
     tags,
     starterRecipes,
@@ -136,6 +137,7 @@ export function IndexRecipesView() {
                 onPendingChange={discovery.setPendingCount}
                 onGeneratingChange={discovery.setIsPoolGenerating}
                 onPreparationChange={discovery.setHasPreparation}
+                mealTimes={meal_times ?? []}
                 onClose={discovery.quitDiscovery}
               />
             </div>

@@ -46,6 +46,7 @@ export class OpenRouterRecipeGenerator implements RecipeGenerator {
 Respecte strictement le schéma. Le nom doit correspondre exactement au nom demandé.
 Catégories autorisées : ${catalog.ingredient_categories.map((category) => `${category.id}: ${category.name}`).join(', ')}.
 Moments de repas autorisés : ${catalog.meal_times.map((mealTime) => mealTime.slug).join(', ')}.
+Les moments de repas sont une contrainte métier, jamais une simple étiquette : la recette doit concrètement convenir à au moins l’un de ceux autorisés. Adapte le type de plat, les ingrédients et les portions, puis n’associe que les moments pour lesquels elle est réellement adaptée.
 L'image et image_data_url doivent être null.`,
         },
         { role: 'user', content: `Demande : ${prompt}\nNom imposé : ${name}` },
