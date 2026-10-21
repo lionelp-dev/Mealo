@@ -11,6 +11,7 @@ const initialState: RecipesMultiSelectState = {
 };
 export interface RecipesMultiSelectActions {
   setIsMultiSelectMode: (value: boolean) => void;
+  startMultiSelect: (recipeId: string) => void;
   toggleRecipeSelection: (recipeId: string) => void;
   clearSelectedRecipes: () => void;
   resetStore: () => void;
@@ -26,6 +27,12 @@ export const useRecipesMultiSelectStore = create<
       isMultiSelectMode: value,
       selectedRecipeIds: value ? state.selectedRecipeIds : [],
     })),
+
+  startMultiSelect: (recipeId) =>
+    set({
+      isMultiSelectMode: true,
+      selectedRecipeIds: [recipeId],
+    }),
 
   toggleRecipeSelection: (recipeId) =>
     set((state) => {

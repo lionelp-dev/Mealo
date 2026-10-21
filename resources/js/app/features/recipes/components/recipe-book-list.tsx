@@ -1,8 +1,15 @@
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/app/components/ui/dropdown-menu';
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { InfiniteScroll } from '@inertiajs/react';
-import { Check, ImageOff } from 'lucide-react';
+import { Check, EllipsisVertical, ImageOff, Trash2Icon } from 'lucide-react';
 import { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   recipes: RecipeResource[];
@@ -25,8 +32,13 @@ export function RecipeBookList({
   emptyContent,
   generationStatus,
 }: Props) {
-  const { isMultiSelectMode, selectedRecipeIds, toggleRecipeSelection } =
-    useRecipesMultiSelectStore();
+  const { t } = useTranslation();
+  const {
+    isMultiSelectMode,
+    selectedRecipeIds,
+    startMultiSelect,
+    toggleRecipeSelection,
+  } = useRecipesMultiSelectStore();
 
   return (
     <section
@@ -51,56 +63,88 @@ export function RecipeBookList({
                 const isSelected = selectedRecipeId === recipe.id;
                 const isRecentlyAdded = recentlyAddedRecipeId === recipe.id;
                 return (
-                  <button
+                  <div
                     key={recipe.id}
-                    type="button"
-                    aria-pressed={isSelected}
-                    onClick={() =>
-                      isMultiSelectMode
-                        ? toggleRecipeSelection(recipe.id)
-                        : onSelect(recipe)
-                    }
                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-left transition ${
                       isSelected ? 'bg-base-200/75' : 'hover:bg-base-200/45'
                     }`}
                   >
-                    {recipe.image_url ? (
-                      <img
-                        src={recipe.image_url}
-                        alt=""
-                        className="aspect-video w-40 shrink-0 rounded-lg object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <span className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-base-200 text-base-content/35">
-                        <ImageOff size={18} />
-                      </span>
-                    )}
-                    <span className="min-w-0 flex-1">
-                      <span className="flex items-center gap-2">
-                        <span className="truncate text-sm font-semibold">
-                          {recipe.name}
+                    <button
+                      type="button"
+                      aria-pressed={
+                        isMultiSelectMode
+                          ? selectedRecipeIds.includes(recipe.id)
+                          : isSelected
+                      }
+                      onClick={() =>
+                        isMultiSelectMode
+                          ? toggleRecipeSelection(recipe.id)
+                          : onSelect(recipe)
+                      }
+                      className="flex min-w-0 flex-1 items-center gap-3 text-left"
+                    >
+                      {recipe.image_url ? (
+                        <img
+                          src={recipe.image_url}
+                          alt=""
+                          className="aspect-video w-40 shrink-0 rounded-lg object-cover"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <span className="flex size-16 shrink-0 items-center justify-center rounded-lg bg-base-200 text-base-content/35">
+                          <ImageOff size={18} />
                         </span>
-                        {isRecentlyAdded && (
-                          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-success/15 px-2 py-1 text-[11px] font-semibold text-success">
-                            <Check size={12} /> Ajoutée
+                      )}
+                      <span className="min-w-0 flex-1">
+                        <span className="flex items-center gap-2">
+                          <span className="truncate text-sm font-semibold">
+                            {recipe.name}
                           </span>
-                        )}
+                          {isRecentlyAdded && (
+                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-success/15 px-2 py-1 text-[11px] font-semibold text-success">
+                              <Check size={12} /> Ajoutée
+                            </span>
+                          )}
+                        </span>
+                        <span className="mt-1 block text-xs text-base-content/55">
+                          Recette ·{' '}
+                          {recipe.preparation_time + recipe.cooking_time} min
+                        </span>
                       </span>
-                      <span className="mt-1 block text-xs text-base-content/55">
-                        Recette ·{' '}
-                        {recipe.preparation_time + recipe.cooking_time} min
-                      </span>
-                    </span>
-                    {isMultiSelectMode && (
+                    </button>
+                    {isMultiSelectMode ? (
                       <input
                         type="checkbox"
                         checked={selectedRecipeIds.includes(recipe.id)}
-                        readOnly
+                        onChange={() => toggleRecipeSelection(recipe.id)}
                         className="checkbox shrink-0 checkbox-sm checkbox-secondary"
                       />
+                    ) : (
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <button
+                            type="button"
+                            className="btn btn-square shrink-0 btn-ghost btn-sm"
+                            aria-label={t(
+                              'recipes.actions.openMenu',
+                              'Open recipe menu',
+                            )}
+                          >
+                            <EllipsisVertical size={18} />
+                          </button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem
+                            variant="destructive"
+                            onClick={() => startMultiSelect(recipe.id)}
+                          >
+                            <Trash2Icon size={14} />
+                            {t('common.buttons.delete', 'Delete')}
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     )}
-                  </button>
+                  </div>
                 );
               })}
             </div>
@@ -108,11 +152,14 @@ export function RecipeBookList({
           {recipes.length > 0 && generationStatus}
         </InfiniteScroll>
       </div>
-      <footer className="-mx-3 flex shrink-0 items-center justify-between border-t border-base-300/60 bg-base-100 px-3 py-2 lg:-mx-5 lg:px-5">
-        <span className="text-sm text-base-content/55">
-          {recipes.length} recette{recipes.length > 1 ? 's' : ''}
-        </span>
-        {footer}
+      <footer className="-mx-3 shrink-0 border-t border-base-300/60 bg-base-100 lg:-mx-5">
+        {footer ?? (
+          <div className="flex items-center px-3 py-2 lg:px-5">
+            <span className="text-sm text-base-content/55">
+              {recipes.length} recette{recipes.length > 1 ? 's' : ''}
+            </span>
+          </div>
+        )}
       </footer>
     </section>
   );

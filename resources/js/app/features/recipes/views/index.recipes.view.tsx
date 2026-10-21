@@ -13,7 +13,6 @@ import RecipesSearch from '@/app/components/recipes-search';
 import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
 import { useRecipesRequestCoordination } from '@/app/hooks/use-recipes-request-coordination';
 import AppLayout from '@/app/layouts/app-layout';
-import { cn } from '@/app/lib';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { useRecipesSearchStore } from '@/app/stores/use-recipes-search-store';
 import { capitalize } from '@/app/utils';
@@ -234,32 +233,14 @@ export function IndexRecipesView() {
                   </div>
                 }
                 footer={
-                  <button
-                    className={cn(
-                      'btn min-w-0 gap-2 border border-secondary/40 px-3 whitespace-nowrap btn-outline btn-soft btn-sm btn-secondary',
-                      multiSelect.isMultiSelectMode ? 'btn-active' : '',
-                    )}
-                    onClick={() => {
-                      const next = !multiSelect.isMultiSelectMode;
-                      multiSelect.setIsMultiSelectMode(next);
-                      if (!next) multiSelect.clearSelectedRecipes();
-                    }}
-                    disabled={discovery.isDiscovering}
-                  >
-                    <span className="min-w-0 truncate">
-                      Sélectionner des recettes
-                    </span>
-                  </button>
+                  !discovery.isDiscovering && multiSelect.isMultiSelectMode ? (
+                    <RecipesMultiSelectToolbar />
+                  ) : undefined
                 }
               />
             </div>
           </div>
         </PageContainer>
-        {!discovery.isDiscovering &&
-          multiSelect.isMultiSelectMode &&
-          multiSelect.selectedRecipeIds.length > 0 && (
-            <RecipesMultiSelectToolbar />
-          )}
       </>
     ),
   });

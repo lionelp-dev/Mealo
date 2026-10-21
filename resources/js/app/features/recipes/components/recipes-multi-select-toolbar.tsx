@@ -5,6 +5,7 @@ import {
   useConfirmDialog,
   ConfirmDialog,
 } from '@/app/components/confirm-dialog';
+import { Trash2Icon, XIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export function RecipesMultiSelectToolbar() {
@@ -23,6 +24,7 @@ export function RecipesMultiSelectToolbar() {
   } = useRecipesMultiSelectStore();
 
   const hasSelectedRecipesId = selectedRecipeIds.length !== 0;
+  const hasMultipleSelectedRecipes = selectedRecipeIds.length > 1;
   const recipesData = recipes?.data ?? [];
 
   const handleCancelMultiSelect = () => {
@@ -30,16 +32,12 @@ export function RecipesMultiSelectToolbar() {
     setIsMultiSelectMode(false);
   };
 
-  const handleClearSelectedRecipes = () => {
-    clearSelectedRecipes();
-  };
-
   const handleDeleteRecipes = () => {
     const selectedRecipes = recipesData.filter((recipe) =>
       selectedRecipeIds.includes(recipe.id),
     );
     confirm({
-      title: isMultiSelectMode
+      title: hasMultipleSelectedRecipes
         ? t(
             'recipes.delete.confirmTitleMultiple',
             'Are you sure you want to delete these recipes?',
@@ -48,7 +46,7 @@ export function RecipesMultiSelectToolbar() {
             'recipes.delete.confirmTitle',
             'Are you sure you want to delete this recipe?',
           ),
-      message: isMultiSelectMode
+      message: hasMultipleSelectedRecipes
         ? t('recipes.delete.confirmDescriptionMultiple', {
             count: selectedRecipes.length,
             defaultValue: `Once these ${selectedRecipes.length} recipes are deleted, they will be permanently removed. Are you sure you want to delete them?`,
@@ -65,38 +63,40 @@ export function RecipesMultiSelectToolbar() {
       },
     });
   };
+
+  if (!isMultiSelectMode) return null;
+
   return (
     <>
-      <div className="fixed bottom-7 left-1/2 z-20 flex -translate-x-1/2 transform">
-        <div className="join shadow-2xl">
+      <div
+        className="bg-base-100"
+        role="toolbar"
+        aria-label={t('recipes.actions.selection', 'Recipe selection')}
+      >
+        <div className="flex h-16 items-center px-6">
           <button
-            className="btn join-item rounded-l-full border-base-300 text-sm font-medium text-base-content"
+            className="btn btn-square btn-ghost btn-sm"
             onClick={handleCancelMultiSelect}
-            disabled={!hasSelectedRecipesId}
+            aria-label={t('common.buttons.close', 'Close')}
           >
-            {t('common.buttons.abandon', 'Cancel')}
+            <XIcon size={22} />
           </button>
-
+          <span className="ml-3 text-sm font-medium text-base-content">
+            {selectedRecipeIds.length}{' '}
+            {t(
+              selectedRecipeIds.length === 1
+                ? 'common.buttons.selected.singular'
+                : 'common.buttons.selected.plural',
+              'selected',
+            )}
+          </span>
           <button
-            onClick={handleClearSelectedRecipes}
-            className="btn join-item flex items-center gap-3 border-base-300 px-5"
-          >
-            <span className="flex items-baseline gap-1.5 text-base-content">
-              <span className="mb-[1px] text-sm font-medium">
-                {t('common.buttons.clearSelection', 'Clear selection')}
-              </span>
-              <span className="text-sm font-medium">
-                ({selectedRecipeIds.length})
-              </span>
-            </span>
-          </button>
-
-          <button
-            className="btn join-item rounded-r-full border-base-300 text-error hover:bg-base-300"
+            className="btn ml-auto btn-square text-base-content btn-ghost btn-sm hover:text-error"
             onClick={() => handleDeleteRecipes()}
             disabled={!hasSelectedRecipesId || processing}
+            aria-label={t('common.buttons.delete', 'Delete')}
           >
-            {t('common.buttons.remove', 'Remove')}
+            <Trash2Icon size={19} />
           </button>
         </div>
       </div>

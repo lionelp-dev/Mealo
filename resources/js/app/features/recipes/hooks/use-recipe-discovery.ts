@@ -250,6 +250,9 @@ export function useRecipeDiscovery({
         preserveState: true,
         preserveScroll: true,
         only: ['recipes', 'selected_recipe', 'discovery_error'],
+        // `recipes` is an Inertia scroll prop. Reset it after the redirect so
+        // the refreshed first page replaces the list instead of appending to it.
+        reset: ['recipes'],
         onSuccess: (page) => {
           const discoveryError = page.props.discovery_error;
           if (typeof discoveryError === 'string') {
