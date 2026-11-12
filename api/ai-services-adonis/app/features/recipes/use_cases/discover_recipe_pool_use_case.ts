@@ -117,6 +117,14 @@ export class DiscoverRecipePoolUseCase {
         continue
       }
 
+      if (result.imageGenerationFailed) {
+        logger.warn(
+          { ownerId, candidate: index + 1, recipeName: result.generatedRecipe.name },
+          'Recipe discovery candidate excluded because image generation failed'
+        )
+        continue
+      }
+
       recipes.push({
         ...result.generatedRecipe,
         image_data_url: result.imageDataUrl,

@@ -41,7 +41,7 @@ return [
     ],
 
     'ai' => [
-        'url' => env('AI_SERVICE_URL', 'http://127.0.0.1:8001'),
+        'url' => env('AI_SERVICE_URL', 'http://127.0.0.1:3333'),
         'token' => env('AI_SERVICE_TOKEN'),
     ],
 

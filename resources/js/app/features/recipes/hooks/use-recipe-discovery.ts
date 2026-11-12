@@ -230,7 +230,7 @@ export function useRecipeDiscovery({
     const isLast = recipes.length === 1;
     setRecipes((current) => current.slice(1));
     const nextCount = swipes.current + 1;
-    if (nextCount === 5 || isLast) requestPool(true);
+    if (nextCount === 3 || isLast) requestPool(true);
     swipes.current = nextCount === 10 ? 0 : nextCount;
   };
 
