@@ -1,7 +1,15 @@
 export type DiscoveryCatalog = {
   ingredient_categories: Array<{ id: number; slug: string; name: string }>
   meal_times: Array<{ id: number; slug: string }>
-  existing_recipe_names: string[]
+}
+
+export type RecipeNameGenerationRequest = {
+  prompt: string
+  requiredMealTimeSlug: string | null
+}
+
+export type GeneratedRecipeNameResult = RecipeNameGenerationRequest & {
+  name: string
 }
 
 export type GeneratedDiscoveryRecipe = {
@@ -18,7 +26,7 @@ export type GeneratedDiscoveryRecipe = {
 }
 
 export interface RecipeGenerator {
-  generateName(prompt: string, excludedNames: string[]): Promise<string>
+  generateNames(requests: RecipeNameGenerationRequest[], excludedNames: string[]): Promise<string[]>
   generateRecipe(
     prompt: string,
     name: string,
@@ -31,5 +39,5 @@ export interface RecipeImageGenerator {
 }
 
 export interface RecipeRepository {
-  recipeNameExists(ownerId: number, name: string): Promise<boolean>
+  findExistingRecipeNames(ownerId: number, names: string[]): Promise<string[]>
 }

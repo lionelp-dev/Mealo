@@ -73,9 +73,6 @@ final class RecipeAIClient
                 ->all(),
             'meal_times' => $mealTimeCatalog,
             'selected_meal_times' => $payload->meal_times,
-            'existing_recipe_names' => $user->recipes()
-                ->pluck('name')
-                ->all(),
         ], 180);
 
         if ($response->failed()) {

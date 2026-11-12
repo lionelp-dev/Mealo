@@ -4,6 +4,7 @@ import { createRecipeStoreRequestSchema } from '../../../data/request/recipe/sch
 import type {
   DiscoveryCatalog,
   GeneratedDiscoveryRecipe,
+  RecipeNameGenerationRequest,
   RecipeGenerator,
 } from '../contracts/recipe_discovery_contracts.ts'
 
@@ -12,24 +13,31 @@ export class OpenRouterRecipeGenerator implements RecipeGenerator {
     return new ChatOpenRouter({ model: 'openai/gpt-4o-mini', temperature: 0.8 })
   }
 
-  async generateName(prompt: string, excludedNames: string[]) {
+  async generateNames(requests: RecipeNameGenerationRequest[], excludedNames: string[]) {
+    if (requests.length === 0) return []
+
     const response = await this.model()
-      .withStructuredOutput(z.object({ name: z.string().trim().min(1).max(255) }), {
-        method: 'jsonSchema',
-        strict: true,
-      })
+      .withStructuredOutput(
+        z.object({ names: z.array(z.string().trim().min(1).max(255)).length(requests.length) }),
+        {
+          method: 'jsonSchema',
+          strict: true,
+        }
+      )
       .invoke([
         {
           role: 'system',
           content:
-            'Tu es un chef cuisinier. Propose un unique nom de recette réaliste, distinct des noms exclus.',
+            'Tu es un chef cuisinier. Propose exactement un nom de recette réaliste par demande, dans le même ordre. Tous les noms doivent être distincts : ne propose pas deux variantes quasiment identiques du même plat. Cherche une bonne diversité dans les plats, les ingrédients principaux, les cuisines et les méthodes de préparation. Chaque nom doit aussi être distinct des noms exclus.',
         },
         {
           role: 'user',
-          content: `Demande : ${prompt}\nNoms exclus : ${excludedNames.join(', ') || 'aucun'}`,
+          content: `Demandes :\n${requests
+            .map((request, index) => `${index + 1}. ${request.prompt}`)
+            .join('\n\n')}\n\nNoms exclus : ${excludedNames.join(', ') || 'aucun'}`,
         },
       ])
-    return response.name
+    return response.names
   }
 
   async generateRecipe(prompt: string, name: string, catalog: DiscoveryCatalog) {

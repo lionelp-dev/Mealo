@@ -73,8 +73,17 @@ export class RecipeImageClient {
       })
 
       if (!response.ok) {
+        const errorResponse = await response.text()
+        const errorBody = errorResponse.trim().slice(0, 1_000)
+
         logger.warn(
-          logContext({ status: response.status }),
+          logContext({
+            status: response.status,
+            requestId: response.headers.get('x-request-id'),
+            generationId: response.headers.get('x-generation-id'),
+            retryAfter: response.headers.get('retry-after'),
+            errorBody: errorBody || undefined,
+          }),
           'Recipe image generation failed'
         )
         return null
@@ -91,10 +100,7 @@ export class RecipeImageClient {
         return null
       }
 
-      logger.info(
-        logContext({ status: response.status }),
-        'Recipe image generation completed'
-      )
+      logger.info(logContext({ status: response.status }), 'Recipe image generation completed')
 
       return `data:image/${RecipeImageClient.IMAGE_OPTIONS.output_format};base64,${b64Json}`
     } catch (error) {
@@ -102,9 +108,7 @@ export class RecipeImageClient {
 
       logger.warn(
         logContext(timedOut ? { timeoutMs } : { err: error }),
-        timedOut
-          ? 'Recipe image generation timed out'
-          : 'Recipe image generation request errored'
+        timedOut ? 'Recipe image generation timed out' : 'Recipe image generation request errored'
       )
       return null
     }

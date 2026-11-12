@@ -10,7 +10,6 @@ const discoveryRequestSchema = z.object({
     .min(1),
   meal_times: z.array(z.object({ id: z.number().int().positive(), slug: z.string() })).min(1),
   selected_meal_times: z.array(z.string().trim().min(1)).max(4).default([]),
-  existing_recipe_names: z.array(z.string().trim().min(1).max(255)),
 })
 
 export default class RecipeDiscoveryController {
@@ -44,7 +43,6 @@ export default class RecipeDiscoveryController {
       catalog: {
         ingredient_categories: parsed.data.ingredient_categories,
         meal_times: mealTimes,
-        existing_recipe_names: parsed.data.existing_recipe_names,
       },
     })
   }

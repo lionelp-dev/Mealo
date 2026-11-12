@@ -1,4 +1,5 @@
 import app from '@adonisjs/core/services/app'
+import env from '#start/env'
 import { defineConfig } from '@adonisjs/lucid'
 import { mkdirSync } from 'node:fs'
 import { dirname } from 'node:path'
@@ -8,6 +9,37 @@ const discoveryDatabasePath = app.inProduction
   : app.makePath('tmp/recipe_discovery.sqlite')
 
 mkdirSync(dirname(discoveryDatabasePath), { recursive: true })
+
+const recipeSourceDatabase =
+  env.get('NODE_ENV') === 'development'
+    ? {
+        client: 'better-sqlite3' as const,
+        connection: { filename: app.makePath('../../database/database.sqlite') },
+        useNullAsDefault: true,
+      }
+    : {
+        client: 'pg' as const,
+        connection: {
+          host: requiredDatabaseEnv('DB_HOST'),
+          port: env.get('DB_PORT') ?? 5432,
+          user: requiredDatabaseEnv('DB_USERNAME'),
+          password: requiredDatabasePassword(),
+          database: requiredDatabaseEnv('DB_DATABASE'),
+        },
+        pool: { min: 0, max: 5 },
+      }
+
+function requiredDatabaseEnv(key: 'DB_HOST' | 'DB_USERNAME' | 'DB_DATABASE') {
+  const value = env.get(key)
+  if (!value) throw new Error(`La variable d'environnement ${key} est requise.`)
+  return value
+}
+
+function requiredDatabasePassword() {
+  const value = env.get('DB_PASSWORD')
+  if (!value) throw new Error("La variable d'environnement DB_PASSWORD est requise.")
+  return value.release()
+}
 
 const dbConfig = defineConfig({
   /**
@@ -55,6 +87,8 @@ const dbConfig = defineConfig({
         rulesPaths: ['./database/schema_rules.js'],
       },
     },
+
+    recipe_source: recipeSourceDatabase,
 
     /**
      * PostgreSQL connection.

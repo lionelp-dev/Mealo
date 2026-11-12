@@ -21,14 +21,11 @@ const recipeSchema = z.object({
   image_data_url: z.string().nullable(),
 })
 
-export const RecipeDiscoveryState = new StateSchema({
+export const RecipeContentDiscoveryState = new StateSchema({
   prompt: z.string(),
   requiredMealTimeSlug: z.string().nullable().default(null),
-  generatedRecipeName: z.string().nullable().default(null),
+  generatedRecipeName: z.string().trim().min(1).max(255),
   generatedRecipe: recipeSchema.nullable().default(null),
-  excludedRecipeNames: z.array(z.string()).default([]),
-  generationAttempts: z.number().int().default(0),
-  isDuplicateRecipe: z.boolean().default(false),
   imageDataUrl: z.string().nullable().default(null),
   imageGenerationFailed: z.boolean().default(false),
 })

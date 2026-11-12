@@ -1,14 +1,11 @@
 import type { GraphNode } from '@langchain/langgraph'
-import type { RecipeDiscoveryContext } from '../../contexts/recipe_discovery_context.ts'
-import { type RecipeDiscoveryState } from '../../state/recipe_discovery_state.ts'
+import type { RecipeContentDiscoveryContext } from '../../contexts/recipe_content_discovery_context.ts'
+import { type RecipeContentDiscoveryState } from '../../state/recipe_content_discovery_state.ts'
 
 export const generateRecipe: GraphNode<
-  typeof RecipeDiscoveryState,
-  RecipeDiscoveryContext
+  typeof RecipeContentDiscoveryState,
+  RecipeContentDiscoveryContext
 > = async (state, runtime) => {
-  if (!state.generatedRecipeName)
-    throw new Error('Le nom de recette généré est absent du workflow.')
-
   const catalog = runtime.context!.catalog
   const recipeCatalog = state.requiredMealTimeSlug
     ? {
@@ -19,8 +16,9 @@ export const generateRecipe: GraphNode<
       }
     : catalog
 
-  if (recipeCatalog.meal_times.length === 0)
+  if (recipeCatalog.meal_times.length === 0) {
     throw new Error('Le moment de repas imposé est absent du catalogue.')
+  }
 
   return {
     generatedRecipe: await runtime.context!.recipeGenerator.generateRecipe(

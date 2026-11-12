@@ -1,1 +1,1 @@
-export { ExistingRecipeNamesRepository } from './lucid_recipe_repository.ts'
+export { DirectRecipeNameRepository } from './direct_recipe_name_repository.ts'

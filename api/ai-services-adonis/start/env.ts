@@ -27,6 +27,13 @@ export default await Env.create(new URL('../', import.meta.url), {
   OPENROUTER_MODEL: Env.schema.string.optional(),
   OPENROUTER_IMAGE_MODEL: Env.schema.string.optional(),
 
+  // Laravel recipe source database (read-only account outside development)
+  DB_HOST: Env.schema.string.optional(),
+  DB_PORT: Env.schema.number.optional(),
+  DB_DATABASE: Env.schema.string.optional(),
+  DB_USERNAME: Env.schema.string.optional(),
+  DB_PASSWORD: Env.schema.secret.optional(),
+
   // Session
   SESSION_DRIVER: Env.schema.enum(['cookie', 'memory', 'database'] as const),
 })
