@@ -298,6 +298,7 @@
         "generatePlan": "Generate Plan",
         "generatePlanTitle": "Generate your meal plan",
         "generatePlanDescription": "Automatically create a balanced meal plan with your existing recipes.",
+        "mealsToInclude": "Which meals should be included?",
         "planningPeriod": "Planning period",
         "startDate": "Start date",
         "numberOfDays": "Number of days",

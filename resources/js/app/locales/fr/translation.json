@@ -308,6 +308,7 @@
         "generatePlan": "Générer un planning",
         "generatePlanTitle": "Générer votre planning de repas",
         "generatePlanDescription": "Créez automatiquement un planning de repas équilibré avec vos recettes existantes.",
+        "mealsToInclude": "Quels repas inclure ?",
         "planningPeriod": "Pour quelle periode ?",
         "startDate": "Date de début",
         "numberOfDays": "Nombre de jours",

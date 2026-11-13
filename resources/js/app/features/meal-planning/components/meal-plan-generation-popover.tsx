@@ -1,14 +1,28 @@
 import { useMealPlanGeneration } from '../hooks/use-meal-plan-generation';
+import { MealTimeResource } from '@/app/data/resources/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import mealPlanning from '@/routes/meal-planning';
 import { router, usePage } from '@inertiajs/react';
 import * as Popover from '@radix-ui/react-popover';
 import 'cally';
 import clsx, { ClassValue } from 'clsx';
-import { CalendarRange, Minus, Plus, Sparkles } from 'lucide-react';
+import {
+  CalendarRange,
+  Check,
+  Cookie,
+  CookingPot,
+  Croissant,
+  Minus,
+  Plus,
+  Sparkles,
+  Utensils,
+} from 'lucide-react';
 import { DateTime, Interval } from 'luxon';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+const DEFAULT_MEAL_TIME_SLUGS = new Set(['breakfast', 'lunch', 'diner']);
+const DEFAULT_MEAL_TIME_DISTRIBUTION = [3, 2, 2];
 
 type MealPlanGenerationForm = {
   range: {
@@ -16,6 +30,7 @@ type MealPlanGenerationForm = {
     endDate: DateTime;
   };
   serving_size: number;
+  meal_times: string[];
 };
 
 type Props = {
@@ -25,7 +40,10 @@ type Props = {
 export function MealPlanGenerationPopover({ className }: Props) {
   const { t } = useTranslation();
 
-  const { weekStart } = usePage<{ weekStart: string }>().props;
+  const { weekStart, mealTimes } = usePage<{
+    weekStart: string;
+    mealTimes: MealTimeResource[];
+  }>().props;
 
   const { isGenerating, setIsGenerating, isOpen, setIsOpen } =
     useMealPlanGeneration();
@@ -39,6 +57,9 @@ export function MealPlanGenerationPopover({ className }: Props) {
       endDate: DateTime.fromISO(weekStart).endOf('week'),
     },
     serving_size: 1,
+    meal_times: mealTimes
+      .filter((mealTime) => DEFAULT_MEAL_TIME_SLUGS.has(mealTime.slug))
+      .map((mealTime) => mealTime.slug),
   };
 
   const form = useAppForm({
@@ -50,6 +71,10 @@ export function MealPlanGenerationPopover({ className }: Props) {
           startDate: value.range.startDate.toISODate(),
           endDate: value.range.endDate.toISODate(),
           serving_size: value.serving_size,
+          meal_times: value.meal_times.map((name) => ({
+            name,
+            distribution: DEFAULT_MEAL_TIME_DISTRIBUTION,
+          })),
         },
         {
           onStart: () => {
@@ -151,6 +176,72 @@ export function MealPlanGenerationPopover({ className }: Props) {
                   </div>
                 )}
               />
+
+              <form.AppField name="meal_times" mode="array">
+                {(field) => {
+                  const selectedMealTimes = field.state.value ?? [];
+
+                  return (
+                    <div className="flex flex-col gap-2.5">
+                      <h3 className="text-base leading-none font-medium text-secondary">
+                        {t(
+                          'mealPlanning.mealsToInclude',
+                          'Quels repas inclure ?',
+                        )}
+                      </h3>
+                      <div className="grid grid-cols-2 gap-2">
+                        {mealTimes.map((mealTime) => {
+                          const isSelected = selectedMealTimes.includes(
+                            mealTime.slug,
+                          );
+
+                          return (
+                            <button
+                              key={mealTime.id}
+                              type="button"
+                              aria-pressed={isSelected}
+                              onClick={() => {
+                                field.setValue(
+                                  isSelected
+                                    ? selectedMealTimes.filter(
+                                        (slug) => slug !== mealTime.slug,
+                                      )
+                                    : [...selectedMealTimes, mealTime.slug],
+                                );
+                              }}
+                              className={clsx(
+                                'btn h-8.5 min-h-0 justify-start gap-2 border-base-300 px-2.5 text-sm font-medium shadow-none',
+                                isSelected
+                                  ? 'border-secondary bg-secondary/10 text-secondary hover:border-secondary hover:bg-secondary/15'
+                                  : 'bg-base-100 text-base-content hover:border-secondary/40 hover:bg-secondary/5',
+                              )}
+                            >
+                              <span
+                                className={clsx(
+                                  'flex size-4 shrink-0 items-center justify-center rounded-sm border',
+                                  isSelected
+                                    ? 'border-secondary bg-secondary text-secondary-content'
+                                    : 'border-base-300 bg-base-100',
+                                )}
+                                aria-hidden="true"
+                              >
+                                {isSelected && <Check className="size-3" />}
+                              </span>
+                              {getMealTimeIcon(mealTime.slug)}
+                              <span className="truncate">
+                                {t(
+                                  `mealPlanning.dialog.filters.${mealTime.slug}`,
+                                  mealTime.name,
+                                )}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }}
+              </form.AppField>
 
               <div className="flex flex-col gap-3">
                 <h3 className="text-base leading-none font-medium text-secondary">
@@ -269,7 +360,9 @@ export function MealPlanGenerationPopover({ className }: Props) {
 
               <button
                 onClick={() => form.handleSubmit()}
-                disabled={isGenerating}
+                disabled={
+                  isGenerating || form.state.values.meal_times.length === 0
+                }
                 className="btn w-full border-secondary/20 btn-soft btn-secondary"
               >
                 {t('mealPlanning.generateNow', 'Generate my meal plan')}
@@ -303,4 +396,17 @@ export function MealPlanGenerationPopover({ className }: Props) {
       )}
     </>
   );
+}
+
+function getMealTimeIcon(mealTimeSlug: string): ReactNode {
+  const iconClassName = 'size-4 shrink-0';
+
+  const icons: Record<string, ReactNode> = {
+    breakfast: <Croissant className={iconClassName} />,
+    lunch: <Utensils className={iconClassName} />,
+    diner: <CookingPot className={iconClassName} />,
+    snack: <Cookie className={iconClassName} />,
+  };
+
+  return icons[mealTimeSlug] ?? null;
 }
