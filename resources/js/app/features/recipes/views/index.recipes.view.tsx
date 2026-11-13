@@ -7,7 +7,6 @@ import { useDiscoverySession } from '../hooks/use-discovery-session';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
 import { PageContainer } from '@/app/components/page-container';
-import { RecipesFilters } from '@/app/components/recipes-filters';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
 import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
@@ -123,7 +122,7 @@ export function IndexRecipesView() {
           {discovery.hasPausedDiscovery && (
             <DiscoveryPausedBanner onResume={discovery.resumeDiscovery} />
           )}
-          <div className="relative grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1fr_1.975fr]">
+          <div className="relative grid min-h-0 flex-1 overflow-hidden lg:grid-cols-[1fr_2.25fr]">
             <div
               className={
                 discovery.isDiscovering
@@ -138,7 +137,6 @@ export function IndexRecipesView() {
                 onGeneratingChange={discovery.setIsPoolGenerating}
                 onPreparationChange={discovery.setHasPreparation}
                 mealTimes={meal_times ?? []}
-                onClose={discovery.quitDiscovery}
               />
             </div>
             {!discovery.isDiscovering &&
@@ -184,45 +182,44 @@ export function IndexRecipesView() {
                     <RecipesSearch className="min-w-0" />
                     <RecipesFiltersPopover
                       tags={tags ?? []}
+                      mealTimes={meal_times ?? []}
                       label="Filtres"
                       compact
                       className="min-w-0"
                     />
-                    <RecipesFilters
-                      className="col-span-2 min-w-0"
-                      showActiveFilters={false}
-                      showReset={false}
-                    />
-                    {activeFilters.some(
-                      (filter) => filter.type !== 'meal_time',
-                    ) && (
+                    {activeFilters.length > 0 && (
                       <div className="col-span-2 flex min-w-0 items-center justify-between gap-3">
                         <div className="flex max-h-[4.5rem] min-w-0 flex-wrap content-start items-center gap-2 overflow-hidden">
-                          {activeFilters
-                            .filter((filter) => filter.type !== 'meal_time')
-                            .map((filter) => (
-                              <button
-                                key={`${filter.type}-${filter.value}`}
-                                type="button"
-                                onClick={() => removeFilter(filter)}
-                                className="badge h-8 max-w-40 gap-1.5 border-0 bg-secondary/10 px-3 text-sm font-normal text-secondary"
-                              >
-                                <span className="truncate">
-                                  {filter.type === 'preparation_time' &&
-                                    t(
-                                      'mealPlanning.dialog.filters.prep',
-                                      'Prep: ',
-                                    )}
-                                  {filter.type === 'cooking_time' &&
-                                    t(
-                                      'mealPlanning.dialog.filters.cook',
-                                      'Cook: ',
-                                    )}
-                                  {capitalize(filter.label)}
-                                </span>
-                                <X size={14} className="shrink-0" />
-                              </button>
-                            ))}
+                          {activeFilters.map((filter) => (
+                            <button
+                              key={`${filter.type}-${filter.value}`}
+                              type="button"
+                              onClick={() => removeFilter(filter)}
+                              className="badge h-8 max-w-40 gap-1.5 border-0 bg-secondary/10 px-3 text-sm font-normal text-secondary"
+                            >
+                              <span className="truncate">
+                                {filter.type === 'preparation_time' &&
+                                  t(
+                                    'mealPlanning.dialog.filters.prep',
+                                    'Prep: ',
+                                  )}
+                                {filter.type === 'cooking_time' &&
+                                  t(
+                                    'mealPlanning.dialog.filters.cook',
+                                    'Cook: ',
+                                  )}
+                                {filter.type === 'meal_time'
+                                  ? capitalize(
+                                      t(
+                                        `mealPlanning.dialog.filters.${filter.label}`,
+                                        filter.label,
+                                      ),
+                                    )
+                                  : capitalize(filter.label)}
+                              </span>
+                              <X size={14} className="shrink-0" />
+                            </button>
+                          ))}
                         </div>
                         <button
                           onClick={clearAllFilters}

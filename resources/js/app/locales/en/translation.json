@@ -164,6 +164,7 @@
         },
         "index": {
             "createButton": "Create recipe",
+            "bookTitle": "My recipe book",
             "viewButton": "View my recipes"
         },
         "table": {

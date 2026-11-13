@@ -7,7 +7,13 @@ import {
 } from '@/app/components/ui/dropdown-menu';
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { InfiniteScroll } from '@inertiajs/react';
-import { Check, EllipsisVertical, ImageOff, Trash2Icon } from 'lucide-react';
+import {
+  Bookmark,
+  Check,
+  EllipsisVertical,
+  ImageOff,
+  Trash2Icon,
+} from 'lucide-react';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -46,7 +52,17 @@ export function RecipeBookList({
       className="order-2 flex h-full min-h-0 min-w-0 flex-1 flex-col border-r border-base-300/60 bg-base-100 px-3 lg:px-5 lg:pl-6"
     >
       <div className="-mx-3 mb-3 shrink-0 border-b border-base-300/60 bg-base-100 px-3 lg:-mx-5 lg:px-5">
-        {controls && <div className="py-3.5">{controls}</div>}
+        {controls && (
+          <div className="py-3.5">
+            <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold tracking-tight">
+              <span className="flex size-8 items-center justify-center rounded-lg bg-base-200 text-secondary">
+                <Bookmark size={19} aria-hidden="true" />
+              </span>
+              {t('recipes.index.bookTitle', 'My recipe book')}
+            </h2>
+            {controls}
+          </div>
+        )}
       </div>
 
       <div className="min-h-0 flex-1 overflow-y-auto">
@@ -87,7 +103,7 @@ export function RecipeBookList({
                         <img
                           src={recipe.image_url}
                           alt=""
-                          className="aspect-video w-40 shrink-0 rounded-lg object-cover"
+                          className="h-24 w-37 shrink-0 rounded-lg object-cover"
                           loading="lazy"
                         />
                       ) : (
@@ -106,9 +122,18 @@ export function RecipeBookList({
                             </span>
                           )}
                         </span>
-                        <span className="mt-1 block text-xs text-base-content/55">
-                          Recette ·{' '}
-                          {recipe.preparation_time + recipe.cooking_time} min
+                        <span className="mt-1 flex flex-wrap gap-1.5">
+                          {recipe.meal_times.map((mealTime) => (
+                            <span
+                              key={mealTime.id}
+                              className="badge h-5 border-0 bg-secondary/10 px-2 text-[11px] font-medium text-secondary"
+                            >
+                              {t(
+                                `mealPlanning.dialog.filters.${mealTime.slug}`,
+                                mealTime.name,
+                              )}
+                            </span>
+                          ))}
                         </span>
                       </span>
                     </button>
@@ -152,15 +177,11 @@ export function RecipeBookList({
           {recipes.length > 0 && generationStatus}
         </InfiniteScroll>
       </div>
-      <footer className="-mx-3 shrink-0 border-t border-base-300/60 bg-base-100 lg:-mx-5">
-        {footer ?? (
-          <div className="flex items-center px-3 py-2 lg:px-5">
-            <span className="text-sm text-base-content/55">
-              {recipes.length} recette{recipes.length > 1 ? 's' : ''}
-            </span>
-          </div>
-        )}
-      </footer>
+      {footer && (
+        <footer className="-mx-3 shrink-0 border-t border-base-300/60 bg-base-100 lg:-mx-5">
+          {footer}
+        </footer>
+      )}
     </section>
   );
 }

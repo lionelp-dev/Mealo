@@ -164,6 +164,7 @@
         },
         "index": {
             "createButton": "Créer une recette",
+            "bookTitle": "Mon carnet",
             "viewButton": "Voir mes recettes"
         },
         "table": {

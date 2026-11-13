@@ -2,13 +2,15 @@ import { useRecipeDiscovery } from '../../hooks/use-recipe-discovery';
 import { RecipeFormCard } from '../recipe-form-card';
 import { MealTimeResource } from '@/app/data/resources/recipe/types';
 import {
-  ArrowLeft,
+  Clock3,
   CookingPot,
   Leaf,
   LoaderCircle,
   Plus,
   Settings2,
   Sparkles,
+  UtensilsCrossed,
+  X,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -18,7 +20,6 @@ type Props = {
   onGeneratingChange: (value: boolean) => void;
   onPreparationChange: (value: boolean) => void;
   mealTimes: MealTimeResource[];
-  onClose?: () => void;
 };
 
 const dietOptions = [
@@ -43,7 +44,7 @@ export function RecipeDiscoveryPanel(props: Props) {
     return (
       <section className="h-full min-h-0 flex-1 overflow-y-auto px-4 pt-0 pb-4 sm:px-6 sm:pt-0 sm:pb-6 lg:col-start-2 lg:row-start-1 lg:px-10 lg:py-7">
         <div className="max-w-3xl">
-          <DiscoveryHeader onClose={props.onClose} />
+          <DiscoveryHeader />
           {isLoading ? (
             <LoadingState />
           ) : (
@@ -114,7 +115,7 @@ export function RecipeDiscoveryPanel(props: Props) {
   return (
     <section className="h-full min-h-0 flex-1 overflow-y-auto px-4 pt-0 pb-4 sm:px-6 sm:pt-0 sm:pb-6 lg:col-start-2 lg:row-start-1 lg:px-10 lg:py-7">
       <div className="max-w-3xl">
-        <DiscoveryHeader onClose={props.onClose} />
+        <DiscoveryHeader />
         <div className="mt-5 flex items-center">
           <button
             type="button"
@@ -143,72 +144,95 @@ export function RecipeDiscoveryPanel(props: Props) {
               </span>
             ))}
         </div>
-        <article className="mt-4 rounded-xl border border-base-300 bg-base-100 shadow-sm sm:mt-5 sm:rounded-2xl">
-          {recipe.image_data_url ? (
-            <img
-              src={recipe.image_data_url}
-              alt={recipe.name}
-              className="h-52 w-full rounded-t-xl object-cover sm:h-64 sm:rounded-t-2xl lg:h-80"
-            />
-          ) : (
-            <div className="flex h-52 items-center justify-center rounded-t-xl bg-base-200 text-sm text-base-content/50 sm:h-64 sm:rounded-t-2xl lg:h-80">
-              Image indisponible
-            </div>
-          )}
-          <div className="p-4 sm:p-6">
-            <h2
-              className="sticky top-9 z-10 -mx-4 truncate bg-base-100 px-4 py-3 text-2xl leading-tight font-bold sm:-mx-6 sm:px-6 sm:text-3xl lg:static lg:mx-0 lg:px-0 lg:py-0"
-              title={recipe.name}
-            >
-              {recipe.name}
-            </h2>
-            <div className="mt-3 flex flex-wrap gap-2 text-sm sm:mt-4">
-              <span className="badge badge-soft badge-lg badge-secondary">
-                {recipe.preparation_time + recipe.cooking_time} min
-              </span>
-              {discovery.diet && (
-                <span className="badge badge-soft badge-lg badge-success">
-                  {discovery.diet}
-                </span>
+        <div className="relative mx-auto mt-6 max-w-2xl pb-5 sm:mt-8">
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-5 top-3 bottom-0 rounded-3xl border border-base-300/70 bg-base-100/75 shadow-sm"
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-x-2.5 top-1.5 bottom-2 rounded-3xl border border-base-300/70 bg-base-100/85 shadow-sm"
+          />
+          <article className="relative overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-xl shadow-base-content/10 sm:rounded-3xl">
+            <div className="relative">
+              {recipe.image_data_url ? (
+                <img
+                  src={recipe.image_data_url}
+                  alt={recipe.name}
+                  className="h-56 w-full object-cover sm:h-72 lg:h-80"
+                />
+              ) : (
+                <div className="flex h-56 items-center justify-center bg-base-200 text-sm text-base-content/50 sm:h-72 lg:h-80">
+                  Image indisponible
+                </div>
               )}
-              <span className="badge badge-lg">Suggestion IA</span>
+              <span className="absolute top-3 left-3 badge h-8 gap-1.5 border-0 bg-base-100 px-3 text-sm font-semibold text-secondary shadow-sm">
+                <Sparkles size={15} aria-hidden="true" /> Suggestion IA
+              </span>
             </div>
-            <p className="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-base-content/70 sm:mt-4 sm:text-base">
-              {recipe.description}
-            </p>
-            <div className="mt-5 grid grid-cols-2 gap-2 sm:mt-6 sm:gap-3">
-              <button
-                type="button"
-                onClick={discovery.skip}
-                disabled={discovery.isSaving}
-                className="btn rounded-xl btn-soft btn-md btn-secondary max-md:btn-sm"
+            <div className="p-5 sm:p-6">
+              <h2
+                className="truncate text-2xl leading-tight font-bold tracking-tight sm:text-3xl"
+                title={recipe.name}
               >
-                Une autre idée
-              </button>
-              <button
-                type="button"
-                onClick={discovery.save}
-                disabled={discovery.isSaving}
-                className="btn gap-2 rounded-xl btn-md btn-secondary max-md:btn-sm"
-              >
-                {discovery.isSaving ? (
-                  <LoaderCircle className="animate-spin" size={18} />
-                ) : (
-                  <Plus size={18} />
-                )}
-                <span className="sm:hidden">
-                  {discovery.isSaving ? 'Ajout…' : 'Ajouter'}
+                {recipe.name}
+              </h2>
+              <div className="mt-3 flex flex-wrap gap-2 text-sm sm:mt-4">
+                <span className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium">
+                  <Clock3 size={15} aria-hidden="true" />
+                  {recipe.preparation_time + recipe.cooking_time} min
                 </span>
-                <span className="max-sm:hidden">
-                  {discovery.isSaving ? 'Ajout…' : 'Ajouter au carnet'}
+                {props.mealTimes
+                  .filter((mealTime) =>
+                    discovery.selectedMealTimes.includes(mealTime.slug),
+                  )
+                  .map((mealTime) => (
+                    <span
+                      key={mealTime.id}
+                      className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium"
+                    >
+                      <UtensilsCrossed size={15} aria-hidden="true" />
+                      {mealTime.name}
+                    </span>
+                  ))}
+                <span className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium">
+                  <Sparkles size={15} aria-hidden="true" /> Suggestion IA
                 </span>
-              </button>
+              </div>
+              <p className="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-base-content/70 sm:mt-4 sm:text-base">
+                {recipe.description}
+              </p>
+              <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6">
+                <button
+                  type="button"
+                  onClick={discovery.skip}
+                  disabled={discovery.isSaving}
+                  className="btn gap-2 rounded-xl btn-outline btn-secondary max-md:btn-sm"
+                >
+                  <X size={18} /> Passer
+                </button>
+                <button
+                  type="button"
+                  onClick={discovery.save}
+                  disabled={discovery.isSaving}
+                  className="btn gap-2 rounded-xl btn-secondary max-md:btn-sm"
+                >
+                  {discovery.isSaving ? (
+                    <LoaderCircle className="animate-spin" size={18} />
+                  ) : (
+                    <Plus size={18} />
+                  )}
+                  <span className="sm:hidden">
+                    {discovery.isSaving ? 'Ajout…' : 'Ajouter'}
+                  </span>
+                  <span className="max-sm:hidden">
+                    {discovery.isSaving ? 'Ajout…' : 'Ajouter au carnet'}
+                  </span>
+                </button>
+              </div>
             </div>
-          </div>
-        </article>
-        {discovery.notice && (
-          <p className="mt-4 text-sm text-success">{discovery.notice}</p>
-        )}
+          </article>
+        </div>
         {discovery.error && (
           <ErrorState error={discovery.error} retry={discovery.retry} />
         )}
@@ -217,26 +241,18 @@ export function RecipeDiscoveryPanel(props: Props) {
   );
 }
 
-function DiscoveryHeader({ onClose }: { onClose?: () => void }) {
+function DiscoveryHeader() {
   return (
     <header className="pt-3 sm:pt-5 lg:pt-0">
-      {onClose && (
-        <button
-          type="button"
-          onClick={onClose}
-          className="flex items-center gap-2 text-base font-medium text-secondary"
-        >
-          <ArrowLeft size={20} aria-hidden="true" />
-          Quitter le mode découverte
-        </button>
-      )}
-      <h1
-        className={`${onClose ? 'mt-5' : ''} text-2xl font-bold tracking-tight sm:text-3xl`}
-      >
-        Explorez de nouvelles recettes avec l’IA
+      <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
+        <span className="flex size-8 items-center justify-center rounded-lg bg-base-200 text-secondary">
+          <Sparkles size={19} aria-hidden="true" />
+        </span>
+        Mode découverte
       </h1>
       <p className="mt-1 text-sm text-secondary/75 sm:text-base">
-        Des suggestions adaptées à vos envies et à vos critères.
+        Explorez des recettes personnalisées avec l'IA et ajoutez vos coups de
+        cœur à votre carnet.
       </p>
     </header>
   );

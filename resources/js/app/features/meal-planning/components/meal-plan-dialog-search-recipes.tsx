@@ -9,7 +9,7 @@ export default function MealPlanDialogSearchRecipes() {
   const { searchTerm, setSearchTerm, isSearching } = useRecipesSearch();
 
   return (
-    <label className="input input-md flex w-full gap-3 rounded-xl border-secondary input-secondary">
+    <label className="input input-md flex w-full gap-3 rounded-xl border-secondary/40 input-secondary">
       <Search
         className={`text-secondary transition-transform duration-300`}
         size={16}

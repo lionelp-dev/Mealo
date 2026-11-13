@@ -25,6 +25,11 @@ const recipeSourceDatabase =
           user: requiredDatabaseEnv('DB_USERNAME'),
           password: requiredDatabasePassword(),
           database: requiredDatabaseEnv('DB_DATABASE'),
+          ssl: env.get('DB_SSL')
+            ? {
+                rejectUnauthorized: env.get('DB_SSL_REJECT_UNAUTHORIZED') ?? true,
+              }
+            : undefined,
         },
         pool: { min: 0, max: 5 },
       }

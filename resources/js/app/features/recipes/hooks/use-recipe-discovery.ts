@@ -36,7 +36,6 @@ export function useRecipeDiscovery({
   const [isSaving, setIsSaving] = useState(false);
   const [isRefining, setIsRefining] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [notice, setNotice] = useState<string | null>(null);
   const [discoveryJob, setDiscoveryJob] = useState<DiscoveryJob | null>(null);
   const swipes = useRef(0);
   const requestInFlight = useRef(false);
@@ -107,11 +106,6 @@ export function useRecipeDiscovery({
         if (!discoveryJob.prefetch) {
           swipes.current = 0;
           setIsRefining(false);
-        }
-        if (pool.failedRecipeCount) {
-          setNotice(
-            `${pool.failedRecipeCount} proposition(s) n’ont pas pu être générées.`,
-          );
         }
         finish();
       } catch {
@@ -286,14 +280,12 @@ export function useRecipeDiscovery({
     isSaving,
     isRefining,
     error,
-    notice,
     setPrompt,
     setIsRefining,
     selectDiet,
     selectStyle,
     toggleMealTime,
     generate: () => {
-      setNotice(null);
       requestPool(false);
     },
     retry: () => requestPool(true),

@@ -17,7 +17,9 @@ export const checkRecipeNamesDuplicates: GraphNode<
   )
   const existingNameSet = new Set(existingNames.map(normalizeRecipeName))
   const acceptedNameSet = new Set(
-    state.acceptedRecipeNameResults.map((recipeNameResult) => normalizeRecipeName(recipeNameResult.name))
+    state.acceptedRecipeNameResults.map((recipeNameResult) =>
+      normalizeRecipeName(recipeNameResult.name)
+    )
   )
   const acceptedRecipeNameResults = [...state.acceptedRecipeNameResults]
   const pendingRecipeNameRequests = [] as typeof state.pendingRecipeNameRequests

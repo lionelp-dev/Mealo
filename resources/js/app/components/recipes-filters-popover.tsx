@@ -1,4 +1,4 @@
-import { TagResource } from '../data/resources/recipe/types';
+import { MealTimeResource, TagResource } from '../data/resources/recipe/types';
 import { RecipesFilterOption } from './recipes-filter-option';
 import { useRecipesMultiSelectStore } from '@/app/features/recipes/stores/use-recipes-multi-select-store';
 import { cn } from '@/app/lib/';
@@ -19,6 +19,7 @@ export const TIME_OPTIONS: Option[] = [
 
 type Props = {
   tags: TagResource[];
+  mealTimes?: MealTimeResource[];
   className?: ClassValue;
   side?: Popover.PopoverContentProps['side'];
   align?: Popover.PopoverContentProps['align'];
@@ -30,6 +31,7 @@ type Props = {
 
 export function RecipesFiltersPopover({
   tags,
+  mealTimes = [],
   className,
   side = 'bottom',
   align = 'end',
@@ -42,6 +44,17 @@ export function RecipesFiltersPopover({
 
   const { activeFilters, isFilterActive, selectSingleFilter, toggleTagFilter } =
     useRecipesFiltersStore();
+
+  const createMealTimesSection = (
+    mealTimes: MealTimeResource[],
+  ): FilterSection => ({
+    title: 'mealTime',
+    type: 'meal_time',
+    options: mealTimes.map((mealTime) => ({
+      label: mealTime.slug,
+      value: mealTime.id.toString(),
+    })),
+  });
 
   const { setIsMultiSelectMode, clearSelectedRecipes } =
     useRecipesMultiSelectStore();
@@ -57,6 +70,7 @@ export function RecipesFiltersPopover({
   });
 
   const FILTERS_SECTIONS: FilterSection[] = [
+    ...(mealTimes.length > 0 ? [createMealTimesSection(mealTimes)] : []),
     { ...createTagsSection(tags) },
     {
       title: 'preparationTime',

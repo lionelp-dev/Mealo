@@ -16,7 +16,7 @@ export default function RecipesSearch({ className }: Props) {
   return (
     <label
       className={cn(
-        'input input-md flex w-full gap-3 rounded-xl border-secondary input-secondary',
+        'input input-md flex w-full gap-3 rounded-xl border-secondary/40 input-secondary',
         className,
       )}
     >

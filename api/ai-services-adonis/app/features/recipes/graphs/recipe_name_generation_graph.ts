@@ -16,7 +16,9 @@ export const recipeNameGenerationGraph = new StateGraph({
   .addConditionalEdges(
     'check_recipe_names_duplicates',
     (state) =>
-      state.acceptedRecipeNameResults.length === DISCOVERY_POOL_SIZE ? END : 'generate_recipe_names',
+      state.acceptedRecipeNameResults.length === DISCOVERY_POOL_SIZE
+        ? END
+        : 'generate_recipe_names',
     ['generate_recipe_names', END]
   )
   .compile()
