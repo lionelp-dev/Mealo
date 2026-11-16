@@ -3,6 +3,7 @@ import { cn } from '@/app/lib/';
 import { capitalize } from '@/app/utils/';
 import { router } from '@inertiajs/react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 type ShoppingListIngredientRowProps = {
   checked: boolean;
@@ -27,10 +28,15 @@ export default function ShoppingListIngredientRow({
   unit,
 }: ShoppingListIngredientRowProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const { i18n, t } = useTranslation();
   const { canEditShoppingList } = useWorkspacePermissions();
+  const formattedQuantity = new Intl.NumberFormat(
+    i18n.resolvedLanguage ?? i18n.language,
+    { maximumFractionDigits: 2 },
+  ).format(quantity);
 
   const toggleChecked = async () => {
-    if (isLoading || externalIsLoading) return;
+    if (!canEditShoppingList || isLoading || externalIsLoading) return;
 
     router.put(
       `/shopping-lists`,
@@ -50,41 +56,44 @@ export default function ShoppingListIngredientRow({
   return (
     <label
       className={cn(
-        'flex items-center gap-3 px-4 py-1 select-none',
-        checked
-          ? 'bg-gray-100/50 hover:bg-secondary/15'
-          : 'hover:bg-secondary/5',
+        'flex min-h-10 items-center gap-3 rounded-sm px-0.5 py-2 transition-colors select-none hover:bg-secondary/5',
+        canEditShoppingList && 'cursor-pointer',
+        checked && 'text-base-content/45',
         (isLoading || externalIsLoading) && 'opacity-50',
       )}
     >
-      <div className="grid w-full grid-cols-[auto_1fr] items-center gap-x-3 py-1.5">
-        {canEditShoppingList && (
-          <input
-            type="checkbox"
-            checked={checked}
-            onChange={toggleChecked}
-            disabled={isLoading || externalIsLoading}
-            className={cn(
-              'checkbox flex-shrink-0 rounded-full checkbox-sm hover:checkbox-secondary',
-              checked && 'checkbox-secondary',
-            )}
-          />
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={toggleChecked}
+        disabled={!canEditShoppingList || isLoading || externalIsLoading}
+        className={cn(
+          'checkbox size-5 shrink-0 rounded-full border-base-300 checkbox-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary disabled:opacity-60',
+          canEditShoppingList && 'hover:checkbox-secondary',
+          checked && 'checkbox-secondary',
         )}
+      />
 
-        <span className="flex h-full min-w-0 items-center justify-between gap-1">
-          <span
-            className={cn(
-              'flex-1 truncate text-sm font-medium text-base-content transition-all duration-200',
-              checked && 'line-through',
-            )}
-          >
-            {capitalize(name)}
-          </span>
-          <span className="shrink-0 text-sm text-base-content/70 transition-all duration-200">
-            {quantity} {unit}
-          </span>
+      <span className="flex min-w-0 flex-1 items-center justify-between gap-3">
+        <span
+          title={capitalize(name)}
+          className={cn(
+            'min-w-0 flex-1 text-sm leading-snug font-medium wrap-anywhere transition-colors',
+            checked && 'line-through',
+          )}
+        >
+          {capitalize(name)}
         </span>
-      </div>
+        <span
+          className={cn(
+            'shrink-0 text-sm whitespace-nowrap tabular-nums',
+            checked ? 'text-base-content/40' : 'text-base-content/70',
+          )}
+        >
+          {formattedQuantity}{' '}
+          {t(`ingredientUnits.${unit}`, { defaultValue: unit })}
+        </span>
+      </span>
     </label>
   );
 }

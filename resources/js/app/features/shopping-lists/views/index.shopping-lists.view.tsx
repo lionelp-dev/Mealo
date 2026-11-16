@@ -11,7 +11,7 @@ import AppLayout from '@/app/layouts/app-layout';
 import { cn } from '@/app/lib/';
 import shoppingLists from '@/routes/shopping-lists';
 import { Head, usePrefetch } from '@inertiajs/react';
-import { BookCopy, Rows2, ShoppingBasket } from 'lucide-react';
+import { BookCopy, LayoutGrid, ShoppingBasket } from 'lucide-react';
 import { DateTime } from 'luxon';
 import { useTranslation } from 'react-i18next';
 
@@ -50,25 +50,22 @@ export default function ShoppingListsView() {
 
       <PageContainer
         size="full"
-        className="overflow-hidden py-0"
-        contentClassName="flex min-h-0 flex-1 flex-col"
+        className="overflow-hidden bg-[#f1f4f9] py-0 dark:bg-base-200"
+        contentClassName="flex min-h-0 flex-1 flex-col px-4 md:px-6"
       >
-        <div className="flex shrink-0 flex-col gap-1.25 border-b border-base-300/50 bg-[#f6f7f9] px-4 py-3.25 md:px-12">
-          <div className="flex items-end justify-between">
-            <h1 className="text-xl font-bold text-secondary md:hidden">
-              {t('shoppingLists.mobileTitle', 'Panier')}
-            </h1>
-            <h1 className="text-2xl font-bold text-secondary max-md:hidden">
-              {t('shoppingLists.desktopTitle', 'Liste de courses')}
-            </h1>
+        <div className="shrink-0 pt-6 pb-5 md:pt-4 md:pb-4">
+          <div className="flex flex-wrap items-center gap-4 md:px-3">
             <ShoppingListToggleView />
           </div>
         </div>
 
-        <div className="flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto px-4 py-5 md:px-12">
+        <div className="flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain pb-5">
           {total > 0 && (
             <div className="flex w-full flex-1 flex-col gap-4">
-              <div className="grid grid-cols-1 gap-7 md:gap-10 lg:grid-cols-3">
+              <div
+                key={`${weekStart}-${workspace_data.current_workspace.id}-${viewMode}`}
+                className="grid grid-cols-1 gap-x-8 gap-y-10 md:grid-cols-2 xl:grid-cols-3"
+              >
                 {viewMode === 'ingredients' ? (
                   <ShoppingListByIngredientCategories />
                 ) : (
@@ -80,7 +77,7 @@ export default function ShoppingListsView() {
           <ShoppingListEmptyView />
         </div>
 
-        <div className="shrink-0 border-t border-base-300/50 bg-[#f6f7f9] px-4 py-3.25 md:px-12">
+        <div className="-mx-4 shrink-0 border-t border-base-300/50 bg-[#f6f7f9] px-4 py-3.25 md:-mx-6 md:px-12">
           <ShoppingListProgress
             checkedCount={checkedCount}
             totalCount={total}
@@ -99,7 +96,7 @@ function ShoppingListEmptyView() {
   return (
     <>
       {total === 0 && (
-        <div className="flex flex-col items-center pt-60">
+        <div className="flex min-h-60 flex-1 flex-col items-center justify-center px-4 py-12">
           <ShoppingBasket className="mb-4 h-12 w-12 text-muted-foreground" />
           <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
             {t('shoppingLists.empty.title', 'Aucune liste de courses')}
@@ -122,31 +119,35 @@ function ShoppingListToggleView() {
   const { setViewMode, viewMode } = useShoppingList();
 
   return (
-    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-      <div className="tabs-boxed tabs h-fit w-fit shrink-0 rounded-md bg-secondary/15 tabs-xs min-md:tabs-sm">
-        <button
-          className={cn(
-            'tab rounded-md px-2',
-            viewMode === 'ingredients' &&
-              'tab-active bg-secondary text-secondary-content btn-soft hover:text-white',
-          )}
-          onClick={() => setViewMode('ingredients')}
-        >
-          <Rows2 className="mr-2 h-4 w-4" />
-          {t('shoppingLists.viewByIngredients', 'Par ingrédients')}
-        </button>
-        <button
-          className={cn(
-            'tab rounded-md px-2 text-secondary',
-            viewMode === 'recipes' &&
-              'tab-active bg-secondary text-secondary-content hover:text-white',
-          )}
-          onClick={() => setViewMode('recipes')}
-        >
-          <BookCopy className="mr-2 h-4 w-4" />
-          {t('shoppingLists.viewByRecipes', 'Par recettes')}
-        </button>
-      </div>
+    <div className="inline-flex shrink-0 rounded-xl border border-white/80 bg-secondary/5 p-1 dark:border-base-300">
+      <button
+        type="button"
+        aria-pressed={viewMode === 'ingredients'}
+        className={cn(
+          'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
+          viewMode === 'ingredients'
+            ? 'bg-secondary text-secondary-content shadow-sm'
+            : 'text-secondary hover:bg-secondary/10',
+        )}
+        onClick={() => setViewMode('ingredients')}
+      >
+        <LayoutGrid aria-hidden="true" className="size-4" />
+        {t('shoppingLists.viewByIngredients', 'Par ingrédients')}
+      </button>
+      <button
+        type="button"
+        aria-pressed={viewMode === 'recipes'}
+        className={cn(
+          'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary',
+          viewMode === 'recipes'
+            ? 'bg-secondary text-secondary-content shadow-sm'
+            : 'text-secondary hover:bg-secondary/10',
+        )}
+        onClick={() => setViewMode('recipes')}
+      >
+        <BookCopy aria-hidden="true" className="size-4" />
+        {t('shoppingLists.viewByRecipes', 'Par recettes')}
+      </button>
     </div>
   );
 }

@@ -1,12 +1,13 @@
 import { useShoppingList } from '../hooks/use-shopping-list';
+import { getCategoryAppearance } from './shopping-list-appearance';
 import ShoppingListCard from './shopping-list-card';
 import ShoppingListIngredientRow from './shopping-list-ingredient-row';
 import { PlannedMealIngredient } from '@/types';
-import { useTranslation } from 'react-i18next';
 
 type IngredientCategoryGroup = {
   id: number;
   name: string;
+  slug: string;
   ingredients: PlannedMealIngredient[];
   checkedCount: number;
 };
@@ -28,6 +29,7 @@ function groupIngredientsByCategory(
     groups.set(ingredient.category_id, {
       id: ingredient.category_id,
       name: ingredient.category_name,
+      slug: ingredient.category_slug,
       ingredients: [ingredient],
       checkedCount: ingredient.is_checked ? 1 : 0,
     });
@@ -67,23 +69,17 @@ function IngredientCategoryCard({
 }: {
   category: IngredientCategoryGroup;
 }) {
-  const { t } = useTranslation();
   const { isCategoryComplete } = getCategoryCompletionState(category);
-  const subtitle = t('shoppingLists.listProgress', {
-    checked: category.checkedCount,
-    defaultValue: '{{checked}} sur {{total}}',
-    total: category.ingredients.length,
-  });
 
   return (
     <ShoppingListCard
-      subtitle={subtitle}
+      appearance={getCategoryAppearance(category.slug)}
       title={category.name}
       isComplete={isCategoryComplete}
     >
       {category.ingredients.map((ingredient) => (
         <ShoppingListIngredientRow
-          key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}`}
+          key={`${ingredient.shopping_list_id}-${ingredient.ingredient_id}-${ingredient.unit}-${ingredient.is_checked}`}
           checked={ingredient.is_checked}
           name={ingredient.name}
           onTogglePayload={() =>

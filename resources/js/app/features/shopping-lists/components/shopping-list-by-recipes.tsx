@@ -1,27 +1,21 @@
 import { useShoppingList } from '../hooks/use-shopping-list';
+import { recipeAppearance } from './shopping-list-appearance';
 import ShoppingListCard from './shopping-list-card';
 import ShoppingListIngredientRow from './shopping-list-ingredient-row';
 import { ShoppingList } from '@/types';
-import { useTranslation } from 'react-i18next';
 
 type ShoppingListRecipe = ShoppingList['by_recipes'][number];
 
 function ShoppingListRecipeCard({ recipe }: { recipe: ShoppingListRecipe }) {
-  const { t } = useTranslation();
   const totalIngredients =
     recipe.ingredients.unchecked.length + recipe.ingredients.checked.length;
   const isRecipeCompleted =
     totalIngredients > 0 &&
     recipe.ingredients.checked.length === totalIngredients;
-  const subtitle = t('shoppingLists.listProgress', {
-    checked: recipe.ingredients.checked.length,
-    defaultValue: '{{checked}} sur {{total}}',
-    total: totalIngredients,
-  });
 
   return (
     <ShoppingListCard
-      subtitle={subtitle}
+      appearance={recipeAppearance}
       title={recipe.recipe_name}
       isComplete={isRecipeCompleted}
     >

@@ -1,6 +1,7 @@
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { RecipeResourceData } from '@/types/generated';
 import { ArrowLeft, Clock3, UtensilsCrossed, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 
 type DetailRecipe = RecipeResource | RecipeResourceData;
 
@@ -17,6 +18,7 @@ export default function RecipeDetailPanel({
   compact,
   showDesktopCloseButton = true,
 }: Props) {
+  const { t } = useTranslation();
   const steps = [...recipe.steps].sort(
     (left, right) => left.order - right.order,
   );
@@ -128,7 +130,10 @@ export default function RecipeDetailPanel({
                     >
                       <span className="truncate">{ingredient.name}</span>
                       <span className="shrink-0">
-                        {ingredient.quantity} {ingredient.unit}
+                        {ingredient.quantity}{' '}
+                        {t(`ingredientUnits.${ingredient.unit}`, {
+                          defaultValue: ingredient.unit,
+                        })}
                       </span>
                     </li>
                   ))}

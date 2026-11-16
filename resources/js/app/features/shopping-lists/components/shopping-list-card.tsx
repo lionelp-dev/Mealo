@@ -1,24 +1,33 @@
+import {
+  getShoppingListTone,
+  type ShoppingListAppearance,
+} from './shopping-list-appearance';
 import { cn } from '@/app/lib/';
-import { Children, ReactNode, useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+import { Children, ReactNode, useId, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const DEFAULT_VISIBLE_COUNT = 8;
+const DEFAULT_VISIBLE_COUNT = 5;
 
 type ShoppingListCardProps = {
   children: ReactNode;
   isComplete?: boolean;
-  subtitle?: ReactNode;
+  appearance: ShoppingListAppearance;
   title: string;
 };
 
 export default function ShoppingListCard({
   children,
   isComplete = false,
-  subtitle,
+  appearance,
   title,
 }: ShoppingListCardProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
+  const contentId = useId();
+  const titleId = useId();
+  const illustrationColumn = appearance.illustrationIndex % 6;
+  const illustrationRow = Math.floor(appearance.illustrationIndex / 6);
 
   const childArray = Children.toArray(children);
   const totalCount = childArray.length;
@@ -29,36 +38,52 @@ export default function ShoppingListCard({
   const hiddenCount = totalCount - DEFAULT_VISIBLE_COUNT;
 
   return (
-    <section className="flex h-fit flex-col overflow-hidden rounded-xl border border-base-200 bg-base-100">
-      <div className="border-b-2 border-secondary/70 px-4 py-3">
-        <div className="flex min-w-0 flex-col gap-0.5">
-          <span
+    <section
+      aria-labelledby={titleId}
+      className="flex min-w-0 flex-col overflow-hidden rounded-2xl border border-base-300/50 bg-base-100 p-1.5 shadow-[0_2px_8px_rgba(45,65,90,0.04)]"
+    >
+      <div
+        className={cn(
+          'flex items-center gap-3 rounded-xl px-3 py-2.5',
+          getShoppingListTone(appearance.tone),
+        )}
+      >
+        <div className="min-w-0 flex-1">
+          <h2
+            id={titleId}
             className={cn(
-              'truncate text-base font-bold text-base-content transition-all duration-200',
+              'text-base leading-snug font-bold text-base-content',
               isComplete && 'text-base-content/50 line-through',
             )}
           >
             {title}
+          </h2>
+          <span className="mt-0.5 block text-xs font-medium tabular-nums">
+            {t('shoppingLists.itemsCount', { count: totalCount })}
           </span>
-          {subtitle && (
-            <span
-              className={cn(
-                'text-xs text-base-content/60 transition-all duration-200',
-                isComplete && 'text-base-content/40',
-              )}
-            >
-              {subtitle}
-            </span>
-          )}
         </div>
+        <span
+          className="size-11 shrink-0 rounded-full bg-current/10 bg-no-repeat"
+          aria-hidden="true"
+          style={{
+            backgroundImage: 'url(/images/shopping-categories.png)',
+            backgroundSize: '600% 400%',
+            backgroundPosition: `${(illustrationColumn / 5) * 100}% ${(illustrationRow / 3) * 100}%`,
+          }}
+        />
       </div>
 
-      <div className="divide-y divide-base-200">{visibleChildren}</div>
+      <div id={contentId} className="mx-3 divide-y divide-base-300/60 py-1">
+        {visibleChildren}
+      </div>
 
       {hasMore && (
         <button
+          type="button"
+          aria-expanded={isExpanded}
+          aria-controls={contentId}
           onClick={() => setIsExpanded((expanded) => !expanded)}
-          className="border-t border-base-200 px-4 py-3 text-left text-sm font-semibold text-secondary hover:underline"
+          className="mt-auto flex items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm font-medium text-secondary hover:bg-secondary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-secondary"
         >
           {isExpanded
             ? t('shoppingLists.showLess', 'Réduire')
@@ -66,6 +91,13 @@ export default function ShoppingListCard({
                 count: hiddenCount,
                 defaultValue: 'Voir les {{count}} autres',
               })}
+          <ChevronDown
+            aria-hidden="true"
+            className={cn(
+              'size-4 shrink-0 transition-transform',
+              isExpanded && 'rotate-180',
+            )}
+          />
         </button>
       )}
     </section>
