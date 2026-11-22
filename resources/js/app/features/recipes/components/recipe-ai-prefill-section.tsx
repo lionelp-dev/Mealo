@@ -1,4 +1,5 @@
 import { useGenerateRecipePreview } from '../repositories/use-generate-recipe-preview';
+import { Typography } from '@/app/components/Typography';
 import {
   Collapsible,
   CollapsibleContent,
@@ -60,9 +61,14 @@ export function RecipeAIPrefillSection({ onPrefillSuccess }: Props) {
       >
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <Wand2 className="h-5 w-5 shrink-0 text-secondary" />
-          <h2 className="min-w-0 flex-1 truncate text-base font-bold text-secondary sm:text-lg">
+          <Typography
+            as="h2"
+            variant="body-xl"
+            tone="secondary"
+            className="min-w-0 flex-1 truncate"
+          >
             {t('recipes.prefill.title', 'Préremplir une recette avec l’IA')}
-          </h2>
+          </Typography>
         </div>
 
         <CollapsibleTrigger asChild>
@@ -80,12 +86,17 @@ export function RecipeAIPrefillSection({ onPrefillSuccess }: Props) {
 
       <CollapsibleContent>
         <div className="flex w-full max-w-full min-w-0 flex-col gap-4 rounded-xl border border-base-300/30 bg-base-100 p-4 py-6 shadow-xs sm:p-7 sm:py-6.5">
-          <p className="min-w-0 text-sm leading-6 break-words text-base-content/65 sm:text-base">
+          <Typography
+            as="p"
+            variant="body"
+            tone="muted"
+            className="min-w-0 break-words"
+          >
             {t(
               'recipes.prefill.description',
               'Indiquez un nom, décrivez un plat ou collez une recette complète.',
             )}
-          </p>
+          </Typography>
 
           <form.AppField
             name="prompt"
@@ -126,12 +137,21 @@ export function RecipeAIPrefillSection({ onPrefillSuccess }: Props) {
                   />
 
                   {shouldShowErrors && (
-                    <em className="flex min-w-0 items-center gap-2 text-sm text-error">
+                    <Typography
+                      as="em"
+                      variant="body-sm"
+                      tone="error"
+                      className="flex min-w-0 items-center gap-2"
+                    >
                       <AlertTriangle size={14} className="flex-shrink-0" />
-                      <span className="min-w-0 break-words">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        className="min-w-0 break-words"
+                      >
                         {translatedPromptErrors.join(', ')}
-                      </span>
-                    </em>
+                      </Typography>
+                    </Typography>
                   )}
                 </>
               );
@@ -164,13 +184,23 @@ export function RecipeAIPrefillSection({ onPrefillSuccess }: Props) {
                     <Wand2 className="h-4 w-4" />
                   )}
                   {processing ? (
-                    <span className="min-w-0 truncate">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      className="min-w-0 truncate"
+                    >
                       {t('recipes.prefill.generating', 'Pré-remplissage...')}
-                    </span>
+                    </Typography>
                   ) : (
-                    <span className="min-w-0 truncate">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      className="min-w-0 truncate"
+                    >
                       {t('recipes.prefill.button', 'Analyser et préremplir')}
-                    </span>
+                    </Typography>
                   )}
                 </button>
               )}

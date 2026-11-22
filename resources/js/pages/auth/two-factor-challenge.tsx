@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import InputError from '@/app/components/input-error';
 import { Input } from '@/app/components/ui/input';
 import {
@@ -113,7 +114,9 @@ export default function TwoFactorChallenge() {
               </button>
 
               <div className="text-center text-sm text-muted-foreground">
-                <span>{t('common.buttons.cancel', 'Cancel')} </span>
+                <Typography as="span" variant="body-sm" tone="inherit">
+                  {t('common.buttons.cancel', 'Cancel')}{' '}
+                </Typography>
                 <button
                   type="button"
                   className="cursor-pointer text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"

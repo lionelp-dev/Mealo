@@ -1,4 +1,5 @@
 import { useAdminUsersContext } from '../infrastructure/inertia.adapter';
+import { Typography } from '@/app/components/Typography';
 import { PageContainer } from '@/app/components/page-container';
 import {
   Dialog,
@@ -22,10 +23,34 @@ function formatDate(value: string | null): string {
 
 function UserTypeBadge({ user }: { user: UserResource }) {
   if (user.is_admin)
-    return <span className="badge badge-sm badge-primary">Admin</span>;
+    return (
+      <Typography
+        as="span"
+        variant="body-sm"
+        className="badge badge-sm badge-primary"
+      >
+        Admin
+      </Typography>
+    );
   if (user.is_demo)
-    return <span className="badge badge-sm badge-warning">Demo</span>;
-  return <span className="badge badge-ghost badge-sm">User</span>;
+    return (
+      <Typography
+        as="span"
+        variant="body-sm"
+        className="badge badge-sm badge-warning"
+      >
+        Demo
+      </Typography>
+    );
+  return (
+    <Typography
+      as="span"
+      variant="body-sm"
+      className="badge badge-ghost badge-sm"
+    >
+      User
+    </Typography>
+  );
 }
 
 export default function AdminUsersView() {
@@ -78,13 +103,19 @@ export default function AdminUsersView() {
       <PageContainer size="default">
         <div className="grid gap-6">
           <div>
-            <h1 className="text-3xl font-bold">Users</h1>
-            <p className="text-muted-foreground">
+            <Typography as="h1" variant="heading">
+              Users
+            </Typography>
+            <Typography as="p" variant="body" tone="muted">
               Manage platform users and demo accounts
-            </p>
+            </Typography>
           </div>
 
-          <label className="input-bordered input flex max-w-sm items-center gap-2">
+          <Typography
+            as="label"
+            variant="label"
+            className="input-bordered input flex max-w-sm items-center gap-2"
+          >
             <Search className="h-4 w-4 opacity-60" />
             <input
               type="text"
@@ -93,7 +124,7 @@ export default function AdminUsersView() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-          </label>
+          </Typography>
 
           <div className="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
             <table className="table">
@@ -215,11 +246,19 @@ export default function AdminUsersView() {
           <DialogHeader>
             <DialogTitle>Delete user</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
+          <Typography as="p" variant="body-sm" tone="muted">
             This will permanently delete{' '}
-            <span className="font-medium">{userToDelete?.name}</span> and all
-            their recipes, workspaces and planned meals. This cannot be undone.
-          </p>
+            <Typography
+              as="span"
+              variant="body-sm"
+              tone="inherit"
+              weight="medium"
+            >
+              {userToDelete?.name}
+            </Typography>{' '}
+            and all their recipes, workspaces and planned meals. This cannot be
+            undone.
+          </Typography>
           <DialogFooter>
             <button className="btn" onClick={() => setUserToDelete(null)}>
               Cancel

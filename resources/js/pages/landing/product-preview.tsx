@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { useTranslation } from 'react-i18next';
 
 export function ProductPreview() {
@@ -7,12 +8,17 @@ export function ProductPreview() {
     <section id="preview" className="bg-card py-26">
       <div className="mx-auto flex max-w-7xl flex-col gap-15 px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-secondary md:text-4xl">
+          <Typography as="h2" variant="heading" tone="secondary">
             {t('landing.productPreview.sectionTitle')}
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
+          </Typography>
+          <Typography
+            as="p"
+            variant="body"
+            tone="muted"
+            className="mx-auto mt-4 max-w-2xl text-pretty"
+          >
             {t('landing.productPreview.sectionDescription')}
-          </p>
+          </Typography>
         </div>
 
         <div className="grid gap-9 px-2 md:grid-cols-2">

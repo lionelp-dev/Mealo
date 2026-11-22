@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,22 +37,34 @@ export default function AppearanceToggleDropdown({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuItem onClick={() => updateAppearance('light')}>
-            <span className="flex items-center gap-2">
+            <Typography
+              as="span"
+              variant="body-sm"
+              className="flex items-center gap-2"
+            >
               <Sun className="h-5 w-5" />
               Light
-            </span>
+            </Typography>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => updateAppearance('dark')}>
-            <span className="flex items-center gap-2">
+            <Typography
+              as="span"
+              variant="body-sm"
+              className="flex items-center gap-2"
+            >
               <Moon className="h-5 w-5" />
               Dark
-            </span>
+            </Typography>
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => updateAppearance('system')}>
-            <span className="flex items-center gap-2">
+            <Typography
+              as="span"
+              variant="body-sm"
+              className="flex items-center gap-2"
+            >
               <Monitor className="h-5 w-5" />
               System
-            </span>
+            </Typography>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

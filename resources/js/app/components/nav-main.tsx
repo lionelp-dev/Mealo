@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -42,7 +43,9 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
               >
                 <Link href={item.href} prefetch>
                   {item.icon && <item.icon />}
-                  <span>{item.title}</span>
+                  <Typography as="span" variant="body-sm" tone="inherit">
+                    {item.title}
+                  </Typography>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>

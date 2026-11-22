@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib';
 import { useId } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -24,25 +25,33 @@ function ShoppingListProgress({
     <div
       className={cn(className, 'flex flex-1 items-center justify-end gap-3')}
     >
-      <span className="shrink-0 text-sm font-semibold whitespace-nowrap text-base-content sm:text-base">
+      <Typography
+        as="span"
+        variant="body-sm"
+        weight="semibold"
+        className="shrink-0 whitespace-nowrap"
+      >
         {roundedProgressPercentage} %
-      </span>
+      </Typography>
       <progress
         aria-labelledby={labelId}
         className="progress col-span-2 col-start-1 row-start-2 h-2.5 w-full progress-secondary sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:h-3"
         value={progressPercentage}
         max="100"
       />
-      <span
+      <Typography
+        as="span"
+        variant="body-sm"
         id={labelId}
-        className="text-sm font-semibold whitespace-nowrap text-base-content sm:text-base"
+        weight="semibold"
+        className="whitespace-nowrap"
       >
         {t('shoppingLists.progress', {
           checked: checkedCount,
           defaultValue: '{{checked}} sur {{total}} cochés',
           total: totalCount,
         })}
-      </span>
+      </Typography>
     </div>
   );
 }

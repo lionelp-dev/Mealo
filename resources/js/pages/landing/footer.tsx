@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { Github, Mail } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -15,9 +16,14 @@ export function Footer() {
               alt={t('landing.footer.appName')}
               className="h-10 w-auto max-w-44 object-contain"
             />
-            <p className="max-w-xs text-center text-sm text-muted-foreground md:text-left">
+            <Typography
+              as="p"
+              variant="body-sm"
+              tone="muted"
+              className="max-w-xs text-center md:text-left"
+            >
               {t('landing.footer.description')}
-            </p>
+            </Typography>
           </div>
 
           {/* Links */}
@@ -49,9 +55,9 @@ export function Footer() {
         <div className="divider-neutral/20 divider" />
         {/* Copyright */}
         <div className="text-center">
-          <p className="text-xs text-muted-foreground">
+          <Typography as="p" variant="caption" tone="muted">
             {t('landing.footer.copyright')}
-          </p>
+          </Typography>
         </div>
       </div>
     </footer>

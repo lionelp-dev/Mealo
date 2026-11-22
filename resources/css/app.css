@@ -1,4 +1,5 @@
-/*! 🌼 daisyUI 5.1.14 */
+@import url('https://fonts.googleapis.com/css2?family=Geist:ital,wght@0,100..900;1,100..900&family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Noto+Serif+Display:ital,wght@0,100..900;1,100..900&display=swap');
+
 @import 'tailwindcss';
 
 @plugin 'tailwindcss-animate';
@@ -10,7 +11,7 @@
 
 @theme {
     --font-sans:
-        'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Geist', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
         'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
     --font-logo: 'DM Serif Display';
@@ -65,7 +66,7 @@
 
 :root {
     --background: oklch(1 0 0);
-    --foreground: oklch(0.145 0 0);
+    --foreground: oklch(0.375 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
     --popover: oklch(1 0 0);

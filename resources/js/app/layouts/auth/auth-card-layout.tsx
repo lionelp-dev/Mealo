@@ -1,4 +1,3 @@
-import AppLogoIcon from '@/app/components/app-logo-icon';
 import {
   Card,
   CardContent,
@@ -24,11 +23,13 @@ export default function AuthCardLayout({
       <div className="flex w-full max-w-md flex-col gap-6">
         <Link
           href={home()}
-          className="flex items-center gap-2 self-center font-medium"
+          className="self-center"
         >
-          <div className="flex h-9 w-9 items-center justify-center">
-            <AppLogoIcon className="size-9 fill-current text-black dark:text-white" />
-          </div>
+          <img
+            src="/logo.svg"
+            alt="Mealo Planner"
+            className="h-14 w-auto"
+          />
         </Link>
 
         <div className="flex flex-col gap-6">

@@ -1,4 +1,5 @@
 import { useMealPlanGeneration } from '../hooks/use-meal-plan-generation';
+import { Typography } from '@/app/components/Typography';
 import { MealTimeResource } from '@/app/data/resources/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import mealPlanning from '@/routes/meal-planning';
@@ -107,7 +108,9 @@ export function MealPlanGenerationPopover({ className }: Props) {
             ) : (
               <Sparkles className="h-4.5 w-4.5 max-md:hidden" />
             )}
-            <span>{t('mealPlanning.generatePlan', 'Generate Plan')}</span>
+            <Typography as="span" variant="body-sm" tone="inherit">
+              {t('mealPlanning.generatePlan', 'Generate Plan')}
+            </Typography>
           </button>
         </Popover.Trigger>
         <Popover.Portal>
@@ -124,26 +127,32 @@ export function MealPlanGenerationPopover({ className }: Props) {
             }}
           >
             <div className="flex w-full flex-col gap-4">
-              <h4 className="text-lg leading-none font-medium">
+              <Typography as="h4" variant="title" weight="medium">
                 {t('mealPlanning.generatePlanTitle', 'Generate your meal plan')}
-              </h4>
-              <p className="text-sm text-muted-foreground">
+              </Typography>
+              <Typography as="p" variant="body-sm" tone="muted">
                 {t(
                   'mealPlanning.generatePlanDescription',
                   'Automatically create a balanced meal plan with your existing recipes.',
                 )}
-              </p>
+              </Typography>
               <form.AppField
                 name="serving_size"
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 children={(field: any) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
-                    <span className="w-full text-base font-medium whitespace-nowrap text-secondary">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      weight="medium"
+                      tone="secondary"
+                      className="w-full whitespace-nowrap"
+                    >
                       {t(
                         'mealPlanning.dialog.persons',
                         'Pour combien de personnes ?',
                       )}
-                    </span>
+                    </Typography>
                     <div className="join w-fit shrink-0 items-center gap-2 px-2.5 pb-0.5">
                       <button
                         className="btn join-item rounded-md px-2 btn-outline btn-soft btn-sm btn-secondary"
@@ -183,12 +192,17 @@ export function MealPlanGenerationPopover({ className }: Props) {
 
                   return (
                     <div className="flex flex-col gap-2.5">
-                      <h3 className="text-base leading-none font-medium text-secondary">
+                      <Typography
+                        as="h3"
+                        variant="title"
+                        weight="medium"
+                        tone="secondary"
+                      >
                         {t(
                           'mealPlanning.mealsToInclude',
                           'Quels repas inclure ?',
                         )}
-                      </h3>
+                      </Typography>
                       <div className="grid grid-cols-2 gap-2">
                         {mealTimes.map((mealTime) => {
                           const isSelected = selectedMealTimes.includes(
@@ -228,12 +242,17 @@ export function MealPlanGenerationPopover({ className }: Props) {
                                 {isSelected && <Check className="size-3" />}
                               </span>
                               {getMealTimeIcon(mealTime.slug)}
-                              <span className="truncate">
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="truncate"
+                              >
                                 {t(
                                   `mealPlanning.dialog.filters.${mealTime.slug}`,
                                   mealTime.name,
                                 )}
-                              </span>
+                              </Typography>
                             </button>
                           );
                         })}
@@ -244,9 +263,14 @@ export function MealPlanGenerationPopover({ className }: Props) {
               </form.AppField>
 
               <div className="flex flex-col gap-3">
-                <h3 className="text-base leading-none font-medium text-secondary">
+                <Typography
+                  as="h3"
+                  variant="title"
+                  weight="medium"
+                  tone="secondary"
+                >
                   {t('mealPlanning.planningPeriod', 'Planning period')}
-                </h3>
+                </Typography>
                 <form.Field name="range">
                   {(field) => {
                     const startDate = form.state.values.range.startDate;
@@ -269,11 +293,15 @@ export function MealPlanGenerationPopover({ className }: Props) {
                                 : 'Pick a date range'}
                               <CalendarRange className="h-5" />
                             </button>
-                            <span className="text- text-sm whitespace-nowrap">
+                            <Typography
+                              as="span"
+                              variant="body-sm"
+                              className="whitespace-nowrap"
+                            >
                               {'/ '}
                               {interval}
                               {' Jours'}
-                            </span>
+                            </Typography>
                           </div>
                         </Popover.Trigger>
                         <Popover.Portal>
@@ -378,19 +406,24 @@ export function MealPlanGenerationPopover({ className }: Props) {
         <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/30 text-white backdrop-blur-xs">
           <span className="loading loading-xl loading-spinner"></span>
           <div className="flex flex-col items-center gap-2">
-            <p className="text-lg font-medium">
+            <Typography as="p" variant="body" weight="medium" tone="inverse">
               {t(
                 'mealPlanning.generatingPlan',
                 'Génération de votre plan de repas en cours',
               )}
-            </p>
-            <p className="text text-white/60">
+            </Typography>
+            <Typography
+              as="p"
+              variant="body"
+              tone="inverse"
+              className="opacity-60"
+            >
               {t(
                 'mealPlanning.estimatedTime',
                 'Cela peut prendre quelques instants',
               )}{' '}
               <span className="loading loading-xs loading-dots"></span>
-            </p>
+            </Typography>
           </div>
         </div>
       )}

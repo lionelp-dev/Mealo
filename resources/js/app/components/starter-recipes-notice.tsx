@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { ChefHat } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
@@ -22,9 +23,9 @@ export function StarterRecipesNotice({
         className="flex items-center gap-2 px-3 py-2 text-sm text-secondary"
       >
         <span className="loading loading-sm loading-spinner" />
-        <span>
+        <Typography as="span" variant="body-sm" tone="inherit">
           {t('recipes.generating.noticeTitle', 'Vos recettes arrivent…')}
-        </span>
+        </Typography>
       </div>
     );
   }
@@ -39,15 +40,15 @@ export function StarterRecipesNotice({
         <ChefHat className="absolute h-5 w-5 text-secondary" />
       </div>
       <div className="flex flex-col gap-1.5">
-        <h3 className="text-lg font-semibold text-secondary">
+        <Typography as="h3" variant="title" tone="secondary">
           {t('recipes.generating.noticeTitle', 'Vos recettes arrivent…')}
-        </h3>
-        <p className="max-w-md text-muted-foreground">
+        </Typography>
+        <Typography as="p" variant="body" tone="muted" className="max-w-md">
           {t(
             'recipes.generating.noticeDescription',
             'Nous préparons vos premières recettes personnalisées. Elles apparaîtront ici automatiquement dans quelques instants.',
           )}
-        </p>
+        </Typography>
       </div>
     </div>
   );

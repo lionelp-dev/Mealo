@@ -7,6 +7,7 @@ import { useRecipesContextValue } from '../inertia.adapter';
 import { viewRecipes } from '../repositories/recipes.repository';
 import { useCreateRecipe } from '../repositories/use-create-recipe';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
+import { Typography } from '@/app/components/Typography';
 import { PageContainer } from '@/app/components/page-container';
 import { recipeStoreRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-store.request.schema';
 import {
@@ -116,11 +117,16 @@ export function CreateRecipesView() {
                   className="btn max-w-full min-w-0 btn-secondary max-sm:btn-sm min-sm:pr-3.5 min-sm:pl-[23px]"
                   onClick={() => form.handleSubmit()}
                 >
-                  <span className="min-w-0 truncate">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    className="min-w-0 truncate"
+                  >
                     {isSubmitting
                       ? '...'
                       : t('recipes.form.saveButton', 'Enregistrer la recette')}
-                  </span>
+                  </Typography>
                   <ChefHatIcon className="h-4 max-md:hidden" />
                 </button>
               )}
@@ -140,11 +146,10 @@ export function CreateRecipesView() {
         </div>
       }
     >
-      <Head title={t('recipes.create.pageTitle', 'Create recipe')}></Head>
       <PageContainer size="default">
-        <h1 className="mb-6 text-2xl font-bold text-secondary">
+        <Typography as="h1" variant="heading" tone="secondary" className="mb-6">
           {t('recipes.create.title', 'Create a new recipe')}
-        </h1>
+        </Typography>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -199,7 +204,7 @@ export function CreateRecipesView() {
               </RecipeFormCard>
 
               <RecipeFormCard
-                title={`${t('recipes.form.ingredientsTitle', 'Ingredients')} *`}
+                title={`${t('recipes.form.ingredientsTitle', 'Ingredients')}`}
                 className="order-4 lg:order-none"
               >
                 <RecipeFormIngredientsSection
@@ -246,7 +251,9 @@ export function CreateRecipesView() {
                 {imageErrors &&
                   imageErrors.map((error) => (
                     <div key={error} className="alert-sm alert alert-error">
-                      <span className="text-xs">{error}</span>
+                      <Typography as="span" variant="caption">
+                        {error}
+                      </Typography>
                     </div>
                   ))}
                 <button
@@ -262,22 +269,32 @@ export function CreateRecipesView() {
                   {imageGenerating ? (
                     <>
                       <span className="loading loading-xs loading-spinner"></span>
-                      <span className="min-w-0 truncate">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="inherit"
+                        className="min-w-0 truncate"
+                      >
                         {t(
                           'recipes.form.imageGeneration.generating',
                           'Génération...',
                         )}
-                      </span>
+                      </Typography>
                     </>
                   ) : (
                     <>
                       <Wand2 className="h-4 w-4" />
-                      <span className="min-w-0 truncate">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="inherit"
+                        className="min-w-0 truncate"
+                      >
                         {t(
                           'recipes.form.imageGeneration.button',
                           'Générer avec IA',
                         )}
-                      </span>
+                      </Typography>
                     </>
                   )}
                 </button>
@@ -386,9 +403,14 @@ export function CreateRecipesView() {
             </button>
             <form.AppForm>
               <form.SubmitButton className="max-w-full min-w-0 pr-3.5 pl-[23px]">
-                <span className="min-w-0 truncate">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  tone="inherit"
+                  className="min-w-0 truncate"
+                >
                   {t('recipes.form.saveButton', 'Enregistrer la recette')}
-                </span>
+                </Typography>
                 <ChefHatIcon className="h-4" />
               </form.SubmitButton>
             </form.AppForm>

@@ -1,5 +1,6 @@
 import { useMealPlanActions } from '../hooks/use-meal-plan-actions';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
+import { Typography } from '@/app/components/Typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,10 +34,10 @@ export default function MealPlanMealCard({
 
   return (
     <div
-      className="group flex w-full cursor-pointer items-stretch gap-3.25 overflow-hidden rounded-[14px] border border-base-300/50 bg-base-100 px-2.5 py-2 pr-2.75 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-200 focus-within:border-base-300 focus-within:shadow-sm hover:border-base-300 hover:shadow-sm hover:[&_.meal-card-actions-btn]:opacity-100"
+      className="group flex w-full cursor-pointer gap-3.25 overflow-hidden rounded-[14px] border border-base-300/50 bg-base-100 px-1.5 py-1.75 shadow-[0_1px_2px_rgba(15,23,42,0.04)] transition-all duration-200 focus-within:border-base-300 focus-within:shadow-sm hover:border-base-300 hover:shadow-sm hover:[&_.meal-card-actions-btn]:opacity-100"
       onClick={() => onSelectRecipe(recipe)}
     >
-      <div className="relative h-21.5 w-28 shrink-0 overflow-hidden rounded-[12px] bg-base-200/70">
+      <div className="relative h-24 w-30 shrink-0 overflow-hidden rounded-[12px] bg-base-200/70">
         {imageUrl ? (
           <>
             {!imageLoaded && (
@@ -59,21 +60,31 @@ export default function MealPlanMealCard({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-2 self-stretch py-2">
+      <div className="grid min-w-0 content-start items-center pt-0.75 pr-1.5">
         {mealTimeLabel && (
-          <p className="text-xs font-semibold tracking-[0.01em] text-secondary/80 uppercase">
+          <Typography
+            as="p"
+            variant="overline"
+            tone="secondary"
+            className="col-end-1"
+          >
             {mealTimeLabel}
-          </p>
+          </Typography>
         )}
-        <p className="line-clamp-2 text-base leading-[1.275] font-semibold break-words text-base-content">
+        <div className="col-start-2">
+          <MealPlanMealCardButtonMenu
+            plannedMeal={plannedMeal}
+            onSelectRecipe={onSelectRecipe}
+          />
+        </div>
+        <Typography
+          as="p"
+          variant="body"
+          className="col-end-1 line-clamp-2 break-words"
+        >
           {recipe.name}
-        </p>
+        </Typography>
       </div>
-
-      <MealPlanMealCardButtonMenu
-        plannedMeal={plannedMeal}
-        onSelectRecipe={onSelectRecipe}
-      />
     </div>
   );
 }

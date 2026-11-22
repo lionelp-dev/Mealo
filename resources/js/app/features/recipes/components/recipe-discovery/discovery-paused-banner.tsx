@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { Sparkles } from 'lucide-react';
 
 export function DiscoveryPausedBanner({ onResume }: { onResume: () => void }) {
@@ -10,16 +11,35 @@ export function DiscoveryPausedBanner({ onResume }: { onResume: () => void }) {
       <span className="flex items-start gap-3">
         <Sparkles size={20} className="mt-0.5 shrink-0 text-secondary" />
         <span>
-          <span className="block font-semibold">Mode découverte en pause</span>
-          <span className="mt-0.5 block text-sm text-base-content/60">
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            weight="semibold"
+            className="block"
+          >
+            Mode découverte en pause
+          </Typography>
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="mt-0.5 block"
+          >
             Votre suggestion et vos critères sont conservés pendant que vous
             consultez cette recette.
-          </span>
+          </Typography>
         </span>
       </span>
-      <span className="shrink-0 text-sm font-semibold underline">
+      <Typography
+        as="span"
+        variant="body-sm"
+        tone="inherit"
+        weight="semibold"
+        className="shrink-0 underline"
+      >
         Reprendre
-      </span>
+      </Typography>
     </button>
   );
 }

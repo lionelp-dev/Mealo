@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { useClipboard } from '@/app/hooks/use-clipboard';
 import { PageProps } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -49,7 +50,9 @@ export function DemoWarningBanner() {
   return (
     <div className={`alert ${alertClass} mb-4 flex flex-col gap-1 shadow-sm`}>
       <div className="flex w-full items-center justify-between">
-        <span>Compte démo</span>
+        <Typography as="span" variant="body-sm" tone="inherit">
+          Compte démo
+        </Typography>
         <button
           onClick={handleDismiss}
           className="btn btn-square btn-ghost btn-sm"
@@ -58,25 +61,38 @@ export function DemoWarningBanner() {
           <X className="h-4 w-4" />
         </button>
       </div>
-      <span className="flex flex-col pb-1.5 text-xs">
+      <Typography as="span" variant="caption" className="flex flex-col pb-1.5">
         {isUrgent && (
-          <span className="font-semibold">
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            weight="semibold"
+          >
             '⚠️ Votre compte démo expire bientôt'
-          </span>
+          </Typography>
         )}
-        <span className="opacity-90">
-          Il vous reste <strong>{daysRemaining} jour(s)</strong>. Ce compte sera
-          supprimé le{' '}
-          <strong>
+        <Typography
+          as="span"
+          variant="body-sm"
+          tone="inherit"
+          className="opacity-90"
+        >
+          Il vous reste{' '}
+          <Typography as="strong" variant="body" weight="bold">
+            {daysRemaining} jour(s)
+          </Typography>
+          . Ce compte sera supprimé le{' '}
+          <Typography as="strong" variant="body" weight="bold">
             {expirationDate.toLocaleDateString('fr-FR', {
               day: 'numeric',
               month: 'long',
               year: 'numeric',
             })}
-          </strong>
+          </Typography>
           .
-        </span>
-      </span>
+        </Typography>
+      </Typography>
       {reconnectUrl && (
         <button
           type="button"
@@ -86,14 +102,26 @@ export function DemoWarningBanner() {
           {isCopied ? (
             <span className="flex items-center gap-2">
               <Check className="h-3.5 w-3.5 pt-[2px]" />
-              <span className="pr-4.5">Lien copié</span>
+              <Typography
+                as="span"
+                variant="body-sm"
+                tone="inherit"
+                className="pr-4.5"
+              >
+                Lien copié
+              </Typography>
             </span>
           ) : (
             <span className="flex min-w-0 items-center gap-2">
               <Copy className="h-3.5 w-3.5 shrink-0" />
-              <span className="min-w-0 truncate">
+              <Typography
+                as="span"
+                variant="body-sm"
+                tone="inherit"
+                className="min-w-0 truncate"
+              >
                 Copier le lien de reconnexion
-              </span>
+              </Typography>
             </span>
           )}
         </button>

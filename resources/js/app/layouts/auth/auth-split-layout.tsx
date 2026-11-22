@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import AppLogoIcon from '@/app/components/app-logo-icon';
 import { home } from '@/routes';
 import { type SharedData } from '@/types';
@@ -29,12 +30,19 @@ export default function AuthSplitLayout({
         </Link>
         {quote && (
           <div className="relative z-20 mt-auto">
-            <blockquote className="space-y-2">
-              <p className="text-lg">&ldquo;{quote.message}&rdquo;</p>
+            <Typography
+              as="blockquote"
+              variant="quote"
+              tone="inherit"
+              className="space-y-2"
+            >
+              <Typography as="p" variant="quote" tone="inherit">
+                &ldquo;{quote.message}&rdquo;
+              </Typography>
               <footer className="text-sm text-neutral-300">
                 {quote.author}
               </footer>
-            </blockquote>
+            </Typography>
           </div>
         )}
       </div>
@@ -47,10 +55,17 @@ export default function AuthSplitLayout({
             <AppLogoIcon className="h-10 fill-current text-black sm:h-12" />
           </Link>
           <div className="flex flex-col items-start gap-2 text-left sm:items-center sm:text-center">
-            <h1 className="text-xl font-medium">{title}</h1>
-            <p className="text-sm text-balance text-muted-foreground">
+            <Typography as="h1" variant="title">
+              {title}
+            </Typography>
+            <Typography
+              as="p"
+              variant="body-sm"
+              tone="muted"
+              className="text-balance"
+            >
               {description}
-            </p>
+            </Typography>
           </div>
           {children}
         </div>

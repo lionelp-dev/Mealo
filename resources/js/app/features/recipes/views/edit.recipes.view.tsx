@@ -6,6 +6,7 @@ import { useRecipesContextValue } from '../inertia.adapter';
 import { viewRecipe } from '../repositories/recipes.repository';
 import { useGenerateRecipeImage } from '../repositories/use-generate-recipe-image';
 import { useUpdateRecipe } from '../repositories/use-update-recipe';
+import { Typography } from '@/app/components/Typography';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
 import { PageContainer } from '@/app/components/page-container';
 import { recipeUpdateRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-update.request.schema';
@@ -86,11 +87,16 @@ export function EditRecipesView() {
                   className="btn max-w-full min-w-0 btn-secondary max-sm:btn-sm min-sm:pr-3.5 min-sm:pl-[23px]"
                   onClick={() => form.handleSubmit()}
                 >
-                  <span className="min-w-0 truncate">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    className="min-w-0 truncate"
+                  >
                     {isSubmitting
                       ? '...'
                       : t('common.buttons.update', 'Update')}
-                  </span>
+                  </Typography>
                   <ChefHatIcon className="h-4 max-md:hidden" />
                 </button>
               )}
@@ -110,9 +116,9 @@ export function EditRecipesView() {
     >
       <Head title={t('recipes.edit.pageTitle', 'Edit recipe')}></Head>
       <PageContainer size="default">
-        <h1 className="mb-6 text-2xl font-bold text-secondary">
+        <Typography as="h1" variant="heading" tone="secondary" className="mb-6">
           {t('recipes.edit.title', 'Edit recipe')}
-        </h1>
+        </Typography>
         <form
           onSubmit={(e) => {
             e.preventDefault();
@@ -225,22 +231,32 @@ export function EditRecipesView() {
                   {imageGenerating ? (
                     <>
                       <span className="loading loading-xs loading-spinner"></span>
-                      <span className="min-w-0 truncate">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="inherit"
+                        className="min-w-0 truncate"
+                      >
                         {t(
                           'recipes.form.imageGeneration.generating',
                           'Génération...',
                         )}
-                      </span>
+                      </Typography>
                     </>
                   ) : (
                     <>
                       <Wand2 className="h-4 w-4" />
-                      <span className="min-w-0 truncate">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="inherit"
+                        className="min-w-0 truncate"
+                      >
                         {t(
                           'recipes.form.imageGeneration.button',
                           'Générer avec IA',
                         )}
-                      </span>
+                      </Typography>
                     </>
                   )}
                 </button>
@@ -336,9 +352,14 @@ export function EditRecipesView() {
             </button>
             <form.AppForm>
               <form.SubmitButton className="max-w-full min-w-0 pr-3.5 pl-[23px]">
-                <span className="min-w-0 truncate">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  tone="inherit"
+                  className="min-w-0 truncate"
+                >
                   {t('common.buttons.update', 'Update')}
-                </span>
+                </Typography>
                 <ChefHatIcon className="h-4" />
               </form.SubmitButton>
             </form.AppForm>

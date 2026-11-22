@@ -1,4 +1,5 @@
 import { useMealPlanDayActions } from '../hooks/use-meal-plan-day-actions';
+import { Typography } from '@/app/components/Typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,26 +28,33 @@ export default function MealPlanDayHeader({
   const { date, isCurrentDay } = useMealPlanDayActions(dayPlannedMeals);
 
   return (
-    <div className="flex items-center justify-between">
-      <span
-        className={cn(
-          'flex items-center gap-2 text-xl font-semibold tracking-tight text-base-content/80',
-          isCurrentDay && 'text-secondary',
-        )}
+    <div className="flex items-center justify-between px-1.25 pl-2.25">
+      <Typography
+        as="span"
+        variant="body-sm"
+        weight="semibold"
+        tone={isCurrentDay ? 'secondary' : 'default'}
+        className="flex items-center gap-2"
       >
-        <span>
+        <Typography as="span" variant="title" tone="secondary">
           {date.weekdayLong &&
             `${date.weekdayLong[0].toUpperCase()}${date.weekdayLong
               .slice(1)
               .replace(/\.$/, '')}`}
-        </span>
-        <span>{date.day}</span>
+        </Typography>
+        <Typography as="span" variant="title" tone="secondary">
+          {date.day}
+        </Typography>
         {isCurrentDay && (
-          <span className="badge rounded-full badge-soft badge-secondary">
+          <Typography
+            as="span"
+            variant="body-sm"
+            className="badge rounded-full badge-soft badge-secondary"
+          >
             Aujourd'hui
-          </span>
+          </Typography>
         )}
-      </span>
+      </Typography>
       <MealPlanDayHeaderMenu dayPlannedMeals={dayPlannedMeals} />
     </div>
   );

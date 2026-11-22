@@ -1,4 +1,4 @@
-import HeadingSmall from '@/app/components/heading-small';
+import { Typography } from '@/app/components/Typography';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';
@@ -25,13 +25,17 @@ export default function Language() {
 
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title={t('settings.language.sectionTitle', 'Language settings')}
-            description={t(
-              'settings.language.sectionDescription',
-              'Update your language setting',
-            )}
-          />
+          <header>
+            <Typography as="h3" variant="title" weight="medium">
+              {t('settings.language.sectionTitle', 'Language settings')}
+            </Typography>
+            <Typography variant="body-sm" tone="muted">
+              {t(
+                'settings.language.sectionDescription',
+                'Update your language setting',
+              )}
+            </Typography>
+          </header>
           <LanguageSwitcher />
         </div>
       </SettingsLayout>

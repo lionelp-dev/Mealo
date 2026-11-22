@@ -1,5 +1,6 @@
 // Components
 import PasswordResetLinkController from '@/actions/App/Http/Controllers/Auth/PasswordResetLinkController';
+import { Typography } from '@/app/components/Typography';
 import InputError from '@/app/components/input-error';
 import TextLink from '@/app/components/text-link';
 import { Input } from '@/app/components/ui/input';
@@ -69,7 +70,9 @@ export default function ForgotPassword({ status }: { status?: string }) {
         </Form>
 
         <div className="space-x-1 text-center text-sm text-muted-foreground">
-          <span>{t('auth.forgotPassword.backToLogin', 'Back to login')}</span>
+          <Typography as="span" variant="body-sm" tone="inherit">
+            {t('auth.forgotPassword.backToLogin', 'Back to login')}
+          </Typography>
           <TextLink href={login()}>
             {t('auth.login.pageTitle', 'Log in')}
           </TextLink>

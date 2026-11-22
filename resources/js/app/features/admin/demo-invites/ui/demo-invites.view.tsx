@@ -1,5 +1,6 @@
 import { useAdminDemoInvitesContext } from '../infrastructure/inertia.adapter';
 import DemoInviteFormModal from './demo-invite-form-modal';
+import { Typography } from '@/app/components/Typography';
 import { PageContainer } from '@/app/components/page-container';
 import {
   Collapsible,
@@ -73,10 +74,12 @@ export default function AdminDemoInvitesView() {
         <div className="grid gap-6">
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Demo links</h1>
-              <p className="text-muted-foreground">
+              <Typography as="h1" variant="heading">
+                Demo links
+              </Typography>
+              <Typography as="p" variant="body" tone="muted">
                 Share links that let visitors create isolated demo accounts
-              </p>
+              </Typography>
             </div>
             <button className="btn gap-2 btn-secondary" onClick={openCreate}>
               <Plus className="h-4 w-4" />
@@ -99,23 +102,37 @@ export default function AdminDemoInvitesView() {
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div className="grid gap-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold">
+                      <Typography as="h3" variant="title">
                         {invite.label ?? 'Untitled link'}
-                      </h3>
+                      </Typography>
                       {invite.is_usable ? (
-                        <span className="badge badge-sm badge-success">
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          className="badge badge-sm badge-success"
+                        >
                           Usable
-                        </span>
+                        </Typography>
                       ) : (
-                        <span className="badge badge-ghost badge-sm">
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          className="badge badge-ghost badge-sm"
+                        >
                           {invite.is_active
                             ? 'Exhausted / expired'
                             : 'Disabled'}
-                        </span>
+                        </Typography>
                       )}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <code className="max-w-xs truncate">{invite.url}</code>
+                      <Typography
+                        as="code"
+                        variant="code"
+                        className="max-w-xs truncate"
+                      >
+                        {invite.url}
+                      </Typography>
                       <button
                         className="btn btn-ghost btn-xs"
                         title="Copy URL"
@@ -129,18 +146,24 @@ export default function AdminDemoInvitesView() {
                       </button>
                     </div>
                     <div className="mt-1 flex gap-4 text-sm text-muted-foreground">
-                      <span>
+                      <Typography as="span" variant="body-sm" tone="inherit">
                         Uses:{' '}
-                        <span className="font-medium text-base-content">
+                        <Typography as="span" variant="body-sm" weight="medium">
                           {invite.used_count} / {invite.max_uses}
-                        </span>
-                      </span>
-                      <span>Expires: {formatDate(invite.expires_at)}</span>
+                        </Typography>
+                      </Typography>
+                      <Typography as="span" variant="body-sm" tone="inherit">
+                        Expires: {formatDate(invite.expires_at)}
+                      </Typography>
                     </div>
                   </div>
 
                   <div className="flex items-center gap-2">
-                    <label className="flex cursor-pointer items-center gap-2 text-sm">
+                    <Typography
+                      as="label"
+                      variant="label"
+                      className="flex cursor-pointer items-center gap-2"
+                    >
                       <input
                         type="checkbox"
                         className="toggle toggle-secondary toggle-sm"
@@ -148,7 +171,7 @@ export default function AdminDemoInvitesView() {
                         onChange={() => toggle(invite)}
                       />
                       Active
-                    </label>
+                    </Typography>
                     <button
                       className="btn btn-ghost btn-xs"
                       title="Edit"
@@ -190,13 +213,21 @@ export default function AdminDemoInvitesView() {
                               <td>{formatDate(account.expires_at)}</td>
                               <td>
                                 {account.is_expired ? (
-                                  <span className="badge badge-ghost badge-sm">
+                                  <Typography
+                                    as="span"
+                                    variant="body-sm"
+                                    className="badge badge-ghost badge-sm"
+                                  >
                                     Expired
-                                  </span>
+                                  </Typography>
                                 ) : (
-                                  <span className="badge badge-sm badge-success">
+                                  <Typography
+                                    as="span"
+                                    variant="body-sm"
+                                    className="badge badge-sm badge-success"
+                                  >
                                     Active
-                                  </span>
+                                  </Typography>
                                 )}
                               </td>
                             </tr>
@@ -229,13 +260,18 @@ export default function AdminDemoInvitesView() {
           <DialogHeader>
             <DialogTitle>Delete demo link</DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground">
+          <Typography as="p" variant="body-sm" tone="muted">
             This deletes the share link{' '}
-            <span className="font-medium">
+            <Typography
+              as="span"
+              variant="body-sm"
+              tone="inherit"
+              weight="medium"
+            >
               {toDelete?.label ?? 'Untitled link'}
-            </span>
+            </Typography>
             . Demo accounts already created will be kept and expire normally.
-          </p>
+          </Typography>
           <DialogFooter>
             <button className="btn" onClick={() => setToDelete(null)}>
               Cancel

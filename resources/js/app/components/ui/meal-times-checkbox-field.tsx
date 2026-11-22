@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
@@ -52,7 +53,9 @@ export function MealTimesCheckboxField({
       }}
     >
       {label && (
-        <label className="min-w-0 text-base text-base-content">{label}</label>
+        <Typography as="label" variant="label" className="min-w-0">
+          {label}
+        </Typography>
       )}
 
       <div className={cn('flex min-w-0 flex-wrap gap-2 rounded-lg p-0.5')}>
@@ -68,15 +71,22 @@ export function MealTimesCheckboxField({
               aria-pressed={isSelected}
               onClick={() => toggleMealTime(option)}
               className={cn(
-                'btn min-h-0 min-w-0 flex-1 border-base-300 px-1.75 pl-6.25 font-medium btn-sm md:btn-md',
-
+                'btn min-h-0 min-w-0 flex-1 border-base-300 px-1.75 pl-6.25 btn-sm md:btn-md',
                 !field.state.meta.isValid && 'border-error',
                 isSelected
                   ? 'border-secondary bg-secondary text-secondary-content hover:border-secondary hover:bg-secondary'
-                  : 'bg-base-100 text-base-content hover:border-secondary/40 hover:bg-secondary/10',
+                  : 'bg-base-100 hover:border-secondary/40 hover:bg-secondary/10',
               )}
             >
-              <span className="min-w-0 truncate">{option.label}</span>
+              <Typography
+                as="span"
+                variant="body-sm"
+                tone={isSelected ? 'inverse' : 'default'}
+                weight="semibold"
+                className="min-w-0 truncate"
+              >
+                {option.label}
+              </Typography>
               <CheckIcon
                 className={cn('h-4 w-4', !isSelected && 'opacity-0')}
               />

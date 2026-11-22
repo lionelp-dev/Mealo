@@ -1,5 +1,6 @@
 import { useWorkspaces } from '../hooks/use-workspaces';
 import { workspaceEditStore } from '../stores/workspace-edit-modal-store';
+import { Typography } from '@/app/components/Typography';
 import {
   DialogHeader,
   Dialog,
@@ -53,9 +54,9 @@ export function WorkspaceEditModal({ workspace_data }: Props) {
       <DialogContent className="max-sm:top-1/3">
         <DialogHeader>
           <DialogTitle>
-            <span className="text-secondary">
+            <Typography as="span" variant="body-sm" tone="secondary">
               {t('workspace.edit.title', "Modifier l'espace")}
-            </span>
+            </Typography>
           </DialogTitle>
         </DialogHeader>
         {selected_workspace && (
@@ -134,15 +135,18 @@ function WorkspaceEditForm({
                   ({ value, icon: Icon, labelKey, subtitleKey }) => {
                     const selected = field.state.value === value;
                     return (
-                      <label
+                      <Typography
+                        as="label"
+                        variant="label"
                         key={String(value)}
+                        tone={selected ? 'secondary' : 'default'}
                         className={cn(
-                          `flex flex-1 cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 text-secondary transition-colors`,
+                          `flex flex-1 cursor-pointer flex-col items-center gap-1 rounded-xl border-2 p-4 transition-colors`,
                           selected
                             ? confirmingPersonal
                               ? 'border-warning bg-warning/5'
                               : 'border-secondary bg-secondary/5'
-                            : 'border-base-300 text-base-content hover:border-secondary/50',
+                            : 'border-base-300 hover:border-secondary/50',
                         )}
                       >
                         <input
@@ -174,11 +178,17 @@ function WorkspaceEditForm({
                             confirmingPersonal && selected && 'text-warning',
                           )}
                         />
-                        <span className={`text-sm font-semibold`}>
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          weight="semibold"
+                        >
                           {t(labelKey)}
-                        </span>
-                        <span className={`text-xs`}>{t(subtitleKey)}</span>
-                      </label>
+                        </Typography>
+                        <Typography as="span" variant="caption">
+                          {t(subtitleKey)}
+                        </Typography>
+                      </Typography>
                     );
                   },
                 )}
@@ -190,27 +200,32 @@ function WorkspaceEditForm({
             <div className="alert-soft alert flex flex-col items-start gap-4 rounded-xl alert-error">
               <span className="flex gap-2">
                 <AlertTriangle size={20} />
-                <span className="text-sm font-semibold text-error">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  tone="error"
+                  weight="semibold"
+                >
                   {t(
                     'workspace.edit.makePersonalWarning.title',
                     'Passer en mode personnel ?',
                   )}
-                </span>
+                </Typography>
               </span>
-              <span className="text-sm text-base-content/70">
+              <Typography as="span" variant="body-sm" tone="muted">
                 {t(
                   'workspace.edit.makePersonalWarning.currentlyHas',
                   'Cet espace compte actuellement',
                 )}{' '}
-                <span className="font-semibold">
+                <Typography as="span" variant="body-sm" weight="semibold">
                   {nonOwnerMembersCount} {t('workspace.member', 'membre')}
                   {nonOwnerMembersCount > 1 ? 's' : ''}.
-                </span>{' '}
+                </Typography>{' '}
                 {t(
                   'workspace.edit.makePersonalWarning.intro',
                   'En passant en mode personnel :',
                 )}
-              </span>
+              </Typography>
               <ul className="list-inside list-disc space-y-1 text-sm text-base-content/70">
                 <li>
                   {t(
@@ -233,16 +248,20 @@ function WorkspaceEditForm({
               </ul>
               <span className="flex w-full items-center gap-2 rounded-sm bg-error/10 p-3">
                 <AlertTriangle size={18} />
-                <span className="text-xs font-semibold">
+                <Typography as="span" variant="caption" weight="semibold">
                   {t(
                     'workspace.edit.makePersonalWarning.irreversible',
                     'Cette action est irréversible.',
                   )}
-                </span>
+                </Typography>
               </span>
             </div>
           ) : (
-            <span className="alert-soft alert alert-info text-xs font-normal">
+            <Typography
+              as="span"
+              variant="caption"
+              className="alert-soft alert alert-info"
+            >
               {isPersonal
                 ? t(
                     'workspace.hints.personal',
@@ -252,7 +271,7 @@ function WorkspaceEditForm({
                     'workspace.hints.shared',
                     'Collaborez avec votre famille, colocataires ou amis.',
                   )}
-            </span>
+            </Typography>
           )}
         </>
       )}
@@ -283,13 +302,13 @@ function WorkspaceEditForm({
                 form.handleSubmit();
               }}
             >
-              <span>
+              <Typography as="span" variant="body-sm" tone="inherit">
                 {confirmingPersonal
                   ? t('common.buttons.confirm', 'Confirmer')
                   : isWorkspaceUpdating
                     ? t('common.status.saving', 'Sauvegarde...')
                     : t('common.buttons.save', 'Sauvegarder')}
-              </span>
+              </Typography>
             </button>
           )}
         </form.Subscribe>

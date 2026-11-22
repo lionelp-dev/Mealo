@@ -198,7 +198,7 @@
         },
         "index": {
             "createButton": "Créer une recette",
-            "bookTitle": "Mon carnet",
+            "bookTitle": "Mes recettes",
             "viewButton": "Voir mes recettes"
         },
         "table": {

@@ -1,4 +1,5 @@
 import FieldInfo from './form-field-info';
+import { Typography } from '@/app/components/Typography';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
 
@@ -17,12 +18,14 @@ export default function NumberField({
     <div className="flex min-w-0 flex-1 flex-col gap-2">
       <div className="flex min-w-0 flex-col">
         {label && (
-          <label
+          <Typography
+            as="label"
+            variant="label"
             htmlFor={field.name}
-            className="min-w-0 truncate text-left text-base leading-10 text-base-content"
+            className="min-w-0 truncate text-left"
           >
             {label}
-          </label>
+          </Typography>
         )}
         <input
           type="number"

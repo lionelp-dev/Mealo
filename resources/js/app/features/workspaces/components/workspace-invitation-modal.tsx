@@ -1,5 +1,6 @@
 import { useWorkspaces } from '../hooks/use-workspaces';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
+import { Typography } from '@/app/components/Typography';
 import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
 import { Dialog, DialogContent, DialogTitle } from '@/app/components/ui/dialog';
 import {
@@ -90,9 +91,15 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
           <span className="badge flex gap-2 rounded-full badge-soft badge-xl pr-4 text-sm badge-secondary">
             <FolderOpen className="h-5 w-5" />
             <span className="flex items-center gap-1">
-              <span>{t('workspace.label', 'Espace')}</span>
-              <span>-</span>
-              <span>{workspace.name}</span>
+              <Typography as="span" variant="body-sm" tone="inherit">
+                {t('workspace.label', 'Espace')}
+              </Typography>
+              <Typography as="span" variant="body-sm" tone="inherit">
+                -
+              </Typography>
+              <Typography as="span" variant="body-sm" tone="inherit">
+                {workspace.name}
+              </Typography>
             </span>
           </span>
         </DialogTitle>
@@ -103,9 +110,9 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
           }}
         >
           <div className="flex flex-col">
-            <span className="text-base leading-11 text-secondary">
+            <Typography as="span" variant="body-sm" tone="secondary">
               {t('workspace.inviteByEmail', 'Inviter par email')}
-            </span>
+            </Typography>
             <div className="flex gap-3">
               <form.AppField
                 name="email"
@@ -141,7 +148,9 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                       form.handleSubmit();
                     }}
                   >
-                    <span>{t('workspace.invite.button', 'Invite')}</span>
+                    <Typography as="span" variant="body-sm" tone="inherit">
+                      {t('workspace.invite.button', 'Invite')}
+                    </Typography>
                     <UserPlus className="h-4 w-4" />
                   </button>
                 )}
@@ -152,11 +161,11 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
 
         {/* Current members */}
         <div className="flex flex-col">
-          <span className="text-base leading-10 text-secondary">
+          <Typography as="span" variant="body-sm" tone="secondary">
             {t('workspace.members.title', 'Membres')} {'( '}
             {members.length}
             {' )'}
-          </span>
+          </Typography>
           <div className="flex max-h-48 flex-col gap-3 overflow-y-auto">
             {members.map((member) => (
               <div
@@ -175,14 +184,16 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span
+                  <Typography
+                    as="span"
+                    variant="body-sm"
                     className={cn(
                       'badge rounded-full',
                       `${getRoleBadgeVariant(member.role)}`,
                     )}
                   >
                     {getRoleLabel(member.role)}
-                  </span>
+                  </Typography>
                   {canEditCurrentWorkspace && member.role !== 'owner' && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -246,12 +257,12 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
 
         {pending_invitations && pending_invitations.length > 0 && (
           <div className="space-y-3">
-            <span className="text-base leading-8 text-secondary">
+            <Typography as="span" variant="body-sm" tone="secondary">
               {t('workspace.pending_invitations', 'Invitations en attente')}{' '}
               {'( '}
               {pending_invitations.length}
               {' )'}
-            </span>
+            </Typography>
             <div className="max-h-44 space-y-2 overflow-y-auto">
               {pending_invitations.map((invitation) => (
                 <div
@@ -273,14 +284,16 @@ export function WorkspaceInvitationModal({ workspace_data }: Props) {
                         {invitation.invited_by.name}
                       </div>
                     </div>
-                    <span
+                    <Typography
+                      as="span"
+                      variant="body-sm"
                       className={cn(
                         'badge rounded-full badge-soft',
                         `${getRoleBadgeVariant(invitation.role)}`,
                       )}
                     >
                       {getRoleLabel(invitation.role)}
-                    </span>
+                    </Typography>
                   </div>
 
                   {canEditCurrentWorkspace && (

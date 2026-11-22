@@ -1,4 +1,4 @@
-import Heading from '@/app/components/heading';
+import { Typography } from '@/app/components/Typography';
 import { Separator } from '@/app/components/ui/separator';
 import { cn } from '@/app/lib/';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -51,13 +51,17 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
 
   return (
     <div className="px-8 py-6">
-      <Heading
-        title={t('settings.title', 'Settings')}
-        description={t(
-          'settings.description',
-          'Manage your profile and account settings',
-        )}
-      />
+      <div className="mb-8 space-y-0.5">
+        <Typography as="h2" variant="title">
+          {t('settings.title', 'Settings')}
+        </Typography>
+        <Typography variant="body-sm" tone="muted">
+          {t(
+            'settings.description',
+            'Manage your profile and account settings',
+          )}
+        </Typography>
+      </div>
 
       <div className="flex flex-col lg:flex-row lg:space-x-12">
         <aside className="w-full max-w-xl lg:w-60">
@@ -67,7 +71,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                 key={`${typeof item.href === 'string' ? item.href : item.href.url}-${index}`}
                 href={item.href}
                 className={cn('btn w-full justify-start btn-ghost btn-sm', {
-                  'bg-secondary text-secondary-foreground':
+                  'bg-secondary text-secondary-content':
                     currentPath ===
                     (typeof item.href === 'string' ? item.href : item.href.url),
                 })}

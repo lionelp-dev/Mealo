@@ -1,4 +1,4 @@
-import HeadingSmall from '@/app/components/heading-small';
+import { Typography } from '@/app/components/Typography';
 import { useClipboard } from '@/app/hooks/use-clipboard';
 import { type SharedData } from '@/types';
 import { usePage } from '@inertiajs/react';
@@ -34,28 +34,36 @@ export function DemoAccountSettings() {
 
   return (
     <div className="flex flex-col gap-4">
-      <HeadingSmall
-        title={t('settings.demoAccount.title', 'Demo account')}
-        description={t(
-          'settings.demoAccount.sectionDescription',
-          'Keep your reconnect link to come back to this demo account later.',
-        )}
-      />
+      <header>
+        <Typography as="h3" variant="title" weight="medium">
+          {t('settings.demoAccount.title', 'Demo account')}
+        </Typography>
+        <Typography variant="body-sm" tone="muted">
+          {t(
+            'settings.demoAccount.sectionDescription',
+            'Keep your reconnect link to come back to this demo account later.',
+          )}
+        </Typography>
+      </header>
 
-      <p className="text-sm text-muted-foreground">
+      <Typography variant="body-sm" tone="muted">
         {t('settings.demoAccount.expiryLine', {
           days: daysRemaining,
           date: formattedDate,
           defaultValue:
             'This account expires in {{days}} day(s) and will be deleted on {{date}}.',
         })}
-      </p>
+      </Typography>
 
       {reconnectUrl && (
         <div className="grid gap-4">
-          <code className="truncate rounded-md bg-base-200 px-3 py-2 text-xs">
+          <Typography
+            as="code"
+            variant="code"
+            className="truncate rounded-md bg-base-200 px-3 py-2"
+          >
             {reconnectUrl}
-          </code>
+          </Typography>
           <button
             type="button"
             onClick={() => copy(reconnectUrl)}

@@ -1,4 +1,5 @@
 import FieldInfo from './form-field-info';
+import { Typography } from '@/app/components/Typography';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
 
@@ -17,14 +18,16 @@ export default function TextAreaField({
 }: TextAreaFieldProps) {
   const field = useFieldContext<string>();
   return (
-    <div className={cn('flex min-w-0 flex-1 flex-col gap-3', className)}>
+    <div className={cn('flex min-w-0 flex-1 flex-col', className)}>
       {label && (
-        <label
+        <Typography
+          as="label"
+          variant="label"
           htmlFor={field.name}
-          className="min-w-0 text-base text-base-content"
+          className="min-w-0"
         >
           {label}
-        </label>
+        </Typography>
       )}
       <textarea
         id={field.name}

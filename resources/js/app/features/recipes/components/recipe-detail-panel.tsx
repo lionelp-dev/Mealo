@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { RecipeResourceData } from '@/types/generated';
 import { ArrowLeft, Clock3, UtensilsCrossed, X } from 'lucide-react';
@@ -59,9 +60,14 @@ export default function RecipeDetailPanel({
             )}
           </div>
           {!compact && (
-            <p className="mb-2 hidden text-xs font-semibold tracking-wide text-base-content/55 uppercase lg:block">
+            <Typography
+              as="p"
+              variant="overline"
+              tone="muted"
+              className="mb-2 hidden lg:block"
+            >
               Aperçu de la recette
-            </p>
+            </Typography>
           )}
           {recipe.image_url ? (
             <img
@@ -74,12 +80,14 @@ export default function RecipeDetailPanel({
           )}
           <div className="flex flex-1 flex-col px-1 pt-4 pb-5 sm:pb-6">
             <div className="sticky top-12 z-10 -mx-1 bg-base-100 px-2 pt-2 pb-2 sm:px-2 lg:top-0 lg:mx-0 lg:px-0">
-              <h2
+              <Typography
+                as="h2"
+                variant="heading"
                 id="recipe-detail-title"
-                className="text-2xl leading-tight font-bold tracking-tight sm:text-3xl"
+                weight="bold"
               >
                 {recipe.name}
-              </h2>
+              </Typography>
             </div>
             <dl className="mt-1 flex flex-wrap gap-x-4 gap-y-2 text-sm text-base-content/55 sm:mt-2 sm:gap-x-5">
               <div className="flex items-center gap-2">
@@ -91,35 +99,48 @@ export default function RecipeDetailPanel({
                 <dd>{ingredients.length} ingrédients</dd>
               </div>
             </dl>
-            <p className="mt-3 max-w-2xl text-sm leading-6 text-base-content/65 sm:mt-4">
+            <Typography
+              as="p"
+              variant="body-sm"
+              tone="muted"
+              className="mt-3 max-w-2xl sm:mt-4"
+            >
               {recipe.description || 'Aucune description disponible.'}
-            </p>
+            </Typography>
             {(recipe.meal_times.length > 0 || recipe.tags.length > 0) && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {recipe.meal_times.map((mealTime) => (
-                  <span
+                  <Typography
+                    as="span"
+                    variant="body-sm"
                     key={mealTime.id}
-                    className="badge h-7 bg-secondary/10 px-3 text-secondary"
+                    tone="secondary"
+                    className="badge h-7 bg-secondary/10 px-3"
                   >
                     {mealTime.name}
-                  </span>
+                  </Typography>
                 ))}
                 {recipe.tags.map((tag) => (
-                  <span
+                  <Typography
+                    as="span"
+                    variant="body-sm"
                     key={tag.id}
-                    className="badge h-7 border-base-content/30 px-3 text-base-content/75"
+                    tone="muted"
+                    className="badge h-7 border-base-content/30 px-3"
                   >
                     {tag.name}
-                  </span>
+                  </Typography>
                 ))}
               </div>
             )}
             <section className="mt-6 flex-1 border-t border-base-300 pt-5">
               <div className="flex items-center justify-between">
-                <h2 className="text-base font-bold">Ingrédients</h2>
-                <span className="text-xs text-base-content/45">
+                <Typography as="h2" variant="heading" weight="bold">
+                  Ingrédients
+                </Typography>
+                <Typography as="span" variant="caption" tone="muted">
                   Liste indicative
-                </span>
+                </Typography>
               </div>
               {ingredients.length ? (
                 <ul className="mt-3 space-y-0.5">
@@ -128,24 +149,41 @@ export default function RecipeDetailPanel({
                       key={ingredient.id}
                       className="flex items-center justify-between gap-3 px-1 py-2 text-sm text-base-content/70"
                     >
-                      <span className="truncate">{ingredient.name}</span>
-                      <span className="shrink-0">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        className="truncate"
+                      >
+                        {ingredient.name}
+                      </Typography>
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        className="shrink-0"
+                      >
                         {ingredient.quantity}{' '}
                         {t(`ingredientUnits.${ingredient.unit}`, {
                           defaultValue: ingredient.unit,
                         })}
-                      </span>
+                      </Typography>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="mt-3 text-sm text-base-content/55">
+                <Typography
+                  as="p"
+                  variant="body-sm"
+                  tone="muted"
+                  className="mt-3"
+                >
                   Aucun ingrédient pour le moment.
-                </p>
+                </Typography>
               )}
             </section>
             <section className="mt-6 border-t border-base-300 pt-5">
-              <h2 className="text-base font-bold">Préparation</h2>
+              <Typography as="h2" variant="heading" weight="bold">
+                Préparation
+              </Typography>
               {steps.length ? (
                 <ol className="mt-3 space-y-3">
                   {steps.map((step) => (
@@ -153,17 +191,29 @@ export default function RecipeDetailPanel({
                       key={step.id}
                       className="flex gap-3 text-sm leading-6 text-base-content/70"
                     >
-                      <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-base-200 text-xs font-bold">
+                      <Typography
+                        as="span"
+                        variant="caption"
+                        weight="bold"
+                        className="flex size-6 shrink-0 items-center justify-center rounded-full bg-base-200"
+                      >
                         {step.order}
-                      </span>
-                      <span>{step.description}</span>
+                      </Typography>
+                      <Typography as="span" variant="body-sm" tone="inherit">
+                        {step.description}
+                      </Typography>
                     </li>
                   ))}
                 </ol>
               ) : (
-                <p className="mt-3 text-sm text-base-content/55">
+                <Typography
+                  as="p"
+                  variant="body-sm"
+                  tone="muted"
+                  className="mt-3"
+                >
                   Aucune étape pour le moment.
-                </p>
+                </Typography>
               )}
             </section>
           </div>

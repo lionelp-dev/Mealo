@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
 import { cn } from '@/app/lib/';
 import { capitalize } from '@/app/utils/';
@@ -54,11 +55,13 @@ export default function ShoppingListIngredientRow({
   };
 
   return (
-    <label
+    <Typography
+      as="label"
+      variant="label"
+      tone={checked ? 'muted' : 'default'}
       className={cn(
         'flex min-h-10 items-center gap-3 rounded-sm px-0.5 py-2 transition-colors select-none hover:bg-secondary/5',
         canEditShoppingList && 'cursor-pointer',
-        checked && 'text-base-content/45',
         (isLoading || externalIsLoading) && 'opacity-50',
       )}
     >
@@ -75,25 +78,28 @@ export default function ShoppingListIngredientRow({
       />
 
       <span className="flex min-w-0 flex-1 items-center justify-between gap-3">
-        <span
+        <Typography
+          as="span"
+          variant="body-sm"
           title={capitalize(name)}
+          weight="medium"
           className={cn(
-            'min-w-0 flex-1 text-sm leading-snug font-medium wrap-anywhere transition-colors',
+            'min-w-0 flex-1 wrap-anywhere transition-colors',
             checked && 'line-through',
           )}
         >
           {capitalize(name)}
-        </span>
-        <span
-          className={cn(
-            'shrink-0 text-sm whitespace-nowrap tabular-nums',
-            checked ? 'text-base-content/40' : 'text-base-content/70',
-          )}
+        </Typography>
+        <Typography
+          as="span"
+          variant="body-sm"
+          tone={checked ? 'muted' : 'default'}
+          className={cn('shrink-0 whitespace-nowrap tabular-nums')}
         >
           {formattedQuantity}{' '}
           {t(`ingredientUnits.${unit}`, { defaultValue: unit })}
-        </span>
+        </Typography>
       </span>
-    </label>
+    </Typography>
   );
 }

@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   Dialog,
   DialogContent,
@@ -85,15 +86,21 @@ export default function DemoInviteFormModal({ open, onClose, invite }: Props) {
           <form.AppField
             name="is_active"
             children={(field) => (
-              <label className="flex cursor-pointer items-center gap-3">
+              <Typography
+                as="label"
+                variant="label"
+                className="flex cursor-pointer items-center gap-3"
+              >
                 <input
                   type="checkbox"
                   className="toggle toggle-secondary"
                   checked={field.state.value}
                   onChange={(e) => field.handleChange(e.target.checked)}
                 />
-                <span>Active</span>
-              </label>
+                <Typography as="span" variant="body-sm" tone="inherit">
+                  Active
+                </Typography>
+              </Typography>
             )}
           />
 

@@ -1,6 +1,7 @@
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useDeleteRecipes } from '../repositories/use-delete-recipes';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
+import { Typography } from '@/app/components/Typography';
 import {
   useConfirmDialog,
   ConfirmDialog,
@@ -81,7 +82,12 @@ export function RecipesMultiSelectToolbar() {
           >
             <XIcon size={22} />
           </button>
-          <span className="ml-3 text-sm font-medium text-base-content">
+          <Typography
+            as="span"
+            variant="body-sm"
+            weight="medium"
+            className="ml-3"
+          >
             {selectedRecipeIds.length}{' '}
             {t(
               selectedRecipeIds.length === 1
@@ -89,7 +95,7 @@ export function RecipesMultiSelectToolbar() {
                 : 'common.buttons.selected.plural',
               'selected',
             )}
-          </span>
+          </Typography>
           <button
             className="btn ml-auto btn-square text-base-content btn-ghost btn-sm hover:text-error"
             onClick={() => handleDeleteRecipes()}

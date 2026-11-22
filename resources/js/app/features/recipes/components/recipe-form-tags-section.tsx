@@ -1,5 +1,6 @@
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useSearchTags } from '../repositories/use-search-tags';
+import { Typography } from '@/app/components/Typography';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { tagRequestSchema } from '@/app/data/requests/recipe/schemas/entities/tag.request.schema';
 import { recipeSearchRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-search.request.schema';
@@ -65,9 +66,9 @@ export const RecipeFormTagsSection = withFieldGroup({
         }}
         children={(tags_field) => (
           <div className="flex w-full min-w-0 flex-col gap-4">
-            <span className="text-base text-base-content">
+            <Typography as="span" variant="body-sm">
               {t('recipes.form.tagsTitle', 'Tags')}
-            </span>
+            </Typography>
 
             <div className="flex min-w-0 flex-col gap-6">
               <Popover.Root open={isPopoverOpen} onOpenChange={setPopoverOpen}>
@@ -76,7 +77,9 @@ export const RecipeFormTagsSection = withFieldGroup({
                     name="name"
                     children={(field) => (
                       <Popover.Trigger className="min-w-0 flex-1">
-                        <label
+                        <Typography
+                          as="label"
+                          variant="label"
                           className={cn(
                             `${tags_field.state.value && tags_field.state.value.length > 0 && 'input pt-2 pr-4 pb-4 pl-3'}`,
                             'flex h-fit w-full max-w-full min-w-0 flex-col items-start gap-4 text-left [&>div:first-of-type]:w-full [&>div:first-of-type]:min-w-0',
@@ -121,16 +124,21 @@ export const RecipeFormTagsSection = withFieldGroup({
                                         tags_field.removeValue(index)
                                       }
                                     >
-                                      <span className="min-w-0 truncate text-secondary-content">
+                                      <Typography
+                                        as="span"
+                                        variant="body-sm"
+                                        tone="inverse"
+                                        className="min-w-0 truncate"
+                                      >
                                         {tag.name}
-                                      </span>
+                                      </Typography>
                                       <X size={14} />
                                     </span>
                                   ))}
                                 </div>
                               </div>
                             )}
-                        </label>
+                        </Typography>
                       </Popover.Trigger>
                     )}
                   />
@@ -166,9 +174,14 @@ export const RecipeFormTagsSection = withFieldGroup({
                                     setPopoverOpen(false);
                                   }}
                                 >
-                                  <span className="min-w-0 truncate font-medium">
+                                  <Typography
+                                    as="span"
+                                    variant="body-sm"
+                                    weight="medium"
+                                    className="min-w-0 truncate"
+                                  >
                                     {tag.name}
-                                  </span>
+                                  </Typography>
                                 </div>
                               ))}
                             </InfiniteScroll>
@@ -194,9 +207,14 @@ export const RecipeFormTagsSection = withFieldGroup({
                     }}
                     onMouseDown={(e) => e.preventDefault()}
                   >
-                    <span className="min-w-0 truncate">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      className="min-w-0 truncate"
+                    >
                       {t('recipes.tags.addButton', 'Add tag')}
-                    </span>
+                    </Typography>
                     <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}

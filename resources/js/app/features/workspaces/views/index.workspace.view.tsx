@@ -6,6 +6,7 @@ import { useWorkspaceContextValue } from '../inertia.adapter';
 import { workspaceCreationStore } from '../stores/workspace-creation-modal-store';
 import { workspaceEditStore } from '../stores/workspace-edit-modal-store';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
+import { Typography } from '@/app/components/Typography';
 import {
   ConfirmDialog,
   useConfirmDialog,
@@ -72,15 +73,20 @@ export function WorkspaceIndexView() {
       <PageContainer size="default">
         <div className="grid h-full gap-8">
           <span className="flex flex-col">
-            <span className="text-3xl leading-11 font-bold text-secondary">
+            <Typography
+              as="span"
+              variant="heading"
+              weight="bold"
+              tone="secondary"
+            >
               {t('workspace.mySpaces', 'Mes espaces')}
-            </span>
-            <span className="text-muted-foreground">
+            </Typography>
+            <Typography as="span" variant="body-sm" tone="muted">
               {t(
                 'workspace.indexSubtitle',
                 'Gérez vos espaces personnels et collaboratifs',
               )}
-            </span>
+            </Typography>
           </span>
           <div className="grid auto-rows-fr grid-cols-[repeat(auto-fit,minmax(min(354px,100%),1fr))] gap-8">
             {workspaces.map((workspace, idx) => {
@@ -104,9 +110,14 @@ export function WorkspaceIndexView() {
                 >
                   <div className="card-body flex flex-col gap-3 pb-2.5">
                     <div className="flex justify-between">
-                      <span className="card-title pl-1 text-secondary">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="secondary"
+                        className="card-title pl-1"
+                      >
                         {capitalize(workspace.name)}
-                      </span>
+                      </Typography>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                           <button
@@ -233,7 +244,9 @@ export function WorkspaceIndexView() {
                     <div className="flex flex-col gap-2 divide-y divide-base-300/40">
                       <div className="flex flex-col gap-4 pb-3">
                         <div className="flex gap-2">
-                          <span
+                          <Typography
+                            as="span"
+                            variant="body-sm"
                             className={cn(
                               'badge rounded-full badge-sm',
                               workspace.is_personal
@@ -246,34 +259,47 @@ export function WorkspaceIndexView() {
                                 ? t('workspace.type.personal', 'Personnel')
                                 : t('workspace.type.shared', 'Partagé'),
                             )}
-                          </span>
-                          <span
+                          </Typography>
+                          <Typography
+                            as="span"
+                            variant="body-sm"
                             className={cn(
                               'badge rounded-full badge-soft badge-sm badge-secondary',
                             )}
                           >
                             {getRoleLabel(member.role)}
-                          </span>
+                          </Typography>
                         </div>
-                        <span className="flex w-fit items-center gap-1 rounded-full text-muted-foreground">
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          tone="muted"
+                          className="flex w-fit items-center gap-1 rounded-full"
+                        >
                           {workspace.users_count === 1 ? (
                             <UserIcon className="h-3.5 w-3.5" />
                           ) : (
                             <UsersIcon className="h-3.5 w-3.5" />
                           )}
-                          <span className="leading-none">
+                          <Typography as="span" variant="body-sm">
                             {workspace.users_count}
-                          </span>
-                          <span>
+                          </Typography>
+                          <Typography
+                            as="span"
+                            variant="body-sm"
+                            tone="inherit"
+                          >
                             {pluralize(
                               t('workspace.member', 'membre'),
                               workspace.users_count,
                             )}
-                          </span>
-                        </span>
+                          </Typography>
+                        </Typography>
                       </div>
                       <span className="flex w-full justify-end text-muted-foreground/80">
-                        <span>{last_update}</span>
+                        <Typography as="span" variant="body-sm" tone="inherit">
+                          {last_update}
+                        </Typography>
                       </span>
                     </div>
                   </div>
@@ -287,24 +313,29 @@ export function WorkspaceIndexView() {
               <span className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/10">
                 <PlusIcon className="h-5 w-5 text-secondary/60" />
               </span>
-              <span className="text-sm">
+              <Typography as="span" variant="body-sm" tone="inherit">
                 {t('workspace.create.newSpace', 'Nouvel espace')}
-              </span>
+              </Typography>
             </button>
           </div>
           {/* Empty State */}
           {workspaces.length === 0 && (
             <div className="row-start-4 flex flex-1 flex-col items-center justify-center">
               <Users className="mb-4 h-12 w-12 text-muted-foreground" />
-              <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
+              <Typography as="h3" variant="title" tone="muted" className="mb-2">
                 {t('workspace.empty.title', 'Aucun groupe partagé')}
-              </h3>
-              <p className="mb-4 max-w-md text-center text-muted-foreground">
+              </Typography>
+              <Typography
+                as="p"
+                variant="body"
+                tone="muted"
+                className="mb-4 max-w-md text-center"
+              >
                 {t(
                   'workspace.empty.description',
                   "Créez votre premier groupe ou demandez une invitation pour collaborer avec d'autres personnes sur vos planifications de repas.",
                 )}
-              </p>
+              </Typography>
             </div>
           )}
         </div>

@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { Icon } from '@/app/components/icon';
 import {
   SidebarGroup,
@@ -39,7 +40,9 @@ export function NavFooter({
                   {item.icon && (
                     <Icon iconNode={item.icon} className="h-5 w-5" />
                   )}
-                  <span>{item.title}</span>
+                  <Typography as="span" variant="body-sm" tone="inherit">
+                    {item.title}
+                  </Typography>
                 </a>
               </SidebarMenuButton>
             </SidebarMenuItem>

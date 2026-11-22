@@ -1,5 +1,6 @@
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useSearchIngredients } from '../repositories/use-search-ingredients';
+import { Typography } from '@/app/components/Typography';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { recipeIngredientRequestSchema } from '@/app/data/requests/recipe/schemas/entities/recipe-ingredient.request.schema';
 import { recipeSearchRequestSchema } from '@/app/data/requests/recipe/schemas/recipe-search.request.schema';
@@ -182,9 +183,14 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                         className="btn w-full max-w-full min-w-0 border-red-100 bg-red-50 text-red-700 hover:border-red-200 hover:bg-red-100"
                       >
                         <Trash2 className="size-4" />
-                        <span className="min-w-0 truncate">
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          tone="inherit"
+                          className="min-w-0 truncate"
+                        >
                           {t('recipes.ingredients.removeButton', 'Supprimer')}
-                        </span>
+                        </Typography>
                       </button>
                     </div>
                     <div className="hidden sm:block sm:pt-10">
@@ -283,9 +289,13 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                                         setPopoverOpen(false);
                                       }}
                                     >
-                                      <span className="min-w-0 truncate">
+                                      <Typography
+                                        as="span"
+                                        variant="body-sm"
+                                        className="min-w-0 truncate"
+                                      >
                                         {ingredient.name}
-                                      </span>
+                                      </Typography>
                                     </div>
                                   ),
                                 )}
@@ -383,9 +393,9 @@ export const RecipeFormIngredientsSection = withFieldGroup({
           return (
             <div className="flex w-full min-w-0 flex-col gap-4">
               {title && (
-                <span className="text-base font-bold text-base-content">
+                <Typography as="span" variant="body-sm" weight="bold">
                   {title} *
-                </span>
+                </Typography>
               )}
               <div className="flex min-w-0 flex-col gap-5">
                 <div className={gridClassName}>
@@ -411,9 +421,14 @@ export const RecipeFormIngredientsSection = withFieldGroup({
                       onMouseDown={(e) => e.preventDefault()}
                       className="btn w-full max-w-full min-w-0 border-secondary/20 pl-6.5 btn-soft btn-secondary sm:w-fit"
                     >
-                      <span className="min-w-0 truncate">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        tone="inherit"
+                        className="min-w-0 truncate"
+                      >
                         {t('recipes.ingredients.addButton', 'Add ingredient')}
-                      </span>
+                      </Typography>
                       <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                     </button>
                   )}

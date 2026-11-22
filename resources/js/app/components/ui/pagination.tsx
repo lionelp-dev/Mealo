@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import recipes from '@/routes/recipes';
 import { PaginatedCollection } from '@/types';
 import { router } from '@inertiajs/react';
@@ -22,9 +23,13 @@ export function Pagination({
       >
         «
       </button>
-      <span className="join-item flex items-center px-3">
+      <Typography
+        as="span"
+        variant="body-sm"
+        className="join-item flex items-center px-3"
+      >
         Page {meta.current_page} / {meta.last_page}
-      </span>
+      </Typography>
       <button
         className="btn join-item btn-ghost"
         disabled={!meta.has_more_pages}

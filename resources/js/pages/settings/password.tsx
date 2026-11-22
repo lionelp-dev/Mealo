@@ -1,5 +1,5 @@
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
-import HeadingSmall from '@/app/components/heading-small';
+import { Typography } from '@/app/components/Typography';
 import InputError from '@/app/components/input-error';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -32,13 +32,17 @@ export default function Password() {
 
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title={t('settings.password.sectionTitle', 'Update password')}
-            description={t(
-              'settings.password.sectionDescription',
-              'Ensure your account is using a long, random password to stay secure',
-            )}
-          />
+          <header>
+            <Typography as="h3" variant="title" weight="medium">
+              {t('settings.password.sectionTitle', 'Update password')}
+            </Typography>
+            <Typography variant="body-sm" tone="muted">
+              {t(
+                'settings.password.sectionDescription',
+                'Ensure your account is using a long, random password to stay secure',
+              )}
+            </Typography>
+          </header>
 
           <Form
             {...PasswordController.update.form()}
@@ -148,9 +152,9 @@ export default function Password() {
                     leave="transition ease-in-out"
                     leaveTo="opacity-0"
                   >
-                    <p className="text-sm text-neutral-600">
+                    <Typography variant="body-sm" tone="muted">
                       {t('common.status.saved', 'Saved')}
-                    </p>
+                    </Typography>
                   </Transition>
                 </div>
               </>

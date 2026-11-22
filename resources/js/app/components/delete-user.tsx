@@ -1,5 +1,5 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
-import HeadingSmall from '@/app/components/heading-small';
+import { Typography } from '@/app/components/Typography';
 import InputError from '@/app/components/input-error';
 import {
   Dialog,
@@ -22,22 +22,28 @@ export default function DeleteUser() {
 
   return (
     <div className="space-y-6">
-      <HeadingSmall
-        title={t('deleteAccount.title', 'Delete account')}
-        description={t(
-          'deleteAccount.description',
-          'Delete your account and all of its resources',
-        )}
-      />
+      <header>
+        <Typography as="h3" variant="title" weight="medium">
+          {t('deleteAccount.title', 'Delete account')}
+        </Typography>
+        <Typography variant="body-sm" tone="muted">
+          {t(
+            'deleteAccount.description',
+            'Delete your account and all of its resources',
+          )}
+        </Typography>
+      </header>
       <div className="space-y-4 rounded-lg border border-red-100 bg-red-50 p-4 dark:border-red-200/10 dark:bg-red-700/10">
         <div className="relative space-y-0.5 text-red-600 dark:text-red-100">
-          <p className="font-medium">{t('deleteAccount.warning', 'Warning')}</p>
-          <p className="text-sm">
+          <Typography weight="medium">
+            {t('deleteAccount.warning', 'Warning')}
+          </Typography>
+          <Typography variant="body-sm">
             {t(
               'deleteAccount.warningText',
               'Please proceed with caution, this cannot be undone.',
             )}
-          </p>
+          </Typography>
         </div>
 
         <Dialog>

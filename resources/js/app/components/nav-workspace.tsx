@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -46,11 +47,18 @@ export function NavWorkspace() {
             >
               <span className="flex items-center gap-3">
                 <Users className="h-5 w-5" />
-                <span>{t('workspace.mySpaces', 'Mes espaces')}</span>
+                <Typography as="span" variant="body-sm" tone="inherit">
+                  {t('workspace.mySpaces', 'Mes espaces')}
+                </Typography>
               </span>
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-xs text-secondary-content">
+              <Typography
+                as="span"
+                variant="caption"
+                tone="inherit"
+                className="flex h-5 w-5 items-center justify-center rounded-full bg-secondary text-center text-secondary-content"
+              >
                 {sharedWorkspaces.length}
-              </span>
+              </Typography>
             </Link>
           </SidebarMenuButton>
         </SidebarMenuItem>
@@ -67,11 +75,18 @@ export function NavWorkspace() {
               >
                 <span className="flex items-center gap-3">
                   <Bell />
-                  <span>{t('workspace.invitations', 'Invitations')}</span>
+                  <Typography as="span" variant="body-sm" tone="inherit">
+                    {t('workspace.invitations', 'Invitations')}
+                  </Typography>
                 </span>
-                <span className="flex h-5 w-5 items-center justify-center rounded-full bg-warning text-center text-xs text-secondary-content">
+                <Typography
+                  as="span"
+                  variant="caption"
+                  tone="inherit"
+                  className="flex h-5 w-5 items-center justify-center rounded-full bg-warning text-center text-secondary-content"
+                >
                   {pendingInvitationsCount}
-                </span>
+                </Typography>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

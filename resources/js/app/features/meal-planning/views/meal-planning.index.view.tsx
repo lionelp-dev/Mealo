@@ -6,7 +6,7 @@ import MealPlanDialog from '../components/meal-plan-dialog';
 import { MealPlanRecipeCard } from '../components/meal-plan-dialog-recipe-card';
 import { MealPlanGenerationPopover } from '../components/meal-plan-generation-popover';
 import MealPlanSlots from '../components/meal-plan-slots';
-import MealPlanningDayNavigator from '../components/meal-planning-day-navigator';
+import MealPlanningSmallScreenDayNavigator from '../components/meal-planning-small-screen-day-navigator';
 import { useMealPlanDayNavigation } from '../hooks/use-meal-plan-day-navigation';
 import { useMealPlanNavigation } from '../hooks/use-meal-plan-navigation';
 import { useWeekPlannedMeals } from '../hooks/use-week-meal-plan';
@@ -112,7 +112,7 @@ export function MealPlanningIndexView() {
     ),
     children: (
       <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-        <MealPlanningDayNavigator
+        <MealPlanningSmallScreenDayNavigator
           activeDayId={activeDayId}
           days={weekPlannedMeals}
           onSelectDay={scrollToDay}
@@ -125,20 +125,6 @@ export function MealPlanningIndexView() {
             className="flex w-full max-w-full min-w-0 gap-6"
             style={detailPanelStyle}
           >
-            <RecipeDetailPanelContainer
-              isMounted={isRecipeDetailMounted}
-              isVisible={isRecipeDetailVisible}
-              className="rounded-xl bg-base-100 shadow-sm min-lg:top-0 min-lg:h-[var(--meal-planning-detail-panel-height)] min-lg:w-[35rem] min-lg:min-w-[35rem]"
-            >
-              {displayedRecipe && (
-                <RecipeDetailPanel
-                  recipe={displayedRecipe}
-                  onClose={closeRecipeDetail}
-                  compact
-                />
-              )}
-            </RecipeDetailPanelContainer>
-
             <div
               className={`grid min-w-0 flex-1 grid-cols-1 gap-x-6.5 gap-y-5.75 lg:grid-cols-2 ${
                 isRecipeDetailMounted ? '2xl:grid-cols-3' : '2xl:grid-cols-4'
@@ -152,23 +138,15 @@ export function MealPlanningIndexView() {
                 return (
                   <div
                     key={dayId}
-                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white px-4 py-4"
-                    style={
-                      isLastDay && lastDayMinHeight
+                    id={dayId ? `planning-day-marker-${dayId}` : undefined}
+                    className="flex w-full min-w-0 flex-col gap-3 rounded-xl bg-white px-2.5 py-3 pb-3.25"
+                    style={{
+                      ...(isLastDay && lastDayMinHeight
                         ? { minHeight: lastDayMinHeight }
-                        : undefined
-                    }
+                        : {}),
+                      scrollMarginTop: stickyHeight || undefined,
+                    }}
                   >
-                    {dayId && (
-                      <div
-                        id={`planning-day-marker-${dayId}`}
-                        aria-hidden="true"
-                        className="-mb-px h-px"
-                        style={{
-                          scrollMarginTop: stickyHeight || undefined,
-                        }}
-                      />
-                    )}
                     <MealPlanDayHeader dayPlannedMeals={dayPlannedMeals} />
                     <MealPlanSlots
                       dayPlannedMeals={dayPlannedMeals}
@@ -178,6 +156,20 @@ export function MealPlanningIndexView() {
                 );
               })}
             </div>
+
+            <RecipeDetailPanelContainer
+              isMounted={isRecipeDetailMounted}
+              isVisible={isRecipeDetailVisible}
+              className="rounded-xl bg-base-100 shadow-sm min-lg:top-0 min-lg:h-[var(--meal-planning-detail-panel-height)] min-lg:w-[36rem] min-lg:min-w-[35rem]"
+            >
+              {displayedRecipe && (
+                <RecipeDetailPanel
+                  recipe={displayedRecipe}
+                  onClose={closeRecipeDetail}
+                  compact
+                />
+              )}
+            </RecipeDetailPanelContainer>
 
             <MealPlanDialog>
               <div className="overflow-y-scroll">

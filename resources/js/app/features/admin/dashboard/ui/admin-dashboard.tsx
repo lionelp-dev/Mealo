@@ -1,4 +1,5 @@
 import { useAdminDashboardContext } from '../infrastructure/inertia.adapter';
+import { Typography } from '@/app/components/Typography';
 import { PageContainer } from '@/app/components/page-container';
 import AdminLayout from '@/app/layouts/admin-layout';
 import { Head } from '@inertiajs/react';
@@ -20,10 +21,12 @@ export default function AdminDashboard() {
         <div className="grid gap-8">
           {/* Header */}
           <div>
-            <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-            <p className="text-muted-foreground">
+            <Typography as="h1" variant="heading">
+              Admin Dashboard
+            </Typography>
+            <Typography as="p" variant="body" tone="muted">
               Overview of platform metrics and activity
-            </p>
+            </Typography>
           </div>
 
           {/* Stats Cards */}

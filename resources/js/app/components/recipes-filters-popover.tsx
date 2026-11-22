@@ -1,5 +1,6 @@
 import { MealTimeResource, TagResource } from '../data/resources/recipe/types';
 import { RecipesFilterOption } from './recipes-filter-option';
+import { Typography } from '@/app/components/Typography';
 import { useRecipesMultiSelectStore } from '@/app/features/recipes/stores/use-recipes-multi-select-store';
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -105,18 +106,22 @@ export function RecipesFiltersPopover({
           ) : (
             <FilterIcon className="h-4 w-auto pt-[1.5px]" />
           )}
-          <span>
+          <Typography as="span" variant="body-sm" tone="inherit">
             {label ?? t('recipes.filters.advanced', 'Filtres avancés')}
-          </span>
+          </Typography>
           {showActiveCount && activeFilters.length > 0 && (
-            <span
+            <Typography
+              as="span"
+              variant="caption"
+              tone="inherit"
+              weight="semibold"
               className={cn(
-                'flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-xs leading-none font-semibold text-secondary-content',
+                'flex h-5 min-w-5 items-center justify-center rounded-full bg-secondary px-1.5 text-secondary-content',
                 !compact && 'min-lg:hidden',
               )}
             >
               {activeFilters.length}
-            </span>
+            </Typography>
           )}
         </button>
       </Popover.Trigger>
@@ -138,12 +143,17 @@ export function RecipesFiltersPopover({
                 key={section.type}
                 className="flex max-h-[calc(26_*_1vh)] flex-col"
               >
-                <span className="px-2 pb-1 text-sm font-medium">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  weight="medium"
+                  className="px-2 pb-1"
+                >
                   {t(
                     `mealPlanning.dialog.filters.${section.title}`,
                     section.title,
                   )}
-                </span>
+                </Typography>
                 <div className="divide-y divide-base-300/40 overflow-y-scroll">
                   {section.options.map((option) => {
                     const filter: Filter = {

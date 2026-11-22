@@ -1,7 +1,7 @@
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
+import { Typography } from '@/app/components/Typography';
 import DeleteUser from '@/app/components/delete-user';
 import { DemoAccountSettings } from '@/app/components/demo-account-settings';
-import HeadingSmall from '@/app/components/heading-small';
 import InputError from '@/app/components/input-error';
 import { Input } from '@/app/components/ui/input';
 import { Label } from '@/app/components/ui/label';
@@ -28,13 +28,17 @@ export default function Profile({
 
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title={t('settings.profile.sectionTitle', 'Profile information')}
-            description={t(
-              'settings.profile.sectionDescription',
-              'Update your name and email address',
-            )}
-          />
+          <header>
+            <Typography as="h3" variant="title" weight="medium">
+              {t('settings.profile.sectionTitle', 'Profile information')}
+            </Typography>
+            <Typography variant="body-sm" tone="muted">
+              {t(
+                'settings.profile.sectionDescription',
+                'Update your name and email address',
+              )}
+            </Typography>
+          </header>
 
           <Form
             {...ProfileController.update.form()}
@@ -90,7 +94,11 @@ export default function Profile({
 
                 {mustVerifyEmail && auth.user.email_verified_at === null && (
                   <div>
-                    <p className="-mt-4 text-sm text-muted-foreground">
+                    <Typography
+                      variant="body-sm"
+                      tone="muted"
+                      className="-mt-4"
+                    >
                       {t(
                         'auth.verifyEmail.description',
                         'A verification link has been sent to your email address',
@@ -105,7 +113,7 @@ export default function Profile({
                           'Resend verification email',
                         )}
                       </Link>
-                    </p>
+                    </Typography>
 
                     {status === 'verification-link-sent' && (
                       <div className="mt-2 text-sm font-medium text-green-600">
@@ -134,9 +142,9 @@ export default function Profile({
                     leave="transition ease-in-out"
                     leaveTo="opacity-0"
                   >
-                    <p className="text-sm text-neutral-600">
+                    <Typography variant="body-sm" tone="muted">
                       {t('common.status.saved', 'Saved')}
-                    </p>
+                    </Typography>
                   </Transition>
                 </div>
               </>

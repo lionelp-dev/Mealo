@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { useTranslation } from 'react-i18next';
 
 const stepKeys = [
@@ -14,12 +15,17 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-24 md:py-32">
       <div className="mx-auto max-w-6xl px-6">
         <div className="text-center">
-          <h2 className="text-3xl font-semibold tracking-tight text-secondary md:text-4xl">
+          <Typography as="h2" variant="heading" tone="secondary">
             {t('landing.howItWorks.sectionTitle')}
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-pretty text-muted-foreground">
+          </Typography>
+          <Typography
+            as="p"
+            variant="body"
+            tone="muted"
+            className="mx-auto mt-4 max-w-2xl text-pretty"
+          >
             {t('landing.howItWorks.sectionDescription')}
-          </p>
+          </Typography>
         </div>
 
         <div className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
@@ -34,12 +40,17 @@ export function HowItWorks() {
                 <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary text-2xl font-semibold text-primary-foreground shadow-lg">
                   {step.number}
                 </div>
-                <h3 className="text-xl font-semibold text-secondary">
+                <Typography as="h3" variant="title" tone="secondary">
                   {t(`landing.howItWorks.steps.${step.key}.title`)}
-                </h3>
-                <p className="mt-3 max-w-xs leading-relaxed text-muted-foreground">
+                </Typography>
+                <Typography
+                  as="p"
+                  variant="body"
+                  tone="muted"
+                  className="mt-3 max-w-xs"
+                >
                   {t(`landing.howItWorks.steps.${step.key}.description`)}
-                </p>
+                </Typography>
               </div>
             </div>
           ))}

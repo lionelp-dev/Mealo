@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import WorkspaceCreationModal from '@/app/features/workspaces/components/workspace-creation-modal';
 import { WorkspaceEditModal } from '@/app/features/workspaces/components/workspace-edit-modal';
 import { WorkspaceInvitationModal } from '@/app/features/workspaces/components/workspace-invitation-modal';
@@ -78,15 +79,32 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
                 isWorkspaceSwitcherPopoverOpen && '-scale-y-100',
               )}
             />
-            <span className="truncate">
+            <Typography
+              as="span"
+              variant="body-sm"
+              tone="inherit"
+              className="truncate"
+            >
               {capitalize(current_workspace.name)}
-            </span>
-            <span className="text-xs font-normal max-md:hidden">-</span>
-            <span className="text-xs font-normal max-md:hidden">
+            </Typography>
+            <Typography
+              as="span"
+              variant="caption"
+              tone="inherit"
+              className="max-md:hidden"
+            >
+              -
+            </Typography>
+            <Typography
+              as="span"
+              variant="caption"
+              tone="inherit"
+              className="max-md:hidden"
+            >
               {current_workspace.is_personal
                 ? t('workspace.type.personal', 'Espace personnel')
                 : t('workspace.type.shared', 'Espace partagé')}
-            </span>
+            </Typography>
             <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-secondary/15">
               {current_workspace.is_personal ? (
                 <User className="h-4 w-4" />
@@ -104,9 +122,14 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
           >
             {workspaces.length !== 0 && (
               <div className="flex max-h-58 min-w-0 flex-col gap-2 pb-1">
-                <span className="px-3 text-xs font-semibold text-secondary uppercase">
+                <Typography
+                  as="span"
+                  variant="overline"
+                  tone="secondary"
+                  className="px-3"
+                >
                   {t('workspace.mySpaces', 'Mes espaces')}
-                </span>
+                </Typography>
                 <div className="flex flex-col overflow-y-auto">
                   {[...workspaces]
                     .sort((a, b) =>
@@ -145,23 +168,50 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
                             )}
                           </span>
                           <span className="flex flex-1 flex-col">
-                            <span className="text-left text-xs leading-5 font-semibold">
+                            <Typography
+                              as="span"
+                              variant="caption"
+                              tone="inherit"
+                              weight="semibold"
+                              className="text-left"
+                            >
                               {capitalize(workspace.name)}
-                            </span>
+                            </Typography>
                             <span className="flex items-center gap-1 text-muted-foreground/80">
-                              <span className="text-left text-xs font-normal">
+                              <Typography
+                                as="span"
+                                variant="caption"
+                                tone="inherit"
+                                className="text-left"
+                              >
                                 {t('workspace.modified', 'Modifié')}{' '}
                                 {last_update}
-                                <span>.</span>
-                              </span>
+                                <Typography
+                                  as="span"
+                                  variant="body-sm"
+                                  tone="inherit"
+                                >
+                                  .
+                                </Typography>
+                              </Typography>
                               <span className="flex gap-1 text-left text-xs font-normal">
-                                <span>{workspace.users_count}</span>
-                                <span>
+                                <Typography
+                                  as="span"
+                                  variant="body-sm"
+                                  tone="inherit"
+                                >
+                                  {workspace.users_count}
+                                </Typography>
+                                <Typography
+                                  as="span"
+                                  variant="body-sm"
+                                  tone="inherit"
+                                >
                                   {pluralize(
                                     t('workspace.member', 'membre'),
                                     workspace.users_count,
                                   )}
-                                </span>
+                                </Typography>
                               </span>
                             </span>
                           </span>
@@ -175,9 +225,14 @@ export function NavWorkspaceSwitcher({ workspace_data, className }: Props) {
               </div>
             )}
             <div className="-mx-1 flex flex-col gap-2.5 pb-2">
-              <span className="px-4 pt-1 text-xs font-semibold text-secondary uppercase">
+              <Typography
+                as="span"
+                variant="overline"
+                tone="secondary"
+                className="px-4 pt-1"
+              >
                 {t('workspace.actions', 'Actions')}
-              </span>
+              </Typography>
               <button
                 className="btn h-fit w-fit gap-2 border-none font-normal text-muted-foreground btn-ghost hover:bg-transparent hover:text-secondary hover:underline"
                 onClick={() => openWorkspaceCreationModal()}

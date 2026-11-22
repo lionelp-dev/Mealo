@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { TrashIcon } from 'lucide-react';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -176,27 +177,41 @@ export function ImageUploadField({
               />
             </svg>
             <div className="mt-4 min-w-0">
-              <p className="min-w-0 break-words text-base-content">
-                <span className="font-medium text-primary">
+              <Typography as="p" variant="body" className="min-w-0 break-words">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  tone="primary"
+                  weight="medium"
+                >
                   {t(
                     'recipes.form.imageUpload.clickToUpload',
                     'Click to upload',
                   )}
-                </span>{' '}
+                </Typography>{' '}
                 {t('recipes.form.imageUpload.orDragDrop', 'or drag and drop')}
-              </p>
-              <p className="mt-1 min-w-0 text-sm break-words text-base-content/60">
+              </Typography>
+              <Typography
+                as="p"
+                variant="body-sm"
+                tone="muted"
+                className="mt-1 min-w-0 break-words"
+              >
                 {t(
                   'recipes.form.imageUpload.formats',
                   'PNG, JPG, WebP up to 5MB',
                 )}
-              </p>
+              </Typography>
             </div>
           </div>
         )}
       </div>
 
-      {error && <p className="text-sm text-error">{error}</p>}
+      {error && (
+        <Typography as="p" variant="body-sm" tone="error">
+          {error}
+        </Typography>
+      )}
 
       {value && (
         <div className="min-w-0 text-xs break-words text-base-content/60">

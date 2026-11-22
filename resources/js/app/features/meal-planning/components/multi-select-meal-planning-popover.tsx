@@ -1,6 +1,7 @@
 import { useMealPlanActions } from '../hooks/use-meal-plan-actions';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
+import { Typography } from '@/app/components/Typography';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
 import { useRecipeMultiSelectStore } from '@/app/stores/recipe-multi-select';
@@ -89,7 +90,9 @@ export default function MultiSelectMealPlanningPopover({
             setIsMultiSelectMealPlanningPopoverOpen(true);
           }}
         >
-          <span>Plannifier</span>
+          <Typography as="span" variant="body-sm" tone="inherit">
+            Plannifier
+          </Typography>
           <CalendarPlus size={16} />
         </button>
       </Popover.Trigger>
@@ -118,12 +121,18 @@ export default function MultiSelectMealPlanningPopover({
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 children={(field: any) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
-                    <span className="w-full px-2.5 text-sm font-medium whitespace-nowrap text-secondary">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      weight="medium"
+                      tone="secondary"
+                      className="w-full px-2.5 whitespace-nowrap"
+                    >
                       {t(
                         'mealPlanning.dialog.persons',
                         'Pour combien de personnes ?',
                       )}
-                    </span>
+                    </Typography>
                     <div className="join w-fit shrink-0 items-center gap-2 px-2.5 pb-0.5">
                       <button
                         className="btn join-item rounded-md px-2 btn-outline btn-soft btn-sm btn-secondary"
@@ -175,12 +184,17 @@ export default function MultiSelectMealPlanningPopover({
                             >
                               <div className="flex gap-3.5">
                                 {getMealTimeIcon(mealTime.slug)}
-                                <span className="pt-[1px]">
+            <Typography
+              as="span"
+              variant="body-sm"
+              tone="inherit"
+              className="pt-[1px]"
+                                >
                                   {t(
                                     `mealPlanning.dialog.filters.${mealTime.slug}`,
                                     mealTime.name,
                                   )}
-                                </span>
+                                </Typography>
                               </div>
                             </button>
                           </form.Subscribe>

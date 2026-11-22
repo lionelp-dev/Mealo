@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   Avatar,
   AvatarFallback,
@@ -24,11 +25,23 @@ export function UserInfo({
         </AvatarFallback>
       </Avatar>
       <div className="grid min-w-0 flex-1 text-left text-sm leading-tight">
-        <span className="truncate font-medium">{user.name}</span>
+        <Typography
+          as="span"
+          variant="body-sm"
+          weight="medium"
+          className="truncate"
+        >
+          {user.name}
+        </Typography>
         {showEmail && (
-          <span className="truncate text-xs text-muted-foreground">
+          <Typography
+            as="span"
+            variant="caption"
+            tone="muted"
+            className="truncate"
+          >
             {user.email}
-          </span>
+          </Typography>
         )}
       </div>
     </>

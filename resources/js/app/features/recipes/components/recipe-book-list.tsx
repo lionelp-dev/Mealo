@@ -1,4 +1,5 @@
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
+import { Typography } from '@/app/components/Typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -54,12 +55,17 @@ export function RecipeBookList({
       <div className="-mx-3 mb-3 shrink-0 border-b border-base-300/60 bg-base-100 px-3 lg:-mx-5 lg:px-5">
         {controls && (
           <div className="py-3.5">
-            <h2 className="mb-3 flex items-center gap-2 text-2xl font-bold tracking-tight">
+            <Typography
+              as="h2"
+              variant="body-2xl"
+              tone="secondary"
+              className="mb-3 flex items-center gap-2"
+            >
               <span className="flex size-8 items-center justify-center rounded-lg bg-base-200 text-secondary">
                 <Bookmark size={19} aria-hidden="true" />
               </span>
               {t('recipes.index.bookTitle', 'My recipe book')}
-            </h2>
+            </Typography>
             {controls}
           </div>
         )}
@@ -112,29 +118,53 @@ export function RecipeBookList({
                         </span>
                       )}
                       <span className="min-w-0 flex-1">
-                        <span className="flex items-center gap-2">
-                          <span className="truncate text-sm font-semibold">
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          tone="inherit"
+                          className="flex items-center gap-2"
+                        >
+                          <Typography
+                            as="span"
+                            variant="body"
+                            tone="inherit"
+                            className="truncate"
+                          >
                             {recipe.name}
-                          </span>
+                          </Typography>
                           {isRecentlyAdded && (
-                            <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-success/15 px-2 py-1 text-[11px] font-semibold text-success">
+                            <Typography
+                              as="span"
+                              variant="body-sm"
+                              weight="semibold"
+                              tone="inherit"
+                              className="inline-flex shrink-0 items-center gap-1 rounded-full bg-success/15 px-2 py-1"
+                            >
                               <Check size={12} /> Ajoutée
-                            </span>
+                            </Typography>
                           )}
-                        </span>
-                        <span className="mt-1 flex flex-wrap gap-1.5">
+                        </Typography>
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          tone="inherit"
+                          className="mt-1 flex flex-wrap gap-1.5"
+                        >
                           {recipe.meal_times.map((mealTime) => (
-                            <span
+                            <Typography
+                              as="span"
+                              variant="body-sm"
                               key={mealTime.id}
-                              className="badge h-5 border-0 bg-secondary/10 px-2 text-[11px] font-medium text-secondary"
+                              tone="inherit"
+                              className="badge"
                             >
                               {t(
                                 `mealPlanning.dialog.filters.${mealTime.slug}`,
                                 mealTime.name,
                               )}
-                            </span>
+                            </Typography>
                           ))}
-                        </span>
+                        </Typography>
                       </span>
                     </button>
                     {isMultiSelectMode ? (

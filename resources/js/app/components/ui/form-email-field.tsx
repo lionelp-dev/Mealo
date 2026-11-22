@@ -1,4 +1,5 @@
 import FieldInfo from './form-field-info';
+import { Typography } from '@/app/components/Typography';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
 
@@ -18,9 +19,9 @@ export default function EmailField({
   return (
     <div className={cn('flex flex-1 flex-col gap-3', className)}>
       {label && (
-        <label htmlFor={field.name} className="text-base text-base-content">
+        <Typography as="label" variant="label" htmlFor={field.name}>
           {label}
-        </label>
+        </Typography>
       )}
       <input
         type="email"

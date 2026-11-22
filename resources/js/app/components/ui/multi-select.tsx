@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib/';
 import * as Checkbox from '@radix-ui/react-checkbox';
 import * as Popover from '@radix-ui/react-popover';
@@ -45,7 +46,12 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           className={cn('select w-full appearance-none', className)}
           aria-expanded={open}
         >
-          <span className="flex gap-2 truncate text-left">
+            <Typography
+              as="span"
+              variant="body-sm"
+              tone="inherit"
+              className="flex gap-2 truncate text-left"
+          >
             {selectedLabels.length > 0 ? (
               selectedLabels.map((option, index) => (
                 <div
@@ -58,9 +64,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 </div>
               ))
             ) : (
-              <span className="text-base-content/50">{placeholder}</span>
+              <Typography as="span" variant="body-sm" tone="inherit">
+                {placeholder}
+              </Typography>
             )}
-          </span>
+          </Typography>
         </button>
       </Popover.Trigger>
 
@@ -75,7 +83,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                 key={option.value}
                 className="flex items-center space-x-2 rounded p-1 hover:bg-base-200"
               >
-                <label className="flex flex-1 cursor-pointer items-center gap-3 text-sm text-base-content select-none">
+                <Typography
+                  as="label"
+                  variant="label"
+                  className="flex flex-1 cursor-pointer items-center gap-3 select-none"
+                >
                   <Checkbox.Root
                     checked={value.includes(option.value)}
                     onCheckedChange={(checked) =>
@@ -88,7 +100,7 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
                     </Checkbox.Indicator>
                   </Checkbox.Root>
                   {option.label}
-                </label>
+                </Typography>
               </div>
             ))}
           </div>

@@ -1,4 +1,5 @@
 import MealPlanningPopover from './meal-planning-popover';
+import { Typography } from '@/app/components/Typography';
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { useMultiSelectRecipe } from '@/app/hooks/use-multi-select-recipe';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
@@ -23,7 +24,7 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
   return (
     <div
       key={recipe.id}
-      className={`card cursor-pointer overflow-hidden rounded-2xl bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-lg ${!isMultiSelectMode && 'hover:[&_.plan-meal-btn]:opacity-100'}`}
+      className={`card cursor-pointer overflow-hidden rounded-2xl bg-base-100 shadow-lg transition-shadow card-sm hover:shadow-xl ${!isMultiSelectMode && 'hover:[&_.plan-meal-btn]:opacity-100'}`}
       onClick={() => {
         if (isMultiSelectMode) {
           return toggleRecipeSelection(recipe.id);
@@ -64,40 +65,59 @@ export function MealPlanRecipeCard({ recipe }: RecipeCardProps) {
         ) : (
           <figure className="flex h-42 items-center justify-center bg-base-200"></figure>
         )}
-
-        <div className="absolute right-0 bottom-2 left-0 flex max-h-[1.3lh] flex-wrap justify-start gap-2 overflow-hidden p-2">
-          <div className="flex max-h-[1lh] flex-wrap gap-3">
-            {recipe.meal_times?.map((meal_time) => (
-              <span
-                key={meal_time.id}
-                className={`badge bg-base-100/70 badge-sm whitespace-nowrap text-base-content ${isFilterActive({ type: 'meal_time', value: meal_time.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
-              >
-                {t(
-                  `mealPlanning.dialog.filters.${meal_time.slug}`,
-                  meal_time.name,
-                )}
-              </span>
-            ))}
-            {recipe.tags?.map((tag) => (
-              <span
-                key={tag.id}
-                className={`badge bg-base-100/80 badge-sm whitespace-nowrap text-base-content ${tag.id && isFilterActive({ type: 'tag', value: tag.id.toString() }) && 'bg-secondary/80 text-secondary-content'}`}
-              >
-                {tag.name}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
       <div className="card-body">
         <div className="flex min-w-0 flex-col gap-2">
-          <h2 className="card-title text-base-content">
-            <span className="min-w-0 truncate">{recipe.name}</span>
-          </h2>
-          <p className="line-clamp-2 text-base-content/70">
-            {recipe.description}
-          </p>
+          <Typography as="h2" variant="heading" className="card-title">
+            <Typography
+              as="span"
+              variant="body-sm"
+              className="min-w-0 truncate"
+            >
+              {recipe.name}
+            </Typography>
+          </Typography>
+          <div className="flex min-w-0 flex-nowrap gap-2 overflow-hidden">
+            {recipe.meal_times?.map((mealTime) => {
+              const isActive = isFilterActive({
+                type: 'meal_time',
+                value: mealTime.id.toString(),
+              });
+
+              return (
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  key={mealTime.id}
+                  tone={isActive ? 'inverse' : 'default'}
+                  className={`badge shrink-0 bg-base-200 badge-sm whitespace-nowrap ${isActive && 'bg-secondary/80'}`}
+                >
+                  {t(
+                    `mealPlanning.dialog.filters.${mealTime.slug}`,
+                    mealTime.name,
+                  )}
+                </Typography>
+              );
+            })}
+            {recipe.tags?.map((tag) => {
+              const isActive =
+                !!tag.id &&
+                isFilterActive({ type: 'tag', value: tag.id.toString() });
+
+              return (
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  key={tag.id}
+                  tone={isActive ? 'inverse' : 'default'}
+                  className={`badge shrink-0 bg-base-200 badge-sm whitespace-nowrap ${isActive && 'bg-secondary/80'}`}
+                >
+                  {tag.name}
+                </Typography>
+              );
+            })}
+          </div>
         </div>
       </div>
     </div>

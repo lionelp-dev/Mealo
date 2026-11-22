@@ -1,4 +1,5 @@
 import { usePlannedMealsContextValue } from '../inertia.adapter';
+import { Typography } from '@/app/components/Typography';
 import { useMultiSelectRecipe } from '@/app/hooks/use-multi-select-recipe';
 import { Clock, CookingPot } from 'lucide-react';
 
@@ -46,36 +47,50 @@ function MealPlanDialogRecipes() {
               </figure>
             )}
             <div className="card-body bg-base-100">
-              <h2 className="card-title text-base-content">{recipe.name}</h2>
+              <Typography as="h2" variant="heading" className="card-title">
+                {recipe.name}
+              </Typography>
 
-              <p className="line-clamp-2 text-base-content/70">
+              <Typography
+                as="p"
+                variant="body"
+                tone="muted"
+                className="line-clamp-2"
+              >
                 {recipe.description}
-              </p>
+              </Typography>
               <div className="flex flex-wrap gap-1">
                 <span className="badge badge-sm">
                   <Clock className="size-[1em]" />
-                  <span className="text-base-content">
+                  <Typography as="span" variant="body-sm">
                     {recipe.preparation_time}min
-                  </span>
+                  </Typography>
                 </span>
                 <span className="badge badge-sm">
                   <CookingPot className="size-[1em]" />
-                  <span className="text-base-content">
+                  <Typography as="span" variant="body-sm">
                     {recipe.cooking_time}min
-                  </span>
+                  </Typography>
                 </span>
                 {recipe.meal_times?.map((meal_time) => (
-                  <span
+                  <Typography
+                    as="span"
+                    variant="body-sm"
                     key={meal_time.id}
                     className="badge bg-base-300 badge-sm"
                   >
                     {meal_time.name}
-                  </span>
+                  </Typography>
                 ))}
                 {recipe.tags?.map((tag) => (
-                  <span key={tag.id} className="badge badge-sm">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    key={tag.id}
+                    className="badge badge-sm"
+                  >
                     {tag.name}
-                  </span>
+                  </Typography>
                 ))}
               </div>
             </div>

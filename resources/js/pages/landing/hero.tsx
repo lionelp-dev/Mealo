@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { login } from '@/routes';
 import { ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -16,18 +17,33 @@ export function Hero() {
           </div>
 
           {/* Headline */}
-          <h1 className="max-w-4xl text-4xl leading-15.5 font-semibold tracking-tight text-balance text-secondary md:text-5xl lg:text-6xl">
+          <Typography
+            as="h1"
+            variant="display"
+            tone="secondary"
+            className="max-w-4xl text-balance"
+          >
             {t('landing.hero.title')}
             <br />
-            <span className="text-secondary/70">
+            <Typography
+              as="span"
+              variant="display"
+              tone="secondary"
+              className="opacity-70"
+            >
               {t('landing.hero.subtitle')}
-            </span>
-          </h1>
+            </Typography>
+          </Typography>
 
           {/* Description */}
-          <p className="mt-6 max-w-2xl text-lg leading-7.5 text-pretty text-muted-foreground md:text-xl">
+          <Typography
+            as="p"
+            variant="body"
+            tone="muted"
+            className="mt-6 max-w-2xl text-pretty"
+          >
             {t('landing.hero.description')}
-          </p>
+          </Typography>
 
           {/* CTAs */}
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">

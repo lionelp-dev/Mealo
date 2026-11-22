@@ -1,6 +1,7 @@
 import { useWorkspaces } from '../hooks/use-workspaces';
 import { workspaceCreationStore } from '../stores/workspace-creation-modal-store';
 import { workspaceInvitationModalStore } from '../stores/workspace-invitation-modal-store';
+import { Typography } from '@/app/components/Typography';
 import {
   DialogHeader,
   Dialog,
@@ -105,7 +106,9 @@ export default function WorkspaceCreationModal() {
                   ({ value, icon: Icon, labelKey, subtitleKey }) => {
                     const selected = field.state.value === value;
                     return (
-                      <label
+                      <Typography
+                        as="label"
+                        variant="label"
                         key={String(value)}
                         className={cn(
                           `flex flex-1 cursor-pointer flex-col items-center gap-2 rounded-xl border border-secondary/40 p-4 transition-colors`,
@@ -132,17 +135,22 @@ export default function WorkspaceCreationModal() {
                             selected ? 'text-secondary' : 'text-base-content/50'
                           }
                         />
-                        <span
-                          className={`text-sm font-semibold ${selected ? 'text-secondary' : 'text-base-content/50'}`}
+                        <Typography
+                          as="span"
+                          variant="body-sm"
+                          weight="semibold"
+                          tone={selected ? 'secondary' : 'muted'}
                         >
                           {t(labelKey)}
-                        </span>
-                        <span
-                          className={`text-xs ${selected ? 'text-secondary' : 'text-base-content/50'}`}
+                        </Typography>
+                        <Typography
+                          as="span"
+                          variant="caption"
+                          tone={selected ? 'secondary' : 'muted'}
                         >
                           {t(subtitleKey)}
-                        </span>
-                      </label>
+                        </Typography>
+                      </Typography>
                     );
                   },
                 )}
@@ -150,7 +158,7 @@ export default function WorkspaceCreationModal() {
             )}
           />
 
-          <span className="text-xs font-normal text-muted-foreground">
+          <Typography as="span" variant="caption" tone="muted">
             {isPersonal
               ? t(
                   'workspace.hints.personal',
@@ -160,7 +168,7 @@ export default function WorkspaceCreationModal() {
                   'workspace.hints.shared',
                   'Collaborez avec votre famille, colocataires ou amis.',
                 )}
-          </span>
+          </Typography>
 
           <div className="flex justify-end gap-4">
             <button
@@ -180,13 +188,13 @@ export default function WorkspaceCreationModal() {
                     form.handleSubmit();
                   }}
                 >
-                  <span>
+                  <Typography as="span" variant="body-sm" tone="inherit">
                     {state.values.is_personal
                       ? isWorkspaceCreating
                         ? t('common.status.loading', 'Création...')
                         : t('common.buttons.create', 'Créer')
                       : t('common.buttons.continue', 'Continuer')}
-                  </span>
+                  </Typography>
                 </button>
               )}
             </form.Subscribe>

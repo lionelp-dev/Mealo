@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,8 +49,22 @@ export function LanguageSwitcher({ className }: ComponentProps<'button'>) {
           )}
         >
           <ChevronDown className="-mr-1 h-4 w-4 transform pt-[1px] duration-75 ease-in first:group-aria-expanded:-scale-y-100" />
-          <span className="hidden sm:inline">{getCurrentLanguageLabel()}</span>
-          <span className="sm:hidden">{i18n.language.toUpperCase()}</span>
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="hidden sm:inline"
+          >
+            {getCurrentLanguageLabel()}
+          </Typography>
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="sm:hidden"
+          >
+            {i18n.language.toUpperCase()}
+          </Typography>
           <Languages className="h-4 w-4" />
         </button>
       </DropdownMenuTrigger>

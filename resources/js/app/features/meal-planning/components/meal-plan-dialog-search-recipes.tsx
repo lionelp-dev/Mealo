@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { useRecipesSearch } from '@/app/hooks/use-recipes-search';
 import { cn } from '@/app/lib/';
 import { Search } from 'lucide-react';
@@ -9,7 +10,11 @@ export default function MealPlanDialogSearchRecipes() {
   const { searchTerm, setSearchTerm, isSearching } = useRecipesSearch();
 
   return (
-    <label className="input input-md flex w-full gap-3 rounded-xl border-secondary/40 input-secondary">
+    <Typography
+      as="label"
+      variant="label"
+      className="input input-md flex w-full gap-3 rounded-xl border-secondary/40 input-secondary"
+    >
       <Search
         className={`text-secondary transition-transform duration-300`}
         size={16}
@@ -27,6 +32,6 @@ export default function MealPlanDialogSearchRecipes() {
           isSearching && 'opacity-100',
         )}
       ></span>
-    </label>
+    </Typography>
   );
 }

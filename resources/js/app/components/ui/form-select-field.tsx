@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from './select';
+import { Typography } from '@/app/components/Typography';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
 
@@ -37,12 +38,14 @@ export default function SelectField({
     <div className="flex min-w-0 flex-1 flex-col gap-2">
       <div className="flex min-w-0 flex-col">
         {label && (
-          <label
+          <Typography
+            as="label"
+            variant="label"
             htmlFor={field.name}
-            className="min-w-0 text-left text-base leading-10 text-base-content"
+            className="min-w-0 text-left"
           >
             {label}
-          </label>
+          </Typography>
         )}
         <Select
           value={selectedValue}
@@ -59,9 +62,13 @@ export default function SelectField({
             className={cn('w-full min-w-0 pr-9 pl-4.5', className)}
           >
             <SelectValue placeholder={placeholder}>
-              <span className="block min-w-0 flex-1 truncate text-left">
+              <Typography
+                as="span"
+                variant="body-sm"
+                className="block min-w-0 flex-1 truncate text-left"
+              >
                 {selectedOption?.label ?? placeholder}
-              </span>
+              </Typography>
             </SelectValue>
           </SelectTrigger>
           <SelectContent>

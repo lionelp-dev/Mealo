@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib';
 import { ClassValue } from 'clsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -56,15 +57,33 @@ export default function WeekSelector({
       <div className="flex w-full min-w-0 items-center gap-4 min-lg:order-2">
         {leadingContent}
 
-        <span className="min-w-0 truncate text-2xl font-semibold tracking-tight text-secondary capitalize max-lg:pl-2.5">
-          <span className="truncate lg:hidden">{mobileLabel}</span>
-          <span className="truncate max-lg:hidden">{desktopLabel}</span>
+        <span className="flex min-w-0 items-center truncate text-2xl font-semibold tracking-tight text-secondary capitalize max-lg:pl-2.5">
+          <Typography
+            as="span"
+            variant="body-sm"
+            className="truncate lg:hidden"
+          >
+            {mobileLabel}
+          </Typography>
+          <Typography
+            as="span"
+            variant="body-xl"
+            tone="secondary"
+            className="truncate max-lg:hidden"
+          >
+            {desktopLabel}
+          </Typography>
         </span>
 
-        <span className="badge self-center rounded-full badge-soft badge-outline border-secondary/40 badge-sm py-[10.5px] whitespace-nowrap badge-secondary max-md:hidden">
+        <Typography
+          as="span"
+          variant="body-xs"
+          tone="secondary"
+          className="badge self-center rounded-full badge-soft badge-outline border-secondary/40 whitespace-nowrap badge-secondary max-md:hidden"
+        >
           {t('mealPlanning.weekSelector.week', 'Week')}{' '}
           {currentWeek.weekNumber.toString().padStart(2, '0')}
-        </span>
+        </Typography>
       </div>
 
       <div className={cn('flex gap-1.5', 'min-lg:order-1 min-lg:gap-2.75')}>
@@ -72,19 +91,25 @@ export default function WeekSelector({
           className={cn('btn btn-soft max-sm:btn-sm')}
           onClick={onTodayClick}
         >
-          {t('mealPlanning.weekSelector.today', 'Today')}
+          <Typography tone="secondary">
+            {t('mealPlanning.weekSelector.today', 'Today')}
+          </Typography>
         </button>
         <button
           className="btn join-item px-1.5 btn-soft max-md:btn-sm min-md:px-2.5"
           onClick={onPreviousWeekClick}
         >
-          <ChevronLeft className="h-3.5 md:h-4.75" />
+          <Typography tone="secondary">
+            <ChevronLeft className="h-3.5 md:h-4.75" />
+          </Typography>
         </button>
         <button
           className="btn join-item px-1.5 btn-soft max-md:btn-sm min-md:px-2.5"
           onClick={onNextWeekClick}
         >
-          <ChevronRight className="h-3.5 md:h-4.75" />
+          <Typography tone="secondary">
+            <ChevronRight className="h-3.5 md:h-4.75" />
+          </Typography>
         </button>
       </div>
     </div>

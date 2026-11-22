@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
 import { home } from '@/routes';
 import { Link } from '@inertiajs/react';
@@ -30,18 +31,29 @@ export default function AuthSimpleLayout({
             >
               <div className="mb-1 flex items-center justify-center rounded-md">
                 <span className="flex h-fit w-fit origin-top flex-col overflow-hidden text-left font-logo text-[40px] leading-tight font-semibold text-secondary group-data-[state=collapsed]:scale-y-0 group-data-[state=collapsed]:opacity-0 [&_span]:-my-[6px]">
-                  <span className="text-[52px]">Mealo</span>
-                  <span>Planner</span>
+                  <Typography as="span" variant="body-sm">
+                    Mealo
+                  </Typography>
+                  <Typography as="span" variant="body-sm" tone="inherit">
+                    Planner
+                  </Typography>
                 </span>
               </div>
               <span className="sr-only">{title}</span>
             </Link>
 
             <div className="space-y-2 text-center">
-              <h1 className="text-xl font-medium">{title}</h1>
-              <p className="text-center text-sm text-muted-foreground">
+              <Typography as="h1" variant="title">
+                {title}
+              </Typography>
+              <Typography
+                as="p"
+                variant="body-sm"
+                tone="muted"
+                className="text-center"
+              >
                 {description}
-              </p>
+              </Typography>
             </div>
           </div>
           {children}

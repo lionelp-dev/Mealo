@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { FlashMessage } from '@/types';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
@@ -38,7 +39,9 @@ function ToastItem({ message, type, onClose }: ToastItemProps) {
   return (
     <div className={`alert ${typeStyles[type]} z-30 mb-2`}>
       <span>{icons[type]}</span>
-      <span>{message}</span>
+      <Typography as="span" variant="body-sm" tone="inherit">
+        {message}
+      </Typography>
     </div>
   );
 }

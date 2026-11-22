@@ -1,7 +1,7 @@
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
 import MultiSelectMealPlanningPopover from './multi-select-meal-planning-popover';
-import { RecipesFilters } from '@/app/components/recipes-filters';
+import { Typography } from '@/app/components/Typography';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
 import { StarterRecipesNotice } from '@/app/components/starter-recipes-notice';
@@ -25,7 +25,8 @@ type MealPlanDialogProps = {
 export default function MealPlanDialog({ children }: MealPlanDialogProps) {
   const { t } = useTranslation();
 
-  const { recipes, tags, starterRecipes } = usePlannedMealsContextValue();
+  const { recipes, tags, mealTimes, starterRecipes } =
+    usePlannedMealsContextValue();
 
   const { isOpen, setIsOpen, selectedDate } = useMealPlanDialogStore();
 
@@ -89,36 +90,47 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
           <Dialog.Title className="flex flex-col gap-3.5 pb-0.5">
             <span className="-mb-1.5 flex flex-col gap-0.5">
               <span className="flex flex-1 items-center justify-between">
-                <span className="text-2xl font-bold text-secondary md:text-3xl">
+                <Typography
+                  as="span"
+                  variant="heading"
+                  weight="bold"
+                  tone="secondary"
+                >
                   Plannifier un repas
-                </span>
+                </Typography>
                 <Dialog.Close asChild>
                   <button className="btn btn-circle text-base-content btn-soft btn-sm">
                     <X size={18} />
                   </button>
                 </Dialog.Close>
               </span>
-              <span className="flex items-center gap-2 text-lg text-secondary">
+              <Typography
+                as="span"
+                variant="body-2xl"
+                tone="secondary"
+                className="flex items-center gap-2"
+              >
                 <CalendarDays className="h-5 w-5 shrink-0" />
                 {selectedDate &&
                   selectedDate.setLocale(i18n.language).toFormat('EEEE d MMMM')}
-              </span>
+              </Typography>
             </span>
             <div className="flex min-w-0 items-center gap-2.5">
               <RecipesSearch className="min-w-0 flex-1" />
               <div className="hidden min-w-0 shrink-0 items-center gap-2.5 lg:flex">
                 <RecipesFiltersPopover
                   tags={tags}
+                  mealTimes={mealTimes}
+                  label="Filtres"
                   className="max-w-full flex-none"
                 />
               </div>
             </div>
-            <div className="flex min-w-0 flex-col gap-2.5 lg:flex-row lg:items-start lg:justify-between">
-              <RecipesFilters />
-            </div>
             <div className="flex min-w-0 items-center justify-between gap-2.5 lg:hidden">
               <RecipesFiltersPopover
                 tags={tags}
+                mealTimes={mealTimes}
+                label="Filtres"
                 className="max-w-full flex-none"
               />
               {activeFilters.length > 0 && (
@@ -126,9 +138,14 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                   onClick={clearAllFilters}
                   className="btn h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link"
                 >
-                  <span className="min-w-0 truncate">
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="min-w-0 truncate"
+                  >
                     {t('mealPlanning.dialog.filters.reset', 'Réinitialiser')}
-                  </span>
+                  </Typography>
                 </button>
               )}
             </div>
@@ -143,16 +160,16 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
               ) : (
                 <div className="flex items-center justify-center py-8">
                   <div className="text-center text-base-content">
-                    <p className="mb-2">
+                    <Typography as="p" variant="body" className="mb-2">
                       {t('mealPlanning.noRecipesFound', 'No recipes found')}
-                    </p>
+                    </Typography>
                     {(searchTerm || activeFilters.length > 0) && (
-                      <p className="text-sm">
+                      <Typography as="p" variant="body-sm">
                         {t(
                           'mealPlanning.tryAdjustingSearch',
                           'Try adjusting your search or filters',
                         )}
-                      </p>
+                      </Typography>
                     )}
                   </div>
                 </div>

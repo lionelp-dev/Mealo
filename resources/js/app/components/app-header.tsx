@@ -1,5 +1,6 @@
 import AppLogo from './app-logo';
 import AppLogoIcon from './app-logo-icon';
+import { Typography } from '@/app/components/Typography';
 import { Breadcrumbs } from '@/app/components/breadcrumbs';
 import { Icon } from '@/app/components/icon';
 import { LanguageSwitcher } from '@/app/components/language-switcher';
@@ -107,7 +108,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                           {item.icon && (
                             <Icon iconNode={item.icon} className="h-5 w-5" />
                           )}
-                          <span>{t('navigation.dashboard', 'Dashboard')}</span>
+                          <Typography
+                            as="span"
+                            variant="body-sm"
+                            tone="inherit"
+                          >
+                            {t('navigation.dashboard', 'Dashboard')}
+                          </Typography>
                         </Link>
                       ))}
                     </div>
@@ -128,7 +135,13 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                           {item.icon && (
                             <Icon iconNode={item.icon} className="h-5 w-5" />
                           )}
-                          <span>{item.title}</span>
+                          <Typography
+                            as="span"
+                            variant="body-sm"
+                            tone="inherit"
+                          >
+                            {item.title}
+                          </Typography>
                         </a>
                       ))}
                     </div>
@@ -211,7 +224,9 @@ export function AppHeader({ breadcrumbs = [] }: AppHeaderProps) {
                         </a>
                       </TooltipTrigger>
                       <TooltipContent>
-                        <p>{item.title}</p>
+                        <Typography as="p" variant="body">
+                          {item.title}
+                        </Typography>
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>

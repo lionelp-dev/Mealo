@@ -1,4 +1,5 @@
 import AlertError from './alert-error';
+import { Typography } from '@/app/components/Typography';
 import {
   Card,
   CardContent,
@@ -141,11 +142,14 @@ export default function TwoFactorRecoveryCodes({
                 </div>
 
                 <div className="text-xs text-muted-foreground select-none">
-                  <p id="regenerate-warning">
+                  <Typography as="p" variant="body" id="regenerate-warning">
                     Each recovery code can be used once to access your account
                     and will be removed after use. If you need more, click{' '}
-                    <span className="font-bold">Regenerate Codes</span> above.
-                  </p>
+                    <Typography as="span" variant="body-sm" weight="bold">
+                      Regenerate Codes
+                    </Typography>{' '}
+                    above.
+                  </Typography>
                 </div>
               </>
             )}

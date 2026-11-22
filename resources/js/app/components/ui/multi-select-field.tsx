@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { useFieldContext } from '@/app/hooks/form-context';
 import { cn } from '@/app/lib/';
@@ -34,7 +35,11 @@ export function MultiSelectField({
 
   return (
     <div className="flex flex-col gap-4">
-      {label && <label className="text-base text-base-content">{label}</label>}
+      {label && (
+        <Typography as="label" variant="label">
+          {label}
+        </Typography>
+      )}
       <Select
         isMulti
         name={field.name}

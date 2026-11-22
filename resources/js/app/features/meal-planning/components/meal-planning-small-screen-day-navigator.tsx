@@ -1,22 +1,23 @@
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib';
 import { DayPlannedMeals } from '@/types';
 import { DateTime } from 'luxon';
 import { type RefObject, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
-type MealPlanningDayNavigatorProps = {
+type MealPlanningSmallScreenDayNavigatorProps = {
   activeDayId: string | null;
   days: DayPlannedMeals[];
   onSelectDay: (dayId: string) => void;
   stickyRef: RefObject<HTMLDivElement | null>;
 };
 
-export default function MealPlanningDayNavigator({
+export default function MealPlanningSmallScreenDayNavigator({
   activeDayId,
   days,
   onSelectDay,
   stickyRef,
-}: MealPlanningDayNavigatorProps) {
+}: MealPlanningSmallScreenDayNavigatorProps) {
   const { i18n } = useTranslation();
 
   const handleDayClick = useCallback(
@@ -70,10 +71,23 @@ export default function MealPlanningDayNavigator({
                   aria-label={ariaLabel}
                   aria-current={isActive ? 'date' : undefined}
                 >
-                  <span className="text-[12px] font-medium tracking-[0.1em] opacity-80">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      weight="medium"
+                    className="opacity-80"
+                  >
                     {weekdayLabel}
-                  </span>
-                  <span className="font-semibold">{day.date.day}</span>
+                  </Typography>
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      weight="semibold"
+                    >
+                    {day.date.day}
+                  </Typography>
                 </button>
               );
             })}

@@ -7,6 +7,7 @@ import {
   togglePromptPreset,
   type GenerationMode,
 } from './recipe-ai-generation-form';
+import { Typography } from '@/app/components/Typography';
 import {
   Dialog,
   DialogContent,
@@ -259,20 +260,24 @@ function SingleRecipeFields({
   return (
     <div className="flex flex-col gap-1">
       <div>
-        <h3 className="text-xs font-bold tracking-wide text-base-content/50 uppercase">
+        <Typography as="h3" variant="overline" tone="muted" weight="bold">
           {t('recipes.generate.single.title', 'Votre idée')}
-        </h3>
+        </Typography>
       </div>
       <form.Field
         name="prompt"
         children={(field) => (
-          <label className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-base-content/80">
+          <Typography
+            as="label"
+            variant="label"
+            className="flex flex-col gap-2"
+          >
+            <Typography as="span" variant="body-sm" weight="semibold">
               {t(
                 'recipes.generate.single.promptLabel',
                 'Que souhaitez-vous cuisiner ?',
               )}
-            </span>
+            </Typography>
             <textarea
               className="textarea-bordered textarea min-h-50 w-full resize-none rounded-xl bg-base-100 p-4 text-sm leading-relaxed"
               placeholder={t(
@@ -284,7 +289,7 @@ function SingleRecipeFields({
               disabled={processing}
               rows={6}
             />
-          </label>
+          </Typography>
         )}
       />
     </div>
@@ -307,18 +312,18 @@ function MultipleRecipesFields({
   return (
     <div className="flex flex-col gap-2 md:gap-5">
       <div>
-        <h3 className="text-xs font-bold tracking-wide text-base-content/50 uppercase">
+        <Typography as="h3" variant="overline" tone="muted" weight="bold">
           {t('recipes.generate.multiple.title', 'Vos préférences')}
-        </h3>
+        </Typography>
       </div>
 
       <form.Field
         name="prompt"
         children={(field) => (
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-base-content/80">
+            <Typography as="span" variant="body-sm" weight="semibold">
               {t('recipes.generate.presets.label', 'Types de recettes')}
-            </span>
+            </Typography>
             <div className="flex flex-wrap gap-2">
               {recipeTypeChips.map((preset) => {
                 const prompts = getSelectedPrompts(field.state.value);
@@ -353,12 +358,12 @@ function MultipleRecipesFields({
           name="context.meal_time"
           children={(field) => (
             <div className="flex flex-col gap-2">
-              <span className="text-sm font-semibold text-base-content/80">
+              <Typography as="span" variant="body-sm" weight="semibold">
                 {t(
                   'recipes.generate.mealTime.multipleLabel',
                   'Moments du repas',
                 )}
-              </span>
+              </Typography>
               <div className="flex flex-wrap gap-2">
                 {mealTimes.map((mealTime) => {
                   const isActive = field.state.value === mealTime.slug;
@@ -389,9 +394,9 @@ function MultipleRecipesFields({
         name="context.count"
         children={(field) => (
           <div className="flex flex-col gap-2">
-            <span className="text-sm font-semibold text-base-content/80">
+            <Typography as="span" variant="body-sm" weight="semibold">
               {t('recipes.generate.count.label', 'Nombre de recettes')}
-            </span>
+            </Typography>
             <div className="flex gap-2">
               {MULTIPLE_RECIPE_COUNT_OPTIONS.map((count) => {
                 const isActive = field.state.value === count;
@@ -431,27 +436,36 @@ function ImageGenerationToggle({
   const { t } = useTranslation();
 
   return (
-    <label className="flex items-center justify-between gap-4 rounded-xl border border-base-300 p-3 text-sm font-medium hover:border-blue-600/80 hover:bg-blue-600/10">
+    <Typography
+      as="label"
+      variant="label"
+      weight="medium"
+      className="flex items-center justify-between gap-4 rounded-xl border border-base-300 p-3 hover:border-blue-600/80 hover:bg-blue-600/10"
+    >
       <span className="flex min-w-0 items-start gap-3.25">
         <ImageIcon className="h-8 w-8 shrink-0 text-secondary md:h-10 md:w-10" />
-        <span className="flex min-w-0 flex-col gap-1 leading-4.25">
+        <Typography
+          as="span"
+          variant="body-sm"
+          className="flex min-w-0 flex-col gap-1"
+        >
           {mode === 'single' ? (
             t('recipes.generate.imageGeneration.label', 'Générer une image')
           ) : (
-            <span>
+            <Typography as="span" variant="body-sm" tone="inherit">
               {t(
                 'recipes.generate.imageGeneration.multipleLabel',
                 'Générer une image pour chaque recette',
               )}
-            </span>
+            </Typography>
           )}
-          <p className="text-xs text-base-content/60">
+          <Typography as="p" variant="caption" tone="muted">
             {t(
               'recipes.generate.imageGeneration.description',
               'Peut prendre plus de temps',
             )}
-          </p>
-        </span>
+          </Typography>
+        </Typography>
       </span>
       <form.Field
         name="image_generation"
@@ -465,7 +479,7 @@ function ImageGenerationToggle({
           />
         )}
       />
-    </label>
+    </Typography>
   );
 }
 
@@ -524,19 +538,19 @@ function GenerationOverlay({ processing }: { processing: boolean }) {
     <div className="fixed top-0 right-0 bottom-0 left-0 z-50 flex flex-col items-center justify-center gap-4 bg-black/30 text-white backdrop-blur-xs">
       <span className="loading loading-xl loading-spinner"></span>
       <div className="flex flex-col items-center gap-2">
-        <p className="text-lg font-medium">
+        <Typography as="p" variant="body" weight="medium" tone="inverse">
           {t(
             'recipes.generate.overlayTitle',
             'Génération de vos recettes en cours',
           )}
-        </p>
-        <p className="text text-white/60">
+        </Typography>
+        <Typography as="p" variant="body" tone="inverse" className="opacity-60">
           {t(
             'mealPlanning.estimatedTime',
             'Cela peut prendre quelques instants',
           )}{' '}
           <span className="loading loading-xs loading-dots"></span>
-        </p>
+        </Typography>
       </div>
     </div>
   );

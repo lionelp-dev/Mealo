@@ -6,6 +6,7 @@ import { RecipesMultiSelectToolbar } from '../components/recipes-multi-select-to
 import { useDiscoverySession } from '../hooks/use-discovery-session';
 import { useRecipesContextValue } from '../inertia.adapter';
 import { useRecipesMultiSelectStore } from '../stores/use-recipes-multi-select-store';
+import { Typography } from '@/app/components/Typography';
 import { PageContainer } from '@/app/components/page-container';
 import { RecipesFiltersPopover } from '@/app/components/recipes-filters-popover';
 import RecipesSearch from '@/app/components/recipes-search';
@@ -95,10 +96,22 @@ export function IndexRecipesView() {
             'Quitter la découverte'
           ) : (
             <>
-              <span className="lg:hidden">Découvrir avec l’IA</span>
-              <span className="max-lg:hidden">
+              <Typography
+                as="span"
+                variant="body-sm"
+                tone="inherit"
+                className="lg:hidden"
+              >
+                Découvrir avec l’IA
+              </Typography>
+              <Typography
+                as="span"
+                variant="body-sm"
+                tone="inherit"
+                className="max-lg:hidden"
+              >
                 Découvrir des recettes avec l’IA
-              </span>
+              </Typography>
             </>
           )}
         </button>
@@ -151,13 +164,18 @@ export function IndexRecipesView() {
               ) : (
                 <section className="hidden min-h-64 items-center justify-center px-6 py-12 text-center lg:flex">
                   <div>
-                    <p className="text-lg font-semibold">
+                    <Typography as="p" variant="body" weight="semibold">
                       Choisissez une recette
-                    </p>
-                    <p className="mt-2 text-sm text-base-content/55">
+                    </Typography>
+                    <Typography
+                      as="p"
+                      variant="body-sm"
+                      tone="muted"
+                      className="mt-2"
+                    >
                       Sélectionnez une recette dans votre carnet pour voir ses
                       détails.
-                    </p>
+                    </Typography>
                   </div>
                 </section>
               ))}
@@ -197,7 +215,12 @@ export function IndexRecipesView() {
                               onClick={() => removeFilter(filter)}
                               className="badge h-8 max-w-40 gap-1.5 border-0 bg-secondary/10 px-3 text-sm font-normal text-secondary"
                             >
-                              <span className="truncate">
+                              <Typography
+                                as="span"
+                                variant="body-sm"
+                                tone="inherit"
+                                className="truncate"
+                              >
                                 {filter.type === 'preparation_time' &&
                                   t(
                                     'mealPlanning.dialog.filters.prep',
@@ -216,7 +239,7 @@ export function IndexRecipesView() {
                                       ),
                                     )
                                   : capitalize(filter.label)}
-                              </span>
+                              </Typography>
                               <X size={14} className="shrink-0" />
                             </button>
                           ))}

@@ -1,5 +1,5 @@
+import { Typography } from '@/app/components/Typography';
 import AppearanceTabs from '@/app/components/appearance-tabs';
-import HeadingSmall from '@/app/components/heading-small';
 import AppLayout from '@/app/layouts/app-layout';
 import SettingsLayout from '@/app/layouts/settings/layout';
 import { edit as editAppearance } from '@/routes/appearance';
@@ -25,13 +25,17 @@ export default function Appearance() {
 
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title={t('settings.appearance.sectionTitle', 'Appearance settings')}
-            description={t(
-              'settings.appearance.sectionDescription',
-              "Update your account's appearance settings",
-            )}
-          />
+          <header>
+            <Typography as="h3" variant="title" weight="medium">
+              {t('settings.appearance.sectionTitle', 'Appearance settings')}
+            </Typography>
+            <Typography variant="body-sm" tone="muted">
+              {t(
+                'settings.appearance.sectionDescription',
+                "Update your account's appearance settings",
+              )}
+            </Typography>
+          </header>
           <AppearanceTabs />
         </div>
       </SettingsLayout>

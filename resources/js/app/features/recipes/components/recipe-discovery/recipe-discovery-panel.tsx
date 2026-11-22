@@ -1,5 +1,6 @@
 import { useRecipeDiscovery } from '../../hooks/use-recipe-discovery';
 import { RecipeFormCard } from '../recipe-form-card';
+import { Typography } from '@/app/components/Typography';
 import { MealTimeResource } from '@/app/data/resources/recipe/types';
 import {
   Clock3,
@@ -56,12 +57,22 @@ export function RecipeDiscoveryPanel(props: Props) {
               }}
             >
               <RecipeFormCard className="gap-0">
-                <label className="font-semibold" htmlFor="discovery-prompt">
+                <Typography
+                  as="label"
+                  variant="body"
+                  weight="semibold"
+                  tone="secondary"
+                >
                   Qu’avez-vous envie de manger ?{' '}
-                  <span className="font-normal text-base-content/50">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    weight="regular"
+                    tone="muted"
+                  >
                     (requis)
-                  </span>
-                </label>
+                  </Typography>
+                </Typography>
                 <textarea
                   id="discovery-prompt"
                   value={discovery.prompt}
@@ -127,21 +138,27 @@ export function RecipeDiscoveryPanel(props: Props) {
         </div>
         <div className="mt-3 flex flex-wrap gap-2 sm:mt-4">
           {discovery.diet && (
-            <span className="badge badge-soft badge-lg badge-secondary">
+            <Typography
+              as="span"
+              variant="body-sm"
+              className="badge badge-soft badge-lg badge-secondary"
+            >
               {discovery.diet}
-            </span>
+            </Typography>
           )}
           {props.mealTimes
             .filter((mealTime) =>
               discovery.selectedMealTimes.includes(mealTime.slug),
             )
             .map((mealTime) => (
-              <span
+              <Typography
+                as="span"
+                variant="body-sm"
                 key={mealTime.id}
                 className="badge badge-soft badge-lg badge-secondary"
               >
                 {mealTime.name}
-              </span>
+              </Typography>
             ))}
         </div>
         <div className="relative mx-auto mt-6 max-w-2xl pb-5 sm:mt-8">
@@ -166,42 +183,69 @@ export function RecipeDiscoveryPanel(props: Props) {
                   Image indisponible
                 </div>
               )}
-              <span className="absolute top-3 left-3 badge h-8 gap-1.5 border-0 bg-base-100 px-3 text-sm font-semibold text-secondary shadow-sm">
+              <Typography
+                as="span"
+                variant="body-sm"
+                weight="semibold"
+                tone="secondary"
+                className="absolute top-3 left-3 badge h-8 gap-1.5 border-0 bg-base-100 px-3 shadow-sm"
+              >
                 <Sparkles size={15} aria-hidden="true" /> Suggestion IA
-              </span>
+              </Typography>
             </div>
             <div className="p-5 sm:p-6">
-              <h2
-                className="truncate text-2xl leading-tight font-bold tracking-tight sm:text-3xl"
+              <Typography
+                as="h2"
+                variant="heading"
+                weight="bold"
+                className="truncate"
                 title={recipe.name}
               >
                 {recipe.name}
-              </h2>
+              </Typography>
               <div className="mt-3 flex flex-wrap gap-2 text-sm sm:mt-4">
-                <span className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  weight="medium"
+                  className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3"
+                >
                   <Clock3 size={15} aria-hidden="true" />
                   {recipe.preparation_time + recipe.cooking_time} min
-                </span>
+                </Typography>
                 {props.mealTimes
                   .filter((mealTime) =>
                     discovery.selectedMealTimes.includes(mealTime.slug),
                   )
                   .map((mealTime) => (
-                    <span
+                    <Typography
+                      as="span"
+                      variant="body-sm"
                       key={mealTime.id}
-                      className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium"
+                      weight="medium"
+                      className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3"
                     >
                       <UtensilsCrossed size={15} aria-hidden="true" />
                       {mealTime.name}
-                    </span>
+                    </Typography>
                   ))}
-                <span className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3 text-sm font-medium">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  weight="medium"
+                  className="badge h-8 gap-1.5 border-base-300 bg-base-100 px-3"
+                >
                   <Sparkles size={15} aria-hidden="true" /> Suggestion IA
-                </span>
+                </Typography>
               </div>
-              <p className="mt-3 line-clamp-3 min-h-[4.5rem] text-sm leading-6 text-base-content/70 sm:mt-4 sm:text-base">
+              <Typography
+                as="p"
+                variant="body-sm"
+                tone="muted"
+                className="mt-3 line-clamp-3 min-h-[4.5rem] sm:mt-4"
+              >
                 {recipe.description}
-              </p>
+              </Typography>
               <div className="mt-5 grid grid-cols-2 gap-3 sm:mt-6">
                 <button
                   type="button"
@@ -222,12 +266,22 @@ export function RecipeDiscoveryPanel(props: Props) {
                   ) : (
                     <Plus size={18} />
                   )}
-                  <span className="sm:hidden">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    className="sm:hidden"
+                  >
                     {discovery.isSaving ? 'Ajout…' : 'Ajouter'}
-                  </span>
-                  <span className="max-sm:hidden">
+                  </Typography>
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    className="max-sm:hidden"
+                  >
                     {discovery.isSaving ? 'Ajout…' : 'Ajouter au carnet'}
-                  </span>
+                  </Typography>
                 </button>
               </div>
             </div>
@@ -244,16 +298,21 @@ export function RecipeDiscoveryPanel(props: Props) {
 function DiscoveryHeader() {
   return (
     <header className="pt-3 sm:pt-5 lg:pt-0">
-      <h1 className="flex items-center gap-2 text-2xl font-bold tracking-tight sm:text-3xl">
+      <Typography
+        as="h1"
+        variant="body-2xl"
+        tone="secondary"
+        className="flex items-center gap-2"
+      >
         <span className="flex size-8 items-center justify-center rounded-lg bg-base-200 text-secondary">
           <Sparkles size={19} aria-hidden="true" />
         </span>
         Mode découverte
-      </h1>
-      <p className="mt-1 text-sm text-secondary/75 sm:text-base">
+      </Typography>
+      <Typography as="p" variant="body" tone="secondary" className="mt-1">
         Explorez des recettes personnalisées avec l'IA et ajoutez vos coups de
         cœur à votre carnet.
-      </p>
+      </Typography>
     </header>
   );
 }
@@ -276,28 +335,32 @@ function MealTimesCheckboxGroup({
           strokeWidth={2}
           aria-hidden="true"
         />
-        <p className="font-semibold text-secondary/75">
+        <Typography as="p" variant="body" weight="semibold" tone="secondary">
           Moments de repas{' '}
-          <span className="font-normal text-base-content/50">(facultatif)</span>
-        </p>
+          <Typography as="span" variant="body-sm" weight="regular" tone="muted">
+            (facultatif)
+          </Typography>
+        </Typography>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {mealTimes.map((mealTime) => {
           const isSelected = selected.includes(mealTime.slug);
 
           return (
-            <label
+            <Typography
+              as="label"
+              variant="label"
               key={mealTime.id}
-              className={`btn gap-2 rounded-lg btn-md max-md:btn-sm ${isSelected ? 'btn-secondary' : 'btn-outline btn-secondary'}`}
+              className={`btn gap-2 rounded-lg btn-md hover:text-secondary-content max-md:btn-sm ${isSelected ? 'text-secondary-content btn-secondary' : 'text-secondary btn-outline btn-secondary'}`}
             >
               <input
                 type="checkbox"
                 checked={isSelected}
                 onChange={() => onToggle(mealTime.slug)}
-                className="checkbox checkbox-sm"
+                className={`checkbox checkbox-sm ${isSelected ? 'text-secondary-content' : ''}`}
               />
               {mealTime.name}
-            </label>
+            </Typography>
           );
         })}
       </div>
@@ -330,17 +393,17 @@ function PreferenceGroup({
             aria-hidden="true"
           />
         )}
-        <p className="font-semibold text-secondary/75">
+        <Typography as="p" variant="body" weight="semibold" tone="secondary">
           {label}
           {showOptional && (
             <>
               {' '}
-              <span className="font-normal text-base-content/50">
+              <Typography as="span" variant="body-sm" tone="muted">
                 (facultatif)
-              </span>
+              </Typography>
             </>
           )}
-        </p>
+        </Typography>
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         {options.map((option) => (
@@ -362,10 +425,12 @@ function LoadingState() {
   return (
     <div className="flex min-h-72 flex-col items-center justify-center text-center">
       <LoaderCircle className="animate-spin text-base-content/50" size={30} />
-      <p className="mt-4 font-semibold">Création de votre sélection…</p>
-      <p className="mt-1 text-sm text-base-content/60">
+      <Typography as="p" variant="body" weight="semibold" className="mt-4">
+        Création de votre sélection…
+      </Typography>
+      <Typography as="p" variant="body-sm" tone="muted" className="mt-1">
         Les recettes et leurs images sont générées.
-      </p>
+      </Typography>
     </div>
   );
 }
@@ -373,7 +438,9 @@ function LoadingState() {
 function ErrorState({ error, retry }: { error: string; retry: () => void }) {
   return (
     <div role="alert" className="mt-5 text-sm text-error">
-      <p>{error}</p>
+      <Typography as="p" variant="body">
+        {error}
+      </Typography>
       <button
         type="button"
         onClick={retry}

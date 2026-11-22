@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import FieldInfo from '@/app/components/ui/form-field-info';
 import { stepRequestSchema } from '@/app/data/requests/recipe/schemas/entities/step.request.schema';
 import { StepRequest } from '@/app/data/requests/recipe/types';
@@ -80,9 +81,9 @@ export const RecipeFormStepsSection = withFieldGroup({
         children={(steps_field) => (
           <div className="flex w-full min-w-0 flex-col gap-4">
             {title && (
-              <span className="text-base font-bold text-base-content">
+              <Typography as="span" variant="body-sm" weight="bold">
                 {title}
-              </span>
+              </Typography>
             )}
 
             <div className="flex min-w-0 flex-col gap-5">
@@ -96,9 +97,15 @@ export const RecipeFormStepsSection = withFieldGroup({
                         children={(field) => (
                           <div className={stepRowClassName}>
                             <div className={stepHeaderClassName}>
-                              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-content">
+                              <Typography
+                                as="span"
+                                variant="body-sm"
+                                weight="semibold"
+                                tone="inverse"
+                                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary"
+                              >
                                 {index + 1}
-                              </span>
+                              </Typography>
                               <div className={stepActionsClassName}>
                                 <button
                                   type="button"
@@ -156,9 +163,15 @@ export const RecipeFormStepsSection = withFieldGroup({
                     onBlur={() => steps_field.handleBlur()}
                   >
                     <div className={stepHeaderClassName}>
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary text-sm font-semibold text-secondary-content">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        weight="semibold"
+                        tone="inverse"
+                        className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-secondary"
+                      >
                         {(steps_field.state.value?.length ?? 0) + 1}
-                      </span>
+                      </Typography>
                       <div className={stepActionsClassName}>
                         <button
                           type="button"
@@ -222,9 +235,14 @@ export const RecipeFormStepsSection = withFieldGroup({
                     }}
                     className="btn w-full max-w-full min-w-0 border-secondary/20 pl-6.5 btn-soft btn-secondary sm:w-fit"
                   >
-                    <span className="min-w-0 truncate">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      tone="inherit"
+                      className="min-w-0 truncate"
+                    >
                       {t('recipes.steps.addButton', 'Add step')}
-                    </span>
+                    </Typography>
                     <PlusIcon className="h-5 shrink-0 pt-[2px]" />
                   </button>
                 )}

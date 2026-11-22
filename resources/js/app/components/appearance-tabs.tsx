@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { Appearance, useAppearance } from '@/app/hooks/use-appearance';
 import { cn } from '@/app/lib/';
 import { LucideIcon, Monitor, Moon, Sun } from 'lucide-react';
@@ -49,7 +50,14 @@ export default function AppearanceToggleTab({
           )}
         >
           <Icon className="-ml-1 h-4 w-4" />
-          <span className="ml-1.5 text-sm">{label}</span>
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="ml-1.5"
+          >
+            {label}
+          </Typography>
         </button>
       ))}
     </div>

@@ -1,6 +1,7 @@
 import { useMealPlanActions } from '../hooks/use-meal-plan-actions';
 import { usePlannedMealsContextValue } from '../inertia.adapter';
 import { useMealPlanDialogStore } from '../stores/meal-plan-dialog';
+import { Typography } from '@/app/components/Typography';
 import { RecipeResource } from '@/app/data/resources/recipe/types';
 import { useAppForm } from '@/app/hooks/form-hook';
 import { cn } from '@/app/lib/';
@@ -114,19 +115,27 @@ export default function MealPlanningPopover({
           >
             <div className="flex flex-col gap-3">
               <div className="flex flex-col rounded-sm bg-secondary/10 px-4 py-2 text-secondary">
-                <span className="text-base font-medium">{recipe.name}</span>
+                <Typography as="span" variant="body-sm" weight="medium">
+                  {recipe.name}
+                </Typography>
               </div>
 
               <form.AppField
                 name="servings"
                 children={(field) => (
                   <div className="-mt-0.5 flex flex-col gap-2.5">
-                    <span className="w-full px-2.5 text-sm font-medium whitespace-nowrap text-secondary">
+                    <Typography
+                      as="span"
+                      variant="body-sm"
+                      weight="medium"
+                      tone="secondary"
+                      className="w-full px-2.5 whitespace-nowrap"
+                    >
                       {t(
                         'mealPlanning.dialog.persons',
                         'Pour combien de personnes ?',
                       )}
-                    </span>
+                    </Typography>
                     <div className="join w-fit shrink-0 items-center gap-2 px-2.5 pb-0.5">
                       <button
                         className="btn join-item rounded-md px-2 btn-outline btn-soft btn-sm btn-secondary"
@@ -158,7 +167,11 @@ export default function MealPlanningPopover({
                     </div>
                     <span className="flex w-full items-center gap-2 rounded-sm bg-secondary/10 px-2.5 py-2 pr-4.5 text-xs text-secondary">
                       <Info className="h-5 w-5" />
-                      <span className="pt-[1px]">
+                      <Typography
+                        as="span"
+                        variant="body-sm"
+                        className="pt-[1px]"
+                      >
                         {t(
                           'mealPlanning.dialog.persons',
                           'Selectioner le(s) repas pour {{count}} personne(s)',
@@ -166,7 +179,7 @@ export default function MealPlanningPopover({
                             count: field.state.value as number,
                           },
                         )}
-                      </span>
+                      </Typography>
                     </span>
                   </div>
                 )}
@@ -185,18 +198,25 @@ export default function MealPlanningPopover({
                         );
 
                         return (
-                          <label
+                          <Typography
+                            as="label"
+                            variant="label"
                             key={mealTime.id}
-                            className="btn flex justify-between gap-3 border-base-300/50 px-4 pl-3 text-sm text-secondary transition-colors btn-outline hover:border-secondary/50 hover:bg-secondary/5 disabled:opacity-50"
+                            tone="secondary"
+                            className="btn flex justify-between gap-3 border-base-300/50 px-4 pl-3 transition-colors btn-outline hover:border-secondary/50 hover:bg-secondary/5 disabled:opacity-50"
                           >
                             <div className="flex gap-3.5">
                               {getMealTimeIcon(mealTime.slug)}
-                              <span className="pt-[1px]">
+                              <Typography
+                                as="span"
+                                variant="body-sm"
+                                className="pt-[1px]"
+                              >
                                 {t(
                                   `mealPlanning.dialog.filters.${mealTime.slug}`,
                                   mealTime.name,
                                 )}
-                              </span>
+                              </Typography>
                             </div>
                             <field.CheckboxField
                               className="checkbox checkbox-sm"
@@ -210,7 +230,7 @@ export default function MealPlanningPopover({
                                 }
                               }}
                             />
-                          </label>
+                          </Typography>
                         );
                       })}
                     </div>

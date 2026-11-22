@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { TrashIcon } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -99,9 +100,9 @@ export function ImageUpload({
 
   return (
     <div className={`flex flex-col gap-4 ${className}`}>
-      <label className="text-base-content">
+      <Typography as="label" variant="label">
         {t('recipes.form.imageLabel', 'Image')}
-      </label>
+      </Typography>
 
       <div
         className={`relative flex h-[14.5lh] cursor-pointer items-center justify-center rounded-lg border-2 border-dashed p-6 text-center transition-colors ${isDragOver ? 'border-primary bg-primary/5' : 'border-base-300'} ${error ? 'border-error' : ''} ${disabled ? 'cursor-not-allowed opacity-50' : 'hover:border-primary hover:bg-primary/5'} `}
@@ -155,27 +156,41 @@ export function ImageUpload({
               />
             </svg>
             <div className="mt-4">
-              <p className="text-base-content">
-                <span className="font-medium text-primary">
+              <Typography as="p" variant="body">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  tone="primary"
+                  weight="medium"
+                >
                   {t(
                     'recipes.form.imageUpload.clickToUpload',
                     'Click to upload',
                   )}
-                </span>{' '}
+                </Typography>{' '}
                 {t('recipes.form.imageUpload.orDragDrop', 'or drag and drop')}
-              </p>
-              <p className="mt-1 text-sm text-base-content/60">
+              </Typography>
+              <Typography
+                as="p"
+                variant="body-sm"
+                tone="muted"
+                className="mt-1"
+              >
                 {t(
                   'recipes.form.imageUpload.formats',
                   'PNG, JPG, WebP up to 5MB',
                 )}
-              </p>
+              </Typography>
             </div>
           </div>
         )}
       </div>
 
-      {error && <p className="text-sm text-error">{error}</p>}
+      {error && (
+        <Typography as="p" variant="body-sm" tone="error">
+          {error}
+        </Typography>
+      )}
 
       {value && (
         <div className="text-xs text-base-content/60">

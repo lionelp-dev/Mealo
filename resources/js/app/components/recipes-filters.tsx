@@ -1,3 +1,4 @@
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib/';
 import { useRecipesFiltersStore } from '@/app/stores/recipes-filters-store';
 import { capitalize } from '@/app/utils/';
@@ -92,16 +93,21 @@ export function RecipesFilters({
                 : !mealTimeFilter;
 
               return (
-                <label
+                <Typography
+                  as="label"
+                  variant="label"
+                  tone={isActive ? 'inverse' : 'default'}
                   className={cn(
-                    'btn join-item flex-1 items-center border-0 px-2 text-xs whitespace-nowrap min-sm:px-3 min-md:px-4',
-                    isActive
-                      ? 'btn-active btn-secondary'
-                      : 'text-base-content btn-ghost',
+                    'btn join-item flex-1 items-center border-0 px-2 whitespace-nowrap min-sm:px-3 min-md:px-4',
+                    isActive ? 'btn-active btn-secondary' : 'btn-ghost',
                   )}
                   key={`${section.type}-${option.value}`}
                 >
-                  <span className="min-w-0 truncate">
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    className="min-w-0 truncate"
+                  >
                     {capitalize(
                       isAllOption
                         ? t('mealPlanning.dialog.filters.allCompact', 'Tous')
@@ -110,7 +116,7 @@ export function RecipesFilters({
                             option.label,
                           ),
                     )}
-                  </span>
+                  </Typography>
                   <input
                     type="radio"
                     name="meal-time-filter"
@@ -125,7 +131,7 @@ export function RecipesFilters({
                     }}
                     className="sr-only"
                   />
-                </label>
+                </Typography>
               );
             })}
           </div>
@@ -136,9 +142,13 @@ export function RecipesFilters({
         activeFilters.map(
           (filter) =>
             filter.type !== 'meal_time' && (
-              <label
+              <Typography
+                as="label"
+                variant="label"
+                tone="inverse"
+                weight="regular"
                 className={cn(
-                  `btn flex max-w-40 min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-full text-sm font-normal whitespace-nowrap transition-colors btn-sm btn-secondary select-none max-lg:hidden`,
+                  `btn flex max-w-40 min-w-0 shrink-0 cursor-pointer items-center gap-1.5 rounded-full whitespace-nowrap transition-colors btn-sm btn-secondary select-none max-lg:hidden`,
                 )}
                 htmlFor={`${filter.type}-${filter.value}`}
                 key={`${filter.type}-${filter.value}`}
@@ -150,15 +160,19 @@ export function RecipesFilters({
                   onChange={() => removeFilter(filter)}
                   className="h-0 w-0 flex-shrink-0 opacity-0"
                 />
-                <span className="min-w-0 truncate pb-[2px]">
+                <Typography
+                  as="span"
+                  variant="body-sm"
+                  className="min-w-0 truncate pb-[2px]"
+                >
                   {filter.type === 'preparation_time' &&
                     t('mealPlanning.dialog.filters.prep', 'Prep: ')}
                   {filter.type === 'cooking_time' &&
                     t('mealPlanning.dialog.filters.cook', 'Cook: ')}
                   {capitalize(filter.label)}
-                </span>
+                </Typography>
                 <X className="h-[15px] w-[15px] shrink-0" />
-              </label>
+              </Typography>
             ),
         )}
       {showReset && activeFilters.length > 0 && (
@@ -166,9 +180,14 @@ export function RecipesFilters({
           onClick={clearAllFilters}
           className="btn hidden h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link lg:inline-flex"
         >
-          <span className="min-w-0 truncate">
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="min-w-0 truncate"
+          >
             {t('mealPlanning.dialog.filters.reset', 'Réinitialiser')}
-          </span>
+          </Typography>
         </button>
       )}
     </div>

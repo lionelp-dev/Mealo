@@ -2,6 +2,7 @@ import {
   getShoppingListTone,
   type ShoppingListAppearance,
 } from './shopping-list-appearance';
+import { Typography } from '@/app/components/Typography';
 import { cn } from '@/app/lib/';
 import { ChevronDown } from 'lucide-react';
 import { Children, ReactNode, useId, useState } from 'react';
@@ -49,18 +50,23 @@ export default function ShoppingListCard({
         )}
       >
         <div className="min-w-0 flex-1">
-          <h2
+          <Typography
+            as="h2"
+            variant="body-lg"
             id={titleId}
-            className={cn(
-              'text-base leading-snug font-bold text-base-content',
-              isComplete && 'text-base-content/50 line-through',
-            )}
+            tone={isComplete ? 'muted' : 'default'}
+            className={cn(isComplete && 'line-through')}
           >
             {title}
-          </h2>
-          <span className="mt-0.5 block text-xs font-medium tabular-nums">
+          </Typography>
+          <Typography
+            as="span"
+            variant="caption"
+            weight="medium"
+            className="mt-0.5 block tabular-nums"
+          >
             {t('shoppingLists.itemsCount', { count: totalCount })}
-          </span>
+          </Typography>
         </div>
         <span
           className="size-11 shrink-0 rounded-full bg-current/10 bg-no-repeat"

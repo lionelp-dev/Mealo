@@ -3,6 +3,7 @@ import ShoppingListByRecipes from '../components/shopping-list-by-recipes';
 import ShoppingListProgress from '../components/shopping-list-progress';
 import { useShoppingList } from '../hooks/use-shopping-list';
 import { useShoppingListsContextValue } from '../inertia.adapter';
+import { Typography } from '@/app/components/Typography';
 import { NavWorkspaceSwitcher } from '@/app/components/nav-workspace-switcher';
 import { PageContainer } from '@/app/components/page-container';
 import WeekSelector from '@/app/components/week-selector';
@@ -54,7 +55,7 @@ export default function ShoppingListsView() {
         contentClassName="flex min-h-0 flex-1 flex-col px-4 md:px-6"
       >
         <div className="shrink-0 pt-6 pb-5 md:pt-4 md:pb-4">
-          <div className="flex flex-wrap items-center gap-4 md:px-3">
+          <div className="flex flex-wrap items-center gap-4 md:px-1">
             <ShoppingListToggleView />
           </div>
         </div>
@@ -98,15 +99,20 @@ function ShoppingListEmptyView() {
       {total === 0 && (
         <div className="flex min-h-60 flex-1 flex-col items-center justify-center px-4 py-12">
           <ShoppingBasket className="mb-4 h-12 w-12 text-muted-foreground" />
-          <h3 className="mb-2 text-lg font-semibold text-muted-foreground">
+          <Typography as="h3" variant="title" tone="muted" className="mb-2">
             {t('shoppingLists.empty.title', 'Aucune liste de courses')}
-          </h3>
-          <p className="mb-4 max-w-md text-center text-muted-foreground">
+          </Typography>
+          <Typography
+            as="p"
+            variant="body"
+            tone="muted"
+            className="mb-4 max-w-md text-center"
+          >
             {t(
               'shoppingLists.empty.description',
               'Planifiez des repas pour créer automatiquement votre liste de courses.',
             )}
-          </p>
+          </Typography>
         </div>
       )}
     </>
@@ -119,7 +125,7 @@ function ShoppingListToggleView() {
   const { setViewMode, viewMode } = useShoppingList();
 
   return (
-    <div className="inline-flex shrink-0 rounded-xl border border-white/80 bg-secondary/5 p-1 dark:border-base-300">
+    <div className="inline-flex shrink-0 rounded-xl bg-secondary/5 p-1 dark:border-base-300">
       <button
         type="button"
         aria-pressed={viewMode === 'ingredients'}

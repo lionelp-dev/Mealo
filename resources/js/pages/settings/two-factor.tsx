@@ -1,4 +1,4 @@
-import HeadingSmall from '@/app/components/heading-small';
+import { Typography } from '@/app/components/Typography';
 import TwoFactorRecoveryCodes from '@/app/components/two-factor-recovery-codes';
 import TwoFactorSetupModal from '@/app/components/two-factor-setup-modal';
 import { Badge } from '@/app/components/ui/badge';
@@ -50,27 +50,31 @@ export default function TwoFactor({
       />
       <SettingsLayout>
         <div className="space-y-6">
-          <HeadingSmall
-            title={t(
-              'settings.twoFactor.sectionTitle',
-              'Two-Factor Authentication',
-            )}
-            description={t(
-              'settings.twoFactor.sectionDescription',
-              'Manage your two-factor authentication settings',
-            )}
-          />
+          <header>
+            <Typography as="h3" variant="title" weight="medium">
+              {t(
+                'settings.twoFactor.sectionTitle',
+                'Two-Factor Authentication',
+              )}
+            </Typography>
+            <Typography variant="body-sm" tone="muted">
+              {t(
+                'settings.twoFactor.sectionDescription',
+                'Manage your two-factor authentication settings',
+              )}
+            </Typography>
+          </header>
           {twoFactorEnabled ? (
             <div className="flex flex-col items-start justify-start space-y-4">
               <Badge variant="default">
                 {t('settings.twoFactor.enabled', 'Enabled')}
               </Badge>
-              <p className="text-muted-foreground">
+              <Typography tone="muted">
                 {t(
                   'settings.twoFactor.enabledDescription',
                   'With two-factor authentication enabled, you will be prompted for a secure, random pin during login, which you can retrieve from the TOTP-supported application on your phone.',
                 )}
-              </p>
+              </Typography>
 
               <TwoFactorRecoveryCodes
                 recoveryCodesList={recoveryCodesList}
@@ -98,12 +102,12 @@ export default function TwoFactor({
               <Badge variant="destructive">
                 {t('settings.twoFactor.disabled', 'Disabled')}
               </Badge>
-              <p className="text-muted-foreground">
+              <Typography tone="muted">
                 {t(
                   'settings.twoFactor.disabledDescription',
                   'When you enable two-factor authentication, you will be prompted for a secure pin during login. This pin can be retrieved from a TOTP-supported application on your phone.',
                 )}
-              </p>
+              </Typography>
 
               <div>
                 {hasSetupData ? (
