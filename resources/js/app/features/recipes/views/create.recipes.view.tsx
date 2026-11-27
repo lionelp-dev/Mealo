@@ -17,7 +17,6 @@ import {
 import { useAppForm } from '@/app/hooks/form-hook';
 import AppLayout from '@/app/layouts/app-layout';
 import { base64ToFile } from '@/app/utils';
-import { Head } from '@inertiajs/react';
 import { useStore } from '@tanstack/react-form';
 import { ChefHatIcon, Wand2 } from 'lucide-react';
 import { useEffect } from 'react';

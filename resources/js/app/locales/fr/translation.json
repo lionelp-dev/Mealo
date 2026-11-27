@@ -199,7 +199,15 @@
         "index": {
             "createButton": "Créer une recette",
             "bookTitle": "Mes recettes",
-            "viewButton": "Voir mes recettes"
+            "viewButton": "Voir mes recettes",
+            "quitDiscovery": "Quitter la découverte",
+            "discoverShort": "Découvrir avec l’IA",
+            "discover": "Découvrir des recettes avec l’IA",
+            "filters": "Filtres",
+            "clearFilters": "Effacer les filtres",
+            "empty": "Aucune recette pour le moment.",
+            "recentlyAdded": "Ajoutée",
+            "selectRecipe": "Sélectionner {{recipeName}}"
         },
         "table": {
             "name": "Nom",

@@ -242,11 +242,11 @@ export function MealPlanGenerationPopover({ className }: Props) {
                                 {isSelected && <Check className="size-3" />}
                               </span>
                               {getMealTimeIcon(mealTime.slug)}
-          <Typography
-            as="span"
-            variant="body-sm"
-            tone="inherit"
-            className="truncate"
+                              <Typography
+                                as="span"
+                                variant="body-sm"
+                                tone="inherit"
+                                className="truncate"
                               >
                                 {t(
                                   `mealPlanning.dialog.filters.${mealTime.slug}`,

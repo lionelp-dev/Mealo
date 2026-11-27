@@ -1,5 +1,4 @@
 import { Typography } from '@/app/components/Typography';
-import { cn } from '@/app/lib/';
 import { type HTMLAttributes } from 'react';
 
 export default function InputError({

@@ -143,6 +143,16 @@
     }
 }
 
+@keyframes discovery-progress {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(300%);
+    }
+}
+
 @plugin "daisyui" {
     logs: false;
     themes:

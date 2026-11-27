@@ -184,11 +184,11 @@ export default function MultiSelectMealPlanningPopover({
                             >
                               <div className="flex gap-3.5">
                                 {getMealTimeIcon(mealTime.slug)}
-            <Typography
-              as="span"
-              variant="body-sm"
-              tone="inherit"
-              className="pt-[1px]"
+                                <Typography
+                                  as="span"
+                                  variant="body-sm"
+                                  tone="inherit"
+                                  className="pt-[1px]"
                                 >
                                   {t(
                                     `mealPlanning.dialog.filters.${mealTime.slug}`,

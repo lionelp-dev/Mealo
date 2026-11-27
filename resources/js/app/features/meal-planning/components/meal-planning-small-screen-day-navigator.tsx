@@ -71,21 +71,21 @@ export default function MealPlanningSmallScreenDayNavigator({
                   aria-label={ariaLabel}
                   aria-current={isActive ? 'date' : undefined}
                 >
-                    <Typography
-                      as="span"
-                      variant="body-sm"
-                      tone="inherit"
-                      weight="medium"
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    weight="medium"
                     className="opacity-80"
                   >
                     {weekdayLabel}
                   </Typography>
-                    <Typography
-                      as="span"
-                      variant="body-sm"
-                      tone="inherit"
-                      weight="semibold"
-                    >
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    weight="semibold"
+                  >
                     {day.date.day}
                   </Typography>
                 </button>

@@ -46,11 +46,11 @@ export const MultiSelect: React.FC<MultiSelectProps> = ({
           className={cn('select w-full appearance-none', className)}
           aria-expanded={open}
         >
-            <Typography
-              as="span"
-              variant="body-sm"
-              tone="inherit"
-              className="flex gap-2 truncate text-left"
+          <Typography
+            as="span"
+            variant="body-sm"
+            tone="inherit"
+            className="flex gap-2 truncate text-left"
           >
             {selectedLabels.length > 0 ? (
               selectedLabels.map((option, index) => (

@@ -1,295 +1,332 @@
-import { DiscoveryPool, DiscoveredRecipe } from '../types/discovery';
-import { router } from '@inertiajs/react';
-import { useEffect, useRef, useState } from 'react';
+import {
+  type DiscoveryJobStatus,
+  requestDiscoveryJob,
+  saveDiscoveredRecipe,
+} from '../repositories/recipe-discovery.api';
+import type { DiscoveryPool, DiscoveredRecipe } from '../types/discovery';
+import { useDiscoveryJob } from './use-discovery-job';
+import { useEffect, useReducer, useRef } from 'react';
 
-type Props = {
-  onSaved: (recipeId: string) => void;
-  onPendingChange: (count: number) => void;
-  onGeneratingChange: (value: boolean) => void;
-  onPreparationChange: (value: boolean) => void;
+type UseRecipeDiscoveryOptions = { onRecipeSaved: (recipeId: string) => void };
+
+export type RecipeDiscoveryCriteria = {
+  prompt: string;
+  diet: string | null;
+  styles: string[];
+  effort: string | null;
+  mealTimes: string[];
 };
 
-type DiscoveryJob = {
+type RecipeDiscoveryRequestType = 'generation' | 'prefetch';
+type RecipeDiscoveryRequestStatus = 'idle' | 'submitting' | 'polling';
+type RecipeDiscoveryJob = {
   id: string;
-  prefetch: boolean;
+  requestType: RecipeDiscoveryRequestType;
 };
 
-type DiscoveryJobStatus = {
-  status: 'queued' | 'processing' | 'completed' | 'failed';
-  pool?: DiscoveryPool;
-  error?: string;
+type RecipeDiscoveryState = {
+  pendingRecipes: DiscoveredRecipe[];
+  activeJob: RecipeDiscoveryJob | null;
+  requestType: RecipeDiscoveryRequestType | null;
+  requestStatus: RecipeDiscoveryRequestStatus;
+  isSaving: boolean;
+  isRefining: boolean;
+  generationError: string | null;
+  prefetchError: string | null;
+  saveError: string | null;
 };
+
+type RecipeDiscoveryAction =
+  | { type: 'REQUEST_STARTED'; requestType: RecipeDiscoveryRequestType }
+  | { type: 'JOB_RECEIVED'; job: RecipeDiscoveryJob }
+  | {
+      type: 'POOL_RECEIVED';
+      pool: DiscoveryPool;
+      requestType: RecipeDiscoveryRequestType;
+    }
+  | {
+      type: 'REQUEST_FAILED';
+      requestType: RecipeDiscoveryRequestType;
+      error: string;
+    }
+  | { type: 'CURRENT_RECIPE_SKIPPED' }
+  | { type: 'SAVE_STARTED' }
+  | { type: 'SAVE_FINISHED' }
+  | { type: 'SAVE_FAILED'; error: string }
+  | { type: 'REFINING_CHANGED'; value: boolean };
+
+const initialState: RecipeDiscoveryState = {
+  pendingRecipes: [],
+  activeJob: null,
+  requestType: null,
+  requestStatus: 'idle',
+  isSaving: false,
+  isRefining: false,
+  generationError: null,
+  prefetchError: null,
+  saveError: null,
+};
+
+const PREFETCH_AFTER_SKIPPED_RECIPES = 3;
+const SKIPPED_RECIPE_COUNT_RESET_AT = 10;
+
+function recipeDiscoveryReducer(
+  state: RecipeDiscoveryState,
+  action: RecipeDiscoveryAction,
+): RecipeDiscoveryState {
+  switch (action.type) {
+    case 'REQUEST_STARTED':
+      return {
+        ...state,
+        requestType: action.requestType,
+        requestStatus: 'submitting',
+        generationError:
+          action.requestType === 'generation' ? null : state.generationError,
+        prefetchError:
+          action.requestType === 'prefetch' ? null : state.prefetchError,
+      };
+    case 'JOB_RECEIVED':
+      return {
+        ...state,
+        activeJob: action.job,
+        requestType: action.job.requestType,
+        requestStatus: 'polling',
+      };
+    case 'POOL_RECEIVED':
+      return {
+        ...state,
+        pendingRecipes:
+          action.requestType === 'prefetch'
+            ? [...state.pendingRecipes, ...action.pool.recipes]
+            : action.pool.recipes,
+        activeJob: null,
+        requestType: null,
+        requestStatus: 'idle',
+        isRefining:
+          action.requestType === 'prefetch' ? state.isRefining : false,
+      };
+    case 'REQUEST_FAILED':
+      return {
+        ...state,
+        activeJob: null,
+        requestType: null,
+        requestStatus: 'idle',
+        generationError:
+          action.requestType === 'generation'
+            ? action.error
+            : state.generationError,
+        prefetchError:
+          action.requestType === 'prefetch'
+            ? action.error
+            : state.prefetchError,
+      };
+    case 'CURRENT_RECIPE_SKIPPED':
+      return { ...state, pendingRecipes: state.pendingRecipes.slice(1) };
+    case 'SAVE_STARTED':
+      return { ...state, isSaving: true, saveError: null };
+    case 'SAVE_FINISHED':
+      return { ...state, isSaving: false };
+    case 'SAVE_FAILED':
+      return { ...state, saveError: action.error };
+    case 'REFINING_CHANGED':
+      return { ...state, isRefining: action.value };
+  }
+}
+
+function cloneRecipeDiscoveryCriteria(
+  criteria: RecipeDiscoveryCriteria,
+): RecipeDiscoveryCriteria {
+  return {
+    ...criteria,
+    styles: [...criteria.styles],
+    mealTimes: [...criteria.mealTimes],
+  };
+}
+
+function shouldPrefetchRecipes(
+  pendingRecipeCount: number,
+  skippedRecipeCount: number,
+) {
+  return (
+    pendingRecipeCount === 1 ||
+    skippedRecipeCount === PREFETCH_AFTER_SKIPPED_RECIPES
+  );
+}
+
+export function buildRecipeDiscoveryPrompt(criteria: RecipeDiscoveryCriteria) {
+  const preferences = [
+    ...criteria.styles,
+    criteria.diet,
+    criteria.effort,
+  ].filter((value): value is string => value !== null);
+  const customPrompt = criteria.prompt.trim();
+
+  return customPrompt || preferences.length > 0
+    ? [
+        customPrompt,
+        preferences.length > 0
+          ? `Préférences : ${preferences.join(', ')}.`
+          : '',
+      ]
+        .filter(Boolean)
+        .join('\n\n')
+    : 'Surprenez-moi avec une recette variée, savoureuse et de saison.';
+}
 
 export function useRecipeDiscovery({
-  onSaved,
-  onPendingChange,
-  onGeneratingChange,
-  onPreparationChange,
-}: Props) {
-  const [prompt, setPrompt] = useState('');
-  const [diet, setDiet] = useState<string | null>(null);
-  const [style, setStyle] = useState<string | null>(null);
-  const [selectedMealTimes, setSelectedMealTimes] = useState<string[]>([]);
-  const [recipes, setRecipes] = useState<DiscoveredRecipe[]>([]);
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [isPrefetching, setIsPrefetching] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
-  const [isRefining, setIsRefining] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [discoveryJob, setDiscoveryJob] = useState<DiscoveryJob | null>(null);
-  const swipes = useRef(0);
-  const requestInFlight = useRef(false);
-  const currentRecipe = recipes[0] ?? null;
-
-  useEffect(
-    () => onPendingChange(recipes.length),
-    [onPendingChange, recipes.length],
-  );
+  onRecipeSaved,
+}: UseRecipeDiscoveryOptions) {
+  const [state, dispatch] = useReducer(recipeDiscoveryReducer, initialState);
+  const skippedRecipeCountRef = useRef(0);
+  const isMountedRef = useRef(true);
+  const lastRequestedCriteriaRef = useRef<RecipeDiscoveryCriteria>({
+    prompt: '',
+    diet: null,
+    styles: [],
+    effort: null,
+    mealTimes: [],
+  });
+  const currentRecipe = state.pendingRecipes[0] ?? null;
 
   useEffect(() => {
-    if (!discoveryJob) return;
-
-    let cancelled = false;
-    let nextPoll: number | undefined;
-
-    const finish = () => {
-      requestInFlight.current = false;
-      setDiscoveryJob(null);
-      setIsGenerating(false);
-      setIsPrefetching(false);
-    };
-
-    const poll = async () => {
-      try {
-        const response = await fetch(
-          `/recipes/discover/status/${discoveryJob.id}`,
-          { headers: { Accept: 'application/json' } },
-        );
-
-        if (!response.ok) {
-          throw new Error('Unable to retrieve the recipe discovery status.');
-        }
-
-        const status = (await response.json()) as DiscoveryJobStatus;
-
-        if (cancelled) return;
-
-        if (status.status === 'queued' || status.status === 'processing') {
-          nextPoll = window.setTimeout(poll, 1500);
-          return;
-        }
-
-        if (status.status === 'failed') {
-          setError(status.error ?? 'La génération des recettes a échoué.');
-          finish();
-          return;
-        }
-
-        const pool = status.pool;
-        if (!pool) {
-          setError('Le serveur n’a retourné aucune proposition.');
-          finish();
-          return;
-        }
-
-        if (pool.recipes.length === 0) {
-          setError(
-            'Aucune proposition n’a pu être générée. Réessayez dans quelques instants.',
-          );
-          finish();
-          return;
-        }
-
-        setRecipes((current) =>
-          discoveryJob.prefetch ? [...current, ...pool.recipes] : pool.recipes,
-        );
-        if (!discoveryJob.prefetch) {
-          swipes.current = 0;
-          setIsRefining(false);
-        }
-        finish();
-      } catch {
-        if (!cancelled) {
-          setError('Impossible de suivre la génération des recettes.');
-          finish();
-        }
-      }
-    };
-
-    void poll();
-
+    isMountedRef.current = true;
     return () => {
-      cancelled = true;
-      if (nextPoll !== undefined) window.clearTimeout(nextPoll);
+      isMountedRef.current = false;
     };
-  }, [discoveryJob]);
-  useEffect(
-    () => onGeneratingChange(isGenerating || isPrefetching),
-    [isGenerating, isPrefetching, onGeneratingChange],
-  );
-  useEffect(
-    () =>
-      onPreparationChange(
-        prompt.trim().length > 0 ||
-          diet !== null ||
-          style !== null ||
-          selectedMealTimes.length > 0,
-      ),
-    [diet, onPreparationChange, prompt, selectedMealTimes, style],
-  );
+  }, []);
 
-  const replacePreference = (previous: string | null, next: string | null) => {
-    const phrase = (value: string | null) => {
-      if (!value) {
-        return null;
-      }
-      return value.toLowerCase();
-    };
-    setPrompt((value) => {
-      const parts = value
-        .split(',')
-        .map((part) => part.trim())
-        .filter((part) => part && part !== phrase(previous));
-      if (phrase(next)) parts.push(phrase(next)!);
-      return parts.join(', ');
-    });
-  };
+  const handleRecipeDiscoveryJobStatus = (status: DiscoveryJobStatus) => {
+    const job = state.activeJob;
+    if (!job) return;
 
-  const selectDiet = (value: string) => {
-    const next = diet === value ? null : value;
-    replacePreference(diet, next);
-    setDiet(next);
-  };
-  const selectStyle = (value: string) => {
-    const next = style === value ? null : value;
-    replacePreference(style, next);
-    setStyle(next);
-  };
-  const toggleMealTime = (slug: string) => {
-    setSelectedMealTimes((current) =>
-      current.includes(slug)
-        ? current.filter((value) => value !== slug)
-        : [...current, slug],
-    );
-  };
-
-  const requestPool = (prefetch: boolean) => {
-    if (!prompt.trim() || requestInFlight.current) return;
-    requestInFlight.current = true;
-    setError(null);
-    if (prefetch) {
-      setIsPrefetching(true);
-    } else {
-      setIsGenerating(true);
+    if (status.status === 'failed') {
+      dispatch({
+        type: 'REQUEST_FAILED',
+        requestType: job.requestType,
+        error: status.error ?? 'La génération des recettes a échoué.',
+      });
+      return;
     }
-    router.post(
-      '/recipes/discover/pool',
-      { prompt: prompt.trim(), meal_times: selectedMealTimes },
+
+    if (status.status !== 'completed') return;
+
+    if (!status.pool || status.pool.recipes.length === 0) {
+      dispatch({
+        type: 'REQUEST_FAILED',
+        requestType: job.requestType,
+        error: status.pool
+          ? 'Aucune proposition n’a pu être générée. Réessayez dans quelques instants.'
+          : 'Le serveur n’a retourné aucune proposition.',
+      });
+      return;
+    }
+
+    dispatch({
+      type: 'POOL_RECEIVED',
+      pool: status.pool,
+      requestType: job.requestType,
+    });
+    if (job.requestType === 'generation') skippedRecipeCountRef.current = 0;
+  };
+
+  useDiscoveryJob(state.activeJob?.id ?? null, {
+    onStatus: handleRecipeDiscoveryJobStatus,
+    onError: () => {
+      const job = state.activeJob;
+      if (!job) return;
+      dispatch({
+        type: 'REQUEST_FAILED',
+        requestType: job.requestType,
+        error: 'Impossible de suivre la génération des recettes.',
+      });
+    },
+  });
+
+  const requestRecipeDiscoveryPool = (
+    criteria: RecipeDiscoveryCriteria,
+    requestType: RecipeDiscoveryRequestType,
+  ) => {
+    if (state.requestStatus !== 'idle') return;
+
+    dispatch({ type: 'REQUEST_STARTED', requestType });
+    requestDiscoveryJob(
       {
-        async: true,
-        preserveUrl: true,
-        preserveState: true,
-        preserveScroll: true,
-        only: ['discovery_job', 'discovery_error'],
-        onSuccess: (page) => {
-          const discoveryError = page.props.discovery_error;
-          if (typeof discoveryError === 'string') {
-            setError(discoveryError);
-            requestInFlight.current = false;
-            setIsGenerating(false);
-            setIsPrefetching(false);
-            return;
+        prompt: buildRecipeDiscoveryPrompt(criteria),
+        meal_times: criteria.mealTimes,
+      },
+      {
+        onJobCreated: (id) => {
+          if (isMountedRef.current) {
+            dispatch({
+              type: 'JOB_RECEIVED',
+              job: { id, requestType },
+            });
           }
-          const job = page.props.discovery_job as { id?: unknown } | undefined;
-          if (!job || typeof job.id !== 'string') {
-            setError('Le serveur n’a pas démarré la génération.');
-            requestInFlight.current = false;
-            setIsGenerating(false);
-            setIsPrefetching(false);
-            return;
-          }
-          setDiscoveryJob({ id: job.id, prefetch });
         },
-        onError: () => {
-          setError('La génération des recettes a échoué.');
-          requestInFlight.current = false;
-          setIsGenerating(false);
-          setIsPrefetching(false);
+        onError: (error) => {
+          if (isMountedRef.current) {
+            dispatch({ type: 'REQUEST_FAILED', requestType, error });
+          }
         },
       },
     );
   };
 
-  const advance = () => {
-    const isLast = recipes.length === 1;
-    setRecipes((current) => current.slice(1));
-    const nextCount = swipes.current + 1;
-    if (nextCount === 3 || isLast) requestPool(true);
-    swipes.current = nextCount === 10 ? 0 : nextCount;
+  const skipCurrentRecipe = () => {
+    const skippedRecipeCount = skippedRecipeCountRef.current + 1;
+    const shouldPrefetch = shouldPrefetchRecipes(
+      state.pendingRecipes.length,
+      skippedRecipeCount,
+    );
+    dispatch({ type: 'CURRENT_RECIPE_SKIPPED' });
+    skippedRecipeCountRef.current =
+      skippedRecipeCount === SKIPPED_RECIPE_COUNT_RESET_AT
+        ? 0
+        : skippedRecipeCount;
+    if (shouldPrefetch) {
+      requestRecipeDiscoveryPool(lastRequestedCriteriaRef.current, 'prefetch');
+    }
   };
 
-  const save = () => {
-    if (!currentRecipe || isSaving) return;
-    setIsSaving(true);
-    const { image_generation_failed, ...recipe } = currentRecipe;
-    void image_generation_failed;
-    router.post(
-      '/recipes/discover/save',
-      { ...recipe, image: null },
-      {
-        preserveState: true,
-        preserveScroll: true,
-        only: ['recipes', 'selected_recipe', 'discovery_error'],
-        // `recipes` is an Inertia scroll prop. Reset it after the redirect so
-        // the refreshed first page replaces the list instead of appending to it.
-        reset: ['recipes'],
-        onSuccess: (page) => {
-          const discoveryError = page.props.discovery_error;
-          if (typeof discoveryError === 'string') {
-            setError(discoveryError);
-            return;
-          }
-          const selectedRecipe = page.props.selected_recipe as
-            | { id?: string }
-            | null
-            | undefined;
-          const id = selectedRecipe?.id;
-          if (typeof id !== 'string') {
-            setError(
-              'Le serveur n’a pas confirmé l’enregistrement de la recette.',
-            );
-            return;
-          }
-          onSaved(id);
-          advance();
-        },
-        onError: () => setError('La recette n’a pas pu être sauvegardée.'),
-        onFinish: () => setIsSaving(false),
+  const saveRecipe = () => {
+    if (!currentRecipe || state.isSaving) return;
+    dispatch({ type: 'SAVE_STARTED' });
+    saveDiscoveredRecipe(currentRecipe, {
+      onSaved: (id) => {
+        if (!isMountedRef.current) return;
+        onRecipeSaved(id);
+        skipCurrentRecipe();
       },
-    );
+      onError: (error) => {
+        if (isMountedRef.current) dispatch({ type: 'SAVE_FAILED', error });
+      },
+      onFinish: () => {
+        if (isMountedRef.current) dispatch({ type: 'SAVE_FINISHED' });
+      },
+    });
   };
 
   return {
     currentRecipe,
-    prompt,
-    diet,
-    style,
-    selectedMealTimes,
-    isGenerating,
-    isPrefetching,
-    isSaving,
-    isRefining,
-    error,
-    setPrompt,
-    setIsRefining,
-    selectDiet,
-    selectStyle,
-    toggleMealTime,
-    generate: () => {
-      requestPool(false);
+    pendingCount: state.pendingRecipes.length,
+    isGenerating:
+      state.requestStatus !== 'idle' && state.requestType === 'generation',
+    isPrefetching:
+      state.requestStatus !== 'idle' && state.requestType === 'prefetch',
+    isSaving: state.isSaving,
+    isRefining: state.isRefining,
+    error: state.generationError ?? state.saveError ?? state.prefetchError,
+    setIsRefining: (value: boolean) =>
+      dispatch({ type: 'REFINING_CHANGED', value }),
+    generateRecipes: (criteria: RecipeDiscoveryCriteria) => {
+      lastRequestedCriteriaRef.current = cloneRecipeDiscoveryCriteria(criteria);
+      requestRecipeDiscoveryPool(criteria, 'generation');
     },
-    retry: () => requestPool(true),
-    skip: advance,
-    save,
+    retryGeneration: (criteria: RecipeDiscoveryCriteria) => {
+      lastRequestedCriteriaRef.current = cloneRecipeDiscoveryCriteria(criteria);
+      requestRecipeDiscoveryPool(criteria, 'generation');
+    },
+    skipRecipe: skipCurrentRecipe,
+    saveRecipe,
   };
 }

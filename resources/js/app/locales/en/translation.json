@@ -199,7 +199,15 @@
         "index": {
             "createButton": "Create recipe",
             "bookTitle": "My recipe book",
-            "viewButton": "View my recipes"
+            "viewButton": "View my recipes",
+            "quitDiscovery": "Quit discovery",
+            "discoverShort": "Discover with AI",
+            "discover": "Discover recipes with AI",
+            "filters": "Filters",
+            "clearFilters": "Clear filters",
+            "empty": "No recipes yet.",
+            "recentlyAdded": "Added",
+            "selectRecipe": "Select {{recipeName}}"
         },
         "table": {
             "name": "Name",

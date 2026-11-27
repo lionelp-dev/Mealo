@@ -1,7 +1,7 @@
 import { useRecipesFiltersStore } from '../stores/recipes-filters-store';
 import { useRecipesSearchStore } from '../stores/use-recipes-search-store';
 import { router, usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
 export function useRecipesRequestCoordination() {
   const { activeFilters, clearAllFilters } = useRecipesFiltersStore();
@@ -9,16 +9,19 @@ export function useRecipesRequestCoordination() {
 
   const { url } = usePage();
 
-  const baseUrl = new URL(url, window.location.origin).pathname;
+  const baseUrl = useMemo(
+    () => new URL(url, window.location.origin).pathname,
+    [url],
+  );
 
   useEffect(() => {
     return () => {
       clearAllFilters();
       resetRecipeSearch();
     };
-  }, [baseUrl]);
+  }, [baseUrl, clearAllFilters, resetRecipeSearch]);
 
-  const buildSearchParams = () => {
+  const buildSearchParams = useCallback(() => {
     const params: {
       search?: string;
       meal_times?: string[];
@@ -56,30 +59,33 @@ export function useRecipesRequestCoordination() {
     }
 
     return params;
-  };
+  }, [activeFilters, searchTerm]);
 
-  const triggerRecipesRequest = (
-    callbacks: {
-      onBefore?: () => void;
-      onFinish?: () => void;
-    } = {},
-  ) => {
-    const { onBefore, onFinish } = callbacks;
+  const triggerRecipesRequest = useCallback(
+    (
+      callbacks: {
+        onBefore?: () => void;
+        onFinish?: () => void;
+      } = {},
+    ) => {
+      const { onBefore, onFinish } = callbacks;
 
-    const params = buildSearchParams();
+      const params = buildSearchParams();
 
-    router.visit(baseUrl, {
-      data: params,
-      method: 'get',
-      preserveUrl: false,
-      preserveState: true,
-      only: ['recipes'],
-      reset: ['recipes'],
-      replace: true,
-      onBefore,
-      onFinish,
-    });
-  };
+      router.visit(baseUrl, {
+        data: params,
+        method: 'get',
+        preserveUrl: false,
+        preserveState: true,
+        only: ['recipes'],
+        reset: ['recipes'],
+        replace: true,
+        onBefore,
+        onFinish,
+      });
+    },
+    [baseUrl, buildSearchParams],
+  );
 
   return { triggerRecipesRequest };
 }

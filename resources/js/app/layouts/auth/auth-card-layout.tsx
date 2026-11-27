@@ -21,15 +21,8 @@ export default function AuthCardLayout({
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-muted p-6 md:p-10">
       <div className="flex w-full max-w-md flex-col gap-6">
-        <Link
-          href={home()}
-          className="self-center"
-        >
-          <img
-            src="/logo.svg"
-            alt="Mealo Planner"
-            className="h-14 w-auto"
-          />
+        <Link href={home()} className="self-center">
+          <img src="/logo.svg" alt="Mealo Planner" className="h-14 w-auto" />
         </Link>
 
         <div className="flex flex-col gap-6">

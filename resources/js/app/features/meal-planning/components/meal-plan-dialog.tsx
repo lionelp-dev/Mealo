@@ -138,11 +138,11 @@ export default function MealPlanDialog({ children }: MealPlanDialogProps) {
                   onClick={clearAllFilters}
                   className="btn h-fit max-w-36 min-w-0 shrink-0 items-center gap-1.5 self-center p-0 text-secondary btn-link"
                 >
-          <Typography
-            as="span"
-            variant="body-sm"
-            tone="inherit"
-            className="min-w-0 truncate"
+                  <Typography
+                    as="span"
+                    variant="body-sm"
+                    tone="inherit"
+                    className="min-w-0 truncate"
                   >
                     {t('mealPlanning.dialog.filters.reset', 'Réinitialiser')}
                   </Typography>

@@ -7,7 +7,6 @@ import {
   DropdownMenuTrigger,
 } from '@/app/components/ui/dropdown-menu';
 import { useWorkspacePermissions } from '@/app/hooks/use-workspace-permissions';
-import { cn } from '@/app/lib/';
 import { DayPlannedMeals } from '@/types';
 import {
   ClipboardPasteIcon,
